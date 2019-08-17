@@ -993,6 +993,8 @@ init python:
     def GetHairColor(HairColor = 0):
         if HairColor == 0:
             return ""
+        elif HairColor == "custom":
+            return "white"
         else:
             return HairColor
 

@@ -2834,6 +2834,8 @@ image BJ_Head:                                                                  
                 "True", Null(),
                 ),
         (0,0), ConditionSwitch(                                                                 #Hair overlay
+            "R_HairColor == 'custom' and R_Water and R_Hair == 'evo'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairwhite_wet.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+            "R_HairColor == 'custom' and R_Hair == 'evo'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairwhite.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
             "R_Water and R_Hair == 'evo'", "images/RogueBJFace/Rogue_bj_hair" + GetHairColor(R_HairColor) + "_wet.png",
             "R_Hair == 'evo'", "images/RogueBJFace/Rogue_bj_hair" + GetHairColor(R_HairColor) + ".png",
             "True", Null(),
@@ -3164,6 +3166,7 @@ image Rogue_BJFace:
                 "True", Null(),
                 ),
         (0,0), ConditionSwitch(
+            "R_HairColor == 'custom' and R_Hair == 'evo'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairwhite.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
             "R_Hair == 'evo'", "images/RogueBJFace/Rogue_bj_hair" + GetHairColor(R_HairColor) + ".png",
             "True", Null(),
             ),              
@@ -3282,7 +3285,10 @@ image Zero_Blowcock:
 
 image Rogue_TJ_Under: 
     contains:
-        "images/RogueBJFace/Rogue_bj_hair" + GetHairColor(R_HairColor) + "_back.png"
+        ConditionSwitch( 
+            "R_HairColor == 'custom'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+            "True", "images/RogueBJFace/Rogue_bj_hair" + GetHairColor(R_HairColor) + "_back.png",
+            ),
         pos (150, -560)
         zoom .95
     contains:
