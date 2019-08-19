@@ -969,7 +969,7 @@ label Rogue_Modded_Clothes_Menu:
             if ApprovalCheck("Rogue", 800):
                 ch_r "Which color?"
 
-                menu:
+                menu Rogue_Modded_Clothes_Misc_Hair_Color:
                     "Black" if R_HairColor != "black":
                         ch_r "Like this?"
                         call SetHairColorRogue("black")
@@ -988,8 +988,25 @@ label Rogue_Modded_Clothes_Menu:
 
                     "Let me select the color.":
                         ch_k "You think so?"
+                        if R_HairColorBangs:
+                            "Reset the color of the bangs?"
+                            menu:
+                                "Yes":
+                                    $ R_HairColorBangs = ""
+                                "No":
+                                    pass
+
                         call Recolor_Hair("Rogue")
                         call SetHairColorRogue("custom")
+
+                    "Let me select the color just for the bangs.":
+                        ch_k "You think so?"
+                        call Recolor_Hair("Rogue", "HairBangs")
+                        call SetHairBangsColorRogue("custom2")
+                    "Nevermind":
+                        jump Rogue_Modded_Clothes_Misc
+
+                jump Rogue_Modded_Clothes_Misc_Hair_Color
 
                 #ch_r "You think so?"
                 #"She rummages in her bag and grabs some gel, running it through her hair."
@@ -1001,7 +1018,9 @@ label Rogue_Modded_Clothes_Menu:
                 ch_r "You think so?"
                 #"She rummages in her bag and grabs some gel, running it through her hair."
                 ch_r "Like this?"
-                call SetHairColorRogue("")
+                # call SetHairColorRogue("")
+                $ R_HairColor = ""
+                call SetHairBangsColorRogue("")
             else:
                 ch_r "It's too high maintenance."
 
@@ -1097,8 +1116,9 @@ label Rogue_Modded_Clothes_Menu:
                         $ R_Pierce = 0 
                         
         "Never mind":
+            jump Rogue_Modded_Clothes_Menu
             pass      
-    jump Rogue_Modded_Clothes_Menu
+    jump Rogue_Modded_Clothes_Misc
     #End of Rogue Misc Wardrobe
     
     return
@@ -1130,6 +1150,11 @@ label SetHoseRogue(Outfit = "modded fishnet"):
 
 label SetHairColorRogue(Outfit = ""):
     $ R_HairColor = Outfit
+    call Mod_Update_Rogue_Image
+    return
+
+label SetHairBangsColorRogue(Outfit = ""):
+    $ R_HairColorBangs = Outfit
     call Mod_Update_Rogue_Image
     return
 
