@@ -187,7 +187,17 @@ image Rogue_Sex_Body:
         (0,0), ConditionSwitch(                                                                                 #Body Base
             "R_DynamicTan[0]", "images/RogueSex/Rogue_tSex_Body.png",  
             "True", "images/RogueSex/Rogue_Sex_Body.png",             
-            ),             
+            ),
+        (0,0), ConditionSwitch(   
+            "not R_DynamicTan[0] or not R_DynamicTan[3]", Null(),
+            "True", AlphaMask("images/RogueSex/Rogue_Sex_Body.png", GetModdedStringTanRogue("3", ".png", "Sex")),
+            "True", Null(),
+            ),
+        (0,0), ConditionSwitch(   
+            "not R_DynamicTan[0] or not R_DynamicTan[1]", Null(),
+            "True", AlphaMask("images/RogueSex/Rogue_Sex_Body.png", GetModdedStringTanRogue("1", ".png", "Sex")),
+            "True", Null(),
+            ),
         (140,-240), "Rogue_Head_Sex",  #check positioning (400,-300)
         #Eyes
         # (0,0), ConditionSwitch(                                                                                 #necklace
@@ -280,6 +290,20 @@ image Rogue_Sex_Legs:
             "R_DynamicTan[0]", "images/RogueSex/Rogue_tSex_Legs.png",   
             "True", "images/RogueSex/Rogue_Sex_Legs.png",              
             ),                                                         #Legs Base
+        (0,0), ConditionSwitch(   
+            "not R_DynamicTan[0] or not R_DynamicTan[4]", Null(),
+            "True", AlphaMask("images/RogueSex/Rogue_Sex_Legs.png", GetModdedStringTanRogue("4", ".png", "Sex")),
+            "True", Null(),
+            ),
+        (0,0), ConditionSwitch(  
+            "not R_DynamicTan[0] or not R_DynamicTan[5]", Null(), #hose
+            "True", AlphaMask("images/RogueSex/Rogue_Sex_Legs.png", GetModdedStringTanRogue("5", "_Legs.png", "Sex")),
+            ),
+        (0,0), ConditionSwitch(  
+            "not R_DynamicTan[0] or not R_DynamicTan[2]", Null(),
+            "True", AlphaMask("images/RogueSex/Rogue_Sex_Legs.png", GetModdedStringTanRogue("2", "_Legs.png", "Sex")),
+            "True", Null(),   
+            ),
         (0,0), ConditionSwitch(                                                                                 #Wet look
             "R_Water", "images/RogueSex/Rogue_Sex_Water_Legs.png",   
             "True", Null(),              
@@ -337,6 +361,14 @@ image Rogue_Sex_Feet:
             "R_DynamicTan[0]", "images/RogueSex/Rogue_tSex_Feet.png",                                                         #Legs Base
             "True", "images/RogueSex/Rogue_Sex_Feet.png",
             ),                                                         #Legs Base
+        (0,0), ConditionSwitch(  
+            "not R_DynamicTan[0] or not R_DynamicTan[5]", Null(), #hose
+            "True", AlphaMask("images/RogueSex/Rogue_Sex_Feet.png", GetModdedStringTanRogue("5", "_Feet.png", "SexFeet")),
+            ),
+        (0,0), ConditionSwitch(  
+            "not R_DynamicTan[0] or not R_DynamicTan[2]", Null(),
+            "True", AlphaMask("images/RogueSex/Rogue_Sex_Feet.png", GetModdedStringTanRogue("2", "_Feet.png", "SexFeet")),
+            ),
         (0,0), ConditionSwitch(
             "not R_Hose", Null(),     
             "True", GetOutfitString("images/RogueSex/Rogue_Sex_Hose_", R_Hose, "_Feet.png"),
@@ -469,7 +501,34 @@ image Rogue_Sex_Pussy:
                 "Trigger == 'lick pussy'", "images/RogueSex/Rogue_Sex_Pussy_Open.png",
                 "True and R_DynamicTan[0]", "images/RogueSex/Rogue_tSex_Pussy_Closed.png",
                 "True", "images/RogueSex/Rogue_Sex_Pussy_Closed.png",
-                )    
+                )
+    contains:
+            ConditionSwitch(   
+                "not R_DynamicTan[0] or not R_DynamicTan[4]", Null(),
+                "P_Sprite and P_Cock == 'in' and Speed >= 2", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Fucking.png", GetModdedStringTanRogue("4", ".png", "Sex")),
+                "P_Sprite and P_Cock == 'in' and Speed", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Open.png", GetModdedStringTanRogue("4", ".png", "Sex")),
+                "P_Sprite and P_Cock == 'in'", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Closed.png", GetModdedStringTanRogue("4", ".png", "Sex")),
+                "Trigger == 'lick pussy'", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Open.png", GetModdedStringTanRogue("4", ".png", "Sex")),
+                "True", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Closed.png", GetModdedStringTanRogue("4", ".png", "Sex")),
+                ),
+    contains:
+            ConditionSwitch(  
+                "not R_DynamicTan[0] or not R_DynamicTan[5]", Null(), #hose
+                "P_Sprite and P_Cock == 'in' and Speed >= 2", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Fucking.png", GetModdedStringTanRogue("5", "_Legs.png", "Sex")),
+                "P_Sprite and P_Cock == 'in' and Speed", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Open.png", GetModdedStringTanRogue("5", "_Legs.png", "Sex")),
+                "P_Sprite and P_Cock == 'in'", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Closed.png", GetModdedStringTanRogue("5", "_Legs.png", "Sex")),
+                "Trigger == 'lick pussy'", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Open.png", GetModdedStringTanRogue("5", "_Legs.png", "Sex")),
+                "True", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Closed.png", GetModdedStringTanRogue("5", "_Legs.png", "Sex")),
+                ),
+    contains:
+            ConditionSwitch(  
+                "not R_DynamicTan[0] or not R_DynamicTan[2]", Null(),
+                "P_Sprite and P_Cock == 'in' and Speed >= 2", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Fucking.png", GetModdedStringTanRogue("2", "_Legs.png", "Sex")),
+                "P_Sprite and P_Cock == 'in' and Speed", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Open.png", GetModdedStringTanRogue("2", "_Legs.png", "Sex")),
+                "P_Sprite and P_Cock == 'in'", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Closed.png", GetModdedStringTanRogue("2", "_Legs.png", "Sex")),
+                "Trigger == 'lick pussy'", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Open.png", GetModdedStringTanRogue("2", "_Legs.png", "Sex")),
+                "True", AlphaMask("images/RogueSex/Rogue_Sex_Pussy_Closed.png", GetModdedStringTanRogue("2", "_Legs.png", "Sex")),
+                ),    
     contains:
             # The background plate of her pussy            
             ConditionSwitch(    
