@@ -74,12 +74,12 @@ image Rogue:
             "True", "images/RogueSprite/Rogue_body_bare.png",         
             ),
         (0,0), ConditionSwitch(   
-            "not R_DynamicTan[1] or not R_DynamicTan[0]", Null(),
+            "not R_DynamicTan[1] or not R_DynamicTan[0]", Null(), #over
             "Rogue_Arms", AlphaMask("images/RogueSprite/Rogue_body_bare.png", GetModdedStringTanRogue("1", "1.png")),
             "True", AlphaMask("images/RogueSprite/Rogue_body_bare.png", GetModdedStringTanRogue("1", "2.png")),
             ),
         (0,0), ConditionSwitch(                                                                        
-            "not R_DynamicTan[3] or not R_DynamicTan[0]", Null(),
+            "not R_DynamicTan[3] or not R_DynamicTan[0]", Null(), #chest
             "Rogue_Arms", AlphaMask("images/RogueSprite/Rogue_body_bare.png", GetModdedStringTanRogue("3", "1.png")),
             "True", AlphaMask("images/RogueSprite/Rogue_body_bare.png", GetModdedStringTanRogue("3", "2.png")),
             ),
@@ -336,10 +336,10 @@ image Rogue:
             "Rogue_Arms == 1 and R_Arms == 'gloved'", AlphaMask("images/RogueSprite/Rogue_arms1b_gloved.png", GetModdedStringTanRogue("1", "1.png")),                                     #Gloves, no collar
             "Rogue_Arms == 1 and R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms1a_bare.png", GetModdedStringTanRogue("1", "1.png")),                                #No Gloves, collar 
             "Rogue_Arms == 1", AlphaMask("images/RogueSprite/Rogue_arms1b_bare.png", GetModdedStringTanRogue("1", "1.png")),                                                              #No gloves, no collar
-            "R_Arms == 'gloved' and R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms2a_gloved.png", GetModdedStringTanRogue("1", ".png")),                           #Gloves and collar 
-            "R_Arms == 'gloved'", AlphaMask("images/RogueSprite/Rogue_arms2b_gloved.png", GetModdedStringTanRogue("1", ".png")),                                                         #Gloved, no collar
-            "R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms2a_bare.png", GetModdedStringTanRogue("1", ".png")),                                                    #No gloves, collar
-            "True", AlphaMask("images/RogueSprite/Rogue_arms2b_bare.png", GetModdedStringTanRogue("1", ".png")),   
+            "R_Arms == 'gloved' and R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms2a_gloved.png", GetModdedStringTanRogue("1", "2.png")),                           #Gloves and collar 
+            "R_Arms == 'gloved'", AlphaMask("images/RogueSprite/Rogue_arms2b_gloved.png", GetModdedStringTanRogue("1", "2.png")),                                                         #Gloved, no collar
+            "R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms2a_bare.png", GetModdedStringTanRogue("1", "2.png")),                                                    #No gloves, collar
+            "True", AlphaMask("images/RogueSprite/Rogue_arms2b_bare.png", GetModdedStringTanRogue("1", "2.png")),   
             ),
         (0,0), ConditionSwitch(                                                                        
             "not R_DynamicTan[3] or not R_DynamicTan[0]", Null(),
@@ -348,10 +348,10 @@ image Rogue:
             "Rogue_Arms == 1 and R_Arms == 'gloved'", AlphaMask("images/RogueSprite/Rogue_arms1b_gloved.png", GetModdedStringTanRogue("3", "1.png")),                                     #Gloves, no collar
             "Rogue_Arms == 1 and R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms1a_bare.png", GetModdedStringTanRogue("3", "1.png")),                                #No Gloves, collar 
             "Rogue_Arms == 1", AlphaMask("images/RogueSprite/Rogue_arms1b_bare.png", GetModdedStringTanRogue("3", "1.png")),                                                              #No gloves, no collar
-            "R_Arms == 'gloved' and R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms2a_gloved.png", GetModdedStringTanRogue("3", ".png")),                           #Gloves and collar 
-            "R_Arms == 'gloved'", AlphaMask("images/RogueSprite/Rogue_arms2b_gloved.png", GetModdedStringTanRogue("3", ".png")),                                                         #Gloved, no collar
-            "R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms2a_bare.png", GetModdedStringTanRogue("3", ".png")),                                                    #No gloves, collar
-            "True", AlphaMask("images/RogueSprite/Rogue_arms2b_bare.png", GetModdedStringTanRogue("3", ".png")),   
+            "R_Arms == 'gloved' and R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms2a_gloved.png", GetModdedStringTanRogue("3", "2.png")),                           #Gloves and collar 
+            "R_Arms == 'gloved'", AlphaMask("images/RogueSprite/Rogue_arms2b_gloved.png", GetModdedStringTanRogue("3", "2.png")),                                                         #Gloved, no collar
+            "R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms2a_bare.png", GetModdedStringTanRogue("3", "2.png")),                                                    #No gloves, collar
+            "True", AlphaMask("images/RogueSprite/Rogue_arms2b_bare.png", GetModdedStringTanRogue("3", "2.png")),   
             ),
         (0,0), ConditionSwitch(                                                                         
             #chest layer
@@ -402,7 +402,7 @@ image Rogue:
                     ),            
             "True", ConditionSwitch(
                     #if the top's up. . .
-                    "'modded' in R_Chest and 'crop top' in R_Chest", ConditionSwitch(
+                    "'modded' in R_Chest and ('crop top' in R_Chest or 'classic uniform' in R_Chest)", ConditionSwitch(
                         "Rogue_Arms == 1", GetModdedString("images/RogueSprite/Rogue_Sprite_chest_", R_Chest, "1.png"),
                         "True", GetModdedString("images/RogueSprite/Rogue_Sprite_chest_", R_Chest, "2.png"),
                         ),
