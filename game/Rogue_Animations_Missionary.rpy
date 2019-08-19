@@ -269,7 +269,8 @@ image Rogue_Sex_Legs:
             ), 
         (0,0), ConditionSwitch(                                                                                 #Legs Layer
             "not R_Legs", Null(),     
-            "True", GetOutfitString("images/RogueSex/Rogue_Sex_Legs_", R_Legs, ".png"),
+            "R_Wet", GetOutfitString("images/RogueSex/Rogue_Sex_Legs_", R_Legs, "_Legs_Wet.png"),
+            "True", GetOutfitString("images/RogueSex/Rogue_Sex_Legs_", R_Legs, "_Legs.png"),
             ),   
         # (0,0), ConditionSwitch(                                                                                 #Over Layer
         #     "R_Over == 'towel'", "images/RogueSex/Rogue_Sex_Towel_Legs.png",
@@ -309,6 +310,10 @@ image Rogue_Sex_Feet:
         (0,0), ConditionSwitch(
             "not R_Hose", Null(),     
             "True", GetOutfitString("images/RogueSex/Rogue_Sex_Hose_", R_Hose, "_Feet.png"),
+            ),
+        (0,0), ConditionSwitch(
+            "not R_Legs", Null(),     
+            "True", GetOutfitString("images/RogueSex/Rogue_Sex_Legs_", R_Legs, "_Feet.png"),
             ), 
         (0,0), ConditionSwitch(                                                                                 #Wet look
             "R_Water", "images/RogueSex/Rogue_Sex_Water_Feet.png",   
