@@ -351,6 +351,11 @@ label Rogue_Modded_Clothes_Menu:
                                 else:
                                       ch_r "No, it's too short, [R_Petname]."
 
+        "Wear your classic uniform bottom?" if R_Legs != "modded classic uniform bottom":
+                                ch_r "Sure, ok."
+                                call SetLegsRogue("modded classic uniform bottom")
+                                jump Rogue_Modded_Clothes_Legs
+
         "Maybe go without the jeans." if R_Legs == "pants":
                         call RogueFace("sexy", 1)
                         if R_BodySuit:
@@ -497,8 +502,9 @@ label Rogue_Modded_Clothes_Menu:
                         "She pulls her shorts off."
                                 
         "Never mind":
-            pass
-    jump Rogue_Modded_Clothes_Menu
+            jump Rogue_Modded_Clothes_Menu
+            
+    jump Rogue_Modded_Clothes_Legs
     #End of Rogue Pants
         
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
@@ -604,6 +610,12 @@ label Rogue_Modded_Clothes_Menu:
                 "I like that buttoned tank top." if (R_Chest != "buttoned tank" and R_Over != "mesh top") or (R_Chest != "buttoned tank" and R_Over != "modded white mesh top") or (R_Chest != "buttoned tank" and R_Over != "modded blue mesh top") or (R_Chest != "buttoned tank" and R_Over != "modded yellow mesh top") or (R_Chest != "buttoned tank" and R_Over != "modded red mesh top") or (R_Chest != "buttoned tank" and R_Over != "modded black mesh top") or (R_Chest != "buttoned tank" and R_Over != "modded SR7 mesh top"):
                                 # call Rogue_Swimsuit_Change_Top
                                 call SetChestRogue("buttoned tank")
+                                jump Rogue_Modded_Clothes_Under_Top
+                "Wear your classic uniform top?" if R_Chest != "modded classic uniform top":
+                                ch_r "Sure, ok."
+                                # call SetPantiesRogue("bodysuit")
+                                # call SetChestRogue("bodysuit")
+                                call SetChestRogue("modded classic uniform top")
                                 jump Rogue_Modded_Clothes_Under_Top
                     
                 "I like your sport bras.":
@@ -1162,6 +1174,8 @@ init python:
                             return 5
                         elif R_Legs == "modded cheerleader skirt":
                             return 5
+                        elif R_Legs == "modded classic uniform bottom":
+                            return 10
                         # elif R_Panties == "shorts":
                         #     return 6
                         else:
@@ -1312,6 +1326,8 @@ init python:
                 return 20
             elif R_Chest == "modded black crop top":                                              
                 return 20
+            elif R_Chest == "modded classic uniform top":                                              
+                return 20
             elif R_Chest == "modded tape":                                              
                 return 5
             elif R_Chest == "modded red sports bra":
@@ -1358,23 +1374,25 @@ init python:
             #     $ Count = 20  
             # elif R_Over == "red dress":      
             #     $ Count = 20  
-            if R_Legs == "skirtshort":            #If wearing a short skirt commando
+            if R_Legs == "modded skirtshort":            #If wearing a short skirt commando
                 return 0
-            elif R_Legs == "SR7 skirtshort":            #If wearing a short skirt commando
+            elif R_Legs == "modded SR7 skirtshort":            #If wearing a short skirt commando
                 return 0
-            elif R_Legs == "cheerleader skirt":                 #If wearing a cheerleader skirt commando
+            elif R_Legs == "modded cheerleader skirt":                 #If wearing a cheerleader skirt commando
                 return 20
-            elif R_Legs == "cheerleader skirtshort":            #If wearing a short cheerleader skirt commando
+            elif R_Legs == "modded classic uniform bottom":                 #If wearing a cheerleader skirt commando
+                return 20
+            elif R_Legs == "modded cheerleader skirtshort":            #If wearing a short cheerleader skirt commando
                 return 0   
         
 
         if Type == "Panties":
                        
-            if R_Panties == "red shorts":             #If wearing shorts
+            if R_Panties == "modded red shorts":             #If wearing shorts
                 return 25
-            elif R_Panties == "blue shorts":             #If wearing shorts
+            elif R_Panties == "modded blue shorts":             #If wearing shorts
                 return 25  
-            elif R_Panties == "black large panties":      #If wearing only green panties
+            elif R_Panties == "modded black large panties":      #If wearing only green panties
                 return 10
             # elif R_Panties == "swimsuit1":
             #     return 40
