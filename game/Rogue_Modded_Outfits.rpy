@@ -1615,5 +1615,9 @@ init python:
             string = Null()
         return string
 
-
+    def WearingDress(Girl = "Rogue"):
+        if R_Chest:
+            if "dress" in R_Chest:
+                return 1
+        return 0
 #End Rogue Wardrobe
