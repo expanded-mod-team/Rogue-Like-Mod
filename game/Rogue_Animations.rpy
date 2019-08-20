@@ -402,7 +402,9 @@ image Rogue:
                     ),            
             "True", ConditionSwitch(
                     #if the top's up. . .
-                    "'modded' in R_Chest and ('crop top' in R_Chest or 'classic uniform' in R_Chest)", ConditionSwitch(
+                    "'modded' in R_Chest and ('crop top' in R_Chest or 'classic uniform' in R_Chest or 'dress' in R_Chest)", ConditionSwitch(
+                        "'dress' in R_Chest and Rogue_Arms == 1 and R_Upskirt", GetModdedString("images/RogueSprite/Rogue_Sprite_chest_", R_Chest, "_up1.png"),
+                        "'dress' in R_Chest and R_Upskirt", GetModdedString("images/RogueSprite/Rogue_Sprite_chest_", R_Chest, "_up2.png"),
                         "Rogue_Arms == 1", GetModdedString("images/RogueSprite/Rogue_Sprite_chest_", R_Chest, "1.png"),
                         "True", GetModdedString("images/RogueSprite/Rogue_Sprite_chest_", R_Chest, "2.png"),
                         ),
@@ -1055,6 +1057,7 @@ image Rogue_Doggy_Body:
         (0,0), ConditionSwitch(   
             #tanktop
             "not R_Chest", Null(),  
+            "'modded' in R_Chest and 'dress' in R_Chest", GetModdedString("images/RogueDoggy/Rogue_Doggy_Chest_", R_Chest, "Top.png"),
             "'modded' in R_Chest", GetModdedString("images/RogueDoggy/Rogue_Doggy_chest_" ,R_Chest, ".png"),
             "R_Chest == 'tank'", "images/RogueDoggy/Rogue_Doggy_Chest_Tank.png",
             "R_Chest == 'buttoned tank'", "images/RogueDoggy/Rogue_Doggy_Chest_ButtonTank.png",
@@ -1441,7 +1444,16 @@ image Rogue_Doggy_Ass:
             "True", Null(),                      
             ),   
         (0,0), ConditionSwitch(              
+            #Chest Layer
+            "not R_Chest", Null(),
+            "'modded' in R_Chest and 'dress' in R_Chest and R_Upskirt and P_Sprite and P_Cock == 'anal' and Speed", GetModdedString("images/RogueDoggy/Rogue_Doggy_Chest_", R_Chest, "Ass_UpAnal.png"),
+            "'modded' in R_Chest and 'dress' in R_Chest and R_Upskirt", GetModdedString("images/RogueDoggy/Rogue_Doggy_Chest_", R_Chest, "Ass_Up.png"),
+            "'modded' in R_Chest and 'dress' in R_Chest", GetModdedString("images/RogueDoggy/Rogue_Doggy_Chest_", R_Chest, "Ass.png"),
+            "True", Null(),                    
+            ),
+        (0,0), ConditionSwitch(              
             #Over Layer
+            "not R_Over", Null(),
             "R_Over == 'nighty' and R_Upskirt", "images/RogueDoggy/Rogue_Doggy_Over_NightyAss_Up.png",            
             "R_Over == 'nighty'", "images/RogueDoggy/Rogue_Doggy_Over_NightyAss.png",
             "R_Over == 'towel' and R_Upskirt", "images/RogueDoggy/Rogue_Doggy_Over_TowelAss_Up.png",            
@@ -1456,7 +1468,7 @@ image Rogue_Doggy_Ass:
         (0,0), ConditionSwitch(  
             #Hotdogging underlayer
             "not P_Sprite or P_Cock != 'out'", Null(),   
-            "R_Legs == 'skirt' and R_Upskirt", "images/RogueDoggy/Rogue_Doggy_HotdogUpskirtBack.png",  
+            # "R_Legs == 'skirt' and R_Upskirt", "images/RogueDoggy/Rogue_Doggy_HotdogUpskirtBack.png",  
             "True", "images/RogueDoggy/Rogue_Doggy_HotdogBack.png", 
             ),    
         (0,0), ConditionSwitch( 
