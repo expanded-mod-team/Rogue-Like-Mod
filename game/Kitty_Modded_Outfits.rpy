@@ -444,42 +444,42 @@ label Kitty_Modded_Clothes_Menu:
                 "Go back":  
                     jump Kitty_Modded_Clothes_Under
 
-        # "Socks and Stockings": 
+        "Socks and Stockings": 
             
-        #     menu Kitty_Modded_Clothes_Under_Hoses:  
+            menu Kitty_Modded_Clothes_Under_Hoses:  
 
-        #         "You could lose those socks. . ." if K_Hose and K_Hose != "stockings":
-        #             ch_k "K."
-        #             $ K_Hose = 0
-        #             jump Kitty_Modded_Clothes_Under_Hoses  
+                "You could lose those socks. . ." if K_Hose and K_Hose != "modded stockings":
+                    ch_k "K."
+                    call SetHoseKitty(0)
+                    jump Kitty_Modded_Clothes_Under_Hoses  
 
-        #         "You could lose those stockings. . ." if K_Hose == "stockings":
-        #             ch_k "K."
-        #             $ K_Hose = 0
-        #             jump Kitty_Modded_Clothes_Under_Hoses  
+                "You could lose those stockings. . ." if K_Hose == "modded stockings":
+                    ch_k "K."
+                    call SetHoseKitty(0)
+                    jump Kitty_Modded_Clothes_Under_Hoses  
 
-        #         "Why don't you wear those stockings?" if K_Hose != "stockings":
-        #             ch_k "K."
-        #             $ K_Hose = "stockings"  
-        #             jump Kitty_Modded_Clothes_Under_Hoses
+                "Why don't you wear those stockings?" if K_Hose != "modded stockings":
+                    ch_k "K."
+                    call SetHoseKitty("modded stockings")
+                    jump Kitty_Modded_Clothes_Under_Hoses
 
-        #         "Why don't you wear those black socks" if K_Hose != "black socks":
-        #             ch_k "K."
-        #             $ K_Hose = "black socks"  
-        #             jump Kitty_Modded_Clothes_Under_Hoses
+                "Why don't you wear those black socks" if K_Hose != "modded black socks":
+                    ch_k "K."
+                    call SetHoseKitty("modded black socks")
+                    jump Kitty_Modded_Clothes_Under_Hoses
 
-        #         "Why don't you wear those white socks" if K_Hose != "white socks":
-        #             ch_k "K."
-        #             $ K_Hose = "white socks"  
-        #             jump Kitty_Modded_Clothes_Under_Hoses
+                "Why don't you wear those white socks" if K_Hose != "modded white socks":
+                    ch_k "K."
+                    call SetHoseKitty("modded white socks")
+                    jump Kitty_Modded_Clothes_Under_Hoses
 
-        #         "Why don't you wear those pink socks" if K_Hose != "pink socks":
-        #             ch_k "K."
-        #             $ K_Hose = "pink socks"  
-        #             jump Kitty_Modded_Clothes_Under_Hoses
+                "Why don't you wear those pink socks" if K_Hose != "modded pink socks":
+                    ch_k "K."
+                    call SetHoseKitty("modded pink socks")
+                    jump Kitty_Modded_Clothes_Under_Hoses
 
-        #         "Go back":  
-        #             jump Kitty_Modded_Clothes_Under
+                "Go back":  
+                    jump Kitty_Modded_Clothes_Under
 
         "How about your swimsuits.":
 

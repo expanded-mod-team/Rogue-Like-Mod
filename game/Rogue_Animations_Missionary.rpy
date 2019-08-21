@@ -53,6 +53,8 @@ image Rogue_Head:
             ),      
         (0,0), "Rogue Blink",
         (0,0), ConditionSwitch(
+            "R_Hair == 'newhair' and R_Water", "images/RogueSprite/Rogue_hair_wet_newhair.png",
+            "R_Hair == 'newhair'", "images/RogueSprite/Rogue_hair_evo_newhair.png",
             "R_HairColor == 'custom'", Null(),
             "R_Water", "images/RogueSprite/Rogue_Hair" + GetHairColor(R_HairColor) + "_Wet.png",
             "R_Hair == 'evo'", "images/RogueSprite/Rogue_Hair" + GetHairColor(R_HairColor) + "_Evo.png",
@@ -61,6 +63,7 @@ image Rogue_Head:
             "True", "images/RogueSprite/Rogue_Hair" + GetHairColor(R_HairColor) + "_Evo.png",
             ),
         (0,0), ConditionSwitch(
+            "R_Hair == 'newhair'", Null(),
             "R_HairColor != 'custom'", Null(),
             "R_Water", im.MatrixColor("images/RogueSprite/Rogue_HairWhite_Wet.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
             "R_Hair == 'evo'", im.MatrixColor("images/RogueSprite/Rogue_HairWhite_Evo.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
@@ -69,6 +72,7 @@ image Rogue_Head:
             "True", im.MatrixColor("images/RogueSprite/Rogue_HairWhite_Evo.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
             ),
         (0,0), ConditionSwitch(
+            "R_Hair == 'newhair'", Null(),
             "R_HairColorBangs != 'custom2'", Null(),
             "R_Water", im.MatrixColor("images/RogueSprite/Rogue_HairWhite_Wet1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
             "R_Hair == 'evo'", im.MatrixColor("images/RogueSprite/Rogue_HairWhite_Evo1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
@@ -85,18 +89,21 @@ image Rogue_HairBack:
     LiveComposite(
         (416,610),    
         (0,0), ConditionSwitch(
+            "R_Hair == 'newhair'", Null(),
             "R_HairColor == 'custom'", Null(),
             "R_Water or R_Hair == 'evo'", "images/RogueSprite/Rogue_hair" + GetHairColor(R_HairColor) + "_wet.png",
             "R_Hair == 'evo'", "images/RogueSprite/Rogue_hair" + GetHairColor(R_HairColor) + "_evo.png",
             "True", Null(),
             ),
         (0,0), ConditionSwitch(
+            "R_Hair == 'newhair'", Null(),
             "R_HairColor != 'custom'", Null(),
             "R_Water or R_Hair == 'evo'", im.MatrixColor("images/RogueSprite/Rogue_hairWhite_wet.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
             "R_Hair == 'evo'", im.MatrixColor("images/RogueSprite/Rogue_hairWhite_evo.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
             "True", Null(),
             ),
         (0,0), ConditionSwitch(
+            "R_Hair == 'newhair'", Null(),
             "R_HairColorBangs != 'custom2'", Null(),
             "R_Water or R_Hair == 'evo'", im.MatrixColor("images/RogueSprite/Rogue_hairWhite_wet1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
             "R_Hair == 'evo'", im.MatrixColor("images/RogueSprite/Rogue_hairWhite_evo1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),

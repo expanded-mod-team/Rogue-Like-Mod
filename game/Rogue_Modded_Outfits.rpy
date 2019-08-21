@@ -977,6 +977,13 @@ label Rogue_Modded_Clothes_Menu:
         # "You could lose those boots." if R_Boots:
         #                 $ R_Boots = 0
 
+        "Change your haistyle":
+            if R_Hair == "evo":
+                $ R_Hair = "newhair"
+                # $ R_Tan = 0
+            else:
+                $ R_Hair = "evo"
+
         "Dye your hair.":
             if ApprovalCheck("Rogue", 800):
                 ch_r "Which color?"
@@ -1343,6 +1350,10 @@ init python:
             #     $ Count = 10
             if R_Chest == "modded cheerleader":
                 return 20
+            elif R_Chest == "modded blue dress":
+                return 20
+            elif R_Chest == "modded red dress":
+                return 20
             elif R_Chest == "modded slut tank short":                                              
                 return -5
             elif R_Chest == "modded SR7 tank short":                                              
@@ -1393,6 +1404,10 @@ init python:
                 return 40  
 
         if Type == "Legs":
+            if R_Chest == "modded blue dress":
+                return 20
+            elif R_Chest == "modded red dress":
+                return 20
             # if R_BodySuit == "classic uniform":
             #     $ Count = 25
             # if R_Over == "blue dress":      
@@ -1412,7 +1427,12 @@ init python:
         
 
         if Type == "Panties":
-                       
+            if R_Chest == "modded blue dress":
+                return 20
+            elif R_Chest == "modded red dress":
+                return 20
+
+                           
             if R_Panties == "modded red shorts":             #If wearing shorts
                 return 25
             elif R_Panties == "modded blue shorts":             #If wearing shorts

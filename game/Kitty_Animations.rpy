@@ -148,7 +148,13 @@ image Kitty_Sprite:
 #            "K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini_Down.png", 
 #            "True", Null(),
 #            ),  
-        
+        (0,0), ConditionSwitch(                                                                         
+            #full hose/tights              
+            "K_Panties and not K_PantiesDown", Null(), 
+            "not K_Hose", Null(),
+            "'modded' in K_Hose", GetModdedString("images/KittySprite/Kitty_Sprite_hose_", K_Hose, ".png"),
+            "True", Null(), 
+            ), 
         (0,0), ConditionSwitch(                                                                         
             #panties layer           
             "not K_Panties", Null(),               
@@ -226,6 +232,13 @@ image Kitty_Sprite:
                     "K_Legs", AlphaMask("Spunk_Drip2","Kitty_Drip_MaskP"),
                     "True", AlphaMask("Spunk_Drip2","Kitty_Drip_Mask"), #only plays if nothing is in the way
                     ),
+            ),
+        (0,0), ConditionSwitch(                                                                         
+            #full hose/tights              
+            "K_Panties and K_PantiesDown", Null(), 
+            "not K_Hose", Null(),
+            "'modded' in K_Hose", GetModdedString("images/KittySprite/Kitty_Sprite_hose_", K_Hose, ".png"),
+            "True", Null(), 
             ),     
         (0,0), ConditionSwitch(                                                                        
             #pants         
@@ -1004,7 +1017,11 @@ image Kitty_Sex_Legs:
             "K_Panties == 'bikini bottoms' and K_Wet", "images/KittySex/Kitty_Sex_Panties_Bikini_Wet.png",       
             "K_Panties == 'bikini bottoms'", "images/KittySex/Kitty_Sex_Panties_Bikini.png",    
             "True", Null(),                     
-            ),  
+            ),
+        (0,0), ConditionSwitch(        
+            "not K_Hose", Null(),     
+            "True", GetOutfitString("images/KittySex/Kitty_Sex_Hose_", K_Hose, "_Legs.png"),
+            ), 
         (0,0), ConditionSwitch(                                                                                 #Legs Layer
             "K_Legs == 'blue skirt'", "images/KittySex/Kitty_Sex_Skirt.png",   
             "not K_Legs", Null(),
@@ -1075,7 +1092,11 @@ image Kitty_Sex_Feet:
         (0,0), ConditionSwitch(                                                                                 #Wet look
             "K_Water", "images/KittySex/Kitty_Sex_Water_Feet.png",   
             "True", Null(),              
-            ),  
+            ),
+        (0,0), ConditionSwitch(
+            "not K_Hose", Null(),     
+            "True", GetOutfitString("images/KittySex/Kitty_Sex_Hose_", K_Hose, "_Feet.png"),
+            ),
         (0,0), ConditionSwitch(                                                                                 #Legs Layer
             "K_Upskirt", Null(),                               
             "not K_Legs", Null(),

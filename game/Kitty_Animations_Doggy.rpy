@@ -292,10 +292,10 @@ image Kitty_Doggy_Ass:
             "K_Water", "images/RogueDoggy/Rogue_Doggy_WetAss.png",   
             "True", Null(),              
             ),  
-        #(0,0), ConditionSwitch(                                                                                 #Hose
-        #    "R_Hose == 'stockings'", "images/RogueDoggy/Rogue_Doggy_Hose.png",
-        #    "True", Null(),
-        #    ),             
+        (0,0), ConditionSwitch(
+            "not K_Hose", Null(),     
+            "True", GetOutfitString("images/KittyDoggy/Kitty_Doggy_Hose_", K_Hose, ".png"),
+            ),
         (0,0), ConditionSwitch(                                                                                 #Panties if Down
             "not K_PantiesDown or (K_Legs == 'pants' and not K_Upskirt)", Null(),
             "not K_Panties", Null(),
@@ -390,7 +390,11 @@ image Kitty_Doggy_Ass:
                                                             "True", AlphaMask("images/KittyDoggy/Kitty_Doggy_Pussy_Closed.png", GetModdedStringTanKitty("2", ".png", "Doggy")),
                                                             ),
             "True", Null(),
-            ),  
+            ),
+        (0,0), ConditionSwitch(
+            "not K_Hose", Null(),     
+            "True", GetOutfitString("images/KittyDoggy/Kitty_Doggy_Hose_", K_Hose, ".png"),
+            ),
         #(0,0), ConditionSwitch(                                                                                 #pubes              
         #    "not R_Pubes", Null(),         
         #    "P_Sprite and P_Cock == 'in'", Null(),
