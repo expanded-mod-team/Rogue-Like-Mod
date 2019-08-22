@@ -503,10 +503,10 @@ image Rogue:
             ),
         (0,0), ConditionSwitch(                                                                         
             #Hair just bangs
-            "R_HairColorBangs != 'custom2'", Null(),
             "renpy.showing('Rogue_BJ_Animation') or renpy.showing('BJ_NewTest') or renpy.showing('Rogue_TJ_Animation')", Null(),
             "R_Hair == 'newhair' and R_Water", "images/RogueSprite/Rogue_hair_wet_newhair.png",
             "R_Hair == 'newhair'", "images/RogueSprite/Rogue_hair_evo_newhair.png",
+            "R_HairColorBangs != 'custom2'", Null(),
             "R_Hair == 'evo' and R_Water", im.MatrixColor("images/RogueSprite/Rogue_hairWhite_wet1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
             "R_Hair == 'evo'", im.MatrixColor("images/RogueSprite/Rogue_hairWhite_evo1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
             "True", Null(), 
