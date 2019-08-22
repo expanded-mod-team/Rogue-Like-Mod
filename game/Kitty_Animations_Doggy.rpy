@@ -272,7 +272,11 @@ image Kitty_Doggy_Ass:
             # "K_DynamicTan[0] and K_DynamicTan[4] == 'modded kitty lingerie panties'", AlphaMask("images/KittyDoggy/Kitty_Doggy_Ass.png", "images/KittyDoggy/Kitty_Doggy_Panties_green panties.png"),
             # "K_DynamicTan[0] and K_DynamicTan[4] == 'purple bikini panties'", AlphaMask("images/KittyDoggy/Kitty_Doggy_Ass.png", "images/KittyDoggy/Kitty_Doggy_Panties_green panties.png"),
             # "True", Null(),
-            ),  
+            ),
+        (0,0), ConditionSwitch(   
+            "not K_DynamicTan[0] or not K_DynamicTan[5]", Null(),
+            "True", AlphaMask("images/KittyDoggy/Kitty_Doggy_Ass.png", GetModdedStringTanKitty("5", ".png", "Doggy")),
+            ), 
         (0,0), ConditionSwitch(   
             "not K_DynamicTan[0] or not K_DynamicTan[2]", Null(),
             "True", AlphaMask("images/KittyDoggy/Kitty_Doggy_Ass.png", GetModdedStringTanKitty("2", ".png", "Doggy")),

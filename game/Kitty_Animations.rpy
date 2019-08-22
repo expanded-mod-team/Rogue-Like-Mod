@@ -77,6 +77,11 @@ image Kitty_Sprite:
             ),
 
         (0,0), ConditionSwitch(                                                                     #body
+            "not K_DynamicTan[5] or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedStringTanKitty("5", ".png")),
+            ),
+
+        (0,0), ConditionSwitch(                                                                     #body
             "not K_DynamicTan[2] or not K_DynamicTan[0]", Null(),
             "True", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedStringTanKitty("2", ".png")),
             # "K_DynamicTan[0] and 'modded' in K_DynamicTan[2]", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedString("images/KittySprite/Kitty_Sprite_Legs_", K_DynamicTan[2], ".png")),
@@ -990,6 +995,10 @@ image Kitty_Sex_Legs:
             # "True", Null(),
             ),
         (0,0), ConditionSwitch(  
+            "not K_DynamicTan[0] or not K_DynamicTan[5]", Null(), #hose
+            "True", AlphaMask("images/KittySex/Kitty_Sex_Legs.png", GetModdedStringTanKitty("5", "_Legs.png", "Sex")),
+            ),
+        (0,0), ConditionSwitch(  
             "not K_DynamicTan[0] or not K_DynamicTan[2]", Null(),
             "True", AlphaMask("images/KittySex/Kitty_Sex_Legs.png", GetModdedStringTanKitty("2", ".png", "Sex")),
             # "K_DynamicTan[0] and K_DynamicTan[2] == 'shorts'", AlphaMask("images/KittySex/Kitty_Sex_Legs.png", "images/KittySex/Kitty_Sex_Shorts.png"),
@@ -1084,6 +1093,10 @@ image Kitty_Sex_Feet:
         (0,0), ConditionSwitch(
             "K_DynamicTan[0]", "images/KittySex/Kitty_Sex_TFeet.png",                                                         #Legs Base
             "True", "images/KittySex/Kitty_Sex_Feet.png",
+            ),
+        (0,0), ConditionSwitch(  
+            "not K_DynamicTan[0] or not K_DynamicTan[5]", Null(), #hose
+            "True", AlphaMask("images/KittySex/Kitty_Sex_Feet.png", GetModdedStringTanKitty("5", "_Feet.png", "Sex")),
             ),
         (0,0), ConditionSwitch(  
             "not K_DynamicTan[0] or not K_DynamicTan[2]", Null(),

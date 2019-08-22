@@ -986,6 +986,21 @@ init python:
                             # string = "images/Kitty" + str(third) + "/Kitty_" + str(third) + "_Legs_" + str(K_DynamicTan[first_]) + ".png"
                             # if not renpy.loadable(string):
                                 string = Null()
+            elif first_ == 5: #hose
+                    # if "modded" in K_DynamicTan[first_] or third == "Doggy":
+                    if "modded" in K_DynamicTan[first_]:
+                        string = "images/Kitty" + str(third) + "/Kitty_" + str(third) + "_Hose_" + str(K_DynamicTan[first_]) + second
+                        if not renpy.loadable(string):
+                            # string = "images/Kitty" + str(third) + "/Kitty_" + str(third) + "_Hose_" + str(K_DynamicTan[first_]) + ".png"
+                            # if not renpy.loadable(string):
+                                string = Null()
+                    
+                    else:
+                        # string = "images/Kitty" + str(third) + "/KittyTan/Kitty_" + str(third) + "_Hose_tan " + str(K_DynamicTan[first_]) + second
+                        # if not renpy.loadable(string):
+                        #     # string = "images/Kitty" + str(third) + "/Kitty_" + str(third) + "_Hose_" + str(K_DynamicTan[first_]) + ".png"
+                        #     # if not renpy.loadable(string):
+                                string = Null()
         else:
             string = Null()
         return string
