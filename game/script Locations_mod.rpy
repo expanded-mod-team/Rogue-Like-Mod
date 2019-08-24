@@ -36,6 +36,16 @@ label Mod_EventCalls:
                 call Mod_Display_Background
                 call MystiqueMeet
                 return 
+    
+    if R_Loc != bg_current and "Rogue" in Digits and R_Selfie:
+        call Mod_Selfie("Rogue")
+    if K_Loc != bg_current and "Kitty" in Digits and K_Selfie:
+        call Mod_Selfie("Kitty")
+    if E_Loc != bg_current and "Emma" in Digits and E_Selfie:
+        call Mod_Selfie("Emma")
+    if L_Loc != bg_current and "Laura" in Digits and L_Selfie:
+        call Mod_Selfie("Laura")
+
     return
 
 label Mod_Chat:

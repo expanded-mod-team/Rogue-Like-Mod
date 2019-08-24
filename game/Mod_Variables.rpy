@@ -111,6 +111,22 @@ label  mod_default_Variables:
     default GwenStage = 0
     default P_Hands = 0
 
+    default R_Nude = 1
+    default R_Nude_Overlay = 0
+    default R_NudeDay = 0
+    default R_NudeCurrent_Time = 0
+    default K_Nude = 1
+    default K_Nude_Overlay = 0
+    default K_NudeDay = 0
+    default K_NudeCurrent_Time = 0
+    default E_Nude = 1
+    default E_Nude_Overlay = 0
+    default E_NudeDay = 0
+    default E_NudeCurrent_Time = 0
+    default L_Nude = 1
+    default L_Nude_Overlay = 0
+    default L_NudeDay = 0
+    default L_NudeCurrent_Time = 0
 
     define ch_m = Character('[newgirl[Mystique].GirlName]', color="#646dbb", image = "arrow", show_two_window=True)
 
