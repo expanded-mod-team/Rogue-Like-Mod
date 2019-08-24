@@ -3,6 +3,12 @@ label Rogue_Modded_Clothes_Menu:
     call RogueFace
     menu:
         ch_r "So what did you want to tell me about my clothes again?"
+        "Stop sending me nudes." if R_Nude:
+                    $ R_Nude = 0
+                    ch_r "Ok"
+        "Keep sending me nudes." if not R_Nude:
+                    $ R_Nude = 1
+                    ch_r "Ok"
         "Let's talk about your over shirts.":
                 jump Rogue_Modded_Clothes_Over        
         "Let's talk about your legwear.":

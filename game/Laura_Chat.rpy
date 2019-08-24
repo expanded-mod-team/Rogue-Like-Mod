@@ -3711,6 +3711,12 @@ label Laura_Clothes:
     call LauraFace
     menu:
         ch_l "what about my clothes?"
+        "Stop sending me nudes." if L_Nude:
+                    $ L_Nude = 0
+                    ch_l "Ok"
+        "Keep sending me nudes." if not L_Nude:
+                    $ L_Nude = 1
+                    ch_l "Ok"
         "Let's talk about your hair color.":
                     jump Laura_Modded_Clothes_Misc_Hair
         "Let's talk about your outfits.":

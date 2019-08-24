@@ -3,6 +3,12 @@ label Emma_Modded_Clothes_Menu:
     call EmmaFace 
     menu:
         ch_e "You wanted to discuss my clothing choices?"
+        "Stop sending me nudes." if E_Nude:
+                    $ E_Nude = 0
+                    ch_e "Ok"
+        "Keep sending me nudes." if not E_Nude:
+                    $ E_Nude = 1
+                    ch_e "Ok"
         "Let's talk about your over shirts.":
                     jump Emma_Modded_Clothes_Over        
         "Let's talk about your legwear.":

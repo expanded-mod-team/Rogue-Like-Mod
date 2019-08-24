@@ -3,6 +3,12 @@ label Kitty_Modded_Clothes_Menu:
     call KittyFace 
     menu:
         ch_k "So[K_like]you wanted to talk about my clothes?"
+        "Stop sending me nudes." if K_Nude:
+                    $ K_Nude = 0
+                    ch_k "Ok"
+        "Keep sending me nudes." if not K_Nude:
+                    $ K_Nude = 1
+                    ch_k "Ok"
         "Let's talk about your over shirts.":
                     jump Kitty_Modded_Clothes_Over        
         "Let's talk about your legwear.":
