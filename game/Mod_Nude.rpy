@@ -245,7 +245,7 @@
             if Roll_ == 1:    
                 show Nude_Emma zorder 200
             else:
-                show Nude_Rogue_Emma zorder 200
+                show Nude_Emma_Doggy zorder 200
 
             "Emma sent you a picture"
             ch_e "It's hot huh, [E_Petname]?" 
@@ -264,7 +264,7 @@
             if Roll_ == 1:    
                 show Nude_Emma zorder 200
             else:
-                show Nude_Rogue_Emma zorder 200
+                show Nude_Emma_Doggy zorder 200
 
             "Emma sent you a picture" 
     
@@ -276,7 +276,7 @@
             if Roll_ == 1:    
                 show Nude_Emma zorder 200
             else:
-                show Nude_Rogue_Emma zorder 200
+                show Nude_Emma_Doggy zorder 200
 
             "Emma sent you a picture" 
             ch_e "What do you think of this look, [E_Petname]?" 
