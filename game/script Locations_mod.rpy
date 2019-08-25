@@ -37,14 +37,14 @@ label Mod_EventCalls:
                 call MystiqueMeet
                 return 
     
-    if R_Loc != bg_current and "Rogue" in Digits and R_Selfie:
-        call Mod_Selfie("Rogue")
-    if K_Loc != bg_current and "Kitty" in Digits and K_Selfie:
-        call Mod_Selfie("Kitty")
-    if E_Loc != bg_current and "Emma" in Digits and E_Selfie:
-        call Mod_Selfie("Emma")
-    if L_Loc != bg_current and "Laura" in Digits and L_Selfie:
-        call Mod_Selfie("Laura")
+    if R_Loc != bg_current and "Rogue" in Digits and R_Nude:
+        call Mod_Nude("Rogue")
+    if K_Loc != bg_current and "Kitty" in Digits and K_Nude:
+        call Mod_Nude("Kitty")
+    if E_Loc != bg_current and "Emma" in Digits and E_Nude:
+        call Mod_Nude("Emma")
+    if L_Loc != bg_current and "Laura" in Digits and L_Nude:
+        call Mod_Nude("Laura")
 
     return
 
