@@ -225,31 +225,31 @@ label Kitty_Modded_Clothes_Menu:
         
         "You look great in those black blue pants." if K_Legs != "modded black blue pants":
             ch_k "K, no problem."
-            call SetLegsKitty("modded black blue pants")
+            $ K_Legs = "modded black blue pants"
         
         "What about wearing your blue shorts?" if K_Legs != "modded blue shorts":
             ch_k "K, no problem."
-            call SetLegsKitty("modded blue shorts")
+            $ K_Legs = "modded blue shorts"
 
         "What about wearing your white shorts?" if K_Legs != "modded white shorts":
             ch_k "K, no problem."
-            call SetLegsKitty("modded white shorts")
+            $ K_Legs = "modded white shorts"
 
         "Your butt looks cute in that orange skirt." if K_Legs != "modded orange skirt":
             ch_k "Meoww~"
-            call SetLegsKitty("modded orange skirt")
+            $ K_Legs = "modded orange skirt"
 
         "Your butt looks cute in that white skirt." if K_Legs != "modded white skirt":
             ch_k "Meoww~"
-            call SetLegsKitty("modded white skirt")
+            $ K_Legs = "modded white skirt"
 
         "Your butt looks cute in that black skirt." if K_Legs != "modded black skirt":
             ch_k "Meoww~"
-            call SetLegsKitty("modded black skirt")
+            $ K_Legs = "modded black skirt"
 
         "Those leather pants look real tight on you." if K_Legs != "modded leather pants":
             ch_k "Mm~ That's hot."
-            call SetLegsKitty("modded leather pants")
+            $ K_Legs = "modded leather pants"
             
                    
                                 
@@ -390,7 +390,7 @@ label Kitty_Modded_Clothes_Menu:
                     if ApprovalCheck("Kitty", 1100, TabM=3):
                             # call Kitty_Swimsuit_Change_Bottom 
                             ch_k "K."
-                            call SetPantiesKitty("modded white panties")
+                            $ K_Panties = "modded white panties"
                     else:                
                             ch_k "I don't think that's any of your beeswax."
                     jump Kitty_Modded_Clothes_Under_Panties
@@ -399,7 +399,7 @@ label Kitty_Modded_Clothes_Menu:
                     if ApprovalCheck("Kitty", 1300, TabM=3):
                             # call Kitty_Swimsuit_Change_Bottom 
                             ch_k "I guess."
-                            call SetPantiesKitty("modded darker lace panties")
+                            $ K_Panties = "modded darker lace panties"
                     else:
                             ch_k "That's[K_like]none of your business."
                     jump Kitty_Modded_Clothes_Under_Panties
@@ -408,7 +408,7 @@ label Kitty_Modded_Clothes_Menu:
                     if ApprovalCheck("Kitty", 1300, TabM=3):
                             # call Kitty_Swimsuit_Change_Bottom 
                             ch_k "I guess."
-                            call SetPantiesKitty("modded kitty lingerie panties")
+                            $ K_Panties = "modded kitty lingerie panties"
                     else:
                             ch_k "That's[K_like]none of your business."
                     jump Kitty_Modded_Clothes_Under_Panties
@@ -432,19 +432,19 @@ label Kitty_Modded_Clothes_Menu:
                             $ K_Panties = "green panties"
                         "How about the white ones?":
                             ch_k "Sure, ok."
-                            call SetPantiesKitty("modded white panties")
+                            $ K_Panties = "modded white panties"
                         "How about the purple bikini?":
                             ch_k "Sure, ok."
-                            $ K_Panties = "purple bikini panties"
+                            $ K_Panties = "modded purple bikini panties"
                         "How about the lace ones?" if "lace panties" in K_Inventory:
                             ch_k "Alright."                
                             $ K_Panties  = "lace panties"
                         "How about the darker lace ones?":
                             ch_k "Alright."                
-                            call SetPantiesKitty("modded darker lace panties")
+                            $ K_Panties = "modded darker lace panties"
                         "How about the kitty lingerie ones?":
                             ch_k "Alright."                
-                            call SetPantiesKitty("modded kitty lingerie panties")
+                            $ K_Panties = "modded kitty lingerie panties"
                     jump Kitty_Modded_Clothes_Under_Panties
 
                 "Go back":  
@@ -517,7 +517,7 @@ label Kitty_Modded_Clothes_Menu:
                     if ApprovalCheck("Kitty", 1100, TabM=3):
                             # call Kitty_Swimsuit_Change_Bottom 
                             ch_k "K."
-                            call SetPantiesKitty("modded purple bikini panties")
+                            $ K_Panties = "modded purple bikini panties"
                     else:                
                             ch_k "I don't think that's any of your beeswax."
                     jump Kitty_Modded_Clothes_Under_SwimSuits

@@ -654,6 +654,8 @@ init python:
                             return 1
                         if R_Legs == "skirt":
                             return 5
+                        elif IsOutfitModdedRogue("Legs"):
+                            return ModPantsNum("Rogue")    
                         elif R_Legs == "pants":
                             return 10
                         elif R_Panties == "shorts":
@@ -664,7 +666,9 @@ init python:
                         if K_Upskirt and K_Legs:
                             return 1
                         if K_Legs == "black jeans":
-                            return 10            
+                            return 10
+                        elif IsOutfitModdedKitty("Legs"):
+                            return ModPantsNum("Kitty")            
                         elif K_Legs == "capris":
                             return 10    
                         elif K_Legs == "yoga pants":
