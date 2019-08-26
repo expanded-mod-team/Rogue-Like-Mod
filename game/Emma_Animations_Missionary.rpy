@@ -1205,6 +1205,8 @@ label Emma_Missionary_Launch(Line = "solo"):
         hide Emma_HJ_Animation
     if renpy.showing("Emma_TJ_Animation"):
         hide Emma_TJ_Animation
+    if renpy.showing("Emma_Doggy"):
+        hide Emma_Doggy
     show Emma_Missionary zorder 150        
     with dissolve
     return
