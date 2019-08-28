@@ -2737,7 +2737,7 @@ image Emma_BJ_Head:                                                             
         (858,928), 
          (0,0), ConditionSwitch(                                                                 
             #Hair behind face above body
-            "E_HairColor and E_Water or E_Hair == 'wet'", im.MatrixColor("images/EmmaBJFace/Emma_BJ_HairWhite_Wet_Mid.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
+            "E_HairColor and (E_Water or E_Hair == 'wet')", im.MatrixColor("images/EmmaBJFace/Emma_BJ_HairWhite_Wet_Mid.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "E_Water or E_Hair == 'wet'", "images/EmmaBJFace/Emma_BJ_Hair_Wet_Mid.png",
             "E_HairColor", im.MatrixColor("images/EmmaBJFace/Emma_BJ_HairWhite_Wave_Mid.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "True", "images/EmmaBJFace/Emma_BJ_Hair_Wave_Mid.png",
@@ -2829,7 +2829,7 @@ image Emma_BJ_Head:                                                             
             ),
         (0,0), ConditionSwitch(                                                                 
             #Hair overlay
-            "E_HairColor and E_Water or E_Hair == 'wet'", im.MatrixColor("images/EmmaBJFace/Emma_BJ_HairWhite_Wet_Top.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
+            "E_HairColor and (E_Water or E_Hair == 'wet')", im.MatrixColor("images/EmmaBJFace/Emma_BJ_HairWhite_Wet_Top.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "E_Water or E_Hair == 'wet'", "images/EmmaBJFace/Emma_BJ_Hair_Wet_Top.png",
             "E_HairColor", im.MatrixColor("images/EmmaBJFace/Emma_BJ_HairWhite_Wave_Top.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "True", "images/EmmaBJFace/Emma_BJ_Hair_Wave_Top.png",
