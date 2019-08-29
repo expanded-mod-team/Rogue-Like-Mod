@@ -41,6 +41,10 @@ image Kitty_Doggy_Body:
             "K_Hair == 'long'", im.MatrixColor("images/KittyDoggy/Kitty_Doggy_Hair" + GetHairColor(K_HairColor) + ".png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
             "K_Hair == 'evo'", im.MatrixColor("images/KittyDoggy/Kitty_Doggy_Hair" + GetHairColor(K_HairColor) + "_Ponytail.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
             "True", im.MatrixColor("images/KittyDoggy/Kitty_Doggy_Hair" + GetHairColor(K_HairColor) + ".png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+            ),
+        (0,0), ConditionSwitch(                                                                                 #Wet look
+            "K_DynamicTan[0]", "images/KittyDoggy/Kitty_Doggy_T3Ear.png",   
+            "True", "images/KittyDoggy/Kitty_Doggy_Hair_Ear.png",
             ),   
         #(0,0), ConditionSwitch(                                                                                 #Mouth
         #    "R_Gag == 'ballgag'", "images/RogueDoggy/Rogue_Doggy_BallGag.png",
@@ -202,7 +206,7 @@ image Kitty_Doggy_Body:
             ),                    
         (0,0), ConditionSwitch(                                                                                 #Wet look
             "K_DynamicTan[0]", "images/KittyDoggy/Kitty_Doggy_T3Ear.png",   
-            "True", Null(),              
+            "True", "images/KittyDoggy/Kitty_Doggy_Hair_Ear.png",
             ),
         (0,0), ConditionSwitch(
             "K_Headband == 'pink'", "images/KittyDoggy/Kitty_Doggy_Headband_Pink.png",

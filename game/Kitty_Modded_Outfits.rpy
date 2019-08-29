@@ -576,6 +576,9 @@ label Kitty_Modded_Clothes_Menu:
                         ch_k "You think so?"
                         #"She rummages in her bag and grabs some gel, running it through her hair."
                         ch_k "Like this?"
+                        $ K_HairCustomColor.red = 255
+                        $ K_HairCustomColor.green = 255
+                        $ K_HairCustomColor.blue = 255
                         call SetHairColorKitty("black")
                     else:
                         ch_k "It's too high maintenance."
@@ -586,6 +589,9 @@ label Kitty_Modded_Clothes_Menu:
                         ch_k "You think so?"
                         #"She rummages in her bag and grabs some gel, running it through her hair."
                         ch_k "Like this?"
+                        $ K_HairCustomColor.red = 255
+                        $ K_HairCustomColor.green = 255
+                        $ K_HairCustomColor.blue = 255
                         call SetHairColorKitty("blonde")
                     else:
                         ch_k "It's too high maintenance."
@@ -596,6 +602,9 @@ label Kitty_Modded_Clothes_Menu:
                         ch_k "You think so?"
                         #"She rummages in her bag and grabs some gel, running it through her hair."
                         ch_k "Like this?"
+                        $ K_HairCustomColor.red = 255
+                        $ K_HairCustomColor.green = 255
+                        $ K_HairCustomColor.blue = 255
                         call SetHairColorKitty("red")
                     else:
                         ch_k "It's too high maintenance."
@@ -606,13 +615,17 @@ label Kitty_Modded_Clothes_Menu:
                         ch_k "You think so?"
                         #"She rummages in her bag and grabs some gel, running it through her hair."
                         # ch_k "Like this?"
-                        "WARNING: This is gonna apply to all of her hair colors, to reset it either put all values into 255 or select option Change the color of you hair back."
+                        # "WARNING: This is gonna apply to all of her hair colors, to reset it either put all values into 255 or select option Change the color of you hair back."
+                        $ K_HairCustomColor.red = 255
+                        $ K_HairCustomColor.green = 255
+                        $ K_HairCustomColor.blue = 255
                         call Recolor_Hair("Kitty")
+                        call SetHairColorKitty("White")
                     else:
                         ch_k "It's too high maintenance."
                     jump Kitty_Modded_Clothes_Misc_Hair
 
-                "Change the color of you hair back." if K_HairColor == "black" or K_HairColor == "blonde" or K_HairColor == "red":    
+                "Change the color of you hair back." if K_HairColor:    
                     if ApprovalCheck("Kitty", 800):
                         ch_k "You think so?"
                         #"She rummages in her bag and grabs some gel, running it through her hair."

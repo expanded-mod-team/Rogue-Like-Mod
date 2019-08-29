@@ -137,6 +137,17 @@ label  mod_Save_Version:
     if getattr(K_HairCustomColor, "outfit", None) == None:
         $ K_HairCustomColor = SetColor("Kitty","Hair")
 
+    if R_HairColor == 0:
+        $ R_HairColor = ""
+    if K_HairColor == 0:
+        $ K_HairColor = ""
+    if E_HairColor == 0:
+        $ E_HairColor = ""
+    if L_HairColor == 0:
+        $ L_HairColor = ""
+
+
+
     if len(R_OutfitShame) < 21:
         $ R_OutfitShame.append(0) #[15] 16
         $ R_OutfitShame.append(0)
@@ -1275,7 +1286,7 @@ label Recolor_Hair(Girl = "Kitty", Outfit = "Hair"):
 screen recolor_screen_Kitty_Hair:
 
     # add(im.MatrixColor("images/EmmaSprite/EmmaSprite_Head_HairBack_White.png",im.matrix.tint(float(K_HairCustomColor.tempred)/255.0, float(K_HairCustomColor.tempgreen)/255.0, float(K_HairCustomColor.tempblue)/255.0))) align(0.5, 0.1)
-    add(im.MatrixColor("images/KittyBJFace/Kitty_BJ_Hair" + GetHairColor(K_HairColor) + "_Evo.png",im.matrix.tint(float(K_HairCustomColor.tempred)/255.0, float(K_HairCustomColor.tempgreen)/255.0, float(K_HairCustomColor.tempblue)/255.0))) align(0.5, 0.1)
+    add(im.MatrixColor("images/KittyBJFace/Kitty_BJ_HairWhite_Evo.png",im.matrix.tint(float(K_HairCustomColor.tempred)/255.0, float(K_HairCustomColor.tempgreen)/255.0, float(K_HairCustomColor.tempblue)/255.0))) align(0.5, 0.1)
         
     text ("{size=-5}RGB Values: Red: %s, Green: %s, Blue: %s !!!"%(K_HairCustomColor.tempred, K_HairCustomColor.tempgreen, K_HairCustomColor.tempblue)) align(0.5, 0.6)    
         
