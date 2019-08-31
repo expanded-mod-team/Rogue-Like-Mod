@@ -3198,6 +3198,7 @@ image Rogue_BJFace:
     LiveComposite(    
         (787,912),     
         (0,0), ConditionSwitch(
+            "R_DynamicTan[0]", Null(),
             "R_Blush and Trigger != 'blow'", "images/RogueBJFace/Rogue_bj_face_over_blush.png",
             "Trigger != 'blow'", Null(),
             "Speed == 3 and R_Blush", "images/RogueBJFace/Rogue_bj_face_over_suckingB.png",
@@ -3207,6 +3208,19 @@ image Rogue_BJFace:
             "Speed == 4 and R_Blush", "images/RogueBJFace/Rogue_bj_face_over_suckingB.png",
             "Speed == 4 and not R_Blush", "images/RogueBJFace/Rogue_bj_face_over_sucking.png",
             "R_Blush", "images/RogueBJFace/Rogue_bj_face_over_blush.png",
+            "True", Null(),
+            ),
+        (0,0), ConditionSwitch(
+            "not R_DynamicTan[0]", Null(),
+            "R_Blush and Trigger != 'blow'", "images/RogueBJFace/Rogue_tbj_face_over_blush.png",
+            "Trigger != 'blow'", Null(),
+            "Speed == 3 and R_Blush", "images/RogueBJFace/Rogue_tbj_face_over_suckingB.png",
+            "Speed == 3 and not R_Blush", "images/RogueBJFace/Rogue_tbj_face_over_sucking.png",
+            "Speed == 2 and R_Blush", "images/RogueBJFace/Rogue_tbj_face_over_headingB.png",
+            "Speed == 2 and not R_Blush", "images/RogueBJFace/Rogue_tbj_face_over_heading.png",
+            "Speed == 4 and R_Blush", "images/RogueBJFace/Rogue_tbj_face_over_suckingB.png",
+            "Speed == 4 and not R_Blush", "images/RogueBJFace/Rogue_tbj_face_over_sucking.png",
+            "R_Blush", "images/RogueBJFace/Rogue_tbj_face_over_blush.png",
             "True", Null(),
             ),       
         (0,0), ConditionSwitch(
