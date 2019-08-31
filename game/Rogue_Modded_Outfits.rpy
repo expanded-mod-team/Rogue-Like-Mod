@@ -669,6 +669,26 @@ label Rogue_Modded_Clothes_Menu:
                             ch_r "That's too revealing. . ." 
                         jump Rogue_Modded_Clothes_Under_Top
 
+                "How about that red dress?" if R_Chest != "modded red dress":
+                    # if R_Legs:
+                    #     ch_r "I can't really wear that with my [R_Legs] on."
+                    # elif ApprovalCheck("Rogue", 1000) or R_BodySuit:
+                        ch_r "Sure. . ."
+                        call SetChestRogue("modded red dress")
+        
+                    # else:
+                    #     ch_r "That's a bit . . . revealing."   
+        
+                "How about that blue dress?" if R_Chest != "modded blue dress":
+                    # if R_Legs:
+                    #     ch_r "I can't really wear that with my [R_Legs] on."
+                    # elif ApprovalCheck("Rogue", 1000) or R_BodySuit :
+                        ch_r "Sure. . ."
+                        call SetChestRogue("modded blue dress")
+        
+                    # else:
+                    #     ch_r "That's a bit . . . revealing."  
+        
                 "Nevermind.":
                         jump Rogue_Modded_Clothes_Under
 
