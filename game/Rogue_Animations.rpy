@@ -104,10 +104,20 @@ image Rogue:
             ), 
         (0,0), ConditionSwitch(                                                                         
             #pubes 
-            "R_Pubes and R_PubesColor", im.MatrixColor("images/RogueSprite/Rogue_bodyhaired_pubeswhite.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+            "R_PubesColor", Null(),
             "R_Pubes", "images/RogueSprite/Rogue_bodyhaired_pubes.png",   
             "True", Null(),         
-            ),               
+            ),
+        # (0,0), ConditionSwitch(                                                                         
+        #     #pubes 
+        #     "R_Pubes and R_PubesColor", im.MatrixColor("images/RogueSprite/pubes_bottom.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+        #     "True", Null(),         
+        #     ),
+        # (0,0), ConditionSwitch(                                                                         
+        #     #pubes 
+        #     "R_Pubes and R_PubesColor", im.MatrixColor("images/RogueSprite/pubes_top.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
+        #     "True", Null(),         
+        #     ),
         (0,0), ConditionSwitch(                                                                         
             #head 
             "R_DynamicTan[0]", Null(),
