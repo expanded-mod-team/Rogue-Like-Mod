@@ -128,6 +128,11 @@ label  mod_default_Variables:
     default L_NudeDay = 0
     default L_NudeCurrent_Time = 0
 
+    default R_PubesColor = 0
+    default K_PubesColor = 0
+    default E_PubesColor = 0
+    default L_PubesColor = 0
+
     define ch_m = Character('[newgirl[Mystique].GirlName]', color="#646dbb", image = "arrow", show_two_window=True)
 
     return

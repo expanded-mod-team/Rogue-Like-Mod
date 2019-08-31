@@ -104,6 +104,7 @@ image Rogue:
             ), 
         (0,0), ConditionSwitch(                                                                         
             #pubes 
+            "R_Pubes and R_PubesColor", im.MatrixColor("images/RogueSprite/Rogue_bodyhaired_pubeswhite.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
             "R_Pubes", "images/RogueSprite/Rogue_bodyhaired_pubes.png",   
             "True", Null(),         
             ),               
@@ -1290,7 +1291,17 @@ image Rogue_Doggy_Ass:
             "R_Panties", "images/RogueDoggy/Rogue_Doggy_Pubes_Panties.png",
             "R_Hose and R_Hose != 'stockings'", "images/RogueDoggy/Rogue_Doggy_Pubes_Panties.png",   
             "True", "images/RogueDoggy/Rogue_Doggy_Pubes.png",  
-            ),  
+            ),
+        (0,0), ConditionSwitch(  
+            #pubes              
+            "not R_Pubes or not R_PubesColor", Null(),         
+            "P_Sprite and P_Cock == 'in'", Null(),
+            "R_Legs == 'pants' and not R_Upskirt", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite_Panties.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+            "R_PantiesDown", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+            "R_Panties", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite_Panties.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+            "R_Hose and R_Hose != 'stockings'", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite_Panties.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+            "True", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+            ),
         (0,0), ConditionSwitch(   
             #Pussy Piercings          
             "P_Sprite", Null(),             

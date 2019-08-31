@@ -83,6 +83,7 @@ image Laura_Sprite:
             ),
         (0,0), ConditionSwitch(
             #pubes 
+            "L_Pubes and L_PubesColor", im.MatrixColor("images/LauraSprite/Laura_Sprite_PubesWhite.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)),
             "L_Pubes", "images/LauraSprite/Laura_Sprite_Pubes.png",   
             "True", Null(),        
             ),      

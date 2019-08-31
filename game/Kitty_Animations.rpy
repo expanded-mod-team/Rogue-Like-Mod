@@ -65,7 +65,7 @@ image Kitty_Sprite:
             ),
 
         (0,0), ConditionSwitch(                                                                         #body
-   
+            "K_Pubes and K_HairColor == 'white' and K_PubesColor", im.MatrixColor("images/KittySprite/Kitty_Sprite_Body_Hair_PubesWhite.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
             "K_Pubes and K_HairColor == 'black'", "images/KittySprite/Kitty_Sprite_Body_Hair_PubesBlack.png",               
             "K_Pubes", "images/KittySprite/Kitty_Sprite_Body_Hair_Pubes.png",               
             "True", Null(),  
