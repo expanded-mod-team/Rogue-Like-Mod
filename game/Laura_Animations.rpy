@@ -984,6 +984,13 @@ image Laura_Sex_Foot:
         ConditionSwitch(    
             "L_Hose == 'stockings and garterbelt' or L_Hose == 'stockings'", "images/LauraSex/Laura_Sex_Stockings_Up.png", 
             "True", "images/LauraSex/Laura_Sex_FootHigh.png" #base
+            )  
+    contains:
+            # hose/foot
+        ConditionSwitch(    
+            "not L_Hose", Null(), 
+            "'modded' in L_Hose", "images/LauraSex/Laura_Sex_Hose_[L_Hose]_Up.png",
+            "True", Null(),
             )              
     contains:
             # legs
