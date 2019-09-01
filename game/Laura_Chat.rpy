@@ -3717,8 +3717,8 @@ label Laura_Clothes:
         "Keep sending me nudes." if not L_Nude:
                     $ L_Nude = 1
                     ch_l "Ok"
-        "Let's talk about your hair color.":
-                    jump Laura_Modded_Clothes_Misc_Hair
+        "Let's talk about your modded outfits.":
+                    jump Laura_Modded_Clothes
         "Let's talk about your outfits.":
                     jump Laura_Clothes_Outfits        
         "Let's talk about your over shirts.":

@@ -1,12 +1,32 @@
 ﻿## Laura's Clothes ///////////////////
-label Laura_Modded_Clothes_Misc_Hair:
-                    if ApprovalCheck("Laura", 700):
-                        ch_l "You think?"
-                        call Recolor_Hair("Laura")
-                        call SetHairColorLaura("custom")
-                    else:
-                        ch_l "I don't know, it's fine like this."
-                    jump Laura_Clothes
+label Laura_Modded_Clothes:
+    menu:
+        "Let me select you hair color":
+            if ApprovalCheck("Laura", 700):
+                ch_l "You think?"
+                call Recolor_Hair("Laura")
+                call SetHairColorLaura("custom")
+            else:
+                ch_l "I don't know, it's fine like this."
+            jump Laura_Clothes
+    
+        "You could lose the hose." if L_Hose:     
+            $ L_Hose = 0  
+        "The fishnets would look good with that." if L_Hose != "modded fishnets":     
+            $ L_Hose = "modded fishnets"
+
+        "Nevermind":
+            return
+    jump Laura_Modded_Clothes
+
+# label Laura_Modded_Clothes_Misc_Hair:
+#                     if ApprovalCheck("Laura", 700):
+#                         ch_l "You think?"
+#                         call Recolor_Hair("Laura")
+#                         call SetHairColorLaura("custom")
+#                     else:
+#                         ch_l "I don't know, it's fine like this."
+#                     jump Laura_Clothes
 
 label SetChestLaura(Outfit = "modded tape"):
     $ L_Chest = Outfit

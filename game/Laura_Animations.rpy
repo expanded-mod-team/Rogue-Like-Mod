@@ -99,7 +99,12 @@ image Laura_Sprite:
             #stockings    
             "L_Hose == 'stockings' or L_Hose == 'stockings and garterbelt'", "images/LauraSprite/Laura_Sprite_Stockings.png",
             "True", Null(),
-            ),     
+            ),
+        (0,0), ConditionSwitch(
+            "not L_Hose", Null(),
+            "'modded' in L_Hose", "images/LauraSprite/Laura_Sprite_Hose_[L_Hose].png",
+            "True", Null(),
+            ),
         (0,0), ConditionSwitch(
             #garterbelt    
             "L_Hose == 'stockings and garterbelt' or L_Hose == 'garterbelt'", "images/LauraSprite/Laura_Sprite_Garters.png",
@@ -920,7 +925,16 @@ image Laura_Sex_Legs:
             "P_Cock == 'foot' and (L_Hose == 'stockings and garterbelt' or L_Hose == 'stockings')", "images/LauraSex/Laura_Sex_Stockings_Base_Foot.png", 
             "L_Hose == 'stockings and garterbelt' or L_Hose == 'stockings'", "images/LauraSex/Laura_Sex_Stockings_Base_Up.png", 
             "True", Null(),
-            )              
+            )
+    contains:
+            # hose base layer
+        ConditionSwitch(    
+            "not L_Hose", Null(),
+            "not 'modded' in L_Hose", Null(),
+            "P_Cock == 'foot'", "images/LauraSex/Laura_Sex_Hose_[L_Hose]_Base_Foot.png", 
+            "True", "images/LauraSex/Laura_Sex_Hose_[L_Hose]_Base_Up.png", 
+            # "True", Null(),
+            )
     contains:
             # legs
         ConditionSwitch(    
