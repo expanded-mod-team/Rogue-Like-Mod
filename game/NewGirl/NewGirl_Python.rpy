@@ -1,11 +1,44 @@
 ﻿init python:
+    
+    class SetColorNewGirl(object):
+        def __init__(self, name = "Mystique"):
+            self.red = 255
+            self.green = 255
+            self.blue = 255
+            self.tempred = 255
+            self.tempgreen = 255
+            self.tempblue = 255
+            self.name = name
+            
+        
+        def set_color(self):
+            return self.red, self.green, self.blue, 0
+            
+        def screen_loop(self, outfittype = "Over", outfit = "jacket"):
+            self.outfittype = outfittype
+            self.outfit = outfit
+            renpy.show_screen("recolor_screen_",self.name,self.outfittype, self.outfit) #recolor_screen_()
+            self.tempred = self.red
+            self.tempgreen = self.green
+            self.tempblue = self.blue
+            while True:
+                result = ui.interact()
+                
+                if result[0] == "apply":
+                    self.red = self.tempred
+                    self.green = self.tempgreen
+                    self.blue = self.tempblue
+                    
+                if result[0] == "quit":
+                    renpy.hide_screen("recolor_screen_") #recolor_screen_()
+                    return
 
     class Girlnew(object):
         
         def __init__ (self, name = "no name"):
             #self.name = name
             #self.money = money
-            #self.girl = {   
+            #self.girl = {
             self.name = name
             self.Petname = "boy"       #What Mystique calls the player
             self.Petnames = ["boy"]
@@ -154,7 +187,26 @@
             self.LooksLike = "Raven" 
             self.Blindfold = 0 
             self.Headband = 0 
-            #}
+
+            self.Clothes = {
+                "Legs" : "skirt",
+                "Over" : 0,
+                "Chest" : "top",
+                "Pierce" : 0,
+                "Panties" : "black panties",
+                "Neck" : 0,
+                "Hose" : 0,
+                }
+
+            self.Colors = {
+                "Over" : SetColorNewGirl(self.name, "Over", self.Over),
+                "Chest" : SetColorNewGirl(self.name, "Chest", self.Chest),
+                "Legs" : SetColorNewGirl(self.name, "Legs", self.Legs),
+                "Hose" : SetColorNewGirl(self.name, "Hose", self.Hose),
+                "Panties" : SetColorNewGirl(self.name, "Panties", self.Panties),
+                "Hair" : SetColorNewGirl(self.name, "Hair", self.Hair),
+                }
+            #} newgirl["Mystique"].Colors["Over"].screen_loop("Over",newgirl["Mystique"].Over)
 
          
 
