@@ -546,6 +546,8 @@ label Kitty_Modded_Clothes_Menu:
                         $ K_Headband = "pink"
         "Put on that pink kitty headband of yours." if K_Headband != "black":
                         $ K_Headband = "black"
+        "Put on that cruiser dva headphone of yours." if K_Headband != "cruiser dva":
+                        $ K_Headband = "cruiser dva"
         "Take off that headband." if K_Headband:
                         $ K_Headband = ""
         "Let's talk about your hair":
