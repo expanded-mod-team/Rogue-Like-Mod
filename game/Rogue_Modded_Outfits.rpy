@@ -968,10 +968,10 @@ label Rogue_Modded_Clothes_Menu:
 
             
     menu Rogue_Modded_Clothes_Misc:   
-        # "Put on that headband of yours." if R_Headband != "classic headband":
-        #                 $ R_Headband = "classic headband"
-        # "Take off that headband." if R_Headband:
-        #                 $ R_Headband = 0
+        "Put on that headband of yours." if R_Headband != "classic headband":
+                        $ R_Headband = "classic headband"
+        "Take off that headband." if R_Headband:
+                        $ R_Headband = ""
 
         # "Put on that utility belt." if R_Accessory != "classic belt":
         #                 $ R_Accessory = "classic belt"

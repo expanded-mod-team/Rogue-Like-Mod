@@ -492,6 +492,7 @@ image Rogue:
                             ),       
                     ),       
             ),
+        (0,0), "images/RogueSprite/Rogue_Sprite_Headband_[R_Headband].png",
         (0,0), ConditionSwitch(                                                                         
             #Hair
             "renpy.showing('Rogue_BJ_Animation') or renpy.showing('BJ_NewTest') or renpy.showing('Rogue_TJ_Animation')", Null(),
@@ -2889,6 +2890,7 @@ image BJ_Head:                                                                  
                 "Speed == 4", "images/RogueBJFace/Rogue_bj_face_over_sucking_cum.png",  
                 "True", Null(),
                 ),
+        (0,0), "images/RogueBJFace/Rogue_BJFace_Headband_[R_Headband].png",
         (0,0), ConditionSwitch(                                                                 #Hair overlay
             "R_Water and R_Hair == 'newhair'", "images/RogueBJFace/Rogue_bj_hair_back_wet_newhair.png",
             "R_Hair == 'newhair'", "images/RogueBJFace/Rogue_bj_hair_newhair.png",
@@ -3244,6 +3246,7 @@ image Rogue_BJFace:
                 "'facial' in R_Spunk", "images/RogueBJFace/Rogue_bj_facial_over.png", 
                 "True", Null(),
                 ),
+        (0,0), "images/RogueBJFace/Rogue_BJFace_Headband_[R_Headband].png",
         (0,0), ConditionSwitch(
             "R_Hair == 'newhair'", "images/RogueBJFace/Rogue_bj_hair_newhair.png",
             "R_HairColor == 'custom' and R_Hair == 'evo'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairwhite.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
@@ -3260,9 +3263,13 @@ image Rogue_BJFace:
 image Rogue_BJChin:
     LiveComposite(
         (787,912),     
-        (0,0), "images/RogueBJFace/Rogue_bj_face_under.png", 
+        (0,0), ConditionSwitch(
+            "R_DynamicTan[0]", "images/RogueBJFace/Rogue_tbj_face_under.png",
+            "True", "images/RogueBJFace/Rogue_bj_face_under.png",
+            ),
         (0,0), ConditionSwitch(    
             "Speed == 1 and Trigger == 'blow' and 'mouth' in R_Spunk", "images/RogueBJFace/Rogue_bj_mouth_lickingS.png",
+            "Speed and Trigger == 'blow' and R_DynamicTan[0]", "images/RogueBJFace/Rogue_tbj_mouth_licking.png",
             "Speed == 1 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_mouth_licking.png",
             "Speed == 2 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_mouth_heading.png", 
             "Speed == 3 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_mouth_sucking.png",
@@ -3271,10 +3278,13 @@ image Rogue_BJChin:
             "'mouth' in R_Spunk and R_Mouth == 'surprised'", "images/RogueBJFace/Rogue_bj_mouth_surprisedS.png",
             "'mouth' in R_Spunk and R_Mouth == 'sad'", "images/RogueBJFace/Rogue_bj_mouth_sadS.png",
             "'mouth' in R_Spunk and R_Mouth == 'kiss'", "images/RogueBJFace/Rogue_bj_mouth_sadS.png",
+            "'mouth' in R_Spunk and R_Mouth == 'smile' and R_DynamicTan[0]", "images/RogueBJFace/Rogue_tbj_mouth_lipbiteS.png",              
             "'mouth' in R_Spunk and R_Mouth == 'smile'", "images/RogueBJFace/Rogue_bj_mouth_lipbiteS.png",              
             "'mouth' in R_Spunk and R_Mouth == 'tongue'", "images/RogueBJFace/Rogue_bj_mouth_lickingS.png",
+            "'mouth' in R_Spunk and R_DynamicTan[0]", "images/RogueBJFace/Rogue_tbj_mouth_lipbiteS.png",
             "'mouth' in R_Spunk", "images/RogueBJFace/Rogue_bj_mouth_lipbiteS.png",
             "R_Mouth == 'normal'", "images/RogueBJFace/Rogue_bj_mouth_normal.png",
+            "R_Mouth == 'lipbite' and R_DynamicTan[0]", "images/RogueBJFace/Rogue_tbj_mouth_lipbite.png",
             "R_Mouth == 'lipbite'", "images/RogueBJFace/Rogue_bj_mouth_lipbite.png",
             "R_Mouth == 'sucking'", "images/RogueBJFace/Rogue_bj_mouth_surprised.png",            
             "R_Mouth == 'kiss'", "images/RogueBJFace/Rogue_bj_mouth_kiss.png",
@@ -3287,7 +3297,7 @@ image Rogue_BJChin:
             ),       
         (0,0), ConditionSwitch(
                 "not R_Spunk", Null(),
-                "'mouth' in R_Spunk and Speed == 2 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_face_under_heading_cum..png", 
+                "'mouth' in R_Spunk and Speed == 2 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_face_under_heading_cum.png", 
                 "'mouth' in R_Spunk and Speed == 3 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_face_under_sucking_cum.png",
                 "'mouth' in R_Spunk and Speed == 4 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_face_under_sucking_cum.png",  
                 "True", Null(),
@@ -3604,13 +3614,19 @@ image Zero_Handcock:
     pos (200,400)#(200,400)
         
 image Rogue_Hand_Under:
-    "images/RogueBJFace/hand2.png"
+    ConditionSwitch(    # Zero cock sucking
+            "R_DynamicTan[0]", "images/RogueBJFace/thand2.png",
+            "True", "images/RogueBJFace/hand2.png",
+            ),
     anchor (0.5,0.5)
     pos (0,0)
     
     
 image Rogue_Hand_Over:
-    "images/RogueBJFace/hand1.png"    
+    ConditionSwitch(    # Zero cock sucking
+            "R_DynamicTan[0]", "images/RogueBJFace/thand1.png",
+            "True", "images/RogueBJFace/hand1.png",
+            ),   
     anchor (0.5,0.5)
     pos (0,0)
 

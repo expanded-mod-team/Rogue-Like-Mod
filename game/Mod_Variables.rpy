@@ -37,6 +37,7 @@ label  mod_default_Variables:
     default R_HairColor = ""
     default R_HairColorBangs = ""
     default R_HairTint = 0
+    default R_Headband = ""
     default R_Plugged = 0
     default R_BodySuitOff = 0
     default R_Accessory = 0
@@ -47,7 +48,7 @@ label  mod_default_Variables:
     default K_DynamicTan = [0,0,0,0,0,0,0,0]  #controller, over, legs, chest, panties, hose, gloves? choker?
     default K_Gloves = 0
     default K_Blindfold = 0
-    default K_Headband = 0
+    default K_Headband = ""
     default K_Plugged = 0
     default K_Spank = 0
     default E_Tan = 0
@@ -55,12 +56,13 @@ label  mod_default_Variables:
     default E_DynamicTan = [0,0,0,0,0,0,0,0]  #controller, over, legs, chest, panties, hose, gloves? choker?
     default E_Gloves = 0
     default E_Blindfold = 0
-    default E_Headband = 0
+    default E_Headband = ""
     default E_Plugged = 0
     default E_Spank = 0
     default E_LegsUp = 0
 
     default L_HairColor = ""
+    default L_Headband = ""
 
     default R_Custom4 = [0,0,0,0,0,0,0,0,0,0,0]
     default R_Custom5 = [0,0,0,0,0,0,0,0,0,0,0]
@@ -136,6 +138,24 @@ label  mod_Save_Version:
     
     if getattr(K_HairCustomColor, "outfit", None) == None:
         $ K_HairCustomColor = SetColor("Kitty","Hair")
+
+    if K_Headband == 0:
+        $ K_Headband = ""
+        $ E_Headband = ""
+        $ newgirl["Mystique"].Headband = ""
+
+    if persistent.K_BG_HeadBand == 0:
+        $ persistent.E_BG_HeadBand = ""
+
+    if persistent.R_BG_HeadBand == 0:
+        $ persistent.E_BG_HeadBand = ""
+
+    if persistent.E_BG_HeadBand == 0:
+        $ persistent.E_BG_HeadBand = ""
+
+    if persistent.L_BG_HeadBand == 0:
+        $ persistent.L_BG_HeadBand = ""
+
 
     if R_HairColor == 0:
         $ R_HairColor = ""

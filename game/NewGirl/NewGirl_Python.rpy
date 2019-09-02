@@ -143,7 +143,6 @@
             self.Forced = 0                                        #This is a toggle for if she's being coerced
             self.ForcedCount = 0 
             self.Glasses = 0 
-            self.HeadBand = 0 
             self.Swimsuit = 0 
             self.OnePiece = 0 
             self.Held = 0
@@ -153,7 +152,7 @@
             self.Extra = {} 
             self.LooksLike = "Raven" 
             self.Blindfold = 0 
-            self.Headband = 0 
+            self.Headband = "" 
             #}
 
          

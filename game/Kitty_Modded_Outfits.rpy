@@ -542,6 +542,12 @@ label Kitty_Modded_Clothes_Menu:
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  
         
     menu Kitty_Modded_Clothes_Misc:
+        "Put on that pink kitty headband of yours." if K_Headband != "pink":
+                        $ K_Headband = "pink"
+        "Put on that pink kitty headband of yours." if K_Headband != "black":
+                        $ K_Headband = "black"
+        "Take off that headband." if K_Headband:
+                        $ K_Headband = ""
         "Let's talk about your hair":
             menu Kitty_Modded_Clothes_Misc_Hair:                                                                                                                    #Misc
         
@@ -755,8 +761,9 @@ label Kitty_Modded_Clothes_Menu:
     #         $ K_Gloves = 0
             
         "Never mind":
-            pass         
-    jump Kitty_Modded_Clothes_Menu
+            jump Kitty_Modded_Clothes_Menu
+            
+    jump Kitty_Modded_Clothes_Misc
     #End of Kitty Misc Wardrobe
     
 return

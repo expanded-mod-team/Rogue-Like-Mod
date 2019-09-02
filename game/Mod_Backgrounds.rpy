@@ -1770,7 +1770,7 @@ label Define_Outfit_BG:
     default persistent.L_BG_Pierce = 0
     default persistent.L_BG_Hose = 0
     default persistent.L_BG_Glasses = 0
-    default persistent.L_BG_HeadBand = 0
+    default persistent.L_BG_HeadBand = ""
     default persistent.L_BG_Tan = 0
     default persistent.L_BG_Gloves = 0
     default persistent.L_BG_DynamicTan = [0,0,0,0,0]
@@ -1857,7 +1857,7 @@ label Define_Outfit_BG:
     default persistent.E_BG_Boots = 0
     default persistent.E_BG_Hose = "modded black thigh high"
     default persistent.E_BG_Glasses = 0
-    default persistent.E_BG_HeadBand = 0
+    default persistent.E_BG_HeadBand = ""
     default persistent.E_BG_Tan = 0
     # default persistent.E_BG_Gloves = "black gloves"
     default persistent.E_BG_DynamicTan = [0,0,0,0,0]

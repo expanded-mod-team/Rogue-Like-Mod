@@ -208,11 +208,7 @@ image Kitty_Doggy_Body:
             "K_DynamicTan[0]", "images/KittyDoggy/Kitty_Doggy_T3Ear.png",   
             "True", "images/KittyDoggy/Kitty_Doggy_Hair_Ear.png",
             ),
-        (0,0), ConditionSwitch(
-            "K_Headband == 'pink'", "images/KittyDoggy/Kitty_Doggy_Headband_Pink.png",
-            "K_Headband == 'black'", "images/KittyDoggy/Kitty_Doggy_Headband_Black.png",
-            "True", Null(),
-            ), 
+        (0,0), "images/KittyDoggy/Kitty_Doggy_Headband_[K_Headband].png",
         (0,0), ConditionSwitch(                                                                                 #face spunk
             "not K_Spunk", Null(),
             "'facial' in K_Spunk", "images/RogueDoggy/Rogue_Doggy_Facial.png",
