@@ -188,23 +188,23 @@
             self.Blindfold = 0 
             self.Headband = 0 
 
-            self.Clothes = {
-                "Legs" : "skirt",
-                "Over" : 0,
-                "Chest" : "top",
-                "Pierce" : 0,
-                "Panties" : "black panties",
-                "Neck" : 0,
-                "Hose" : 0,
-                }
+            # self.Clothes = {
+            #     "Legs" : "skirt",
+            #     "Over" : 0,
+            #     "Chest" : "top",
+            #     "Pierce" : 0,
+            #     "Panties" : "black panties",
+            #     "Neck" : 0,
+            #     "Hose" : 0,
+            #     }
 
             self.Colors = {
-                "Over" : SetColorNewGirl(self.name, "Over", self.Over),
-                "Chest" : SetColorNewGirl(self.name, "Chest", self.Chest),
-                "Legs" : SetColorNewGirl(self.name, "Legs", self.Legs),
-                "Hose" : SetColorNewGirl(self.name, "Hose", self.Hose),
-                "Panties" : SetColorNewGirl(self.name, "Panties", self.Panties),
-                "Hair" : SetColorNewGirl(self.name, "Hair", self.Hair),
+                "Over" : SetColorNewGirl(self.name),
+                "Chest" : SetColorNewGirl(self.name),
+                "Legs" : SetColorNewGirl(self.name),
+                "Hose" : SetColorNewGirl(self.name),
+                "Panties" : SetColorNewGirl(self.name),
+                "Hair" : SetColorNewGirl(self.name),
                 }
             #} newgirl["Mystique"].Colors["Over"].screen_loop("Over",newgirl["Mystique"].Over)
 

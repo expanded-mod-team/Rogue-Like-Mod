@@ -138,13 +138,13 @@ label  mod_Save_Version:
         $ K_HairCustomColor = SetColor("Kitty","Hair")
 
     if getattr(newgirl["Mystique"], "Colors", None) == None:
-        newgirl["Mystique"].Colors = {
-                "Over" : SetColorNewGirl(self.name, "Over", self.Over),
-                "Chest" : SetColorNewGirl(self.name, "Chest", self.Chest),
-                "Legs" : SetColorNewGirl(self.name, "Legs", self.Legs),
-                "Hose" : SetColorNewGirl(self.name, "Hose", self.Hose),
-                "Panties" : SetColorNewGirl(self.name, "Panties", self.Panties),
-                "Hair" : SetColorNewGirl(self.name, "Hair", self.Hair),
+        $ newgirl["Mystique"].Colors = {
+                "Over" : SetColorNewGirl("Mystique"),
+                "Chest" : SetColorNewGirl("Mystique"),
+                "Legs" : SetColorNewGirl("Mystique"),
+                "Hose" : SetColorNewGirl("Mystique"),
+                "Panties" : SetColorNewGirl("Mystique"),
+                "Hair" : SetColorNewGirl("Mystique"),
                 }
 
     if R_HairColor == 0:
@@ -1436,26 +1436,25 @@ screen recolor_screen_Rogue_HairBangs:
     textbutton "Quit" align(0.55, 0.95):
         action Return(['quit'])
 
-screen recolor_screen_(_Girl="Mystique", _Outfit = "Over"):
+screen recolor_screen_(_Girl="Mystique", _OutfitType = "Over", _Outfit = "jacket"):
 
-    add(im.MatrixColor("images/" + _Girl + "Sprite/" + _Girl + "_Sprite_" + _Outfit + "_" + newgirl[_Girl]. + ".png",im.matrix.tint(float(R_HairCustomColor.tempred)/255.0, float(R_HairCustomColor.tempgreen)/255.0, float(R_HairCustomColor.tempblue)/255.0))) align(0.5, 0.1)
+    add(im.MatrixColor("images/" + _Girl + "Sprite/" + _Girl + "_Sprite_" + _OutfitType + "_" + _Outfit + ".png",im.matrix.tint(float(newgirl[_Girl].Colors[_OutfitType].tempred)/255.0, float(newgirl[_Girl].Colors[_OutfitType].tempgreen)/255.0, float(newgirl[_Girl].Colors[_OutfitType].tempblue)/255.0))) align(0.5, 0.1)
         
-    text ("{size=-5}RGB Values: Red: %s, Green: %s, Blue: %s !!!"%(R_HairCustomColorBangs.tempred, R_HairCustomColorBangs.tempgreen, R_HairCustomColorBangs.tempblue)) align(0.5, 0.6)    
         
     vbox align(0.5, 0.7):
         bar:
             xalign 0.5
-            value FieldValue(R_HairCustomColorBangs, 'tempred', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
+            value FieldValue(newgirl[_Girl].Colors[_OutfitType], 'tempred', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
             xmaximum 255
             
         bar:
             xalign 0.5
-            value FieldValue(R_HairCustomColorBangs, 'tempgreen', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
+            value FieldValue(newgirl[_Girl].Colors[_OutfitType], 'tempgreen', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
             xmaximum 255
             
         bar:
             xalign 0.5
-            value FieldValue(R_HairCustomColorBangs, 'tempblue', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
+            value FieldValue(newgirl[_Girl].Colors[_OutfitType], 'tempblue', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
             xmaximum 255
     
     textbutton "Apply" align(0.45, 0.95):
