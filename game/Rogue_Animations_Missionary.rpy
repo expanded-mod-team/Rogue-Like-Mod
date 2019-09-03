@@ -566,7 +566,7 @@ image Rogue_Sex_Pussy:
     contains:
             # pubes
             ConditionSwitch(    
-                "not R_Pubes", Null(),         
+                "not R_Pubes or R_PubesColor", Null(),         
                 "R_BodySuit and R_BodySuit != 'classic uniform damaged' and not R_BodySuitOff", Null(),
                 #"P_Sprite and P_Cock == 'in' and Speed >= 2 and R_HairColor == 'black'", "images/RogueSex/Rogue_Sex_PubesBlack_Fucking.png",
                 #"P_Sprite and P_Cock == 'in' and Speed >= 2", "images/RogueSex/Rogue_Sex_Pubes_Fucking.png",
@@ -582,12 +582,22 @@ image Rogue_Sex_Pussy:
                 "R_HairColor == 'black' or R_HairColor == 'blackwhite'", "images/RogueSex/Rogue_Sex_Pubes_Black.png",
                 "True", "images/RogueSex/Rogue_Sex_Pubes.png",
                 )
-    #contains:
-    #        ConditionSwitch(
-    #        "R_PantiesDown and R_Panties == 'zipper panties'", "images/RogueSex/RogueSexBDPantyOpenTop.png",
-    #        "R_PantiesDown and R_Panties == 'zipper panties open'", "images/RogueSex/RogueSexBDPantyOpenTop.png",
-    #        "True", Null(), 
-    #        ),
+
+    contains:
+            # pubes
+            ConditionSwitch(    
+                "not R_Pubes or not R_PubesColor", Null(),         
+                "R_BodySuit and R_BodySuit != 'classic uniform damaged' and not R_BodySuitOff", Null(),
+                "True", im.MatrixColor("images/RogueSex/Rogue_Sex_Pubes_bottom.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+                )
+
+    contains:
+            # pubes
+            ConditionSwitch(    
+                "not R_Pubes or not R_PubesColor", Null(),         
+                "R_BodySuit and R_BodySuit != 'classic uniform damaged' and not R_BodySuitOff", Null(),
+                "True", im.MatrixColor("images/RogueSex/Rogue_Sex_Pubes_top.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
+                )
 
     
     contains:

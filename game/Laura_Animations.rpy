@@ -890,10 +890,18 @@ image Laura_Sex_Legs:
     contains:
             # pubes
         ConditionSwitch(    
-            "not L_Pubes", Null(),
+            "not L_Pubes or L_PubesColor", Null(),
             "P_Cock == 'in' and Speed > 1", "images/LauraSex/Laura_Sex_Pubes_Open.png", #and speed above heading?
             "P_Cock == 'in' and Speed > 0", "images/LauraSex/Laura_Sex_Pubes_Mid.png", #and speed heading?
             "True", "images/LauraSex/Laura_Sex_Pubes_Closed.png", 
+            )  
+    contains:
+            # pubes
+        ConditionSwitch(    
+            "not L_Pubes or not L_PubesColor", Null(),
+            "P_Cock == 'in' and Speed > 1", im.MatrixColor("images/LauraSex/Laura_Sex_PubesWhite_Open.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)), #and speed above heading?
+            "P_Cock == 'in' and Speed > 0", im.MatrixColor("images/LauraSex/Laura_Sex_PubesWhite_Mid.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)), #and speed heading?
+            "True", im.MatrixColor("images/LauraSex/Laura_Sex_PubesWhite_Closed.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)), 
             )  
     contains:
             # piercings

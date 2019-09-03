@@ -638,6 +638,12 @@ label Kitty_Modded_Clothes_Menu:
                         ch_k "It's too high maintenance."
                     jump Kitty_Modded_Clothes_Misc_Hair
 
+                "Apply color to pubes as well" if K_HairColor == "white":
+                    $ K_PubesColor = 1
+
+                "Reset pubes color" if K_PubesColor:
+                    $ K_PubesColor = 0
+
                 "Go back":
                     jump Kitty_Modded_Clothes_Misc
 
