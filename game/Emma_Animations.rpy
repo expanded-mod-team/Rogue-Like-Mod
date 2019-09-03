@@ -92,6 +92,7 @@ image Emma_Sprite:
             ),    
         (0,0), ConditionSwitch(
             #pubes 
+            "E_Pubes and E_PubesColor", im.MatrixColor("images/EmmaSprite/EmmaSprite_Pubes.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "E_Pubes", "images/EmmaSprite/EmmaSprite_Pubes.png",   
             "True", Null(),        
             ),      
@@ -1071,6 +1072,7 @@ image Emma_Sex_Legs_S:
     contains:
             # pubes
         ConditionSwitch(    
+            "E_Pubes and E_PubesColor", im.MatrixColor("images/EmmaSex/Emma_PubesWhite_Sex.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "E_Pubes", "images/EmmaSex/Emma_Pubes_Sex.png", 
             "True", Null(),
             )        
@@ -1138,6 +1140,7 @@ image Emma_Sex_Legs_A:
     contains:
             # pubes
         ConditionSwitch(    
+            "E_Pubes and E_PubesColor", im.MatrixColor("images/EmmaSex/Emma_PubesWhite_Anal.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "E_Pubes", "images/EmmaSex/Emma_Pubes_Anal.png", 
             "True", Null(),
             )

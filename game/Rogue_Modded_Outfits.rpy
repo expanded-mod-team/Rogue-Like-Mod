@@ -1048,6 +1048,13 @@ label Rogue_Modded_Clothes_Menu:
                         ch_k "You think so?"
                         call Recolor_Hair("Rogue", "HairBangs")
                         call SetHairBangsColorRogue("custom2")
+
+                    "Apply color to pubes as well" if R_HairColor == "custom":
+                        $ R_PubesColor = 1
+
+                    "Reset pubes color" if R_PubesColor:
+                        $ R_PubesColor = 0
+                        
                     "Nevermind":
                         jump Rogue_Modded_Clothes_Misc
 

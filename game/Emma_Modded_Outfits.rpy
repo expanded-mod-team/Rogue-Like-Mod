@@ -602,6 +602,12 @@ label Emma_Modded_Clothes_Menu:
                         ch_e "I tend to prefer it the way it is."
                     jump Emma_Modded_Clothes_Misc_Hair
 
+                "Apply color to pubes as well" if E_HairColor == "custom":
+                    $ E_PubesColor = 1
+
+                "Reset pubes color" if E_PubesColor:
+                    $ E_PubesColor = 0
+
                 "Nevermind":
                     jump Emma_Modded_Clothes_Misc
 

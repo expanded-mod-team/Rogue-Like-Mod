@@ -104,9 +104,20 @@ image Rogue:
             ), 
         (0,0), ConditionSwitch(                                                                         
             #pubes 
+            "R_PubesColor", Null(),
             "R_Pubes", "images/RogueSprite/Rogue_bodyhaired_pubes.png",   
             "True", Null(),         
-            ),               
+            ),
+        (0,0), ConditionSwitch(                                                                         
+            #pubes 
+            "R_Pubes and R_PubesColor", im.MatrixColor("images/RogueSprite/Rogue_Sprite_Pubes_bottom.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+            "True", Null(),         
+            ),
+        (0,0), ConditionSwitch(                                                                         
+            #pubes 
+            "R_Pubes and R_PubesColor", im.MatrixColor("images/RogueSprite/Rogue_Sprite_Pubes_top.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
+            "True", Null(),         
+            ),
         (0,0), ConditionSwitch(                                                                         
             #head 
             "R_DynamicTan[0]", Null(),
@@ -1284,14 +1295,24 @@ image Rogue_Doggy_Ass:
 #            ),   
         (0,0), ConditionSwitch(  
             #pubes              
-            "not R_Pubes", Null(),         
+            "not R_Pubes or R_PubesColor", Null(),         
             "P_Sprite and P_Cock == 'in'", Null(),
             "R_Legs == 'pants' and not R_Upskirt", "images/RogueDoggy/Rogue_Doggy_Pubes_Panties.png",   
             "R_PantiesDown", "images/RogueDoggy/Rogue_Doggy_Pubes.png",  
             "R_Panties", "images/RogueDoggy/Rogue_Doggy_Pubes_Panties.png",
             "R_Hose and R_Hose != 'stockings'", "images/RogueDoggy/Rogue_Doggy_Pubes_Panties.png",   
             "True", "images/RogueDoggy/Rogue_Doggy_Pubes.png",  
-            ),  
+            ),
+        (0,0), ConditionSwitch(  
+            #pubes              
+            "not R_Pubes or not R_PubesColor", Null(),         
+            "P_Sprite and P_Cock == 'in'", Null(),
+            "PantsNum('Rogue') > 5 and not R_Upskirt", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite_Panties.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+            "R_PantiesDown", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+            "R_Panties", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite_Panties.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+            "HoseNum('Rogue') > 4", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite_Panties.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+            "True", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
+            ),
         (0,0), ConditionSwitch(   
             #Pussy Piercings          
             "P_Sprite", Null(),             

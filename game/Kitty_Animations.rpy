@@ -65,7 +65,7 @@ image Kitty_Sprite:
             ),
 
         (0,0), ConditionSwitch(                                                                         #body
-   
+            "K_Pubes and K_PubesColor", im.MatrixColor("images/KittySprite/Kitty_Sprite_Body_Hair_PubesWhite.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
             "K_Pubes and K_HairColor == 'black'", "images/KittySprite/Kitty_Sprite_Body_Hair_PubesBlack.png",               
             "K_Pubes", "images/KittySprite/Kitty_Sprite_Body_Hair_Pubes.png",               
             "True", Null(),  
@@ -579,6 +579,7 @@ image Kitty_Sprite_Desu:
 
         (0,0), ConditionSwitch(                                                                         #body
    
+            "K_Pubes and K_PubesColor", im.MatrixColor("images/KittySprite/Kitty_Sprite_Body_Hair_PubesWhite.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
             "K_Pubes and K_HairColor == 'black'", "images/KittySprite/Kitty_Sprite_Body_Hair_PubesBlack.png",               
             "K_Pubes", "images/KittySprite/Kitty_Sprite_Body_Hair_Pubes.png",               
             "True", Null(),  
@@ -1606,6 +1607,7 @@ image Kitty_Pussy_Fucking0:
             # pubes
             ConditionSwitch(             
                 "not K_Pubes", Null(),         
+                "K_PubesColor", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Open.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
                 "True", "images/KittySex/Kitty_Sex_Pubes_Open.png",  
                 ),  
     contains:
@@ -1621,6 +1623,7 @@ image Kitty_Pussy_Fucking1:
             # pubes
             ConditionSwitch(             
                 "not K_Pubes", Null(),         
+                "K_PubesColor", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Open.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
                 "True", "images/KittySex/Kitty_Sex_Pubes_Open.png",  
                 ),  
     contains:
@@ -1636,6 +1639,7 @@ image Kitty_Pussy_Fucking2:
             # pubes
             ConditionSwitch(             
                 "not K_Pubes", Null(),         
+                "K_PubesColor", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Fucking.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
                 "True", "images/KittySex/Kitty_Sex_Pubes_Fucking.png",  
                 ),  
     contains:
@@ -1650,6 +1654,7 @@ image Kitty_Pussy_Fucking3:  #rename this to 3
             # pubes
             ConditionSwitch(             
                 "not K_Pubes", Null(),         
+                "K_PubesColor", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Fucking.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
                 "True", "images/KittySex/Kitty_Sex_Pubes_Fucking.png",  
                 ),  
     contains:
@@ -1722,12 +1727,22 @@ image Kitty_Sex_Pussy:
     contains:
             # pubes
             ConditionSwitch(    
-                "not K_Pubes", Null(),         
+                "not K_Pubes or K_PubesColor", Null(),         
                 "P_Sprite and P_Cock == 'in' and Speed >= 2", "images/KittySex/Kitty_Sex_Pubes_Fucking.png",
                 "P_Sprite and P_Cock == 'in' and Speed", "images/KittySex/Kitty_Sex_Pubes_Open.png",
                 "P_Sprite and P_Cock == 'in'", "images/KittySex/Kitty_Sex_Pubes_Closed.png", 
                 "Trigger == 'lick pussy'", "images/KittySex/Kitty_Sex_Pubes_Open.png", 
                 "True", "images/KittySex/Kitty_Sex_Pubes_Closed.png",
+                )
+    contains:
+            # pubes
+            ConditionSwitch(    
+                "not K_Pubes or not K_PubesColor", Null(),         
+                "P_Sprite and P_Cock == 'in' and Speed >= 2", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Fucking.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+                "P_Sprite and P_Cock == 'in' and Speed", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Open.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+                "P_Sprite and P_Cock == 'in'", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Closed.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)), 
+                "Trigger == 'lick pussy'", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Open.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)), 
+                "True", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Closed.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
                 )
     contains:
             #Spunk under penis
