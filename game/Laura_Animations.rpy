@@ -235,6 +235,8 @@ image Laura_Sprite:
 
         (0,0), ConditionSwitch(
             #L Over
+            "not L_Over", Null(),
+            "'modded' in L_Over", "images/LauraSprite/Laura_Sprite_Over_[L_Over]_A[Laura_Arms].png",
             "L_Uptop", ConditionSwitch(
                     # if top is up. . .
                     "L_Over == 'jacket' and Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Jacket_A2_Up.png", # one hand up
@@ -288,6 +290,12 @@ image Laura_Sprite:
             "Laura_Arms == 2 and L_Arms == 'wrists'", "images/LauraSprite/Laura_Sprite_Wrist_Left2.png", # one hand up
             "True", Null(),     
             ), 
+        (0,0), ConditionSwitch(
+            #jacket arm toplayer
+            "not L_Over", Null(),
+            "'modded' in L_Over and Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Over_[L_Over]_A2Top.png", # one hand up
+            "True", Null(),     
+            ),
         (0,0), ConditionSwitch(
             #jacket arm toplayer
             "L_Over == 'jacket' and Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Jacket_A2Top.png", # one hand up
