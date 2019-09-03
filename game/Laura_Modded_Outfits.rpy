@@ -10,7 +10,7 @@ label Laura_Modded_Clothes:
                 ch_l "I don't know, it's fine like this."
             jump Laura_Modded_Clothes
 
-        "Apply color to pubes as well" if L_HairColor == "custom":
+        "Apply color to pubes as well" if L_HairColor == "custom" and not L_PubesColor:
             $ L_PubesColor = 1
 
         "Reset pubes color" if L_PubesColor:
