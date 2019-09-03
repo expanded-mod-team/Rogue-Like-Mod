@@ -8,7 +8,13 @@ label Laura_Modded_Clothes:
                 call SetHairColorLaura("custom")
             else:
                 ch_l "I don't know, it's fine like this."
-            jump Laura_Clothes
+            jump Laura_Modded_Clothes
+
+        "Apply color to pubes as well" if L_HairColor == "custom":
+            $ L_PubesColor = 1
+
+        "Reset pubes color" if L_PubesColor:
+            $ L_PubesColor = 0
     
         "You could lose the hose." if L_Hose:     
             $ L_Hose = 0  
@@ -16,7 +22,8 @@ label Laura_Modded_Clothes:
             $ L_Hose = "modded fishnets"
 
         "Nevermind":
-            return
+            jump Laura_Clothes
+            # return
     jump Laura_Modded_Clothes
 
 # label Laura_Modded_Clothes_Misc_Hair:
