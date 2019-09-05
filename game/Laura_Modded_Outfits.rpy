@@ -1,6 +1,8 @@
 ﻿## Laura's Clothes ///////////////////
 label Laura_Modded_Clothes:
     menu:
+        "Poses":
+                jump Laura_Posing
         "Let me select you hair color":
             if ApprovalCheck("Laura", 700):
                 ch_l "You think?"
@@ -86,6 +88,43 @@ label Mod_Update_Laura_Image:
     elif renpy.showing("Laura_TJ_Animation"):
         show Laura_TJ_Animation   
     return
+
+label Laura_Posing:
+    $ TempP_Sprite = P_Sprite
+    $ P_Sprite = 0
+    menu Laura_Posing_Menu:
+        "Body":
+            call L_Pussy_Launch(0)
+        # "Doggy":
+        #     hide Laura_Sprite
+        #     hide Laura_SexSprite
+        #     hide Laura_Missionary
+
+        #     show Laura_Doggy at SpriteLoc(StageCenter+50) zorder 150
+        "Missionary":
+            hide Laura_Sprite
+            # hide Laura_Doggy
+            # hide Laura_SexSprite
+
+            show Laura_SexSprite zorder 150:
+                pos (450,500)
+        # "Cowgirl":
+        #     hide Laura_Sprite
+        #     hide Laura_Doggy
+        #     hide Laura_Missionary
+
+        #     show Laura_SexSprite zorder 150:
+        #         pos (575,470)
+        "Return":
+            hide Laura_SexSprite
+            # hide Laura_Doggy
+            # hide Laura_Missionary
+            call Laura_Hide
+            call L_Pos_Reset
+            $ P_Sprite = TempP_Sprite
+            jump Laura_Modded_Clothes
+
+    jump Laura_Posing_Menu
     
 init python:
     

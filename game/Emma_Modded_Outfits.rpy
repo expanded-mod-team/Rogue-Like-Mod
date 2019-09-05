@@ -3,6 +3,8 @@ label Emma_Modded_Clothes_Menu:
     call EmmaFace 
     menu:
         ch_e "You wanted to discuss my clothing choices?"
+        "Poses":
+                jump Emma_Posing
         "Stop sending me nudes." if E_Nude:
                     $ E_Nude = 0
                     ch_e "Ok"
@@ -794,6 +796,42 @@ label Mod_Update_Emma_Image:
     elif renpy.showing("Emma_TJ_Animation"):
         show Emma_TJ_Animation   
     return
+
+label Emma_Posing:
+    $ TempP_Sprite = P_Sprite
+    $ P_Sprite = 0
+    menu Emma_Posing_Menu:
+        "Body":
+            call E_Pussy_Launch(0)
+        "Doggy":
+            hide Emma_Sprite
+            hide Emma_SexSprite
+            hide Emma_Missionary
+
+            show Emma_Doggy at SpriteLoc(StageCenter+50) zorder 150
+        "Missionary":
+            hide Emma_Sprite
+            hide Emma_Doggy
+            hide Emma_SexSprite
+
+            show Emma_Missionary zorder 150
+        "Cowgirl":
+            hide Emma_Sprite
+            hide Emma_Doggy
+            hide Emma_Missionary
+
+            show Emma_SexSprite zorder 150:
+                pos (575,470)
+        "Return":
+            hide Emma_SexSprite
+            hide Emma_Doggy
+            hide Emma_Missionary
+            call Emma_Hide
+            call E_Pos_Reset
+            $ P_Sprite = TempP_Sprite
+            jump Emma_Modded_Clothes_Menu
+
+    jump Emma_Posing_Menu
     
 init python:
     

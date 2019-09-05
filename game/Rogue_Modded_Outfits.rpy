@@ -3,6 +3,8 @@ label Rogue_Modded_Clothes_Menu:
     call RogueFace
     menu:
         ch_r "So what did you want to tell me about my clothes again?"
+        "Poses":
+                jump Rogue_Posing
         "Stop sending me nudes." if R_Nude:
                     $ R_Nude = 0
                     ch_r "Ok"
@@ -1224,6 +1226,31 @@ label Mod_Update_Rogue_Image:
     elif renpy.showing("Rogue_TJ_Animation"):
         show Rogue_TJ_Animation   
     return
+
+label Rogue_Posing:
+    $ TempP_Sprite = P_Sprite
+    $ P_Sprite = 0
+    menu Rogue_Posing_Menu:
+        "Body":
+            call R_Pussy_Launch(0)
+        "Doggy":
+            hide Rogue
+            hide Rogue_SexSprite
+
+            show Rogue_Doggy at SpriteLoc(StageCenter+50) zorder 150
+        "Missionary":
+            hide Rogue
+            hide Rogue_Doggy
+
+            show Rogue_SexSprite zorder 150
+        "Return":
+            call Rogue_Hide
+            call R_Pos_Reset
+            $ P_Sprite = TempP_Sprite
+            jump Rogue_Modded_Clothes_Menu
+
+    jump Rogue_Posing_Menu
+
     
 init python:
     def ModPantsNum(Chr = "Rogue"): 

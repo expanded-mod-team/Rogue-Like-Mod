@@ -3,6 +3,8 @@ label Kitty_Modded_Clothes_Menu:
     call KittyFace 
     menu:
         ch_k "So[K_like]you wanted to talk about my clothes?"
+        "Poses":
+                jump Kitty_Posing
         "Stop sending me nudes." if K_Nude:
                     $ K_Nude = 0
                     ch_k "Ok"
@@ -821,6 +823,30 @@ label Mod_Update_Kitty_Image:
     elif renpy.showing("Kitty_TJ_Animation"):
         show Kitty_TJ_Animation   
     return
+
+label Kitty_Posing:
+    $ TempP_Sprite = P_Sprite
+    $ P_Sprite = 0
+    menu Kitty_Posing_Menu:
+        "Body":
+            call K_Pussy_Launch(0)
+        "Doggy":
+            hide Kitty_Sprite
+            hide Kitty_SexSprite
+
+            show Kitty_Doggy at SpriteLoc(StageCenter+50) zorder 150
+        "Missionary":
+            hide Kitty_Sprite
+            hide Kitty_Doggy
+
+            show Kitty_SexSprite zorder 150
+        "Return":
+            call Kitty_Hide
+            call K_Pos_Reset
+            $ P_Sprite = TempP_Sprite
+            jump Kitty_Modded_Clothes_Menu
+
+    jump Kitty_Posing_Menu
     
 init python:
     
