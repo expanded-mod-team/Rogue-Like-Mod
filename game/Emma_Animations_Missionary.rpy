@@ -101,13 +101,15 @@ image Emma_Sex_Missionary_HairBack:
     LiveComposite(
         (555,673), 
         (0,0), ConditionSwitch(       
-            "(E_Hair == 'wet' or E_Water) and E_HairColor == 'red'", "images/EmmaSprite/EmmaSprite_Head_HairbackWet_Red.png",
-            "(E_Hair == 'wet' or E_Water) and E_HairColor == 'white'", "images/EmmaSprite/EmmaSprite_Head_HairbackWet_White.png",
-            "(E_Hair == 'wet' or E_Water) and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_HairBlackbackWet.png",
+            "(E_Hair == 'wet' or E_Water) and E_HairColor", im.MatrixColor("images/EmmaSprite/EmmaSprite_Head_HairWhitebackWet.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
+            # "(E_Hair == 'wet' or E_Water) and E_HairColor == 'red'", "images/EmmaSprite/EmmaSprite_Head_HairbackWet_Red.png",
+            # "(E_Hair == 'wet' or E_Water) and E_HairColor == 'white'", "images/EmmaSprite/EmmaSprite_Head_HairbackWet_White.png",
+            # "(E_Hair == 'wet' or E_Water) and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_HairBlackbackWet.png",
             "E_Hair == 'wet' or E_Water", "images/EmmaSprite/EmmaSprite_Head_HairbackWet.png",
-            "E_Hair and E_HairColor == 'red'", "images/EmmaSprite/EmmaSprite_Head_Hairback_Red.png",   
-            "E_Hair and E_HairColor == 'white'", "images/EmmaSprite/EmmaSprite_Head_Hairback_White.png",   
-            "E_Hair and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_HairBlackback.png",   
+            "E_Hair and E_HairColor", im.MatrixColor("images/EmmaSprite/EmmaSprite_Head_HairWhiteback.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
+            # "E_Hair and E_HairColor == 'red'", "images/EmmaSprite/EmmaSprite_Head_Hairback_Red.png",   
+            # "E_Hair and E_HairColor == 'white'", "images/EmmaSprite/EmmaSprite_Head_Hairback_White.png",   
+            # "E_Hair and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_HairBlackback.png",   
             "E_Hair", "images/EmmaSprite/EmmaSprite_Head_Hairback.png",   
             "True", Null(),        
             ),
@@ -196,27 +198,27 @@ image Emma_Sex_Missionary_Head:
         (0,0), ConditionSwitch(                                                                         #brows
             #"E_Brows == 'normal' and E_HairColor == 'white'", "images/EmmaSprite/EmmaSprite_Head_Brows_Normal_White.png",
             #"E_Brows == 'normal' and E_HairColor == 'red'", "images/EmmaSprite/EmmaSprite_Head_Brows_Normal_Red.png",
-            "E_Brows == 'normal' and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_BrowsBlack_Normal.png",
+            # "E_Brows == 'normal' and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_BrowsBlack_Normal.png",
             "E_Brows == 'normal'", "images/EmmaSprite/EmmaSprite_Head_Brows_Normal.png",
             #"E_Brows == 'angry' and E_HairColor == 'white'", "images/EmmaSprite/EmmaSprite_Head_Brows_Angry_White.png",
             #"E_Brows == 'angry' and E_HairColor == 'red'", "images/EmmaSprite/EmmaSprite_Head_Brows_Angry_Red.png",
-            "E_Brows == 'angry' and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_BrowsBlack_Angry.png",
+            # "E_Brows == 'angry' and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_BrowsBlack_Angry.png",
             "E_Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Brows_Angry.png",
             #"E_Brows == 'sad' and E_HairColor == 'white'", "images/EmmaSprite/EmmaSprite_Head_Brows_Sad_White.png",
             #"E_Brows == 'sad' and E_HairColor == 'red'", "images/EmmaSprite/EmmaSprite_Head_Brows_Sad_Red.png",
-            "E_Brows == 'sad' and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_BrowsBlack_Sad.png",
+            # "E_Brows == 'sad' and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_BrowsBlack_Sad.png",
             "E_Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Brows_Sad.png",
             #"E_Brows == 'surprised' and E_HairColor == 'white'", "images/EmmaSprite/EmmaSprite_Head_Brows_Surprised_White.png",        
             #"E_Brows == 'surprised' and E_HairColor == 'red'", "images/EmmaSprite/EmmaSprite_Head_Brows_Surprised_Red.png",        
-            "E_Brows == 'surprised' and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_BrowsBlack_Surprised.png",        
+            # "E_Brows == 'surprised' and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_BrowsBlack_Surprised.png",        
             "E_Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Brows_Surprised.png",        
             #"E_Brows == 'confused' and E_HairColor == 'white'", "images/EmmaSprite/EmmaSprite_Head_Brows_Confused_White.png",
             #"E_Brows == 'confused' and E_HairColor == 'red'", "images/EmmaSprite/EmmaSprite_Head_Brows_Confused_Red.png",
-            "E_Brows == 'confused' and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_BrowsBlack_Confused.png",
+            # "E_Brows == 'confused' and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_BrowsBlack_Confused.png",
             "E_Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Brows_Confused.png",
             #"True and E_HairColor == 'white'", "images/EmmaSprite/EmmaSprite_Head_Brows_Normal_White.png",
             #"True and E_HairColor == 'red'", "images/EmmaSprite/EmmaSprite_Head_Brows_Normal_Red.png",
-            "True and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_BrowsBlack_Normal.png",
+            # "True and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_BrowsBlack_Normal.png",
             "True", "images/EmmaSprite/EmmaSprite_Head_Brows_Normal.png",
             ),         
         (0,0), ConditionSwitch(                                                                         #facial spunk               
@@ -225,13 +227,15 @@ image Emma_Sex_Missionary_Head:
             ),  
         (0,0), ConditionSwitch(                                                                         #Hair
             "not E_Hair", Null(),
-            "(E_Hair == 'wet' or E_Water) and E_HairColor == 'white'", "images/EmmaSprite/EmmaSprite_Head_HairWet_White.png",
-            "(E_Hair == 'wet' or E_Water) and E_HairColor == 'red'", "images/EmmaSprite/EmmaSprite_Head_HairWet_Red.png",
-            "(E_Hair == 'wet' or E_Water) and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_HairBlackWet.png",
+            "(E_Hair == 'wet' or E_Water) and E_HairColor", im.MatrixColor("images/EmmaSprite/EmmaSprite_Head_HairWhiteWet.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
+            # "(E_Hair == 'wet' or E_Water) and E_HairColor == 'white'", "images/EmmaSprite/EmmaSprite_Head_HairWet_White.png",
+            # "(E_Hair == 'wet' or E_Water) and E_HairColor == 'red'", "images/EmmaSprite/EmmaSprite_Head_HairWet_Red.png",
+            # "(E_Hair == 'wet' or E_Water) and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_HairBlackWet.png",
             "E_Hair == 'wet' or E_Water", "images/EmmaSprite/EmmaSprite_Head_HairWet.png",
-            "E_Hair and E_HairColor == 'white'", "images/EmmaSprite/EmmaSprite_Head_Hair_White.png",
-            "E_Hair and E_HairColor == 'red'", "images/EmmaSprite/EmmaSprite_Head_Hair_Red.png",
-            "E_Hair and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_HairBlack.png",
+            "E_Hair and E_HairColor", im.MatrixColor("images/EmmaSprite/EmmaSprite_Head_HairWhite.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
+            # "E_Hair and E_HairColor == 'white'", "images/EmmaSprite/EmmaSprite_Head_Hair_White.png",
+            # "E_Hair and E_HairColor == 'red'", "images/EmmaSprite/EmmaSprite_Head_Hair_Red.png",
+            # "E_Hair and E_HairColor == 'black'", "images/EmmaSprite/EmmaSprite_Head_HairBlack.png",
             "E_Hair", "images/EmmaSprite/EmmaSprite_Head_Hair.png",
             "True", Null(),
             ),        
@@ -384,6 +388,7 @@ image Emma_Pussy_Fucking0:
             # pubes
             ConditionSwitch(             
                 "not E_Pubes", Null(),         
+                "E_PubesColor", im.MatrixColor("images/EmmaSexMissionary/Emma_Sex_PubesWhite_Open.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
                 "True", "images/EmmaSexMissionary/Emma_Sex_Pubes_Open.png",  
                 ),  
     contains:
@@ -399,6 +404,7 @@ image Emma_Pussy_Fucking1:
             # pubes
             ConditionSwitch(             
                 "not E_Pubes", Null(),         
+                "E_PubesColor", im.MatrixColor("images/EmmaSexMissionary/Emma_Sex_PubesWhite_Open.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
                 "True", "images/EmmaSexMissionary/Emma_Sex_Pubes_Open.png",  
                 ),  
     contains:
@@ -414,6 +420,7 @@ image Emma_Pussy_Fucking2:
             # pubes
             ConditionSwitch(             
                 "not E_Pubes", Null(),         
+                "E_PubesColor", im.MatrixColor("images/EmmaSexMissionary/Emma_Sex_PubesWhite_Fucking.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
                 "True", "images/EmmaSexMissionary/Emma_Sex_Pubes_Fucking.png",  
                 ),  
     contains:
@@ -429,6 +436,7 @@ image Emma_Pussy_Fucking3:  #rename this to 3
             # pubes
             ConditionSwitch(             
                 "not E_Pubes", Null(),         
+                "E_PubesColor", im.MatrixColor("images/EmmaSexMissionary/Emma_Sex_PubesWhite_Fucking.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
                 "True", "images/EmmaSexMissionary/Emma_Sex_Pubes_Fucking.png",  
                 ),  
     contains:
@@ -487,12 +495,22 @@ image Emma_Sex_Missionary_Pussy:
     contains:
             # pubes
             ConditionSwitch(    
-                "not E_Pubes", Null(),         
+                "not E_Pubes or E_PubesColor", Null(),         
                 "P_Sprite and P_Cock == 'in' and Speed >= 2", "images/EmmaSexMissionary/Emma_Sex_Pubes_Fucking.png",
                 "P_Sprite and P_Cock == 'in' and Speed", "images/EmmaSexMissionary/Emma_Sex_Pubes_Open.png",
                 "P_Sprite and P_Cock == 'in'", "images/EmmaSexMissionary/Emma_Sex_Pubes_Closed.png", 
                 "Trigger == 'lick pussy'", "images/EmmaSexMissionary/Emma_Sex_Pubes_Open.png", 
                 "True", "images/EmmaSexMissionary/Emma_Sex_Pubes_Closed.png",
+                )
+    contains:
+            # pubes
+            ConditionSwitch(    
+                "not E_Pubes or not E_PubesColor", Null(),         
+                "P_Sprite and P_Cock == 'in' and Speed >= 2", im.MatrixColor("images/EmmaSexMissionary/Emma_Sex_PubesWhite_Fucking.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
+                "P_Sprite and P_Cock == 'in' and Speed", im.MatrixColor("images/EmmaSexMissionary/Emma_Sex_PubesWhite_Open.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
+                "P_Sprite and P_Cock == 'in'", im.MatrixColor("images/EmmaSexMissionary/Emma_Sex_PubesWhite_Closed.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)), 
+                "Trigger == 'lick pussy'", im.MatrixColor("images/EmmaSexMissionary/Emma_Sex_PubesWhite_Open.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)), 
+                "True", im.MatrixColor("images/EmmaSexMissionary/Emma_Sex_PubesWhite_Closed.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
                 )
     contains:
             #Spunk under penis
