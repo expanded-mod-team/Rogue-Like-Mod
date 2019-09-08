@@ -2822,8 +2822,10 @@ image BJ_Head:                                                                  
             "True", Null(),
             ),
         (0,0), ConditionSwitch(                     
+            "not Speed and R_DynamicTan[0]", "images/RogueBJFace/Rogue_tbj_face_base.png",    
             "not Speed", "images/RogueBJFace/Rogue_bj_face_base.png",    
-            "True", "images/RogueBJFace/Rogue_bj_face_base_s.png"
+            "R_DynamicTan[0]", "images/RogueBJFace/Rogue_tbj_face_base_s.png",
+            "True", "images/RogueBJFace/Rogue_bj_face_base_s.png",
             ),   
         (0,0), ConditionSwitch(                                                                                 #Mouth for under layer
             "renpy.showing('Rogue_BJ_Animation') and Speed", ConditionSwitch(   
