@@ -15,6 +15,11 @@ label Laura_Modded_Clothes:
         "The fishnets would look good with that." if L_Hose != "modded fishnets":     
             $ L_Hose = "modded fishnets"
 
+        "Try on that red turtleneck." if L_Over != "modded turtleneck":
+            call LauraFace("bemused")
+            ch_l "Yeah, ok."          
+            $ L_Over = "modded turtleneck"
+
         "Nevermind":
             return
     jump Laura_Modded_Clothes
@@ -149,7 +154,7 @@ init python:
                 return 0
 
         if Type == "Over":
-            if L_Over == "modded black jacket":                                             
+            if L_Over == "modded turtleneck":                                             
                 return 15
             elif L_Over == "modded black cape":
                 return 20

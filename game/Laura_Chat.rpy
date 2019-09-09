@@ -5004,6 +5004,8 @@ label Laura_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                 $ Count = 0
             elif L_Over == "jacket":                                             
                 $ Count += 10
+            elif IsOutfitModdedLaura("Over"):                                             
+                $ Count += Mod_Laura_OutfitShame("Over")  
 #            elif L_Over == "red shirt":      
 #                $ Count += 20
             elif L_Over == "towel":      

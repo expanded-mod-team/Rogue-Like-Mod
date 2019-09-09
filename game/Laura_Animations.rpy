@@ -279,7 +279,7 @@ image Laura_Sprite:
             #arms toplayer
             "Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Arm_Left2.png", # one hand up
             "True", Null(),     
-            ), 
+            ),
         (0,0), ConditionSwitch(
             #Water effect 
             "L_Water and Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Water2top.png",  
@@ -289,13 +289,13 @@ image Laura_Sprite:
             #arms wristband
             "Laura_Arms == 2 and L_Arms == 'wrists'", "images/LauraSprite/Laura_Sprite_Wrist_Left2.png", # one hand up
             "True", Null(),     
-            ), 
+            ),
         (0,0), ConditionSwitch(
-            #jacket arm toplayer
+            #modded Over arm toplayer
             "not L_Over", Null(),
             "'modded' in L_Over and Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Over_[L_Over]_A2Top.png", # one hand up
             "True", Null(),     
-            ),
+            ), 
         (0,0), ConditionSwitch(
             #jacket arm toplayer
             "L_Over == 'jacket' and Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Jacket_A2Top.png", # one hand up
@@ -819,6 +819,7 @@ image Laura_Sex_Body:
                     ),                
             "True", ConditionSwitch(
                     #if not uptop        
+                    "'modded' in L_Over", "images/LauraSex/Laura_Sex_Over_[L_Over].png",
                     "L_Over == 'jacket'", "images/LauraSex/Laura_Sex_Jacket.png",
 #                    "L_Over == 'towel'", "images/LauraSex/Laura_Sex_Towel.png",
                     "True", Null(),
