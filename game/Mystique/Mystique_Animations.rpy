@@ -1740,7 +1740,25 @@ image VibratorAnalInsert_E:
         rotate 0
 
 
-
+image Slap_Ass2:
+    contains:
+        "UI_Hand"    
+        subpixel True        
+        zoom 1        
+        alpha 0.5
+        anchor (0.5,0.5)
+        pos (800,350)         
+        rotate 40 
+        block:
+            parallel:
+                ease .1 xpos 670 #rotate 80                
+                #ease .1 xpos 610 #rotate 80
+                pause .3
+            parallel:
+                ease .1 ypos 550
+                pause .3  
+        alpha 0
+        
 #Lesbian action animations.
 image GirlGropeBothBreast_E: 
     contains:
