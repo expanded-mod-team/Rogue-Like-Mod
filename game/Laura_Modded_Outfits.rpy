@@ -28,6 +28,35 @@ label Laura_Modded_Clothes:
             ch_l "Yeah, ok."          
             $ L_Over = "modded turtleneck"
 
+        "Save as main menu background clothes.":
+                "This option will save this Kitty at the main menu background, are you sure?"
+                menu:
+                    "Yes":
+                        "do it"
+                        $ persistent.L_BG_Over = L_Over
+                        $ persistent.L_BG_Chest = L_Chest
+                        $ persistent.L_BG_Neck = L_Neck
+                        $ persistent.L_BG_Legs = L_Legs
+                        $ persistent.L_BG_Panties = L_Panties
+                        # $ persistent.L_BG_Arms = L_Arms  #arm pose
+                        $ persistent.L_BG_Arms = L_Arms
+                        # $ persistent.L_BG_DynamicTan = L_DynamicTan
+                        $ persistent.L_BG_Pierce = L_Pierce
+                        $ persistent.L_BG_Hair = L_Hair
+                        # $ persistent.L_BG_Water = L_Water
+                        $ persistent.L_BG_HairColor = L_HairColor
+                        $ persistent.L_BG_PubesColor = L_PubesColor
+                        $ persistent.L_BG_Pubes = L_Pubes
+                        $ persistent.L_BG_HairCustomColor = L_HairCustomColor
+                        $ persistent.L_BG_Hose = L_Hose
+                        # $ persistent.L_BG_Headband = L_Headband
+                        # $ persistent.L_BG_Gag = L_Gag
+                        # $ persistent.L_BG_Blindfold = L_Blindfold
+                        # $ persistent.L_BG_Boots = L_Boots
+
+                    "No":
+                        pass
+
         "Nevermind":
             jump Laura_Clothes
             # return

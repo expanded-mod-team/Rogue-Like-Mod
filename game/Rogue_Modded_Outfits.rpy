@@ -1081,7 +1081,7 @@ label Rogue_Modded_Clothes_Menu:
         "You know, I like some nice hair down there. Maybe grow it out." if not R_Pubes and "pubes" in R_Todo:
                         call RogueFace("bemused", 1)
                         ch_r "Yeah, I know, [R_Petname]. It doesn't grow out overnight!"
-        "You know, I like some nice hair down there. Maybe grow it out." if not R_Pubes:
+        "You know, I like some nice hair down there. Maybe grow it out." if not R_Pubes and "pubes" not in R_Todo:
                         call RogueFace("bemused", 1)
                         $ Approval = ApprovalCheck("Rogue", 1150, TabM=0)
                         
