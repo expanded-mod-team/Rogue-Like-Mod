@@ -47,7 +47,9 @@ label Laura_Modded_Clothes:
                         $ persistent.L_BG_HairColor = L_HairColor
                         $ persistent.L_BG_PubesColor = L_PubesColor
                         $ persistent.L_BG_Pubes = L_Pubes
-                        $ persistent.L_BG_HairCustomColor = L_HairCustomColor
+                        $ persistent.L_BG_HairCustomColor_red = L_HairCustomColor.red
+                        $ persistent.L_BG_HairCustomColor_green = L_HairCustomColor.green
+                        $ persistent.L_BG_HairCustomColor_blue = L_HairCustomColor.blue
                         $ persistent.L_BG_Hose = L_Hose
                         # $ persistent.L_BG_Headband = L_Headband
                         # $ persistent.L_BG_Gag = L_Gag

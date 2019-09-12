@@ -51,7 +51,7 @@ image Laura_Sprite_BG:
         (0,0), "images/LauraSprite/Laura_Sprite_Body.png",
         (0,0), ConditionSwitch(
             #pubes 
-            # "L_Pubes and L_PubesColor", im.MatrixColor("images/LauraSprite/Laura_Sprite_PubesWhite.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)),
+            "persistent.L_BG_Pubes and persistent.L_BG_PubesColor", im.MatrixColor("images/LauraSprite/Laura_Sprite_PubesWhite.png",im.matrix.tint(float(persistent.L_BG_HairCustomColor_red)/255.0, float(persistent.L_BG_HairCustomColor_green)/255.0, float(persistent.L_BG_HairCustomColor_blue)/255.0)),
             "persistent.L_BG_Pubes", "images/LauraSprite/Laura_Sprite_Pubes.png",   
             "True", Null(),        
             ),      
@@ -214,9 +214,9 @@ image Laura_Sprite_BG:
 image Laura_Sprite_HairBack_BG: 
     ConditionSwitch(
             #hair back 
-            # "persistent.L_BG_HairColor and persistent.L_BG_Hair == 'wet' or persistent.L_BG_Water", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Wet_Under.png",im.matrix.tint(float(persistent.L_BG_HairCustomColor.red)/255.0, float(persistent.L_BG_HairCustomColor.green)/255.0, float(persistent.L_BG_HairCustomColor.blue)/255.0)),
+            "persistent.L_BG_HairColor and persistent.L_BG_Hair == 'wet' or persistent.L_BG_Water", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Wet_Under.png",im.matrix.tint(float(persistent.L_BG_HairCustomColor_red)/255.0, float(persistent.L_BG_HairCustomColor_green)/255.0, float(persistent.L_BG_HairCustomColor_blue)/255.0)),
             "persistent.L_BG_Hair == 'wet' or persistent.L_BG_Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Under.png",
-            # "persistent.L_BG_HairColor and persistent.L_BG_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Under.png",im.matrix.tint(float(persistent.L_BG_HairCustomColor.red)/255.0, float(persistent.L_BG_HairCustomColor.green)/255.0, float(persistent.L_BG_HairCustomColor.blue)/255.0)),
+            "persistent.L_BG_HairColor and persistent.L_BG_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Under.png",im.matrix.tint(float(persistent.L_BG_HairCustomColor_red)/255.0, float(persistent.L_BG_HairCustomColor_green)/255.0, float(persistent.L_BG_HairCustomColor_blue)/255.0)),
             "persistent.L_BG_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Under.png",   
             "True", Null(),        
             ),   
@@ -272,14 +272,14 @@ image Laura_Sprite_Head_BG:
         (0,0), ConditionSwitch(                
             #Hair mid
             "persistent.L_BG_Over == 'jacket'", Null(),
-            # "persistent.L_BG_HairColor and persistent.L_BG_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Mid.png",im.matrix.tint(float(persistent.L_BG_HairCustomColor.red)/255.0, float(persistent.L_BG_HairCustomColor.green)/255.0, float(persistent.L_BG_HairCustomColor.blue)/255.0)),
+            "persistent.L_BG_HairColor and persistent.L_BG_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Mid.png",im.matrix.tint(float(persistent.L_BG_HairCustomColor_red)/255.0, float(persistent.L_BG_HairCustomColor_green)/255.0, float(persistent.L_BG_HairCustomColor_blue)/255.0)),
             "persistent.L_BG_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Mid.png",
             "True", Null(),
             ),       
         (0,0), ConditionSwitch(                                                                         
             #Hair over
             "not persistent.L_BG_Hair", Null(),
-            # "persistent.L_BG_HairColor and persistent.L_BG_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Over.png",im.matrix.tint(float(persistent.L_BG_HairCustomColor.red)/255.0, float(persistent.L_BG_HairCustomColor.green)/255.0, float(persistent.L_BG_HairCustomColor.blue)/255.0)),
+            "persistent.L_BG_HairColor and persistent.L_BG_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Over.png",im.matrix.tint(float(persistent.L_BG_HairCustomColor_red)/255.0, float(persistent.L_BG_HairCustomColor_green)/255.0, float(persistent.L_BG_HairCustomColor_blue)/255.0)),
             "persistent.L_BG_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Over.png",
             "True", Null(),
             ),        
@@ -1770,7 +1770,6 @@ image Emma_Squint_BG:
     repeat 
 # End Emma Sprite / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
-
 label Define_Outfit_BG:
     default persistent.L_BG_Arms = "wrists"                  #her gloves
     default persistent.L_BG_Legs = "mesh pants"
@@ -1800,8 +1799,11 @@ label Define_Outfit_BG:
     default persistent.L_BG_Mouth = 0
     default persistent.L_BG_Water = 0
 
-    # default persistent.L_BG_HairCustomColor = SetColorx("Laura","Hair")
-    # default persistent.L_BG_PubesColor = 0
+    # if not persistent.L_BG_HairCustomColor:
+    default persistent.L_BG_HairCustomColor_red = 255
+    default persistent.L_BG_HairCustomColor_blue = 255
+    default persistent.L_BG_HairCustomColor_green = 255
+    default persistent.L_BG_PubesColor = 0
 
 
     default persistent.R_BG_Arms = 0                  #her gloves
