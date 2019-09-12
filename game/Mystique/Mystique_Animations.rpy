@@ -12,37 +12,24 @@ transform dance: #Dancing, flipping left and right
 image Mystique_Blue_Naked:
     LiveComposite(
         (480,960),
-        (0,0), ConditionSwitch(
-            ## Body 
-            "True", "images/MystiqueSprite/Mystique_body_bare.png",         
-            ),  
-        (0,0), ConditionSwitch(
-            ## Arms and gloves
-            "newgirl['Mystique'].Girl_Arms == 1", "images/MystiqueSprite/Mystique_arms1b_bare.png",                                                              #No gloves, no collar
-            "True", "images/MystiqueSprite/Mystique_arms1b_bare.png",                                                                         #No gloves, no collar
-            ), 
-        (0,0), ConditionSwitch(
-            # Chest layer
-            "True", "images/MystiqueSprite/Mystique_chest_bare.png",     
-            ),   
-        (0,0), ConditionSwitch(
-            ## Head 
-            "True", "images/MystiqueSprite/Mystique_head_base.png",
-            ),             
+        (0,0), "images/MystiqueSprite/Mystique_body_bare.png",         
+        (0,0), "images/MystiqueSprite/Mystique_arms1b_bare.png",                                                                         #No gloves, no collar
+        # (0,0), ConditionSwitch(
+        #     ## Arms and gloves
+        #     "newgirl['Mystique'].Girl_Arms == 1", "images/MystiqueSprite/Mystique_arms1b_bare.png",                                                              #No gloves, no collar
+        #     "True", "images/MystiqueSprite/Mystique_arms1b_bare.png",                                                                         #No gloves, no collar
+        #     ), 
+        (0,0),  "images/MystiqueSprite/Mystique_chest_bare.png",     
+        (0,0), "images/MystiqueSprite/Mystique_head_base.png",
         (0,0), ConditionSwitch(
             ## Brows
             "renpy.showing('Mystique_BJ_Animation') or renpy.showing('BJ_NewTest') or renpy.showing('Mystique_TJ_Animation')", Null(),
-            # "R_Brows == 'normal' and R_Blush == 2", "images/RogueSprite/Rogue_brows_normal_b.png",
-            # "R_Brows == 'angry' and R_Blush == 2", "images/RogueSprite/Rogue_brows_angry_b.png",
-            # "R_Brows == 'sad' and R_Blush == 2", "images/RogueSprite/Rogue_brows_sad_b.png",
-            # "R_Brows == 'surprised' and R_Blush == 2", "images/RogueSprite/Rogue_brows_surprised_b.png",        
-            # "R_Brows == 'confused' and R_Blush == 2", "images/RogueSprite/Rogue_brows_confused_b.png",
-            "newgirl['Mystique'].Brows == 'normal'", "images/MystiqueSprite/Mystique_brows_normal.png",
-            "newgirl['Mystique'].Brows == 'angry'", "images/MystiqueSprite/Mystique_brows_angry.png",
-            "newgirl['Mystique'].Brows == 'sad'", "images/MystiqueSprite/Mystique_brows_sad.png",
-            "newgirl['Mystique'].Brows == 'surprised'", "images/MystiqueSprite/Mystique_brows_surprised.png",        
-            "newgirl['Mystique'].Brows == 'confused'", "images/MystiqueSprite/Mystique_brows_confused.png",
-            "True", "images/MystiqueSprite/Mystique_brows_normal.png",
+            # "newgirl['Mystique'].Brows == 'normal'", "images/MystiqueSprite/Mystique_brows_normal.png",
+            # "newgirl['Mystique'].Brows == 'angry'", "images/MystiqueSprite/Mystique_brows_angry.png",
+            # "newgirl['Mystique'].Brows == 'sad'", "images/MystiqueSprite/Mystique_brows_sad.png",
+            # "newgirl['Mystique'].Brows == 'surprised'", "images/MystiqueSprite/Mystique_brows_surprised.png",        
+            # "newgirl['Mystique'].Brows == 'confused'", "images/MystiqueSprite/Mystique_brows_confused.png",
+            "True", "images/MystiqueSprite/Mystique_brows_[newgirl['Mystique'].Brows].png",
             ),
         (0,0), ConditionSwitch(
             ## Mouths
@@ -95,46 +82,7 @@ image Mystique_Mystique_Sprite:
             ## Overhsirt backing
         #     "True", Null(), 
         #     ),     
-        (0,0), ConditionSwitch(
-            ## Body 
-            # "R_Tan == 'tan1'", "images/RogueSprite/Rogue_t1body_bare.png",
-            # "R_Tan == 'tan'", "images/RogueSprite/Rogue_tbody_bare.png",
-            "True", "images/MystiqueSprite/Mystique_body_bare.png",         
-            ),  
-        # (0,0), ConditionSwitch(
-            ## Body 
-        #     "R_Pubes and R_HairColor == 'black'", "images/RogueSprite/Rogue_bodyhaired_pubesblack.png",
-        #     "R_Pubes and R_HairColor == 'blonde'", "images/RogueSprite/Rogue_bodyhaired_pubesblonde.png",
-        #     #"R_Pubes and R_Pierce == 'barbell'", "images/RogueSprite/Rogue_bodyhaired_barbell.png",
-        #     #"R_Pierce == 'ring'", "images/RogueSprite/Rogue_body_ring.png",            
-        #     #"R_Pierce == 'barbell'", "images/RogueSprite/Rogue_body_barbell.png",
-        #     "R_Pubes", "images/RogueSprite/Rogue_bodyhaired_pubes.png",   
-        #     "True", Null(),         
-        #     ),  
-        (0,0), ConditionSwitch(    
-         ## Body     
-            #"R_Pubes and R_Pierce == 'ring'", "images/RogueSprite/Rogue_bodyhaired_ring.png",   
-            #"R_Pubes and R_Pierce == 'barbell'", "images/RogueSprite/Rogue_bodyhaired_barbell.png",  
-            # "newgirl['Mystique'].Pierce == 'ring'", "images/RogueSprite/Rogue_body_piercing_ring.png",            
-            # "newgirl['Mystique'].Pierce == 'barbell'", "images/RogueSprite/Rogue_body_piercing_barbell.png",
-            #"R_Pubes", "images/RogueSprite/Rogue_bodyhaired_bare.png",   
-            "True", Null(),         
-            ),   
-        #(0,0), ConditionSwitch(
-            ## Body 
-        #    "R_Pubes and R_Pierce == 'ring'", "images/RogueSprite/Rogue_bodyhaired_ring.png",
-        #    "R_Pubes and R_Pierce == 'barbell'", "images/RogueSprite/Rogue_bodyhaired_barbell.png",
-        #    "R_Pierce == 'ring'", "images/RogueSprite/Rogue_body_ring.png",            
-        #    "R_Pierce == 'barbell'", "images/RogueSprite/Rogue_body_barbell.png",
-        #    "R_Pubes", "images/RogueSprite/Rogue_bodyhaired_bare.png",   
-        #    "True", "images/RogueSprite/Rogue_body_bare.png",         
-        #    ),              
-        # (0,0), ConditionSwitch(
-            #pants backing/hose    
-        #     "R_Hose == 'stockings'", "images/RogueSprite/Rogue_hose.png",     
-        #     "R_Legs == 'pants' and R_Upskirt", "images/RogueSprite/Rogue_pantsback.png", 
-        #     "True", Null(), 
-        #     ),
+        (0,0), "images/MystiqueSprite/Mystique_body_bare.png",         
         (0,0), ConditionSwitch(
             ## Panties            
             # "not newgirl['Mystique'].Panties", Null(),
