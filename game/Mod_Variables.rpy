@@ -137,6 +137,9 @@ label  mod_default_Variables:
     default E_PubesColor = 0
     default L_PubesColor = 0
 
+    default BH_Day = 0
+    default BH_Current_Time = 0
+
     define ch_m = Character('[newgirl[Mystique].GirlName]', color="#646dbb", image = "arrow", show_two_window=True)
 
     return
@@ -163,15 +166,10 @@ label  mod_Save_Version:
     if persistent.L_BG_HeadBand == 0:
         $ persistent.L_BG_HeadBand = ""
 
-    if getattr(newgirl["Mystique"], "Colors", None) == None:
-        $ newgirl["Mystique"].Colors = {
-                "Over" : SetColorNewGirl("Mystique"),
-                "Chest" : SetColorNewGirl("Mystique"),
-                "Legs" : SetColorNewGirl("Mystique"),
-                "Hose" : SetColorNewGirl("Mystique"),
-                "Panties" : SetColorNewGirl("Mystique"),
-                "Hair" : SetColorNewGirl("Mystique"),
-                }
+    if getattr(newgirl["Mystique"], "Colors", None) == None: #resets Mystique
+        $ newgirl = {"Mystique" : Girlnew("Mystique"),    #The LikeOtherGirl attribute should be set for each new girl
+                       # "Laura" : Girlnew("Laura")
+                        }
 
     if R_HairColor == 0:
         $ R_HairColor = ""
@@ -1462,12 +1460,17 @@ screen recolor_screen_Rogue_HairBangs:
     textbutton "Quit" align(0.55, 0.95):
         action Return(['quit'])
 
-screen recolor_screen_(_Girl="Mystique", _OutfitType = "Over", _Outfit = "jacket"):
+screen recolor_screen_(_Girl="Mystique", _OutfitType = "Over", _Outfit = "workout jacket"):
 
-    add(im.MatrixColor("images/" + _Girl + "Sprite/" + _Girl + "_Sprite_" + _OutfitType + "_" + _Outfit + ".png",im.matrix.tint(float(newgirl[_Girl].Colors[_OutfitType].tempred)/255.0, float(newgirl[_Girl].Colors[_OutfitType].tempgreen)/255.0, float(newgirl[_Girl].Colors[_OutfitType].tempblue)/255.0))) align(0.5, 0.1)
+    add(im.MatrixColor("images/" + _Girl + "Sprite/" + _Girl + "_Sprite_" + _OutfitType + "White_" + _Outfit + ".png",im.matrix.opacity(float(newgirl[_Girl].Colors[_OutfitType].tempopacity)/255.0)*im.matrix.tint(float(newgirl[_Girl].Colors[_OutfitType].tempred)/255.0, float(newgirl[_Girl].Colors[_OutfitType].tempgreen)/255.0, float(newgirl[_Girl].Colors[_OutfitType].tempblue)/255.0))) align(0.5, 0.1)
         
         
     vbox align(0.5, 0.7):
+        bar:
+            xalign 0.5
+            value FieldValue(newgirl[_Girl].Colors[_OutfitType], 'tempopacity', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
+            xmaximum 255
+
         bar:
             xalign 0.5
             value FieldValue(newgirl[_Girl].Colors[_OutfitType], 'tempred', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)

@@ -5,10 +5,13 @@
             self.red = 255
             self.green = 255
             self.blue = 255
+            self.opacity = 255
             self.tempred = 255
             self.tempgreen = 255
             self.tempblue = 255
+            self.tempopacity = 255
             self.name = name
+            self.colored = ""
             
         
         def set_color(self):
@@ -21,6 +24,7 @@
             self.tempred = self.red
             self.tempgreen = self.green
             self.tempblue = self.blue
+            self.tempopacity = self.opacity
             while True:
                 result = ui.interact()
                 
@@ -28,6 +32,8 @@
                     self.red = self.tempred
                     self.green = self.tempgreen
                     self.blue = self.tempblue
+                    self.opacity = self.tempopacity
+                    self.colored = "White"
                     
                 if result[0] == "quit":
                     renpy.hide_screen("recolor_screen_") #recolor_screen_()
@@ -86,10 +92,13 @@
             self.Legs = "skirt"
             self.Over = 0
             self.Chest = "top"    
+            self.BodySuit = 0    
             self.Pierce = 0
             self.Panties = "black panties"
             self.Neck = 0
             self.Hose = 0
+            self.Dress = 0
+            self.Boots = 0
             self.Mouth = "normal"
             self.Brows = "normal"
             self.Eyes = "normal"
@@ -206,6 +215,35 @@
                 "Hair" : SetColorNewGirl(self.name),
                 }
             #} newgirl["Mystique"].Colors["Over"].screen_loop("Over",newgirl["Mystique"].Over)
+
+        def get_outfit(self, outfittype = "Over"):
+            if outfittype == "Over":
+                return self.Over
+            elif outfittype == "Chest":
+                return self.Chest
+            elif outfittype == "Legs":
+                return self.Legs
+            elif outfittype == "Panties":
+                return self.Panties
+            elif outfittype == "Neck":
+                return self.Neck
+            elif outfittype == "Hose":
+                return self.Hose
+            elif outfittype == "Arms":
+                return self.Arms
+            elif outfittype == "Headband":
+                return self.Headband
+            elif outfittype == "BodySuit":
+                return self.BodySuit
+            elif outfittype == "Dress":
+                return self.Dress
+            elif outfittype == "Boots":
+                return self.Boots
+
+        def recolor_part(self, outfittype = "Over", outfit = "workout jacket"):
+            self.Colors[outfittype].screen_loop(outfittype, outfit)
+        #} newgirl["Mystique"].recolor_part("Over", "jacket")
+
 
          
 
@@ -698,6 +736,19 @@
     #     else:
     #         string = Null()
     #     return string
+    #This function checks how many times you've accessed a given action within the timeframe specified. Example: $ Count = Action_Check("Rogue", "recent", "sex")   
+    def Mod_Action_Check(Chr = "Rogue", Time = "recent", Act = "act", Count = 0): 
+            if Chr in ModdedGirls and Time == "recent":
+                if Act in newgirl[Chr].RecentActions:
+                    Count = newgirl[Chr].RecentActions.count(Act) 
+                    
+            return Count
+
+label Reset_Mystique:
+    $ newgirl = {"Mystique" : Girlnew("Mystique"),    #The LikeOtherGirl attribute should be set for each new girl
+                # "Laura" : Girlnew("Laura")
+                 }
+    return
 image blackblink:   
     Solid("#000")   
 image whiteblink:   

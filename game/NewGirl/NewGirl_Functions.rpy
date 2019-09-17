@@ -332,6 +332,127 @@ label Mystique_Todo:
                 $ newgirl["Mystique"].Todo.remove("barbell")            
         return
 
+label Mod_Daily_Math:
+    if Day == BH_Day:
+        return
+    if Current_Time == BH_Current_Time:
+        return
+
+    $ BH_Day = Day
+    $ BH_Current_Time = Current_Time
+
+    call Mod_Hourly
+
+label Mod_Wait:
+    call Wait
+    
+    $ newgirl["Mystique"].Addict += newgirl["Mystique"].Addictionrate
+
+    if Time_Count < 3:  #not sleep time                                          
+                $ newgirl["Mystique"].Action += 1
+
+    # Things that happen when you sleep   
+    else:                                                          
+
+        # Things about Mystique when you sleep:
+                if newgirl["Mystique"].Loc == "hold":
+                        $ newgirl["Mystique"].Loc = "bg Mystique"  
+                if newgirl["Mystique"].Todo:
+                        call Mystique_Todo
+                
+                if "addict mystique" in P_Traits:
+                        $ newgirl["Mystique"].Addict += newgirl["Mystique"].Addictionrate
+                        $ newgirl["Mystique"].Addict -= (3*newgirl["Mystique"].Resistance)
+                else:
+                        $ newgirl["Mystique"].Addict = 0
+                        $ newgirl["Mystique"].Addictionrate = 0
+        
+                if "addictive" in P_Traits:  
+                        pass
+                elif "nonaddictive" in P_Traits:        
+                        $ newgirl["Mystique"].Addictionrate -= 2
+                        $ newgirl["Mystique"].Addict -= 5
+                elif newgirl["Mystique"].Addictionrate:
+                        $ newgirl["Mystique"].Addictionrate -= newgirl["Mystique"].Resistance
+                    
+                $ newgirl["Mystique"].ForcedCount -= 1 if newgirl["Mystique"].ForcedCount > 0 else 0
+                $ newgirl["Mystique"].Action = newgirl["Mystique"].MaxAction    
+                
+                $ newgirl["Mystique"].Rep = 0 if newgirl["Mystique"].Rep < 0 else newgirl["Mystique"].Rep 
+                $ newgirl["Mystique"].Rep += 10 if newgirl["Mystique"].Rep < 800 else 0
+                $ newgirl["Mystique"].Rep = 1000 if newgirl["Mystique"].Rep > 1000 else newgirl["Mystique"].Rep 
+                $ newgirl["Mystique"].Lust -= 5 if newgirl["Mystique"].Lust >= 50 else 0
+                
+                if "painted" not in newgirl["Mystique"].DailyActions or "cleaned" not in newgirl["Mystique"].DailyActions:   
+                        $ del newgirl["Mystique"].Spunk[:]  
+                
+                if "lover" in newgirl["Mystique"].Petnames and newgirl["Mystique"].Love > 800:
+                        $ newgirl["Mystique"].Love += 10
+                if "master" in newgirl["Mystique"].Petnames and newgirl["Mystique"].Obed > 600:
+                        $ newgirl["Mystique"].Obed += 10
+                if "fuck buddy" in newgirl["Mystique"].Petnames:
+                        $ newgirl["Mystique"].Inbt += 10    
+     
+    #End of things when you sleep
+
+label Mod_Hourly:
+    #Things that are about you:
+    $ newgirl["Mystique"].OCount = 0
+
+    #Things that are about Mystique:   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  
+    if newgirl["Mystique"].Lust >= 70 and newgirl["Mystique"].Loc != bg_current:
+        $ newgirl["Mystique"].Lust = 25
+            
+    #Resets her flirt  options
+    $ newgirl["Mystique"].Chat[5] = 0 
+    
+    #Resets her addiction fix attempts
+    if newgirl["Mystique"].Event[3]:
+        $ newgirl["Mystique"].Event[3] -= 1               
+    
+    $ newgirl["Mystique"].Forced = 0
+    if newgirl["Mystique"].Loc == "bg teacher" and "bg classroom" in (bg_current, R_Loc, K_Loc):
+            $ newgirl["Mystique"].XP += 10 
+    if newgirl["Mystique"].Loc == "bg classroom" or newgirl["Mystique"].Loc == "bg dangerroom" :
+            $ newgirl["Mystique"].XP += 10    
+    elif newgirl["Mystique"].Loc == "bg showerroom":
+            call Remove_Girl("Mystique")
+        
+    #Appearance clean-up
+    $ newgirl["Mystique"].Blush = 0
+    $ newgirl["Mystique"].Water = 0
+    $ newgirl["Mystique"].Held = 0 
+    
+    # Reduce addiction
+    $ newgirl["Mystique"].Addictionrate -= newgirl["Mystique"].Resistance if newgirl["Mystique"].Addictionrate > 3 else 0    
+    $ newgirl["Mystique"].Addictionrate = 0 if newgirl["Mystique"].Addictionrate < 0 else newgirl["Mystique"].Addictionrate    
+    
+    #Adjusts shame rate
+    if newgirl["Mystique"].Taboo and newgirl["Mystique"].Shame:
+            if newgirl["Mystique"].Loc == "bg dangerroom":            
+                    $ newgirl["Mystique"].Shame -= 10 if newgirl["Mystique"].Shame >=10 else newgirl["Mystique"].Shame
+            $ Count = int((newgirl["Mystique"].Taboo * newgirl["Mystique"].Shame) / 200)
+            $ newgirl["Mystique"].Inbt = Statupdate("Mystique", "Inbt", newgirl["Mystique"].Inbt, 90, Count)         
+            $ newgirl["Mystique"].Obed = Statupdate("Mystique", "Obed", newgirl["Mystique"].Obed, 90, Count) 
+            $ newgirl["Mystique"].Rep -= int(1.5 * Count)
+    
+    $ newgirl["Mystique"].Love -= 5*(Mod_Action_Check("Mystique","recent","unsatisfied")) #subtracts newgirl["Mystique"].Love by 5* the number of recent unsatisfieds
+    
+    # Clears out recent and daily actions
+    $ del newgirl["Mystique"].RecentActions[:]                            # Clears out recent and daily actions
+    if Time_Count == 0: 
+        $ del newgirl["Mystique"].DailyActions[:]
+        
+    call Mystique_Schedule
+    call Stat_Checks
+    # if Outfit:
+    call MystiqueOutfit(newgirl["Mystique"].OutfitDay)
+    #end Mystique hourly actions 
+
+
+    return
+
+
 label Mod_Round10(Options = ["none"]):    
         #Called when it's time to auto-wait/sleep
         if Current_Time == "Night":
@@ -342,7 +463,7 @@ label Mod_Round10(Options = ["none"]):
                                 if newgirl["Mystique"].Sleep >= 5: 
                                         call CleartheRoom("Mystique",1)
                                         "She probably wouldn't mind you taking a quick nap. . ."
-                                        call Wait
+                                        call Mod_Wait
                                         if newgirl["Mystique"].Loc == bg_current:
                                                 call DrainWord("Mystique","arriving")
                                                 ch_m "Well look whos sleeping in my bed. . ."
@@ -394,7 +515,7 @@ label Mod_Round10(Options = ["none"]):
                                 call CleartheRoom("All",1)
                                 #if nobody is here, you just go to sleep
                                 "It's getting late, so you go to sleep."
-                                call Wait
+                                call Mod_Wait
                 #End night time
         else:
                     #if it's not night time, just wait
@@ -403,7 +524,7 @@ label Mod_Round10(Options = ["none"]):
                                 ch_r "Sure, you can wait around a bit."     
                             else:
                                 "You wait for Rogue to return."
-                            call Wait
+                            call Mod_Wait
                             if Current_Time == "Night" and R_Loc == bg_current:               
                                 if R_Sleep or R_SEXP >= 30:                                                         
                                         #It's late but she really likes you
@@ -422,7 +543,7 @@ label Mod_Round10(Options = ["none"]):
                                 ch_k "Sure, you can hang out for a bit."     
                             else:
                                 "You wait for Kitty to return."
-                            call Wait
+                            call Mod_Wait
                             if Current_Time == "Night" and K_Loc == bg_current:               
                                 if K_Sleep or K_SEXP >= 30:                                                         
                                         #It's late but she really likes you
@@ -441,7 +562,7 @@ label Mod_Round10(Options = ["none"]):
                                 ch_e "You can stay for a while, if you'd like."     
                             else:
                                 "You wait for Emma to return."
-                            call Wait
+                            call Mod_Wait
                             if Current_Time == "Night" and E_Loc == bg_current:               
                                 if E_Sleep or E_SEXP >= 30:                                                         
                                         #It's late but she really likes you
@@ -456,7 +577,7 @@ label Mod_Round10(Options = ["none"]):
                                         jump Campus_Map   
                             #end Emma's room           
                     else:
-                        call Wait
+                        call Mod_Wait
         return
 
 

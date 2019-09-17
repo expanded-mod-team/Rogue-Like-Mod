@@ -29,7 +29,7 @@ image Mystique_Blue_Naked:
             # "newgirl['Mystique'].Brows == 'sad'", "images/MystiqueSprite/Mystique_brows_sad.png",
             # "newgirl['Mystique'].Brows == 'surprised'", "images/MystiqueSprite/Mystique_brows_surprised.png",        
             # "newgirl['Mystique'].Brows == 'confused'", "images/MystiqueSprite/Mystique_brows_confused.png",
-            "True", "images/MystiqueSprite/Mystique_brows_[newgirl['Mystique'].Brows].png",
+            "True", "images/MystiqueSprite/Mystique_brows_[newgirl[Mystique].Brows].png",
             ),
         (0,0), ConditionSwitch(
             ## Mouths
@@ -85,15 +85,13 @@ image Mystique_Mystique_Sprite:
         (0,0), "images/MystiqueSprite/Mystique_body_bare.png",         
         (0,0), ConditionSwitch(
             ## Panties            
-            # "not newgirl['Mystique'].Panties", Null(),
             "newgirl['Mystique'].PantiesDown", Null(),      
-            "True", GetOutfitString("images/MystiqueSprite/Mystique_Sprite_Panties_", newgirl['Mystique'].Panties, ".png"),
+            "True", im.MatrixColor("images/MystiqueSprite/Mystique_Sprite_Panties" + str(newgirl['Mystique'].Colors['Panties'].colored) + "_" + str(newgirl['Mystique'].Panties) + ".png",im.matrix.opacity(float(newgirl['Mystique'].Colors['Panties'].opacity)/255.0)*im.matrix.tint(float(newgirl['Mystique'].Colors['Panties'].red)/255.0, float(newgirl['Mystique'].Colors['Panties'].green)/255.0, float(newgirl['Mystique'].Colors['Panties'].blue)/255.0)),
             "True", Null(),            
             ),
         (0,0), ConditionSwitch(
             ## Full hose/tights              
-            #"R_PantiesDown", Null(), 
-            "True", GetOutfitString("images/MystiqueSprite/Mystique_Sprite_Hose_", newgirl['Mystique'].Hose, ".png"),
+            "True", im.MatrixColor("images/MystiqueSprite/Mystique_Sprite_Hose" + str(newgirl['Mystique'].Colors['Hose'].colored) + "_" + str(newgirl['Mystique'].Hose) + ".png",im.matrix.opacity(float(newgirl['Mystique'].Colors['Hose'].opacity)/255.0)*im.matrix.tint(float(newgirl['Mystique'].Colors['Hose'].red)/255.0, float(newgirl['Mystique'].Colors['Hose'].green)/255.0, float(newgirl['Mystique'].Colors['Hose'].blue)/255.0)),
             "True", Null(), 
             ),
         (0,0), ConditionSwitch(
@@ -118,7 +116,8 @@ image Mystique_Mystique_Sprite:
             ),   
         (0,0), ConditionSwitch(
             # Chest clothes layer
-            "True", GetOutfitString("images/MystiqueSprite/Mystique_Sprite_Chest_", newgirl['Mystique'].Chest, ".png"),
+            "True", im.MatrixColor("images/MystiqueSprite/Mystique_Sprite_Chest" + str(newgirl['Mystique'].Colors['Chest'].colored) + "_" + str(newgirl['Mystique'].Chest) + ".png",im.matrix.opacity(float(newgirl['Mystique'].Colors['Chest'].opacity)/255.0)*im.matrix.tint(float(newgirl['Mystique'].Colors['Chest'].red)/255.0, float(newgirl['Mystique'].Colors['Chest'].green)/255.0, float(newgirl['Mystique'].Colors['Chest'].blue)/255.0)),
+            # "True", GetOutfitString("images/MystiqueSprite/Mystique_Sprite_Chest_", newgirl['Mystique'].Chest, ".png"),
             "True", Null(),               
             ), 
         
@@ -138,52 +137,24 @@ image Mystique_Mystique_Sprite:
         (0,0), ConditionSwitch(
             ## Pants and Skirts
             "newgirl['Mystique'].Upskirt", Null(),
-            "True", GetOutfitString("images/MystiqueSprite/Mystique_Sprite_Legs_", newgirl['Mystique'].Legs, ".png"),
+            "True", im.MatrixColor("images/MystiqueSprite/Mystique_Sprite_Legs" + str(newgirl['Mystique'].Colors['Legs'].colored) + "_" + str(newgirl['Mystique'].Legs) + ".png",im.matrix.opacity(float(newgirl['Mystique'].Colors['Legs'].opacity)/255.0)*im.matrix.tint(float(newgirl['Mystique'].Colors['Legs'].red)/255.0, float(newgirl['Mystique'].Colors['Legs'].green)/255.0, float(newgirl['Mystique'].Colors['Legs'].blue)/255.0)),
             "True", Null(),   
             ),
 
-        # (0,0), ConditionSwitch(
-            ## Arms and gloves
-        #     "newgirl['Mystique'].Girl_Arms == 1", Null(),                                                              #No gloves, no collar
-        #     #"R_Arms == 'gloved' and R_Neck == 'spiked collar'", "images/RogueSprite/Rogue_arms2a_gloved_.png",                           #Gloves and collar 
-        #     #"R_Arms == 'gloved'", "images/RogueSprite/Rogue_arms2b_gloved_.png",                                                         #Gloved, no collar
-        #     #"R_Neck == 'spiked collar'", "images/RogueSprite/Rogue_arms2a_bare_.png",                                                    #No gloves, collar
-        #     "True", "images/MystiqueSprite/Mystique_arms2b_bare_.png",  
-        #     ), 
-                          
-        # (0,0), ConditionSwitch(
-            ## Water
-        #     "R_Water and Rogue_Arms == 1", "images/RogueSprite/Rogue_body_wet1.png",
-        #     "R_Water", "images/RogueSprite/Rogue_body_wet2.png",
-        #     "True", Null(),                 
-        #     ),
-        # (0,0), ConditionSwitch(
-            ## Soap
-        #     "R_Water == 3", "images/RogueSprite/Rogue_body_wet3.png",
-        #     "True", Null(),                 
-        #     ),
         (0,0), ConditionSwitch(
             ## Overshirt layer
-            "True", GetOutfitString("images/MystiqueSprite/Mystique_Sprite_Over_", newgirl['Mystique'].Over, ".png"),
+            # "not newgirl['Mystique'].Over", Null(),
+            "True", im.MatrixColor("images/MystiqueSprite/Mystique_Sprite_Over" + str(newgirl['Mystique'].Colors['Over'].colored) + "_" + str(newgirl['Mystique'].Over) + ".png",im.matrix.opacity(float(newgirl['Mystique'].Colors['Over'].opacity)/255.0)*im.matrix.tint(float(newgirl['Mystique'].Colors['Over'].red)/255.0, float(newgirl['Mystique'].Colors['Over'].green)/255.0, float(newgirl['Mystique'].Colors['Over'].blue)/255.0)),
             "True", Null(), 
             ),
         (0,0), ConditionSwitch(
             ## Head 
             "renpy.showing('Mystique_BJ_Animation') or renpy.showing('BJ_NewTest') or renpy.showing('Mystique_TJ_Animation')", Null(),
-            # "R_Hair == 'evo' and R_Water", "images/RogueSprite/Rogue_head_evowet.png",
-            # "R_Hair == 'evo' and R_Blush == 2", "images/RogueSprite/Rogue_head_evo_blush2.png",
-            # "R_Hair == 'evo' and R_Blush", "images/RogueSprite/Rogue_head_evo_blush.png",
-            # "R_Hair == 'evo'", "images/RogueSprite/Rogue_head_evo.png",
             "True", "images/MystiqueSprite/Mystique_head_base.png",
             ),             
         (0,0), ConditionSwitch(
             ## Brows
             "renpy.showing('Mystique_BJ_Animation') or renpy.showing('BJ_NewTest') or renpy.showing('Mystique_TJ_Animation')", Null(),
-            # "R_Brows == 'normal' and R_Blush == 2", "images/RogueSprite/Rogue_brows_normal_b.png",
-            # "R_Brows == 'angry' and R_Blush == 2", "images/RogueSprite/Rogue_brows_angry_b.png",
-            # "R_Brows == 'sad' and R_Blush == 2", "images/RogueSprite/Rogue_brows_sad_b.png",
-            # "R_Brows == 'surprised' and R_Blush == 2", "images/RogueSprite/Rogue_brows_surprised_b.png",        
-            # "R_Brows == 'confused' and R_Blush == 2", "images/RogueSprite/Rogue_brows_confused_b.png",
             "newgirl['Mystique'].Brows == 'normal'", "images/MystiqueSprite/Mystique_brows_normal.png",
             "newgirl['Mystique'].Brows == 'angry'", "images/MystiqueSprite/Mystique_brows_angry.png",
             "newgirl['Mystique'].Brows == 'sad'", "images/MystiqueSprite/Mystique_brows_sad.png",
@@ -225,22 +196,12 @@ image Mystique_Mystique_Sprite:
         (0,0), ConditionSwitch(
             ## Hair
             "renpy.showing('Mystique_BJ_Animation') or renpy.showing('BJ_NewTest') or renpy.showing('Mystique_TJ_Animation')", Null(),
-            # "R_Hair == 'evo' and R_Water and R_HairColor == 'black'", "images/RogueSprite/Rogue_hairBlack_wet.png",
-            # "R_Hair == 'evo' and R_Water and R_HairColor == 'blonde'", "images/RogueSprite/Rogue_hairBlonde_wet.png",
-            # "R_Hair == 'evo' and R_Water", "images/RogueSprite/Rogue_hair_wet.png",
-            # "R_Hair == 'evo' and R_HairColor == 'black'", "images/RogueSprite/Rogue_hairBlack_evo.png",
-            # "R_Hair == 'evo' and R_HairColor == 'blonde'", "images/RogueSprite/Rogue_hairBlonde_evo.png",
             "newgirl['Mystique'].Hair", "images/MystiqueSprite/Mystique_hair_basic.png",
             "True", Null(), 
             ), 
         (0,0), ConditionSwitch(
             ## Hair
             "renpy.showing('Mystique_BJ_Animation') or renpy.showing('BJ_NewTest') or renpy.showing('Mystique_TJ_Animation')", Null(),
-            # "R_Hair == 'evo' and R_Water and R_HairColor == 'black'", "images/RogueSprite/Rogue_hairBlack_wet.png",
-            # "R_Hair == 'evo' and R_Water and R_HairColor == 'blonde'", "images/RogueSprite/Rogue_hairBlonde_wet.png",
-            # "R_Hair == 'evo' and R_Water", "images/RogueSprite/Rogue_hair_wet.png",
-            # "R_Hair == 'evo' and R_HairColor == 'black'", "images/RogueSprite/Rogue_hairBlack_evo.png",
-            # "R_Hair == 'evo' and R_HairColor == 'blonde'", "images/RogueSprite/Rogue_hairBlonde_evo.png",
             "newgirl['Mystique'].Hair", "images/MystiqueSprite/Mystique_Head_HairGem.png",
             "True", Null(), 
             ),                           
@@ -2106,9 +2067,9 @@ label MystiqueWardrobe:
                     "Add red shirt":
                         $ newgirl["Mystique"].Over = "red shirt"   
                         $ newgirl["Mystique"].Arms = 0
-                    "Add Towel":
-                        $ newgirl["Mystique"].Over = "towel"   
-                        $ newgirl["Mystique"].Arms = 0
+                    # "Add Towel":
+                    #     $ newgirl["Mystique"].Over = "towel"   
+                    #     $ newgirl["Mystique"].Arms = 0
                     "Back":
                         jump MystiqueWardrobe                
         "Tops":            

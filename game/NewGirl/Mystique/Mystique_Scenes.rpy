@@ -134,7 +134,7 @@ label MystiqueMeetOld:
     $ newgirl["Mystique"].Lust += 5
     "She asks a lot of questions of the students, and singles you out more than once. You notice her glancing in your direction as other students answer."
     $ newgirl["Mystique"].Lust += 5
-    call Wait
+    call Mod_Wait
     call CleartheRoom("Mystique",0,1)
     $ newgirl["Mystique"].Loc = "bg classroom" 
     call Mod_Set_The_Scene
@@ -414,7 +414,7 @@ label MystiqueMeetGym_Waited:
     call NewGirl_Face("Mystique", "sly")
     ch_m "Meet me at my room."
     $ newgirl["Mystique"].LooksLike = "Raven"
-    #call Wait 
+    #call Mod_Wait 
     
     #call CleartheRoom("Mystique",0,1)
     #$ newgirl["Mystique"].Loc = "bg dangerroom" 
@@ -624,7 +624,7 @@ label Mystique_Morning:
             ch_m "Night, [newgirl[Mystique].Petname]"                                               #fix add sex option here
             show blackscreen onlayer black    
             pause 2
-            call Wait(Lights = 0)
+            call Mod_Wait(Lights = 0)
             $ newgirl["Mystique"].Loc = bg_current
             call MystiqueOutfit("sleep")
             

@@ -141,9 +141,9 @@ label Mystique_Chat:
         "I just wanted to talk. . .":
                     call Mystique_Chitchat
                     
-        # "Mystique's settings":
-        #             ch_p "Let's talk about you."
-        #             call Mystique_Settings
+        "Mystique's settings":
+                    ch_p "Let's talk about you."
+                    call Mystique_Settings
         
         # "Relationship status":      
         #             ch_p "Could we talk about us?"       
@@ -3858,43 +3858,43 @@ label Mystique_Clothes(Public=0,Bonus=0):
                 call Mystique_First_Topless
             
         "Try on that workout jacket you have." if newgirl["Mystique"].Over != "workout jacket":
-            call NewGirl_Face("Mystique","bemused")
+            # call NewGirl_Face("Mystique","bemused")
             if newgirl["Mystique"].Chest or newgirl["Mystique"].SeenChest or Mod_ApprovalCheck("Mystique", 700, TabM=(3-Public)):
                 ch_m "Yeah, ok."          
             else:
-                call NewGirl_Face("Mystique","bemused", 1)
+                # call NewGirl_Face("Mystique","bemused", 1)
                 ch_m "I'm not sure this is appropriate without something more substantial underneath."
                 jump Mystique_Clothes    
             call SetOverMystique("workout jacket")
 
         "Try on that lavender shirt you have." if newgirl["Mystique"].Over != "lavender shirt":
-            call NewGirl_Face("Mystique","bemused")
+            # call NewGirl_Face("Mystique","bemused")
             #if Mod_ApprovalCheck("Mystique", 400, TabM=(3-Public)):
             ch_m "Yeah, ok."          
             call SetOverMystique("lavender shirt")
 
         "Try on that red shirt you have." if newgirl["Mystique"].Over != "red shirt":
-            call NewGirl_Face("Mystique","bemused")
+            # call NewGirl_Face("Mystique","bemused")
             #if Mod_ApprovalCheck("Mystique", 400, TabM=(3-Public)):
             ch_m "Yeah, ok."          
             call SetOverMystique("red shirt")
             
-        "Maybe just throw on a towel?" if newgirl["Mystique"].Over != "towel":
-            call NewGirl_Face("Mystique","bemused", 1)
-            $ Bonus = 5 if bg_current == "bg showerroom" else 0
-            if newgirl["Mystique"].Chest or (newgirl["Mystique"].SeenChest and Mod_ApprovalCheck("Mystique", 500, TabM=(3-Public-Bonus))):
-                ch_m "Oh, you like this?"
-            elif Mod_ApprovalCheck("Mystique", 1000, TabM=(3-Public-Bonus)):
-                call NewGirl_Face("Mystique","perplexed", 1)
-                ch_m "Fine."          
-            else:
-                ch_m "This wouldn't leave much to the imagination."
-                jump Mystique_Clothes  
-            call Mystique_NoBra
-            if not _return:
-                jump Mystique_Clothes
-            call SetOverMystique("towel")
-            call Mystique_Tits_Up
+        # "Maybe just throw on a towel?" if newgirl["Mystique"].Over != "towel":
+        #     # call NewGirl_Face("Mystique","bemused", 1)
+        #     $ Bonus = 5 if bg_current == "bg showerroom" else 0
+        #     if newgirl["Mystique"].Chest or (newgirl["Mystique"].SeenChest and Mod_ApprovalCheck("Mystique", 500, TabM=(3-Public-Bonus))):
+        #         ch_m "Oh, you like this?"
+        #     elif Mod_ApprovalCheck("Mystique", 1000, TabM=(3-Public-Bonus)):
+        #         call NewGirl_Face("Mystique","perplexed", 1)
+        #         ch_m "Fine."          
+        #     else:
+        #         ch_m "This wouldn't leave much to the imagination."
+        #         jump Mystique_Clothes  
+        #     call Mystique_NoBra
+        #     if not _return:
+        #         jump Mystique_Clothes
+        #     call SetOverMystique("towel")
+        #     call Mystique_Tits_Up
                             
         "Never mind":
             jump Mystique_Clothes
@@ -4075,7 +4075,15 @@ label Mystique_Clothes(Public=0,Bonus=0):
 
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
 
-    menu Mystique_Clothes_Under:                                                                                                 # Tops    
+    menu Mystique_Clothes_Under:  
+        "How about you lose that [newgirl[Mystique].Hose]?" if newgirl["Mystique"].Hose:
+            ch_m "Of course."
+            call SetHoseMystique(0)
+
+        "How about you those stockings?" if newgirl["Mystique"].Hose != "stockings":
+            ch_m "Of course."
+            call SetHoseMystique("stockings")
+                                                                                                           # Tops    
         "How about you lose the [newgirl[Mystique].Chest]?" if newgirl["Mystique"].Chest:
             call NewGirl_Face("Mystique","bemused", 1)
             if newgirl["Mystique"].SeenChest and Mod_ApprovalCheck("Mystique", 900, TabM=(4-Public)):
@@ -5140,30 +5148,116 @@ label Mystique_Show_Plug:
 
 label SetHoseMystique(Outfit = "Mystique"):
     $ newgirl["Mystique"].Hose = Outfit
+    if Outfit:
+        "Wanna recolor it?"
+        menu:
+            "Yes":
+                $ newgirl["Mystique"].recolor_part("Hose", Outfit)
+            "No (keep color)":
+                pass
+            "No (reset color)":
+                $ newgirl["Mystique"].Colors["Hose"].colored = ""
+                $ newgirl["Mystique"].Colors["Hose"].red = 255
+                $ newgirl["Mystique"].Colors["Hose"].green = 255
+                $ newgirl["Mystique"].Colors["Hose"].bluee = 255
+                $ newgirl["Mystique"].Colors["Hose"].opacity = 255
+                pass
+
     if newgirl["Mystique"].LooksLike == "Mystique":
         call Mod_Update_Mystique_Image(1)
     return
 
 label SetChestMystique(Outfit = "Mystique"):
     $ newgirl["Mystique"].Chest = Outfit
+    if Outfit:
+        "Wanna recolor it?"
+        menu:
+            "Yes":
+                $ newgirl["Mystique"].recolor_part("Chest", Outfit)
+            "No (keep color)":
+                pass
+            "No (reset color)":
+                $ newgirl["Mystique"].Colors["Chest"].colored = ""
+                $ newgirl["Mystique"].Colors["Chest"].red = 255
+                $ newgirl["Mystique"].Colors["Chest"].green = 255
+                $ newgirl["Mystique"].Colors["Chest"].bluee = 255
+                $ newgirl["Mystique"].Colors["Chest"].opacity = 255
+                pass
+
     if newgirl["Mystique"].LooksLike == "Mystique":
         call Mod_Update_Mystique_Image(1)
     return
 
 label SetOverMystique(Outfit = "Mystique"):
     $ newgirl["Mystique"].Over = Outfit
+
+    # if newgirl["Mystique"].LooksLike == "Mystique" and Outfit:
+    #     $ newgirl["Mystique"].Over = 0
+    #     call Mod_Update_Mystique_Image(1)
+    if Outfit:
+        "Wanna recolor it?"
+        menu:
+            "Yes":
+                $ newgirl["Mystique"].recolor_part("Over", Outfit)
+                # if newgirl["Mystique"].LooksLike == "Mystique":
+                #     call Mod_Update_Mystique_Image(1)
+            "No (keep color)":
+                pass
+            "No (reset color)":
+                $ newgirl["Mystique"].Colors["Over"].colored = ""
+                $ newgirl["Mystique"].Colors["Over"].red = 255
+                $ newgirl["Mystique"].Colors["Over"].green = 255
+                $ newgirl["Mystique"].Colors["Over"].bluee = 255
+                $ newgirl["Mystique"].Colors["Over"].opacity = 255
+                pass
+
+    # if newgirl["Mystique"].LooksLike == "Mystique":
+    #     $ newgirl["Mystique"].Over = Outfit
+    #     call Mod_Update_Mystique_Image(1)
+
+
     if newgirl["Mystique"].LooksLike == "Mystique":
         call Mod_Update_Mystique_Image(1)
     return
 
 label SetLegsMystique(Outfit = "Mystique"):
     $ newgirl["Mystique"].Legs = Outfit
+    if Outfit:
+        "Wanna recolor it?"
+        menu:
+            "Yes":
+                $ newgirl["Mystique"].recolor_part("Legs", Outfit)
+            "No (keep color)":
+                pass
+            "No (reset color)":
+                $ newgirl["Mystique"].Colors["Legs"].colored = ""
+                $ newgirl["Mystique"].Colors["Legs"].red = 255
+                $ newgirl["Mystique"].Colors["Legs"].green = 255
+                $ newgirl["Mystique"].Colors["Legs"].bluee = 255
+                $ newgirl["Mystique"].Colors["Legs"].opacity = 255
+                pass
+
     if newgirl["Mystique"].LooksLike == "Mystique":
         call Mod_Update_Mystique_Image(1)
     return
 
 label SetPantiesMystique(Outfit = "Mystique"):
     $ newgirl["Mystique"].Panties = Outfit
+    if Outfit:
+        "Wanna recolor it?"
+        menu:
+            "Yes":
+                $ newgirl["Mystique"].recolor_part("Panties", Outfit)
+            "No (keep color)":
+                pass
+            "No (reset color)":
+                $ newgirl["Mystique"].Colors["Panties"].colored = ""
+                $ newgirl["Mystique"].Colors["Panties"].red = 255
+                $ newgirl["Mystique"].Colors["Panties"].green = 255
+                $ newgirl["Mystique"].Colors["Panties"].bluee = 255
+                $ newgirl["Mystique"].Colors["Panties"].opacity = 255
+                pass
+
     if newgirl["Mystique"].LooksLike == "Mystique":
         call Mod_Update_Mystique_Image(1)
     return
