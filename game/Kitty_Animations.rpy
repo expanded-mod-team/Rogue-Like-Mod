@@ -163,6 +163,12 @@ image Kitty_Sprite:
                     ),
             ),
         (0,0), ConditionSwitch(                                                                         
+            #swimsuit tummy              
+            "not K_Chest", Null(),
+            "K_Chest == 'modded green swimsuit'", "images/KittySprite/Kitty_Sprite_Chest_[K_Chest]_tummy.png",
+            "True", Null(), 
+            ),
+        (0,0), ConditionSwitch(                                                                         
             #full hose/tights              
             "K_Panties and K_PantiesDown", Null(), 
             "not K_Hose", Null(),
