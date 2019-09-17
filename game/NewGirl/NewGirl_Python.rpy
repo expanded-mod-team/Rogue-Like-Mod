@@ -123,7 +123,7 @@
             self.Custom6 = [0,0,0,0,0,0,0,0,0,0,0]    
             self.Custom7 = [0,0,0,0,0,0,0,0,0,0,0]    
             self.Gym = [2,0,0,0,"tights","top","black panties",0,0,0,0] #arms position, 0, 0, over, legs, chest, panties, 
-            self.Sleepwear = [0,0,0,0,0,"short top","black panties",0,0,0]
+            self.Sleepwear = [0,0,0,0,0,"black bra","black panties",0,0,0]
             self.Schedule = [0,0,0,0,0,0,0,0,4,0]                      #chooses when she wears what
             self.GirlLayer = 101
             self.SpriteLoc = 550                        #Sets Emma to default to the center

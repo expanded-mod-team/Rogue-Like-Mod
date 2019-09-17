@@ -27,6 +27,25 @@ init python:
         return 0
 
 label Mod_EventCalls:
+    call Get_Dressed
+
+    if Current_Time == "Evening" and "yesdate" in P_DailyActions:
+            if bg_current == "bg campus": 
+                    call DateNight
+                    if "yesdate" in P_DailyActions:
+                            $ P_DailyActions.remove("yesdate")
+                    return
+            else:
+                
+                    menu:
+                        "You have a date to get to, head for the square?"
+                        "Yes":
+                            $ renpy.pop_call()
+                            call Leave_Brotherhood_Area
+                            jump Campus_Entry
+                        "No":
+                            "Suit yourself. . ."
+                            
     if Current_Time == "Night" and "met" not in newgirl["Mystique"].History :
         if Day >= 5:
             if bg_current != "bg player" and not IsGirlAround():
@@ -594,7 +613,7 @@ label Brotherhood_Hall:
     if Round <= 10: 
                 call Mod_Round10
                 call Girls_Location
-                call EventCalls
+                call Mod_EventCalls
     
     call GirlsAngry
     call Mod_Set_The_Scene
@@ -617,7 +636,7 @@ label Brotherhood_Hall:
         "Wait." if Current_Time != "Night":
                     call Mod_Round10
                     call Girls_Location
-                    call EventCalls
+                    call Mod_EventCalls
                             
         # "Return to Your Room" if TravelMode:            
         #             call Leave_Brotherhood_Area
@@ -648,14 +667,14 @@ label Mystique_Room_Entry:
     $ D20 = renpy.random.randint(1, 20)
     
     $ bg_current = "bg Mystique"         
-    call EventCalls
+    call Mod_EventCalls
     if bg_current != "bg Mystique":
         jump Misplaced
             
 label Mystique_Room:
     $ newgirl["Mystique"].LooksLike = "Mystique"
     $ bg_current = "bg Mystique"
-    call Mod_Set_The_Scene
+    call Mod_Set_The_Scene(Quiet = 1)
     if "traveling" in P_RecentActions:
         $ P_RecentActions.remove("traveling")
     call Taboo_Level
@@ -664,10 +683,10 @@ label Mystique_Room:
     if Round <= 10: 
                 call Mod_Round10
                 call Girls_Location
-                call EventCalls
+                call Mod_EventCalls
     
     call GirlsAngry
-    call Mod_Set_The_Scene
+    call Mod_Set_The_Scene(Quiet = 1)
     
 # Mystique's Room Menu Start <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     if newgirl["Mystique"].Loc == bg_current:
@@ -686,12 +705,12 @@ label Mystique_Room:
         "Sleep." if Current_Time == "Night" and newgirl["Mystique"].Loc == bg_current:
                     call Mod_Round10
                     call Girls_Location
-                    call EventCalls
+                    call Mod_EventCalls
                     
         "Wait." if Current_Time != "Night":
                     call Mod_Round10
                     call Girls_Location
-                    call EventCalls
+                    call Mod_EventCalls
                             
         # "Return to Your Room" if TravelMode:            
         #             call Leave_Brotherhood_Area
@@ -707,7 +726,6 @@ label Mystique_Room:
                     else:
                         call Leave_Brotherhood_Area
                         call Worldmap
-    
     if "angry" in newgirl["Mystique"].RecentActions:
             call MystiqueFace("angry")
             ch_m "Go. Now."

@@ -1281,6 +1281,7 @@ label EventCalls:
         #Disables events when it's too early in the game or the turn is about to end      
         call Get_Dressed
         
+        call Mod_EventCalls
         if Current_Time == "Evening" and "yesdate" in P_DailyActions:
             if bg_current == "bg campus": 
                     call DateNight
@@ -1296,7 +1297,6 @@ label EventCalls:
                             jump Campus_Entry
                         "No":
                             "Suit yourself. . ."
-        call Mod_EventCalls
         if Day < 5 or Round < 10:
                     return
                     

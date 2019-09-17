@@ -624,7 +624,7 @@ label Mystique_Morning:
             ch_m "Night, [newgirl[Mystique].Petname]"                                               #fix add sex option here
             show blackscreen onlayer black    
             pause 2
-            call Mod_Wait(Lights = 0)
+            call Mod_Wait(0,0)
             $ newgirl["Mystique"].Loc = bg_current
             call MystiqueOutfit("sleep")
             

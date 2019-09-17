@@ -343,9 +343,8 @@ label Mod_Daily_Math:
 
     call Mod_Hourly
 
-label Mod_Wait:
-    call Wait
-    
+label Mod_Wait (Outfit = 1, Lights = 1):
+    call Wait(Outfit, Lights)
     $ newgirl["Mystique"].Addict += newgirl["Mystique"].Addictionrate
 
     if Time_Count < 3:  #not sleep time                                          
@@ -445,8 +444,8 @@ label Mod_Hourly:
         
     call Mystique_Schedule
     call Stat_Checks
-    # if Outfit:
-    call MystiqueOutfit(newgirl["Mystique"].OutfitDay)
+    if Outfit:
+        call MystiqueOutfit(newgirl["Mystique"].OutfitDay)
     #end Mystique hourly actions 
 
 
