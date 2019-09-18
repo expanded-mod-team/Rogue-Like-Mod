@@ -64,22 +64,9 @@ image Mystique_Sex_Body:
         #     "newgirl['Mystique'].Neck == 'NewX'", "images/MystiqueSex/Mystique_Sex_New_NeckX_White.png",
         #     "newgirl['Mystique'].Neck == 'black NewX'", "images/MystiqueSex/Mystique_Sex_New_NeckX_Black.png",
         #     "True", Null(),
-        #     ),  
-        (350,-275), "Mystique_Head_Sex_2",  #check positioning (400,-300)
-        # (0,0), ConditionSwitch(                                                                                 #gloves
-        #     "E_Arms == 'black gloves'", "images/MystiqueSex/Mystique_Sex_Gloves_Black.png",
-        #     "E_Arms == 'white gloves'", "images/MystiqueSex/Mystique_Sex_Gloves_White.png",
-        #     "True", Null(),
-        #     ), 
+        #     ),
         (0,0), ConditionSwitch(                                                                                 #tanktop
-            # "not newgirl['Mystique'].Chest", Null(),        
-        #     "E_Chest == 'cami'", "images/MystiqueSex/Mystique_Sex_Under_Cami.png",
-        #     "E_Chest == 'sports bra'", "images/MystiqueSex/Mystique_Sex_Under_SportsBra.png",
-        #     "E_Chest == 'bra'", "images/MystiqueSex/Mystique_Sex_Under_Bra.png",
-            "True", GetOutfitString("images/MystiqueSex/Mystique_Sex_Chest_", newgirl['Mystique'].Chest, ".png"),
-            # "newgirl['Mystique'].Chest == 'bra'", "images/MystiqueSex/Mystique_Sex_Under_Bra.png",
-            # "E_Chest == 'black corset'", "images/MystiqueSex/Mystique_Sex_Corset_Black.png",
-            # "E_Chest == 'corset'", "images/MystiqueSex/Mystique_Sex_Corset_White.png",
+            "True", im.MatrixColor("images/MystiqueSex/Mystique_Sex_Chest" + str(newgirl['Mystique'].Colors['Chest'].colored) + "_" + str(newgirl['Mystique'].Chest) + ".png",im.matrix.opacity(float(newgirl['Mystique'].Colors['Chest'].opacity)/255.0)*im.matrix.tint(float(newgirl['Mystique'].Colors['Chest'].red)/255.0, float(newgirl['Mystique'].Colors['Chest'].green)/255.0, float(newgirl['Mystique'].Colors['Chest'].blue)/255.0)),
             "True", Null(),
             ), 
         (0,0), ConditionSwitch(                                                                                 #Wet look
@@ -87,13 +74,9 @@ image Mystique_Sex_Body:
             "True", Null(),              
             ), 
         (0,0), ConditionSwitch(                                                                                 #Overshirt
-            "True", GetOutfitString("images/MystiqueSex/Mystique_Sex_Over_", newgirl['Mystique'].Over, ".png"),
-        #     "not newgirl['Mystique'].Over", Null(),
-        #     "E_Over == 'pink top'", "images/MystiqueSex/Mystique_Sex_Over_PinkShirt.png",           
-        #     "E_Over == 'red shirt'", "images/MystiqueSex/Mystique_Sex_Over_RedShirt.png",   
-        #     "E_Over == 'towel'", "images/MystiqueSex/Mystique_Sex_Over_Towel.png",       
-        #     "True", Null(), 
+            "True", im.MatrixColor("images/MystiqueSex/Mystique_Sex_Over" + str(newgirl['Mystique'].Colors['Over'].colored) + "_" + str(newgirl['Mystique'].Over) + ".png",im.matrix.opacity(float(newgirl['Mystique'].Colors['Over'].opacity)/255.0)*im.matrix.tint(float(newgirl['Mystique'].Colors['Over'].red)/255.0, float(newgirl['Mystique'].Colors['Over'].green)/255.0, float(newgirl['Mystique'].Colors['Over'].blue)/255.0)),
             ),  
+        (350,-275), "Mystique_Head_Sex_2",  #check positioning (400,-300)
         (0,0),ConditionSwitch(                                                                                  #Outside Spunk
             "'belly' in newgirl['Mystique'].Spunk", "images/MystiqueSex/Mystique_Sex_Spunk_Body.png",   
             "True", Null(),  
@@ -274,10 +257,7 @@ image Mystique_Sex_Legs:
 
         (0,0), ConditionSwitch(                                                                                 #Panties if up
             "newgirl['Mystique'].PantiesDown", Null(),     
-            "True", GetOutfitString("images/MystiqueSex/Mystique_Sex_Panties_", newgirl['Mystique'].Panties, ".png"),
-            # "newgirl['Mystique'].Panties == 'bikini'", "images/MystiqueSex/Mystique_Sex_Panty_BikiniBottom_White.png",          
-            # "newgirl['Mystique'].Panties == 'white panties'", "images/MystiqueSex/Mystique_Sex_Panty_White.png",          
-            # "newgirl['Mystique'].Panties == 'black panties'", "images/MystiqueSex/Mystique_Sex_Panty_Black.png",    
+            "True", im.MatrixColor("images/MystiqueSex/Mystique_Sex_Panties" + str(newgirl['Mystique'].Colors['Panties'].colored) + "_" + str(newgirl['Mystique'].Panties) + ".png",im.matrix.opacity(float(newgirl['Mystique'].Colors['Panties'].opacity)/255.0)*im.matrix.tint(float(newgirl['Mystique'].Colors['Panties'].red)/255.0, float(newgirl['Mystique'].Colors['Panties'].green)/255.0, float(newgirl['Mystique'].Colors['Panties'].blue)/255.0)),
             "True", Null(),                     
             ),  
         # (0,0), ConditionSwitch(                                                                                 #Legs Layer
