@@ -1463,6 +1463,8 @@ screen recolor_screen_Rogue_HairBangs:
 screen recolor_screen_(_Girl="Mystique", _OutfitType = "Over", _Outfit = "workout jacket"):
 
     add(im.MatrixColor("images/" + _Girl + "Sprite/" + _Girl + "_Sprite_" + _OutfitType + "White_" + _Outfit + ".png",im.matrix.opacity(float(newgirl[_Girl].Colors[_OutfitType].tempopacity)/255.0)*im.matrix.tint(float(newgirl[_Girl].Colors[_OutfitType].tempred)/255.0, float(newgirl[_Girl].Colors[_OutfitType].tempgreen)/255.0, float(newgirl[_Girl].Colors[_OutfitType].tempblue)/255.0))) align(0.5, 0.1)
+    if _Outfit == "black lingerie":
+        add(im.MatrixColor("images/MystiqueSprite/Mystique_Sprite_PantiesWhite_black lingerie_Waist.png",im.matrix.opacity(float(newgirl[_Girl].Colors[_OutfitType].tempopacity)/255.0)*im.matrix.tint(float(newgirl[_Girl].Colors[_OutfitType].tempred)/255.0, float(newgirl[_Girl].Colors[_OutfitType].tempgreen)/255.0, float(newgirl[_Girl].Colors[_OutfitType].tempblue)/255.0))) align(0.5, 0.1)
         
         
     vbox align(0.5, 0.7):

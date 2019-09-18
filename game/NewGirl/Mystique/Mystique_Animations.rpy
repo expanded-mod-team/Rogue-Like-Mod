@@ -97,8 +97,8 @@ image Mystique_Mystique_Sprite:
         (0,0), ConditionSwitch(
             ## Panties            
             "not newgirl['Mystique'].Panties", Null(),
-            "newgirl['Mystique'].Panties == 'black lingerie'", "images/MystiqueSprite/Mystique_Waist_LacedBeltBlack.png",      
-            "True", Null(),            
+            "newgirl['Mystique'].Panties == 'black lingerie'", im.MatrixColor("images/MystiqueSprite/Mystique_Sprite_Panties" + str(newgirl['Mystique'].Colors['Panties'].colored) + "_black lingerie_Waist.png",im.matrix.opacity(float(newgirl['Mystique'].Colors['Panties'].opacity)/255.0)*im.matrix.tint(float(newgirl['Mystique'].Colors['Panties'].red)/255.0, float(newgirl['Mystique'].Colors['Panties'].green)/255.0, float(newgirl['Mystique'].Colors['Panties'].blue)/255.0)),
+            "True", Null(), 
             ),
         (0,0), ConditionSwitch(
             ## Arms and gloves
