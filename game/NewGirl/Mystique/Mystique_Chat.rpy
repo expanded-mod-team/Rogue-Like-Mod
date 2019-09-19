@@ -4690,17 +4690,25 @@ label Mystique_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agr
                     $ Count = -5
                 else:
                     $ Count = 0
+            if newgirl["Mystique"].Colors["Chest"].colored:
+                $ Mult = float(newgirl["Mystique"].Colors["Chest"].opacity/255)
+                $ Count = Count*Mult
                     
             #If she's wearing an overshirt
             if newgirl["Mystique"].Over == "workout jacket":                                             
-                $ Count += 5
+                $ Count_ = 5
             elif newgirl["Mystique"].Over == "red shirt":                                             
-                $ Count += 20
+                $ Count_ = 20
             elif newgirl["Mystique"].Over == "lavender shirt":                                             
-                $ Count += 20
+                $ Count_ = 20
             elif newgirl["Mystique"].Over == "towel":      
-                $ Count += 5
-            #else: nothing    
+                $ Count_ = 5
+            #else: nothing 
+            if newgirl["Mystique"].Colors["Over"].colored:
+                $ Mult = float(newgirl["Mystique"].Colors["Over"].opacity/255)
+                $ Count_ = Count_*Mult
+
+            $ Count = Count + Count_
             
             call NewGirl_Face("Mystique","sexy", 0)
             if Custom == 9:
@@ -4737,22 +4745,49 @@ label Mystique_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agr
                     #If wearing pants
                     if newgirl["Mystique"].Panties:
                             $ Count = 30
+                            $ Mult1 = 1
+                            $ Mult2 = 1
+                            if newgirl["Mystique"].Colors["Legs"].colored:
+                                $ Mult1 = float(newgirl["Mystique"].Colors["Legs"].opacity/255)
+                            if newgirl["Mystique"].Colors["Panties"].colored:
+                                $ Mult2 = float(newgirl["Mystique"].Colors["Panties"].opacity/255)
+                            $ Mult = (Mult1+Mult2)/2
+                            $ Count = Count*Mult
                     else:
                             # if commando
                             $ Count = 25 
+                            if newgirl["Mystique"].Colors["Legs"].colored:
+                                $ Mult = float(newgirl["Mystique"].Colors["Legs"].opacity/255)
+                                $ Count = Count*Mult
                 elif ModPantsNum("Mystique") > 2: #skirt              
                     #If wearing skirt
                     if newgirl["Mystique"].Panties:
                             $ Count = 25
+                            $ Mult1 = 1
+                            $ Mult2 = 1
+                            if newgirl["Mystique"].Colors["Legs"].colored:
+                                $ Mult1 = float(newgirl["Mystique"].Colors["Legs"].opacity/255)
+                            if newgirl["Mystique"].Colors["Panties"].colored:
+                                $ Mult2 = float(newgirl["Mystique"].Colors["Panties"].opacity/255)
+                            $ Mult = (Mult1+Mult2)/2
+                            $ Count = Count*Mult
                     else:
                             # if commando
-                            $ Count = 15                
-                elif newgirl["Mystique"].Panties == "black lingerie":      #If wearing only white panties
-                    $ Count = 10
-                elif newgirl["Mystique"].Panties == "black panties":      #If wearing only black panties
-                    $ Count = 10
-                elif newgirl["Mystique"].Panties == "yellow bikini":      #If wearing only bikini
-                    $ Count = 15
+                            $ Count = 15
+                            if newgirl["Mystique"].Colors["Legs"].colored:
+                                $ Mult = float(newgirl["Mystique"].Colors["Legs"].opacity/255)
+                                $ Count = Count*Mult
+                else:
+                    if newgirl["Mystique"].Panties == "black lingerie":      #If wearing only white panties
+                        $ Count = 10
+                    elif newgirl["Mystique"].Panties == "black panties":      #If wearing only black panties
+                        $ Count = 10
+                    elif newgirl["Mystique"].Panties == "yellow bikini":      #If wearing only bikini
+                        $ Count = 15
+                    
+                    if newgirl["Mystique"].Colors["Panties"].colored:
+                        $ Mult = float(newgirl["Mystique"].Colors["Panties"].opacity/255)
+                        $ Count = Count*Mult
                 
                 if ModHoseNum("Mystique") >= 10:
                     # if she's wearing full coverage hose, it's at least 25
