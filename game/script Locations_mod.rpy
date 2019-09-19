@@ -177,6 +177,8 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
         $ newgirl["Mystique"].Upskirt = 0
         $ newgirl["Mystique"].Uptop = 0
         $ newgirl["Mystique"].PantiesDown = 0
+        
+        $ newgirl["Mystique"].reset_colors()
         if M_OutfitTemp == "teacher":
                     if 0 in (newgirl["Mystique"].Legs,newgirl["Mystique"].Over,newgirl["Mystique"].Chest,newgirl["Mystique"].Hose):
                             $ Undressed = 1
@@ -264,6 +266,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hair = "wavy"
                     $ newgirl["Mystique"].Hose = 0   
         elif M_OutfitTemp == "custom1":
+                    $ newgirl["Mystique"].load_colors(1)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Custom[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Custom[3]:          
@@ -285,6 +288,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hose = newgirl["Mystique"].Custom[9]                     
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[3]
         elif M_OutfitTemp == "custom2":
+                    $ newgirl["Mystique"].load_colors(2)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Custom2[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Custom2[3]:          
@@ -306,6 +310,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hose = newgirl["Mystique"].Custom2[9]                      
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[5]
         elif M_OutfitTemp == "custom3":
+                    $ newgirl["Mystique"].load_colors(3)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Custom3[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Custom3[3]:          
@@ -327,6 +332,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hose = newgirl["Mystique"].Custom3[9]                         
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[6]
         elif M_OutfitTemp == "custom4":
+                    $ newgirl["Mystique"].load_colors(4)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Custom4[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Custom4[3]:          
@@ -348,6 +354,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hose = newgirl["Mystique"].Custom4[9]                         
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[11]
         elif M_OutfitTemp == "custom5":
+                    $ newgirl["Mystique"].load_colors(5)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Custom5[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Custom5[3]:          
@@ -369,6 +376,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hose = newgirl["Mystique"].Custom5[9]                         
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[12]
         elif M_OutfitTemp == "custom6":
+                    $ newgirl["Mystique"].load_colors(6)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Custom6[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Custom6[3]:          
@@ -390,6 +398,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hose = newgirl["Mystique"].Custom6[9]                         
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[13]
         elif M_OutfitTemp == "custom7":
+                    $ newgirl["Mystique"].load_colors(7)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Custom7[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Custom7[3]:          
@@ -411,6 +420,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hose = newgirl["Mystique"].Custom7[9]                         
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[14]
         elif M_OutfitTemp == "sleep":  
+                    $ newgirl["Mystique"].load_colors(8)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Sleepwear[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Sleepwear[3]:          
@@ -435,6 +445,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[4]
                     
         elif M_OutfitTemp == "gym":
+                    $ newgirl["Mystique"].load_colors(9)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Gym[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Gym[3]:          
@@ -594,7 +605,7 @@ label Brotherhood_Entry:
     $ bg_current = "bg Brotherhood"
     call Mod_Daily_Math
     call Mod_Set_The_Scene(Entry = 1)
-    call Taboo_Level
+    call Mod_Taboo_Level
     # $ D20 = renpy.random.randint(1, 20)
     
     $ bg_current = "bg Brotherhood"         
@@ -607,7 +618,7 @@ label Brotherhood_Hall:
     call Mod_Set_The_Scene
     if "traveling" in P_RecentActions:
         $ P_RecentActions.remove("traveling")
-    call Taboo_Level
+    call Mod_Taboo_Level
     call QuickEvents
     call Checkout(1)
     if Round <= 10: 
@@ -663,7 +674,7 @@ label Mystique_Room_Entry:
     $ bg_current = "bg Mystique"           
     $ newgirl["Mystique"].LooksLike = "Mystique"
     call Mod_Set_The_Scene(Entry = 1)
-    call Taboo_Level
+    call Mod_Taboo_Level
     $ D20 = renpy.random.randint(1, 20)
     
     $ bg_current = "bg Mystique"         
@@ -677,7 +688,7 @@ label Mystique_Room:
     call Mod_Set_The_Scene(Quiet = 1)
     if "traveling" in P_RecentActions:
         $ P_RecentActions.remove("traveling")
-    call Taboo_Level
+    call Mod_Taboo_Level
     call QuickEvents
     call Checkout(1)
     if Round <= 10: 

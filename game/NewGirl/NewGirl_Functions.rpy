@@ -393,8 +393,12 @@ label Mod_Wait (Outfit = 1, Lights = 1):
                         $ newgirl["Mystique"].Inbt += 10    
      
     #End of things when you sleep
+    call Mod_Hourly(Outfit)
+    return
 
-label Mod_Hourly:
+
+label Mod_Hourly(Outfit = 0):
+    
     #Things that are about you:
     $ newgirl["Mystique"].OCount = 0
 

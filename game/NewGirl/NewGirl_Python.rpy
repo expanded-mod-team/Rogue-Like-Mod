@@ -1,5 +1,6 @@
 ﻿init python:
-    
+    import copy
+
     class SetColorNewGirl(object):
         def __init__(self, name = "Mystique"):
             self.red = 255
@@ -121,7 +122,22 @@
             self.Custom4 = [0,0,0,0,0,0,0,0,0,0,0]  
             self.Custom5 = [0,0,0,0,0,0,0,0,0,0,0]  
             self.Custom6 = [0,0,0,0,0,0,0,0,0,0,0]    
-            self.Custom7 = [0,0,0,0,0,0,0,0,0,0,0]    
+            self.Custom7 = [0,0,0,0,0,0,0,0,0,0,0]
+            self.CustomColors = {}
+            i=1
+            while i < 10:
+                self.CustomColors.update( {
+                                i : {
+                                    "Over" : SetColorNewGirl(self.name),
+                                    "Chest" : SetColorNewGirl(self.name),
+                                    "Legs" : SetColorNewGirl(self.name),
+                                    "Hose" : SetColorNewGirl(self.name),
+                                    "Panties" : SetColorNewGirl(self.name),
+                                    "Hair" : SetColorNewGirl(self.name),
+                                    }
+                                })
+                i+=1
+
             self.Gym = [2,0,0,0,"tights","top","black panties",0,0,0,0] #arms position, 0, 0, over, legs, chest, panties, 
             self.Sleepwear = [0,0,0,0,0,"black bra","black panties",0,0,0]
             self.Schedule = [0,0,0,0,0,0,0,0,4,0]                      #chooses when she wears what
@@ -215,6 +231,19 @@
                 "Hair" : SetColorNewGirl(self.name),
                 }
             #} newgirl["Mystique"].Colors["Over"].screen_loop("Over",newgirl["Mystique"].Over)
+        def save_colors(self, number = 1):
+            self.CustomColors[number] = copy.deepcopy(self.Colors)
+
+        def load_colors(self, number = 1):
+            self.Colors = copy.deepcopy(self.CustomColors[number])
+
+        def reset_colors(self):
+            for key in self.Colors:
+                self.Colors[key].red = 255
+                self.Colors[key].green = 255
+                self.Colors[key].blue = 255
+                self.Colors[key].opacity = 255
+                self.Colors[key].colored = ""
 
         def get_outfit(self, outfittype = "Over"):
             if outfittype == "Over":

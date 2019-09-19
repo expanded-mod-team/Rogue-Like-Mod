@@ -1148,21 +1148,21 @@ label Mystique_Flirt:
         menu:        
                 
             "Touch her cheek.":                                                                                 #Touch her cheek 
-                    if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
-                        "You try to reach for her cheek but she moves away from you"
-                        #"She whispers to you:"
-                        ch_m "You can't do that here"
-                        return
-                    else:
+                    # if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
+                    #     "You try to reach for her cheek but she moves away from you"
+                    #     #"She whispers to you:"
+                    #     ch_m "You can't do that here"
+                    #     return
+                    # else:
                         call Mystique_TouchCheek
                             
             "Kiss her cheek":                                                                                   #Kiss her cheek
-                    if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
-                        "You try to reach for her cheek but she moves away from you"
-                        #"She whispers to you:"
-                        ch_m "You can't do that here"
-                        return
-                    else:    
+                    # if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
+                    #     "You try to reach for her cheek but she moves away from you"
+                    #     #"She whispers to you:"
+                    #     ch_m "You can't do that here"
+                    #     return
+                    # else:    
                         "You lean over, tilt her head back, and kiss her on the cheek."    
                         if P_Lvl < 4:
                             call SetLooksLikeMystique("Mystique")
@@ -1195,7 +1195,7 @@ label Mystique_Flirt:
                             $ newgirl["Mystique"].Inbt = Mod_Statupdate("Mystique", "Inbt", newgirl["Mystique"].Inbt, 40, 3) 
                             ch_m "Stop that at once."
                         # if P_Lvl < 4:
-                        #     call SetLooksLikeMystique("Raven")
+                            call SetLooksLikeMystique("Raven")
                         #     call MystiqueOutfit
                         if "addict Mystique" in P_Traits:
                             $ newgirl["Mystique"].Addict -= 1
@@ -1203,12 +1203,12 @@ label Mystique_Flirt:
                             $ newgirl["Mystique"].Addictionrate = 3 if newgirl["Mystique"].Addictionrate < 3 else newgirl["Mystique"].Addictionrate 
                    
             "Kiss her lips":                                                                                    #Kiss her
-                    if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
-                        "You try to reach for her lips but she moves away from you"
-                        #"She whispers to you:"
-                        ch_m "You can't do that here"
-                        return
-                    else:    
+                    # if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
+                    #     "You try to reach for her lips but she moves away from you"
+                    #     #"She whispers to you:"
+                    #     ch_m "You can't do that here"
+                    #     return
+                    # else:    
                         if Mod_ApprovalCheck("Mystique", 1000, TabM=2) or Mod_ApprovalCheck("Mystique", 600, "L", TabM=2):        
                             "You lean down, tilt her head back, and plant a kiss on her lips."
                             if P_Lvl < 4:
@@ -1320,7 +1320,7 @@ label Mystique_Flirt:
                                     $ newgirl["Mystique"].Inbt = Mod_Statupdate("Mystique", "Inbt", newgirl["Mystique"].Inbt, 50, 1)
                                     call Mystique_SexAct("kissing")
                                     if P_Lvl < 4:
-                                        call SetLooksLikeMystique("Raven")
+                                        # call SetLooksLikeMystique("Raven")
                                         call MystiqueOutfit
                                     return
                                 "Not now [[no].":
@@ -1344,17 +1344,17 @@ label Mystique_Flirt:
                         else:
                             ch_m "Don't try that again."
                         if P_Lvl < 4:
-                            call SetLooksLikeMystique("Raven")
+                            # call SetLooksLikeMystique("Raven")
                             call MystiqueOutfit
                         #End Kiss her
                 
             "Hug her":                                                                                          #Hug her
-                    if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
-                        "You try to reach for a hug but she moves away from you"
-                        #"She whispers to you:"
-                        ch_m "You can't do that here"
-                        return
-                    else:
+                    # if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
+                    #     "You try to reach for a hug but she moves away from you"
+                    #     #"She whispers to you:"
+                    #     ch_m "You can't do that here"
+                    #     return
+                    # else:
                         if Mod_ApprovalCheck("Mystique", 400, TabM=2):        
                             "You lean over and wrap Mystique in a warm hug."
                             if P_Lvl < 4:
@@ -1400,27 +1400,27 @@ label Mystique_Flirt:
                             $ newgirl["Mystique"].Inbt = Mod_Statupdate("Mystique", "Inbt", newgirl["Mystique"].Inbt, 30, 2) 
                             ch_m "What was that about, [newgirl[Mystique].Petname]?"   
                         if P_Lvl < 4:
-                            call SetLooksLikeMystique("Raven")
+                            # call SetLooksLikeMystique("Raven")
                             call MystiqueOutfit
             "Slap her ass" if newgirl["Mystique"].Loc == bg_current:                                                              #Slap her ass
-                    if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
-                        "You try to slap her ass but she moves away from you"
-                        #"She whispers to you:"
-                        ch_m "You can't do that here"
-                        return
-                    else:
+                    # if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
+                    #     "You try to slap her ass but she moves away from you"
+                    #     #"She whispers to you:"
+                    #     ch_m "You can't do that here"
+                    #     return
+                    # else:
                         call Mystique_Slap_Ass
                         if P_Lvl < 4:
-                            call SetLooksLikeMystique("Raven")
+                            # call SetLooksLikeMystique("Raven")
                             call MystiqueOutfit
                 
             "Pinch her ass":                                                                                    #Pinch her ass
-                    if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
-                        "You try to reach for her ass but she moves away from you"
-                        #"She whispers to you:"
-                        ch_m "You can't do that here"
-                        return
-                    else:
+                    # if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
+                    #     "You try to reach for her ass but she moves away from you"
+                    #     #"She whispers to you:"
+                    #     ch_m "You can't do that here"
+                    #     return
+                    # else:
                         call NewGirl_Face("Mystique","surprised", 1)
                         if newgirl["Mystique"].SEXP >= 5 and Mod_ApprovalCheck("Mystique", 700, TabM=2):        
                             "You come up to Mystique from behind and quickly pinch her butt."
@@ -1438,7 +1438,7 @@ label Mystique_Flirt:
                             "She slaps your hand away and rounds on you."
                             ch_m "Down boy!" 
                             if P_Lvl < 4:
-                                call SetLooksLikeMystique("Raven")
+                                # call SetLooksLikeMystique("Raven")
                                 call MystiqueOutfit
                             return
                             
@@ -1472,7 +1472,7 @@ label Mystique_Flirt:
                             $ newgirl["Mystique"].Inbt = Mod_Statupdate("Mystique", "Inbt", newgirl["Mystique"].Inbt, 50, 2)
                             ch_m "Would you like me to break those fingers?"  
                         if P_Lvl < 4:
-                            call SetLooksLikeMystique("Raven")
+                            # call SetLooksLikeMystique("Raven")
                             call MystiqueOutfit
 
             "Flip her skirt up" if P_Lvl >= 4 and newgirl["Mystique"].Legs and "skirt" in newgirl["Mystique"].Legs and not newgirl["Mystique"].Upskirt:   #Flip her skirt           
@@ -1681,12 +1681,12 @@ label Mystique_Flirt:
                         #End Flip her Skirt
 
             "Grab her tit":                                                                                     #Grab her tit
-                    if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
-                        "You try to reach for her tit but she moves away from you"
-                        #"She whispers to you:"
-                        ch_m "You can't do that here"
-                        return
-                    else:    
+                    # if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
+                    #     "You try to reach for her tit but she moves away from you"
+                    #     #"She whispers to you:"
+                    #     ch_m "You can't do that here"
+                    #     return
+                    # else:    
                         call NewGirl_Face("Mystique","surprised", 1)
                         if newgirl["Mystique"].SEXP >= 5 and Mod_ApprovalCheck("Mystique", 700, TabM=3):        
                             "You come up to Mystique and quickly honk her boob."
@@ -1706,7 +1706,7 @@ label Mystique_Flirt:
                             "She grabs your arm and turns it on your back."
                             ch_m "You must learn to resist temptations, [newgirl[Mystique].Petname]." 
                             if P_Lvl < 4:
-                                call SetLooksLikeMystique("Raven")
+                                # call SetLooksLikeMystique("Raven")
                                 call MystiqueOutfit
                             return
                             
@@ -1854,16 +1854,16 @@ label Mystique_Flirt:
                             call NewGirl_Face("Mystique","angry", 1)
                             ch_m "Just keep your hands to yourself."
                         if P_Lvl < 4:
-                            call SetLooksLikeMystique("Raven")
+                            # call SetLooksLikeMystique("Raven")
                             call MystiqueOutfit
                     
             "Rub her shoulders":                                                                                #Rub her shoulders
-                    if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
-                        "You try to reach for her shoulders but she moves away from you"
-                        #"She whispers to you:"
-                        ch_m "You can't do that here"
-                        return
-                    else:
+                    # if (Taboo or OtherGirls_Around("Mystique")) and P_Lvl < 4:
+                    #     "You try to reach for her shoulders but she moves away from you"
+                    #     #"She whispers to you:"
+                    #     ch_m "You can't do that here"
+                    #     return
+                    # else:
                         "You come up to Mystique from behind and gently rub her shoulders."
                         if P_Lvl < 4:
                                 call SetLooksLikeMystique("Mystique")
@@ -1898,7 +1898,7 @@ label Mystique_Flirt:
                         $ newgirl["Mystique"].Obed = Mod_Statupdate("Mystique", "Obed", newgirl["Mystique"].Obed, 30, 3)            
                         $ newgirl["Mystique"].Inbt = Mod_Statupdate("Mystique", "Inbt", newgirl["Mystique"].Inbt, 30, 2) 
                         if P_Lvl < 4:
-                            call SetLooksLikeMystique("Raven")
+                            # call SetLooksLikeMystique("Raven")
                             call MystiqueOutfit
 
             # "Ask for her panties" if newgirl["Mystique"].Panties != "naked pool":
@@ -4848,6 +4848,7 @@ label Mystique_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agr
                         
                     $ newgirl["Mystique"].OutfitShame[Custom] = Tempshame                     
                     if Custom == 5:
+                            $ newgirl["Mystique"].save_colors(2)
                             $ newgirl["Mystique"].Custom2[1] = newgirl["Mystique"].Arms  
                             $ newgirl["Mystique"].Custom2[2] = newgirl["Mystique"].Legs 
                             $ newgirl["Mystique"].Custom2[3] = newgirl["Mystique"].Over
@@ -4858,6 +4859,7 @@ label Mystique_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agr
                             $ newgirl["Mystique"].Custom2[9] = newgirl["Mystique"].Hose
                             $ newgirl["Mystique"].Custom2[0] = 2 if Agree else 1           
                     elif Custom == 6:
+                            $ newgirl["Mystique"].save_colors(3)
                             $ newgirl["Mystique"].Custom3[1] = newgirl["Mystique"].Arms  
                             $ newgirl["Mystique"].Custom3[2] = newgirl["Mystique"].Legs 
                             $ newgirl["Mystique"].Custom3[3] = newgirl["Mystique"].Over
@@ -4868,6 +4870,7 @@ label Mystique_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agr
                             $ newgirl["Mystique"].Custom3[9] = newgirl["Mystique"].Hose
                             $ newgirl["Mystique"].Custom3[0] = 2 if Agree else 1
                     elif Custom == 11:
+                            $ newgirl["Mystique"].save_colors(4)
                             $ newgirl["Mystique"].Custom4[1] = newgirl["Mystique"].Arms  
                             $ newgirl["Mystique"].Custom4[2] = newgirl["Mystique"].Legs 
                             $ newgirl["Mystique"].Custom4[3] = newgirl["Mystique"].Over
@@ -4877,6 +4880,7 @@ label Mystique_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agr
                             $ newgirl["Mystique"].Custom4[9] = newgirl["Mystique"].Hose
                             $ newgirl["Mystique"].Custom4[0] = 2 if Agree else 1           
                     elif Custom == 12:
+                            $ newgirl["Mystique"].save_colors(5)
                             $ newgirl["Mystique"].Custom5[1] = newgirl["Mystique"].Arms  
                             $ newgirl["Mystique"].Custom5[2] = newgirl["Mystique"].Legs 
                             $ newgirl["Mystique"].Custom5[3] = newgirl["Mystique"].Over
@@ -4886,6 +4890,7 @@ label Mystique_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agr
                             $ newgirl["Mystique"].Custom5[9] = newgirl["Mystique"].Hose
                             $ newgirl["Mystique"].Custom5[0] = 2 if Agree else 1           
                     elif Custom == 13:
+                            $ newgirl["Mystique"].save_colors(6)
                             $ newgirl["Mystique"].Custom6[1] = newgirl["Mystique"].Arms  
                             $ newgirl["Mystique"].Custom6[2] = newgirl["Mystique"].Legs 
                             $ newgirl["Mystique"].Custom6[3] = newgirl["Mystique"].Over
@@ -4895,6 +4900,7 @@ label Mystique_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agr
                             $ newgirl["Mystique"].Custom6[9] = newgirl["Mystique"].Hose
                             $ newgirl["Mystique"].Custom6[0] = 2 if Agree else 1           
                     elif Custom == 14:
+                            $ newgirl["Mystique"].save_colors(7)
                             $ newgirl["Mystique"].Custom7[1] = newgirl["Mystique"].Arms  
                             $ newgirl["Mystique"].Custom7[2] = newgirl["Mystique"].Legs 
                             $ newgirl["Mystique"].Custom7[3] = newgirl["Mystique"].Over
@@ -4903,7 +4909,8 @@ label Mystique_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agr
                             $ newgirl["Mystique"].Custom7[8] = newgirl["Mystique"].Hair
                             $ newgirl["Mystique"].Custom7[9] = newgirl["Mystique"].Hose
                             $ newgirl["Mystique"].Custom7[0] = 2 if Agree else 1
-                    elif Custom == 7 and Agree:
+                    elif Custom == 7 and Agree: #gym = 8
+                            $ newgirl["Mystique"].save_colors(8)
                             $ newgirl["Mystique"].Gym[1] = newgirl["Mystique"].Arms  
                             $ newgirl["Mystique"].Gym[2] = newgirl["Mystique"].Legs 
                             $ newgirl["Mystique"].Gym[3] = newgirl["Mystique"].Over
@@ -4913,7 +4920,8 @@ label Mystique_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agr
                             $ newgirl["Mystique"].Gym[8] = newgirl["Mystique"].Hair
                             $ newgirl["Mystique"].Gym[9] = newgirl["Mystique"].Hose
                             $ newgirl["Mystique"].Gym[0] = 2   
-                    elif Custom == 9 and Agree:
+                    elif Custom == 9 and Agree: #sleepwear = 9
+                            $ newgirl["Mystique"].save_colors(9)
                             $ newgirl["Mystique"].Sleepwear[1] = newgirl["Mystique"].Arms  
                             $ newgirl["Mystique"].Sleepwear[2] = newgirl["Mystique"].Legs 
                             $ newgirl["Mystique"].Sleepwear[3] = newgirl["Mystique"].Over
@@ -4924,6 +4932,8 @@ label Mystique_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agr
                             $ newgirl["Mystique"].Sleepwear[9] = newgirl["Mystique"].Hose
                             $ newgirl["Mystique"].Sleepwear[0] = 2 if Agree else 1                            
                     else: #Typically Custom == 3
+                            $ newgirl["Mystique"].save_colors(1)
+
                             $ newgirl["Mystique"].Custom[1] = newgirl["Mystique"].Arms  
                             $ newgirl["Mystique"].Custom[2] = newgirl["Mystique"].Legs 
                             $ newgirl["Mystique"].Custom[3] = newgirl["Mystique"].Over
