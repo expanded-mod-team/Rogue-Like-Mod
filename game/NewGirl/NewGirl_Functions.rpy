@@ -332,19 +332,23 @@ label Mystique_Todo:
                 $ newgirl["Mystique"].Todo.remove("barbell")            
         return
 
-label Mod_Daily_Math:
-    if Day == BH_Day:
-        return
-    if Current_Time == BH_Current_Time:
-        return
+# label Mod_Daily_Math:
+    
+#     if Day != BH_Day:
+#         $ BH_Day = Day
+#         call Mod_Wait
+#         return
+    
+#     if Current_Time != BH_Current_Time:
+#         $ BH_Current_Time = Current_Time
+#         call Mod_Hourly
+#         return
 
-    $ BH_Day = Day
-    $ BH_Current_Time = Current_Time
 
-    call Mod_Hourly
 
-label Mod_Wait (Outfit = 1, Lights = 1):
-    call Wait(Outfit, Lights)
+label Mod_Wait (Outfit = 1, Lights = 1, Wait = 1):
+    if Wait:
+        call Wait(Outfit, Lights)
     $ newgirl["Mystique"].Addict += newgirl["Mystique"].Addictionrate
 
     if Time_Count < 3:  #not sleep time                                          

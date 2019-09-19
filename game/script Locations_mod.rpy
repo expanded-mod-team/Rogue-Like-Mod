@@ -603,7 +603,7 @@ label Brotherhood_Entry:
     show screen Mod_Status_screen
     # $ Ch_Focus = "Mystique"
     $ bg_current = "bg Brotherhood"
-    call Mod_Daily_Math
+    # call Mod_Daily_Math
     call Mod_Set_The_Scene(Entry = 1)
     call Mod_Taboo_Level
     # $ D20 = renpy.random.randint(1, 20)

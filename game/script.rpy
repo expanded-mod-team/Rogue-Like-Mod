@@ -4107,6 +4107,8 @@ label Wait (Outfit = 1, Lights = 1):
     # If Lights is 1, it removes the blackout screen, otherwise it does not. 
     show blackscreen onlayer black 
     
+    call Mod_Wait(Wait = 0)
+
     $ R_Addict += R_Addictionrate 
     $ K_Addict += K_Addictionrate
     $ E_Addict += E_Addictionrate
