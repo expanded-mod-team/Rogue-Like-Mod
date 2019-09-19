@@ -409,6 +409,8 @@ label MystiqueHJ_Cycle:
                                                 call Mystique_Blowjob
                                             else:
                                                 ch_m "Actually I'm getting a bit worn out, let's finish up here. . ."
+                                "Never Mind":
+                                            jump MystiqueHJ_Cycle
                                        
                         "I also want to fondle her breasts." if newgirl["Mystique"].Action and MultiAction:
                                     $ Trigger2 = "fondle breasts"
@@ -3371,6 +3373,8 @@ label MystiqueFJ_Cycle:
                                                 call Mystique_Handjob
                                             else:
                                                 ch_m "Actually I'm getting a bit worn out, let's finish up here. . ."
+                                "Never Mind":
+                                            jump MystiqueFJ_Cycle
                                          
                         "I also want to. . . [[Offhand]": #fix set this up
                                 if newgirl["Mystique"].Action and MultiAction:

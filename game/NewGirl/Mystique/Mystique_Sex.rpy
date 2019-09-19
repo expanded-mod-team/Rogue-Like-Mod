@@ -108,51 +108,51 @@ label Mystique_SexMenu:
                 else:
                     ch_m "I'm sorry, [newgirl[Mystique].Petname], but I need a break."
                     
-        # "Could you take care of something for me? [[Your dick, you mean your dick]":        
-        #         if P_Semen and newgirl["Mystique"].Action:                
-        #             menu:
-        #                 ch_m "What do you want me to do?"
-        #                 "Could you give me a handjob?":
-        #                     call Mystique_Handjob
-        #                 # "Could you give me a titjob?":
-        #                 #     call Mystique_Titjob         
-        #                 "Could you suck my cock?":
-        #                     call Mystique_Blowjob
-        #                 "Could you use your feet?":
-        #                     call Mystique_Footjob
-        #                 "Never mind [[something else]":
-        #                     jump Mystique_SMenu
-        #         elif not newgirl["Mystique"].Action:
-        #                 "I'm sorry, [newgirl[Mystique].Petname], but I need a break."
-        #         else:
-        #                 "You really don't have it in you, maybe take a break." 
-        #         # ch_m "Not if you mean \"your dick\".[[Not available yet]"
+        "Could you take care of something for me? [[Your dick, you mean your dick]":        
+                if P_Semen and newgirl["Mystique"].Action:                
+                    menu:
+                        ch_m "What do you want me to do?"
+                        "Could you give me a handjob?":
+                            call Mystique_Handjob
+                        # "Could you give me a titjob?":
+                        #     call Mystique_Titjob         
+                        "Could you suck my cock?":
+                            call Mystique_Blowjob
+                        "Could you use your feet?":
+                            call Mystique_Footjob
+                        "Never mind [[something else]":
+                            jump Mystique_SMenu
+                elif not newgirl["Mystique"].Action:
+                        "I'm sorry, [newgirl[Mystique].Petname], but I need a break."
+                else:
+                        "You really don't have it in you, maybe take a break." 
+                # ch_m "Not if you mean \"your dick\".[[Not available yet]"
                 
-        # "Could you put on a show for me?":
-        #             menu:
-        #                 ch_m "What d0 you want to see?"
-        #                 "Dance for me?":
-        #                         if newgirl["Mystique"].Action:
-        #                             $ Count = 1
-        #                             call Mystique_Strip
-        #                         else:
-        #                             "I'm sorry, [newgirl[Mystique].Petname], but I need a break."
+        "Could you put on a show for me?":
+                    menu:
+                        ch_m "What d0 you want to see?"
+                        "Dance for me?":
+                                if newgirl["Mystique"].Action:
+                                    $ Count = 1
+                                    call Mystique_Strip
+                                else:
+                                    "I'm sorry, [newgirl[Mystique].Petname], but I need a break."
                                 
-        #                 "Could you undress for me?": 
-        #                             call Mystique_Undress
+                        "Could you undress for me?": 
+                                    call Mystique_Undress
                                             
-        #                 "You've got a little something. . . [[clean-up]" if newgirl["Mystique"].Spunk:
-        #                             ch_m "Huh?"
-        #                             call Mystique_Cleanup
+                        "You've got a little something. . . [[clean-up]" if newgirl["Mystique"].Spunk:
+                                    ch_m "Huh?"
+                                    call Mystique_Cleanup
                                     
-        #                 "Could I watch you get yourself off? [[masturbate]":
-        #                         if newgirl["Mystique"].Action:
-        #                             call Mystique_Masturbate
-        #                         else:
-        #                             "I'm sorry, [newgirl[Mystique].Petname], but I need a break."
+                        "Could I watch you get yourself off? [[masturbate]":
+                                if newgirl["Mystique"].Action:
+                                    call Mystique_Masturbate
+                                else:
+                                    "I'm sorry, [newgirl[Mystique].Petname], but I need a break."
                         
-        #                 "Never mind [[something else]":
-        #                         jump Mystique_SMenu
+                        "Never mind [[something else]":
+                                jump Mystique_SMenu
                           
                 
         "Could we maybe?. . . [[fuck]":

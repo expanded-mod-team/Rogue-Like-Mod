@@ -4703,6 +4703,8 @@ label Mystique_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agr
                 $ Count_ = 20
             elif newgirl["Mystique"].Over == "towel":      
                 $ Count_ = 5
+            else:
+                $ Count_ = 0
             #else: nothing 
             if newgirl["Mystique"].Colors["Over"].colored:
                 $ Mult = float(newgirl["Mystique"].Colors["Over"].opacity/255)
