@@ -598,7 +598,7 @@ label Mystique_TouchCheek:
             ch_m "What are you doing, [newgirl[Mystique].Petname]?"
             $ newgirl["Mystique"].Love = Mod_Statupdate("Mystique", "Love", newgirl["Mystique"].Love, 50, -2)
             if P_Lvl < 4:
-                call SetLooksLikeMystique("Raven")
+                # call SetLooksLikeMystique("Raven")
                 call MystiqueOutfit
             return
     else:
@@ -640,7 +640,7 @@ label Mystique_TouchCheek:
         $ newgirl["Mystique"].Inbt = Mod_Statupdate("Mystique", "Inbt", newgirl["Mystique"].Inbt, 30, 1)
 
     if P_Lvl < 4:
-        call SetLooksLikeMystique("Raven")
+        # call SetLooksLikeMystique("Raven")
         call MystiqueOutfit
     
     if "no cheek" in newgirl["Mystique"].DailyActions: 

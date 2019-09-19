@@ -1195,7 +1195,7 @@ label Mystique_Flirt:
                             $ newgirl["Mystique"].Inbt = Mod_Statupdate("Mystique", "Inbt", newgirl["Mystique"].Inbt, 40, 3) 
                             ch_m "Stop that at once."
                         # if P_Lvl < 4:
-                            call SetLooksLikeMystique("Raven")
+                            # call SetLooksLikeMystique("Raven")
                         #     call MystiqueOutfit
                         if "addict Mystique" in P_Traits:
                             $ newgirl["Mystique"].Addict -= 1

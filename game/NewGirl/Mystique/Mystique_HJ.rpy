@@ -3611,16 +3611,16 @@ label Mystique_Les_Response(Girl="Rogue", Step=1, B=0, B2=0, Tempmod=0, Result=0
 
 label Mystique_Appearance_HJ:
     menu:
-        "Why don't you turn into Raven" if newgirl["Mystique"].LooksLike != "Raven":
-            ch_m "Sure"
-            call SetLooksLikeMystique("Raven")
-            # call NewGirl_RemoveClothes("Mystique")
-            call Mystique_HJ_FixPos("L")
-            if P_Cock == "anal" or P_Cock == "in":
-                "She turns into Raven with your cock still inside her."
-            else:
-                "She turns into Raven."
-            ch_p "Nice"
+        # "Why don't you turn into Raven" if newgirl["Mystique"].LooksLike != "Raven":
+        #     ch_m "Sure"
+        #     call SetLooksLikeMystique("Raven")
+        #     # call NewGirl_RemoveClothes("Mystique")
+        #     call Mystique_HJ_FixPos("L")
+        #     if P_Cock == "anal" or P_Cock == "in":
+        #         "She turns into Raven with your cock still inside her."
+        #     else:
+        #         "She turns into Raven."
+        #     ch_p "Nice"
         "I preffer the real Raven" if newgirl["Mystique"].LooksLike != "Mystique":
             ch_m "Sure"
             call SetLooksLikeMystique("Mystique")
@@ -3673,16 +3673,16 @@ label Mystique_Appearance_HJ:
 
 label Mystique_Appearance_BJ:
     menu:
-        "Why don't you turn into Raven" if newgirl["Mystique"].LooksLike != "Raven":
-            ch_m "Sure"
-            call SetLooksLikeMystique("Raven")
-            # call NewGirl_RemoveClothes("Mystique")
-            # call Mystique_HJ_FixPos("L")
-            if P_Cock == "anal" or P_Cock == "in":
-                "She turns into Raven with your cock still inside her."
-            else:
-                "She turns into Raven."
-            ch_p "Nice"
+        # "Why don't you turn into Raven" if newgirl["Mystique"].LooksLike != "Raven":
+        #     ch_m "Sure"
+        #     call SetLooksLikeMystique("Raven")
+        #     # call NewGirl_RemoveClothes("Mystique")
+        #     # call Mystique_HJ_FixPos("L")
+        #     if P_Cock == "anal" or P_Cock == "in":
+        #         "She turns into Raven with your cock still inside her."
+        #     else:
+        #         "She turns into Raven."
+        #     ch_p "Nice"
         "I preffer the real Raven" if newgirl["Mystique"].LooksLike != "Mystique":
             ch_m "Sure"
             call SetLooksLikeMystique("Mystique")

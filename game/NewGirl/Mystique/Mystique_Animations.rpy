@@ -2048,8 +2048,8 @@ label MystiqueWardrobe:
                     call SetLooksLikeMystique("Kitty")
                 "Emma":
                     call SetLooksLikeMystique("Emma")
-                "Raven":
-                    call SetLooksLikeMystique("Raven")
+                # "Raven":
+                #     call SetLooksLikeMystique("Raven")
                 "Mystique":
                     call SetLooksLikeMystique("Mystique")
         "Over":              
