@@ -310,7 +310,7 @@ image Rogue:
             ),            
         (0,0), "Rogue Blink",                                                                           
             #Eyes
-            
+        (0,0), "images/RogueSprite/Rogue_Sprite_Glasses_[R_Glasses].png",
         (0,0), ConditionSwitch(                                                                         
             #Pants and Skirts
             "not R_Legs", Null(),
@@ -1064,6 +1064,7 @@ image Rogue_Doggy_Body:
             "True", "images/RogueDoggy/Rogue_Doggy_Brows_Normal.png",
             ),     
         (0,0), "Rogue Doggy Blink",#Eyes
+        (0,0), "images/RogueDoggy/Rogue_Doggy_Glasses_[R_Glasses].png",
         (0,0), ConditionSwitch( 
             #Collar
             "R_Neck == 'spiked collar'", "images/RogueDoggy/Rogue_Doggy_Collar.png",   
@@ -2905,6 +2906,7 @@ image BJ_Head:                                                                  
             "True", "images/RogueBJFace/Rogue_bj_face_brows_normal.png",
             ),
         (0,0), "BJ Blink",                                                                #Eyes
+        (0,0), "images/RogueBJFace/Rogue_BJFace_Glasses_[R_Glasses].png",
         (0,0), ConditionSwitch(                                                                 #cum on the face
                 "'facial' in R_Spunk", "images/RogueBJFace/Rogue_bj_facial_over.png",
                 "not R_Spunk or Trigger != 'blow' or 'mouth' not in R_Spunk", Null(),
@@ -3257,6 +3259,7 @@ image Rogue_BJFace:
             "True", "images/RogueBJFace/Rogue_bj_face_brows_normal.png",
             ),
         (0,0), "Rogue_BJ Blink",  
+        (0,0), "images/RogueBJFace/Rogue_BJFace_Glasses_[R_Glasses].png",
         (0,0), ConditionSwitch(
                 "not R_Spunk", Null(),
                 "'mouth' in R_Spunk and Speed == 2 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_face_over_heading_cum.png", 

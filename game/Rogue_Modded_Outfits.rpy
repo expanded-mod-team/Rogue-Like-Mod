@@ -992,10 +992,12 @@ label Rogue_Modded_Clothes_Menu:
         # "You could lose that spiked collar." if R_Neck == "spiked collar":
         #                 $ R_Neck = 0
 
-        # "I like those glasses." if not R_Glasses:
-        #                 $ R_Glasses = "glasses"
-        # "You could lose those glasses." if R_Glasses:
-        #                 $ R_Glasses = 0
+        "I like those glasses." if not R_Glasses:
+                        $ R_Glasses = "glasses"
+        "I like those sunglasses." if not R_Glasses:
+                        $ R_Glasses = "sunglasses"
+        "You could lose those glasses." if R_Glasses:
+                        $ R_Glasses = ""
 
         # "Wear those black boots." if R_Boots != "boots":
         #                 $ R_Boots = "boots"

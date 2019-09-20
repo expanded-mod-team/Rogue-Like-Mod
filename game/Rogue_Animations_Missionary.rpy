@@ -53,6 +53,7 @@ image Rogue_Head:
             ),      
         (0,0), "Rogue Blink",
         (0,0), "images/RogueSprite/Rogue_Sprite_Headband_[R_Headband].png",
+        (0,0), "images/RogueSprite/Rogue_Sprite_Glasses_[R_Glasses].png",
         (0,0), ConditionSwitch(
             "R_Hair == 'newhair' and R_Water", "images/RogueSprite/Rogue_hair_wet_newhair.png",
             "R_Hair == 'newhair'", "images/RogueSprite/Rogue_hair_evo_newhair.png",

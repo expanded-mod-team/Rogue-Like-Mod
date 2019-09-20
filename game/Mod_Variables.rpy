@@ -42,7 +42,7 @@ label  mod_default_Variables:
     default R_BodySuitOff = 0
     default R_Accessory = 0
     default R_DynamicTan = [0,0,0,0,0,0,0,0]  #controller, over, legs, chest, panties, hose, gloves? choker?
-    default R_Glasses = ""
+    default R_Glasses = 0
     default R_Boots = ""
     default K_Tan = 0
     default K_HairColor = ""
