@@ -671,7 +671,7 @@ label Kitty_Modded_Clothes_Menu:
                         ch_k "It's too high maintenance."
                     jump Kitty_Modded_Clothes_Misc_Hair
 
-                "Apply color to pubes as well" if K_HairColor == "white" and not K_PubesColor:
+                "Apply color to pubes as well" if K_HairColor and not K_PubesColor:
                     $ K_PubesColor = 1
 
                 "Reset pubes color" if K_PubesColor:
