@@ -493,18 +493,41 @@ label Kitty_Modded_Clothes_Menu:
 
             menu Kitty_Modded_Clothes_Under_SwimSuits:
 
-                # "Why don't you wear the swimsuit3" if K_Panties != "swimsuit3" or K_Chest != "swimsuit3":
-                #     if ApprovalCheck("Kitty", 1200, TabM=3):
-                #         ch_k "Sure."
-                #         $ K_Panties = "swimsuit3"
-                #         $ K_Chest = "swimsuit3"
-                #     else:
-                #         ch_r "I don't see how that's any business of yours, [K_Petname]."
-                #     jump Kitty_Modded_Clothes_Under_SwimSuits
+                "Why don't you wear the green swimsuit" if K_Chest != "modded green swimsuit" or K_Panties != "modded green swimsuit":
+                    if ApprovalCheck("Kitty", 1200, TabM=3):
+                        ch_k "Sure."
+                        $ K_Panties = "modded green swimsuit"
+                        call SetChestKitty("modded green swimsuit")
+                    else:
+                        ch_r "I don't see how that's any business of yours, [K_Petname]."
+                    jump Kitty_Modded_Clothes_Under_SwimSuits
 
-                # "Remove the swimsuit" if K_Panties == "swimsuit3" or K_Chest == "swimsuit3":
-                #                 call Kitty_Remove_Swimsuit 
-                #                 jump Kitty_Modded_Clothes_Under_SwimSuits
+                "Why don't you wear the black swimsuit" if K_Chest != "modded black swimsuit" or K_Panties != "modded black swimsuit":
+                    if ApprovalCheck("Kitty", 1200, TabM=3):
+                        ch_k "Sure."
+                        $ K_Panties = "modded black swimsuit"
+                        call SetChestKitty("modded black swimsuit")
+                    else:
+                        ch_r "I don't see how that's any business of yours, [K_Petname]."
+                    jump Kitty_Modded_Clothes_Under_SwimSuits
+
+                "Why don't you wear the white swimsuit" if K_Chest != "modded white swimsuit" or K_Panties != "modded white swimsuit":
+                    if ApprovalCheck("Kitty", 1400, TabM=3):
+                        ch_k "Sure."
+                        $ K_Panties = "modded white swimsuit"
+                        call SetChestKitty("modded white swimsuit")
+                    else:
+                        ch_r "I don't see how that's any business of yours, [K_Petname]."
+                    jump Kitty_Modded_Clothes_Under_SwimSuits
+
+                "Remove the swimsuit" if K_Chest in ["modded green swimsuit", "modded black swimsuit", "modded white swimsuit"]:
+                    if ApprovalCheck("Kitty", 1400, TabM=3):
+                        ch_k "Sure."
+                        $ K_Panties = 0
+                        call SetChestKitty(0)
+                    else:
+                        ch_r "I don't see how that's any business of yours, [K_Petname]."
+                    jump Kitty_Modded_Clothes_Under_SwimSuits
 
                 "Why don't you wear the purple bikini bra?" if K_Chest != "modded purple bikini bra":
                     if ApprovalCheck("Kitty", 1100, TabM=3):
@@ -906,6 +929,12 @@ init python:
                 return 5   
             elif K_Chest == "modded bustier bra":
                 return 5
+            elif K_chest == "modded green swimsuit":
+                return 25
+            elif K_chest == "modded black swimsuit":
+                return 25
+            elif K_chest == "modded white swimsuit":
+                return 5
             else:
                 return 0
 
@@ -948,6 +977,12 @@ init python:
                 return 15      
             elif K_Panties == "modded white panties":      #If wearing only green panties
                 return 10
+            elif K_Panties == "modded green swimsuit":
+                return 15
+            elif K_Panties == "modded black swimsuit":
+                return 15
+            elif K_Panties == "modded white swimsuit":
+                return 5
             elif K_Panties == "modded darker lace panties":       #If wearing only lace panties
                 return 5
             elif K_Panties == "modded kitty lingerie panties":       #If wearing only kitty lingerie panties
