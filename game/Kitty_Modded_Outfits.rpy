@@ -929,11 +929,11 @@ init python:
                 return 5   
             elif K_Chest == "modded bustier bra":
                 return 5
-            elif K_chest == "modded green swimsuit":
+            elif K_Chest == "modded green swimsuit":
                 return 25
-            elif K_chest == "modded black swimsuit":
+            elif K_Chest == "modded black swimsuit":
                 return 25
-            elif K_chest == "modded white swimsuit":
+            elif K_Chest == "modded white swimsuit":
                 return 5
             else:
                 return 0
