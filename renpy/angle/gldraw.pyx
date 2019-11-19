@@ -3,7 +3,7 @@
 
 #cython: profile=False
 #@PydevCodeAnalysisIgnore
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -76,6 +76,9 @@ IDENTITY = renpy.display.render.IDENTITY
 
 # Should we try to vsync?
 vsync = True
+
+# A list of flip times, which we used to detect if vsync is failing.
+flip_times = [ ]
 
 # A list of frame end times, used for the same purpose.
 frame_times = [ ]
@@ -153,10 +156,6 @@ cdef class GLDraw:
         # The DPI scale factor.
         self.dpi_scale = renpy.display.interface.dpi_scale
 
-        # The number of frames to draw fast if the screen needs to be
-        # updated.
-        self.fast_redraw_frames = 0
-
 
     def get_texture_size(self):
         """
@@ -224,9 +223,8 @@ cdef class GLDraw:
 
         window_args = { }
 
-        info = renpy.display.get_info()
-
         if not renpy.mobile:
+            info = renpy.display.get_info()
 
             visible_w = info.current_w
             visible_h = info.current_h
@@ -259,29 +257,7 @@ cdef class GLDraw:
         pheight = max(pheight, 256)
 
         # Handle swap control.
-        target_framerate = renpy.game.preferences.gl_framerate
-        refresh_rate = info.refresh_rate
-
-        if not refresh_rate:
-            refresh_rate = 60
-
-        if target_framerate is None:
-            sync_frames = 1
-        else:
-            sync_frames = int(round(1.0 * refresh_rate) / target_framerate)
-            if sync_frames < 1:
-                sync_frames = 1
-
-        if renpy.game.preferences.gl_tearing:
-            sync_frames = -sync_frames
-
-        vsync = int(os.environ.get("RENPY_GL_VSYNC", sync_frames))
-
-        renpy.display.interface.frame_duration = 1.0 * abs(vsync) / refresh_rate
-
-        renpy.display.log.write("swap interval: %r frames", vsync)
-
-        # Set the display mode.
+        vsync = int(os.environ.get("RENPY_GL_VSYNC", "1"))
 
         if ANGLE:
             opengl = 0
@@ -666,25 +642,6 @@ cdef class GLDraw:
         return True
 
 
-    def can_block(self):
-        """
-        Returns True if we can block to wait for input, False if the screen
-        needs to be immediately redrawn.
-        """
-
-        powersave = renpy.game.preferences.gl_powersave
-
-        if powersave == "auto":
-            if renpy.exports.get_on_battery():
-                powersave = True
-            else:
-                powersave = False
-
-        if not powersave:
-            return False
-
-        return not self.fast_redraw_frames
-
     def should_redraw(self, needs_redraw, first_pass):
         """
         Redraw whenever the screen needs it, but at least once every
@@ -698,21 +655,13 @@ cdef class GLDraw:
             rv = True
         elif first_pass:
             rv = True
+        elif time.time() > self.last_redraw_time + self.redraw_period:
+            rv = True
         else:
             # Redraw if the mouse moves.
             mx, my, tex = self.mouse_info
             if tex and (mx, my) != pygame.mouse.get_pos():
                 rv = True
-
-        # Handle fast redraw.
-        if rv:
-            self.fast_redraw_frames = renpy.config.fast_redraw_frames
-        elif self.fast_redraw_frames > 0:
-            self.fast_redraw_frames -= 1
-            rv = True
-
-        if time.time() > self.last_redraw_time + self.redraw_period:
-            rv = True
 
         # Store the redraw time.
         if rv:
@@ -788,8 +737,6 @@ cdef class GLDraw:
         Draws the screen.
         """
 
-        renpy.plog(1, "start draw_screen")
-
         if renpy.config.use_drawable_resolution:
             reverse = self.virt_to_draw
         else:
@@ -814,8 +761,7 @@ cdef class GLDraw:
 
         self.clip_mode_screen()
 
-        clear_r, clear_g, clear_b = renpy.color.Color(renpy.config.gl_clear_color).rgb
-        glClearColor(clear_r, clear_g, clear_b, 1.0)
+        glClearColor(0.0, 0.0, 0.0, 1.0)
         glClear(GL_COLOR_BUFFER_BIT)
 
         self.default_clip = (0, 0, xsize, ysize)
@@ -835,8 +781,6 @@ cdef class GLDraw:
 
             start = time.time()
 
-            renpy.plog(1, "flip")
-
             if EGL:
                 egl_swap()
             else:
@@ -846,20 +790,18 @@ cdef class GLDraw:
 
             if vsync:
 
-                # When the window is covered, we can get into a state where no
-                # drawing occurs and everything goes fast. Detect that and
-                # sleep.
+                # When the window is covered or
 
+                flip_times.append(end - start)
                 frame_times.append(end)
 
-                if len(frame_times) > 10:
+                if len(flip_times) > 10:
+                    flip_times.pop(0)
                     frame_times.pop(0)
 
                     # If we're running at over 1000 fps, vsync is broken.
-                    if (frame_times[-1] - frame_times[0] < .001 * 10):
-                        time.sleep(1.0 / 120.0)
-                        renpy.plog(1, "after broken vsync sleep")
-
+                    if (frame_times[-1] - frame_times[0] < .06 * 10) and (sum(flip_times) / len(flip_times) < .001):
+                        time.sleep(1.0 / 60.0)
 
         gltexture.cleanup()
 

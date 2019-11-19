@@ -96,7 +96,7 @@ label R_Massage_Cycle:
     $ D20 = renpy.random.randint(10, 20)
     $ Round -= D20 if Round > D20 else (Round-1)
         
-    call Rogue_Sex_Reset
+    call Rogue_Doggy_Reset
     
     ch_r "That was very relaxing, [R_Petname]"
     if "massage" not in R_RecentActions:        
@@ -308,7 +308,8 @@ label R_Fondle_Breasts:
     return 
             
    
-label RFB_Prep: #Animation set-up 
+label RFB_Prep: #Animation set-up   
+label R_FB_Prep: #Animation set-up           
     if Trigger == "kiss you": 
         $ Trigger = "fondle breasts" 
         return
@@ -324,6 +325,53 @@ label RFB_Prep: #Animation set-up
         
     $ Tempmod = 0  
     call R_Breasts_Launch("fondle breasts")
+    
+    if Situation == "Rogue":                                                                  
+            #Rogue auto-starts    
+            $ Situation = 0
+            if (R_Over or R_Chest) and not R_Uptop:
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Rogue", 1250, TabM = 1) or (R_SeenChest and ApprovalCheck("Rogue", 500) and not Taboo):
+                        $ R_Uptop = 1
+                        $ Line = R_Over if R_Over else R_Chest
+                        "With a miscevious grin, Rogue pulls her [Line] up over her breasts."
+                        call Rogue_First_Topless(1)
+                        $ Line = 0
+                        "She then grabs your arm and shoves your hand against her breast, clearly intending you to get to work."
+                else:
+                    "Rogue grabs your arm and shoves your hand against her covered breast, clearly intending you to get to work."
+            else:
+                "Rogue grabs your arm and shoves your hand against her breast, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Rogue", "Inbt", 80, 3) 
+                    call Statup("Rogue", "Inbt", 50, 2)
+                    "You start to fondle it."
+                "Praise her.":       
+                    call RogueFace("sexy", 1)                    
+                    call Statup("Rogue", "Inbt", 80, 3) 
+                    ch_p "I like the initiative, [R_Pet]."
+                    call Rogue_Namecheck
+                    "You start to fondle it."
+                    call Statup("Rogue", "Love", 85, 1)
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your hand back."
+                    call RogueFace("surprised")       
+                    call Statup("Rogue", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [R_Pet]."
+                    call Rogue_Namecheck
+                    "Rogue pulls back."
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 1)
+                    call Statup("Rogue", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Rogue",1,"refused","refused")  
+                    return          
+            #end auto
+        
     if not R_FondleB:        
         if R_Forced:
             call Statup("Rogue", "Love", 90, -20)
@@ -475,7 +523,7 @@ label RFB_Cycle: #Repeating strokes
                                 call R_Pos_Reset
                                 return    
                             call Statup("Rogue", "Lust", 200, 5) 
-                            if 100 > R_Lust >= 70 and R_OCount < 2:             
+                            if 100 > R_Lust >= 70 and R_OCount < 2 and R_SEXP >= 20:             
                                 $ R_RecentActions.append("unsatisfied")                      
                                 $ R_DailyActions.append("unsatisfied") 
                             
@@ -550,6 +598,8 @@ label RFB_Cycle: #Repeating strokes
                                     jump RFB_After
         #End Count check
            
+        call Escalation("Rogue","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_r "You might want to wrap this up, it's getting late."  
         elif Round == 5:
@@ -558,6 +608,7 @@ label RFB_Cycle: #Repeating strokes
         if R_Lust >= 50 and not R_Uptop and (R_Chest or R_Over):
                 $ R_Uptop = 1
                 "Rogue shrugs and pulls her top open."   
+                call Rogue_First_Topless
                       
     #Round = 0 loop breaks
     call RogueFace("bemused", 0)
@@ -770,6 +821,7 @@ ch_r "Sorry, I don't even know how I got here. . ."
 return
 
 label RSB_Prep:                                                                 #Animation set-up 
+label R_SB_Prep:                                                                 #Animation set-up 
             
     if Trigger2 == "suck breasts":
         return
@@ -782,6 +834,53 @@ label RSB_Prep:                                                                 
     
     $ Tempmod = 0      
     call R_Breasts_Launch("suck breasts")
+        
+    if Situation == "Rogue":                                                        
+            #Rogue auto-starts    
+            $ Situation = 0
+            if (R_Over or R_Chest) and not R_Uptop:
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Rogue", 1250, TabM = 1) or (R_SeenChest and ApprovalCheck("Rogue", 500) and not Taboo):
+                        $ R_Uptop = 1
+                        $ Line = R_Over if R_Over else R_Chest
+                        "With a miscevious grin, Rogue pulls her [Line] up over her breasts."
+                        call Rogue_First_Topless(1)
+                        $ Line = 0
+                        "She then grabs your head and shoves your face into her chest, clearly intending you to get to work."
+                else:
+                    "Rogue grabs your head and shoves your face into her chest, clearly intending you to get to work."
+            else:
+                "Rogue grabs your head and shoves your face into her chest, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Rogue", "Inbt", 80, 3) 
+                    call Statup("Rogue", "Inbt", 50, 2)
+                    "You start to run your tongue along her nipple."
+                "Praise her.":       
+                    call RogueFace("sexy", 1)                    
+                    call Statup("Rogue", "Inbt", 80, 3) 
+                    ch_p "Mmm, I like this, [R_Pet]."
+                    call Rogue_Namecheck
+                    "You start to fondle it."
+                    call Statup("Rogue", "Love", 85, 1)
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your head back."
+                    call RogueFace("surprised")       
+                    call Statup("Rogue", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [R_Pet]."
+                    call Rogue_Namecheck
+                    "Rogue pulls away."
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 1)
+                    call Statup("Rogue", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Rogue",1,"refused","refused")  
+                    return          
+            #end auto
+            
     if not R_SuckB:        
         if R_Forced:
             call Statup("Rogue", "Love", 90, -25)
@@ -1003,6 +1102,8 @@ label RSB_Cycle: #Repeating strokes
                                     jump RSB_After
         #End Count check
            
+        call Escalation("Rogue","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_r "You might want to wrap this up, it's getting late."  
         elif Round == 5:
@@ -1011,6 +1112,7 @@ label RSB_Cycle: #Repeating strokes
         if R_Lust >= 50 and not R_Uptop and (R_Chest or R_Over):
                 $ R_Uptop = 1
                 "Rogue shrugs and pulls her top open."   
+                call Rogue_First_Topless 
                       
     #Round = 0 loop breaks
     call RogueFace("bemused", 0)
@@ -1220,6 +1322,7 @@ label R_Fondle_Thighs:
     return
     
 label RFT_Prep:                                                                 #Animation set-up 
+label R_FT_Prep:                                                                 #Animation set-up 
     if Trigger == "kiss you": 
         $ Trigger = "fondle thighs" 
         return
@@ -1393,7 +1496,7 @@ label RFT_Cycle: #Repeating strokes
                                 call R_Pos_Reset
                                 return    
                             call Statup("Rogue", "Lust", 200, 5) 
-                            if 100 > R_Lust >= 70 and R_OCount < 2:             
+                            if 100 > R_Lust >= 70 and R_OCount < 2 and R_SEXP >= 20:             
                                 $ R_RecentActions.append("unsatisfied")                      
                                 $ R_DailyActions.append("unsatisfied") 
                             
@@ -1466,6 +1569,8 @@ label RFT_Cycle: #Repeating strokes
                                     jump RFT_After
         #End Count check
            
+        call Escalation("Rogue","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_r "You might want to wrap this up, it's getting late."  
         elif Round == 5:
@@ -1687,6 +1792,7 @@ ch_r "Sorry, I don't even know how I got here. . ."
 return
                 
 label RFP_Prep: #Animation set-up 
+label R_FP_Prep: #Animation set-up 
     if Trigger2 == "fondle pussy":
         return
         
@@ -1698,6 +1804,70 @@ label RFP_Prep: #Animation set-up
     $ Tempmod = 0
     
     call R_Pussy_Launch("fondle pussy")
+    
+    if Situation == "Rogue":                                                        
+            #Rogue auto-starts    
+            $ Situation = 0
+            if (R_Legs and not R_Upskirt) or (R_Panties and not R_PantiesDown):
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Rogue", 1250, TabM = 1) or (R_SeenPussy and ApprovalCheck("Rogue", 500) and not Taboo):
+                        $ R_Upskirt = 1
+                        $ R_PantiesDown = 1
+                        $ Line = 0
+                        if R_Legs == "skirt":
+                            $ Line = "Rogue hikes up her skirt"
+                        elif PantsNum("Rogue") >= 5:
+                            $ Line = "Rogue pulls down her " + R_Legs
+                        else:
+                            $ Line = 0                            
+                        if R_Panties:
+                            if Line:
+                                #wearing pants
+                                "[Line] and pulls her [R_Panties] out of the way."
+                                "She then grabs your arm and shoves your hand into her crotch, clearly intending you to get to work."
+                            else:
+                                #no pants
+                                "She pulls her [R_Panties] out of the way, and then shoves your hand into her crotch."
+                                "She clearly intends for you to get to work." 
+                        else:
+                            #pants but no panties
+                            "[Line], and then shoves your hand into her crotch."
+                            "She clearly intends for you to get to work."                     
+                        call Rogue_First_Bottomless(1)
+                else:
+                    "Rogue grabs your arm and shoves your hand into her crotch, clearly intending you to get to work."
+            else:
+                "Rogue grabs your arm and shoves your hand into her crotch, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Rogue", "Inbt", 80, 3) 
+                    call Statup("Rogue", "Inbt", 50, 2)
+                    "You start to run your fingers along her pussy."
+                "Praise her.":       
+                    call RogueFace("sexy", 1)                    
+                    call Statup("Rogue", "Inbt", 80, 3) 
+                    ch_p "I like the initiative, [R_Pet]."
+                    call Rogue_Namecheck
+                    "You start to run your fingers along her pussy."
+                    call Statup("Rogue", "Love", 85, 1)
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your hand back."
+                    call RogueFace("surprised")       
+                    call Statup("Rogue", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [R_Pet]."
+                    call Rogue_Namecheck
+                    "Rogue pulls back."
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 1)
+                    call Statup("Rogue", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Rogue",1,"refused","refused")  
+                    return          
+            #end auto
+            
     if not R_FondleP:        
         if R_Forced:
             call Statup("Rogue", "Love", 90, -50)
@@ -1947,6 +2117,8 @@ label RFP_Cycle: #Repeating strokes
                                     jump RFP_After
         #End Count check
            
+        call Escalation("Rogue","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_r "You might want to wrap this up, it's getting late."  
         elif Round == 5:
@@ -2035,6 +2207,7 @@ label R_Insert_Pussy:
     
                 
 label RIP_Prep: #Animation set-up     
+label R_IP_Prep: #Animation set-up    
     if not R_InsertP:
         $ R_InsertP = 1
         $ R_SEXP += 10          
@@ -2248,6 +2421,7 @@ label R_Lick_Pussy:
     return
     
 label RLP_Prep: #Animation set-up  
+label R_LP_Prep: #Animation set-up  
     if Trigger2 == "lick pussy": #fix pull down pants now an option, make it work
         return
         
@@ -2261,6 +2435,71 @@ label RLP_Prep: #Animation set-up
             
     $ Tempmod = 0      
     call R_Pussy_Launch("lick pussy")
+    
+    
+    if Situation == "Rogue":                                                       
+            #Rogue auto-starts    
+            $ Situation = 0
+            if (R_Legs and not R_Upskirt) or (R_Panties and not R_PantiesDown):
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Rogue", 1250, TabM = 1) or (R_SeenPussy and ApprovalCheck("Rogue", 500) and not Taboo):
+                        $ R_Upskirt = 1
+                        $ R_PantiesDown = 1
+                        $ Line = 0
+                        if R_Legs == "skirt":
+                            $ Line = "Rogue hikes up her skirt"
+                        elif PantsNum("Rogue") >= 5:
+                            $ Line = "Rogue pulls down her " + R_Legs
+                        else:
+                            $ Line = 0                            
+                        if R_Panties:
+                            if Line:
+                                #wearing pants
+                                "[Line] and pulls her [R_Panties] out of the way."
+                                "She then grabs your head and pulls it to her crotch, clearly intending you to get to work."
+                            else:
+                                #no pants
+                                "She pulls her [R_Panties] out of the way, and then shoves your face into her crotch."
+                                "She clearly intends for you to get to work." 
+                        else:
+                            #pants but no panties
+                            "[Line], and then shoves your face into her crotch."
+                            "She clearly intends for you to get to work."                     
+                        call Rogue_First_Bottomless(1)
+                else:
+                    "Rogue grabs your head and pulls it to her crotch, clearly intending you to get to work."
+            else:
+                "Rogue grabs your head and pulls it to her crotch, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Rogue", "Inbt", 80, 3) 
+                    call Statup("Rogue", "Inbt", 50, 2)
+                    "You start licking."
+                "Praise her.":       
+                    call RogueFace("sexy", 1)                    
+                    call Statup("Rogue", "Inbt", 80, 3) 
+                    ch_p "Mmm, I like this idea, [R_Pet]."
+                    call Rogue_Namecheck
+                    "You start licking."
+                    call Statup("Rogue", "Love", 85, 1)
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your head away."
+                    call RogueFace("surprised")       
+                    call Statup("Rogue", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [R_Pet]."
+                    call Rogue_Namecheck
+                    "Rogue pulls back."
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 1)
+                    call Statup("Rogue", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Rogue",1,"refused","refused")  
+                    return          
+            #end auto
+            
     if not R_LickP:        
         if R_Forced:
             call Statup("Rogue", "Love", 90, -30)
@@ -2499,6 +2738,8 @@ label RLP_Cycle: #Repeating strokes
                                     jump RLP_After
         #End Count check
            
+        call Escalation("Rogue","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_r "You might want to wrap this up, it's getting late."  
         elif Round == 5:
@@ -2725,6 +2966,7 @@ ch_r "Sorry, I don't even know how I got here. . ."
 return
 
 label RFA_Prep: #Animation set-up  
+label R_FA_Prep: #Animation set-up 
     if Trigger2 == "fondle ass":
         return
     if not R_Forced and Situation != "auto":
@@ -2899,7 +3141,7 @@ label RFA_Cycle: #Repeating strokes
                                 call R_Pos_Reset
                                 return    
                             call Statup("Rogue", "Lust", 200, 5) 
-                            if 100 > R_Lust >= 70 and R_OCount < 2:             
+                            if 100 > R_Lust >= 70 and R_OCount < 2 and R_SEXP >= 20:             
                                 $ R_RecentActions.append("unsatisfied")                      
                                 $ R_DailyActions.append("unsatisfied") 
                             
@@ -2973,6 +3215,8 @@ label RFA_Cycle: #Repeating strokes
                                     $ R_DailyActions.append("angry")   
                                     jump RFA_After
         #End Count check
+        
+        call Escalation("Rogue","R") #sees if she wants to escalate things
         
         if Round == 10:
             ch_r "You might want to wrap this up, it's getting late."  
@@ -3201,6 +3445,7 @@ label R_Insert_Ass:
     
         
 label RIA_Prep: #Animation set-up 
+label R_IA_Prep: #Animation set-up 
     if Trigger2 == "insert ass":
         return
         
@@ -3212,6 +3457,71 @@ label RIA_Prep: #Animation set-up
             
     $ Tempmod = 0      
     call R_Pussy_Launch("insert ass")
+    
+    
+    if Situation == "Rogue":                                                         
+            #Rogue auto-starts    
+            $ Situation = 0
+            if (R_Legs and not R_Upskirt) or (R_Panties and not R_PantiesDown):
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Rogue", 1250, TabM = 1) or (R_SeenPussy and ApprovalCheck("Rogue", 500) and not Taboo):
+                        $ R_Upskirt = 1
+                        $ R_PantiesDown = 1
+                        $ Line = 0
+                        if R_Legs == "skirt":
+                            $ Line = "Rogue hikes up her skirt"
+                        elif PantsNum("Rogue") >= 5:
+                            $ Line = "Rogue pulls down her " + R_Legs
+                        else:
+                            $ Line = 0                            
+                        if R_Panties:
+                            if Line:
+                                #wearing pants
+                                "[Line] and pulls her [R_Panties] out of the way."
+                                "She then grabs your arm and presses your hand against her asshole, clearly intending you to get to work."
+                            else:
+                                #no pants
+                                "She pulls her [R_Panties] out of the way, and then presses your hand against her asshole."
+                                "She clearly intends for you to get to work." 
+                        else:
+                            #pants but no panties
+                            "[Line], and then presses your hand against her asshole."
+                            "She clearly intends for you to get to work."                     
+                        call Rogue_First_Bottomless(1)
+                else:
+                    "Rogue grabs your arm and presses your hand against her asshole, clearly intending you to get to work."
+            else:
+                "Rogue grabs your arm and presses your hand against her asshole, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Rogue", "Inbt", 80, 3) 
+                    call Statup("Rogue", "Inbt", 50, 2)
+                    "You press your finger into it."
+                "Praise her.":       
+                    call RogueFace("sexy", 1)                    
+                    call Statup("Rogue", "Inbt", 80, 3) 
+                    ch_p "Dirty girl, [R_Pet]."
+                    call Rogue_Namecheck
+                    "You press your finger into it."
+                    call Statup("Rogue", "Love", 85, 1)
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your hand back."
+                    call RogueFace("surprised")       
+                    call Statup("Rogue", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [R_Pet]."
+                    call Rogue_Namecheck
+                    "Rogue pulls back."
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 1)
+                    call Statup("Rogue", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Rogue",1,"refused","refused")  
+                    return          
+            #end auto
+            
     if not R_InsertA:        
         if R_Forced:
             call Statup("Rogue", "Love", 90, -50)
@@ -3449,6 +3759,8 @@ label RIA_Cycle: #Repeating strokes
                                     jump RIA_After
         #End Count check
            
+        call Escalation("Rogue","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_r "You might want to wrap this up, it's getting late."  
         elif Round == 5:
@@ -3942,6 +4254,8 @@ label RLA_Cycle: #Repeating strokes
                                     jump RLA_After
         #End Count check
            
+        call Escalation("Rogue","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_r "You might want to wrap this up, it's getting late."  
         elif Round == 5:

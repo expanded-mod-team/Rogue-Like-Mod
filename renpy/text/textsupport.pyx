@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -23,7 +23,7 @@ include "linebreak.pxi"
 
 cdef class Glyph:
 
-    def __cinit__(self):
+    def __init__(self):
         self.delta_x_offset = 0
 
     def __repr__(self):
@@ -885,22 +885,21 @@ def copy_splits(list source, list dest):
 
         d.split = s.split
 
-
 def tweak_glyph_spacing(list glyphs, list lines, double dx, double dy, double w, double h):
     cdef Glyph g
 
     if w <= 0 or h <= 0:
         return
 
-    cdef short old_x_offset = 0
-    cdef short x_offset
+
+    old_x_offset = 0
 
     for g in glyphs:
 
-        x_offset = <short> (dx * g.x / w)
+        x_offset = int(dx * g.x / w)
 
         g.x += x_offset
-        g.y += <short> (dy * g.y / h)
+        g.y += int(dy * g.y / h)
 
         if x_offset > old_x_offset:
             g.delta_x_offset = x_offset - old_x_offset

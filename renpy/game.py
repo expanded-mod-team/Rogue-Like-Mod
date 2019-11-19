@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -287,7 +287,6 @@ def invoke_in_new_context(callable, *args, **kwargs):  # @ReservedAssignment
     except renpy.game.JumpOutException as e:
 
         contexts[-2].force_checkpoint = True
-        contexts[-2].abnormal = True
         raise renpy.game.JumpException(e.args[0])
 
     finally:
@@ -338,7 +337,6 @@ def call_in_new_context(label, *args, **kwargs):
 
     except renpy.game.JumpOutException as e:
         contexts[-2].force_checkpoint = True
-        contexts[-2].abnormal = True
         raise renpy.game.JumpException(e.args[0])
 
     finally:

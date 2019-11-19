@@ -61,6 +61,12 @@ label Emma_Chat:
     if "angry" in E_RecentActions:
                 ch_e "I would not press my luck if I were you."
                 return
+    if "les" in E_RecentActions:
+            #if she's with a girl. . .
+            ch_e "One moment, [E_Petname]. . ."
+            "You hear some shifting around. . ."
+            ch_e "Ok, so. . ."
+            "You hear some muffled giggles in the background."
     menu:
         ch_e "What was it you wanted to discuss, [E_Petname]?"
         "Come on over." if E_Loc != bg_current:
@@ -74,61 +80,93 @@ label Emma_Chat:
         "Ask Emma to leave" if E_Loc == bg_current:
                     call Emma_Dismissed    
                     return
-        
-        "Flirt with her." if not E_Chat[5]:
-                    call Emma_Flirt               
-        "Flirt with her. (locked)" if E_Chat[5]:  
-                    pass
-            
-        "Sex Menu" if E_Loc == bg_current:
-                    if E_Love >= E_Obed:
-                        ch_p "Did you want to fool around?"  
-                    else: 
-                        ch_p "I want to get naughty."
-                    if "angry" in E_RecentActions:  
-                        ch_e "You should know better than that."
-                    elif ApprovalCheck("Emma", 600, "LI"):
-                        call EmmaFace("sexy")
-                        ch_e "Perhaps. . ."
-                        call Emma_SexMenu
-                        return
-                    elif ApprovalCheck("Emma", 400, "OI"):
-                        ch_e "If that's what you want, [E_Petname]."
-                        call Emma_SexMenu
-                        return
-                    else:
-                        ch_e "No thanks, [E_Petname]."          
+        "Romance her":    
+                menu:
+                    "Flirt with her (locked)" if E_Chat[5]:  
+                                pass
+                    "Flirt with her" if not E_Chat[5]:
+                                call Emma_Flirt    
+                        
+                    "Sex Menu (locked)" if E_Loc != bg_current:
+                                pass
+                    "Sex Menu" if E_Loc == bg_current:
+                                if E_Love >= E_Obed:
+                                    ch_p "Did you want to fool around?"  
+                                else: 
+                                    ch_p "I want to get naughty."
+                                if "angry" in E_RecentActions:  
+                                    ch_e "You should know better than that."
+                                elif ApprovalCheck("Emma", 600, "LI"):
+                                    call EmmaFace("sexy")
+                                    ch_e "Perhaps. . ."
+                                    call Emma_SexMenu
+                                    return
+                                elif ApprovalCheck("Emma", 400, "OI"):
+                                    ch_e "If that's what you want, [E_Petname]."
+                                    call Emma_SexMenu
+                                    return
+                                else:
+                                    ch_e "No thanks, [E_Petname]."    
+                                    
+                    "Dirty Talk (locked)" if E_SEXP < 10:
+                                pass
+                    "Dirty Talk" if E_SEXP >= 10:
+                                ch_p "About when we get together. . ."
+                                call Emma_SexChat
+                    "Date":
+                            ch_p "Do you want to go on a date tonight?"
+                            call Emma_Date_Ask
                                 
-        "I just wanted to talk. . .":
-                    call Emma_Chitchat
-                    
-        "Emma's settings":                    
-                    call Emma_Settings   
+                    "Gifts (locked)" if E_Loc != bg_current:
+                                pass
+                    "Gifts" if E_Loc == bg_current:
+                                ch_p "I'd like to give you something."
+                                call Emma_Gifts
+                
+                    "Back":
+                                pass     
+        "Talk to her":    
+                menu:
+                    "I just wanted to talk. . .":
+                                call Emma_Chitchat                     
+                    "Relationship status":      
+                                ch_p "Could we talk about us?"       
+                                if "relationship" in E_DailyActions:
+                                    ch_e "Now you're starting to bore me."
+                                elif E_Loc == bg_current:
+                                    call Emma_Relationship
+                                else:
+                                    ch_e "This seems a bit serious to discuss over the phone."
+                                    ch_e "Later, perhaps."
+                    "About other girls":
+                        menu:
+                            ch_p "How do you feel about. . ."
+                            "Rogue?":
+                                    call Emma_About("Rogue")  
+                            "Kitty?" if "met" in K_History:
+                                    call Emma_About("Kitty")
+                            "Laura?" if "met" in L_History:
+                                    call Emma_About("Laura")
+                            "About hooking up with other girls. . .":
+                                    call Emma_Monogamy
+                            "Never mind.":
+                                pass
         
-        "Relationship status":      
-                    ch_p "Could we talk about us?"       
-                    if "relationship" in E_DailyActions:
-                        ch_e "Now you're starting to bore me."
-                    elif E_Loc == bg_current:
-                        call Emma_Relationship
-                    else:
-                        ch_e "This seems a bit serious to discuss over the phone."
-                        ch_e "Later, perhaps."
-                        
-        "Could I get your number?" if "Emma" not in Digits:
-                    if ApprovalCheck("Emma", 800, "LI"):
-                        ch_e "I don't see why not."
-                        $ Digits.append("Emma") 
-                    elif ApprovalCheck("Emma", 500, "OI"):
-                        ch_e "Hmm. . . fine, hand me your phone."             
-                        $ Digits.append("Emma")
-                    else:
-                        ch_e "I don't think it's appropriate to give my number out to a student like that."  
-                        
-        "Gifts" if E_Loc == bg_current:
-                ch_p "I'd like to give you something."
-                call Emma_Gifts
-                        
+                    "Could I get your number?" if "Emma" not in Digits:
+                                if ApprovalCheck("Emma", 800, "LI"):
+                                    ch_e "I don't see why not."
+                                    $ Digits.append("Emma") 
+                                elif ApprovalCheck("Emma", 500, "OI"):
+                                    ch_e "Hmm. . . fine, hand me your phone."             
+                                    $ Digits.append("Emma")
+                                else:
+                                    ch_e "I don't think it's appropriate to give my number out to a student like that."        
+                    "Back":
+                                pass
+                    
+        "Change Emma":                    
+                    call Emma_Settings   
+                               
         "Add her to party" if "Emma" not in Party and E_Loc == bg_current:
                     ch_p "Could you follow me for a bit?"                                             
                     if ApprovalCheck("Emma", 1250):
@@ -158,25 +196,21 @@ label Emma_Chat:
                         call Set_The_Scene   
                     return
                 
-        "Lock the door" if bg_current == "bg classroom" and "locked" not in P_RecentActions:
+        "Lock the door" if bg_current == "bg classroom" and "locked" not in P_Traits:
                     ch_p "Could you lock the door?"
                     if Current_Time == "Evening" or Weekday >=5:
                             ch_e "Ooh, certainly. . ."
-                            $ P_RecentActions.append("locked")
+                            $ P_Traits.append("locked")
                             call Taboo_Level
                     else:
                             ch_e "I don't really think that would be appropriate in the middle of class."
                             
-        "Unlock the door" if bg_current == "bg classroom" and "locked" in P_RecentActions:
+        "Unlock the door" if bg_current == "bg classroom" and "locked" in P_Traits:
                     ch_p "Could you unlock the door?"
                     ch_e "I suppose. . ."
-                    $ P_RecentActions.remove("locked")
+                    $ P_Traits.remove("locked")
                     call Taboo_Level
-            
-        "Date":
-                ch_p "Do you want to go on a date tonight?"
-                call Emma_Date_Ask
-        
+                    
         "Switch to. . .":
                 menu:
                     "Rogue":
@@ -213,52 +247,50 @@ label Emma_Chat_Minimal:
                     ch_e "I don't think I should be visiting students at their whim."
                     ch_e "You know my office hours."
         "Ask Emma to leave" if E_Loc == bg_current:
-                    ch_e "I'll come and go as I see fit, thank you."
-                    
-        "Sex Menu" if E_Loc == bg_current:
-                    if E_Love >= E_Obed:
-                        ch_p "Did you want to fool around?"  
-                    else: 
-                        ch_p "I want to get naughty."                        
-                    ch_e "With a student? You should know better than that, [E_Petname]."  
-                          
-        "I just wanted to talk. . .":
-                    call Emma_Chitchat
-                    
-        "Emma's settings":
+                    ch_e "I'll come and go as I see fit, thank you."        
+        "Romance her":
+                menu:
+                    "Sex Menu" if E_Loc == bg_current:
+                                if E_Love >= E_Obed:
+                                    ch_p "Did you want to fool around?"  
+                                else: 
+                                    ch_p "I want to get naughty."                        
+                                ch_e "With a student? You should know better than that, [E_Petname]."   
+                    "Date":
+                                ch_p "Do you want to go on a date tonight?"
+                                ch_e "Well that certainly doesn't seem appropriate."
+                    "Gifts" if E_Loc == bg_current:
+                                ch_p "I'd like to give you something."
+                                ch_e "I'm not sure that would be appropriate at the moment."                        
+                    "Back":
+                                pass
+        "Talk to her":
+                menu:
+                    "I just wanted to talk. . .":
+                                call Emma_Chitchat
+                    "Relationship status":   
+                                ch_p "Could we talk about us?"
+                                ch_e "I'm not sure that's an appropriate discussion at the moment."                        
+                    "Could I get your number?" if "Emma" not in Digits:
+                                if ApprovalCheck("Emma", 800, "LI"):
+                                    ch_e "I don't see why not."
+                                    $ Digits.append("Emma") 
+                                elif ApprovalCheck("Emma", 500, "OI"):
+                                    ch_e "Hmm. . . fine, hand me your phone."             
+                                    $ Digits.append("Emma")
+                                else:
+                                    ch_e "I don't think it's appropriate to give my number out to a student like that."     
+                    "Back":
+                                pass                        
+        "Change Emma":
                     ch_p "Let's talk about you."
-                    ch_e "I doubt that's any of your business."
-        
-        "Relationship status":   
-                    ch_p "Could we talk about us?"
-                    ch_e "I'm not sure that's an appropriate discussion at the moment."
-                        
-        "Could I get your number?" if "Emma" not in Digits:
-                    if ApprovalCheck("Emma", 800, "LI"):
-                        ch_e "I don't see why not."
-                        $ Digits.append("Emma") 
-                    elif ApprovalCheck("Emma", 500, "OI"):
-                        ch_e "Hmm. . . fine, hand me your phone."             
-                        $ Digits.append("Emma")
-                    else:
-                        ch_e "I don't think it's appropriate to give my number out to a student like that."  
-                        
-        "Gifts" if E_Loc == bg_current:
-                    ch_p "I'd like to give you something."
-                    ch_e "I'm not sure that would be appropriate at the moment."
-                        
+                    ch_e "I doubt that's any of your business."        
         "Party up" if "Emma" not in Party and E_Loc == bg_current:
                     ch_p "Could you follow me for a bit?"
-                    ch_e "I don't think I should."
-                    
+                    ch_e "I don't think I should."                    
         "Disband party" if "Emma" in Party: 
                     ch_p "Ok, you can leave if you prefer."
-                    $ Party.remove("Emma")       
-                          
-        "Date":
-                    ch_p "Do you want to go on a date tonight?"
-                    ch_e "Well that certainly doesn't seem appropriate."
-                
+                    $ Party.remove("Emma")                           
         "Never mind.":
                     if Current_Time == "Evening":
                             ch_e "Now if that will be all, please clear out of here."
@@ -274,267 +306,198 @@ label Emma_Chat_Minimal:
 #Emma Relationship ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
 label Emma_Relationship:
-    menu:
-        ch_e "What did you want to talk about?"
-        
-        "Have you considered maybe having some fun in public?" if "taboocheck" not in E_History and "taboo" not in E_History:
-            call Emma_Taboo_Talk
-        "We talked about maybe having some fun in public?" if "taboocheck" in E_History:
-            call Emma_Taboo_Talk
-            
-        "Have you considered maybe having a threesome?" if "threecheck" not in E_History and "three" not in E_History:
-            call Emma_ThreeCheck
-        "We talked about maybe having a threesome?" if "threecheck" in E_History:
-            call Emma_ThreeCheck
-        
-        "Do you want to be my girlfriend?" if "dating" not in E_Traits and "ex" not in E_Traits:
-                $ E_DailyActions.append("relationship")
-                if "asked boyfriend" in E_DailyActions and "angry" in E_DailyActions:
-                    call EmmaFace("angry", 1)
-                    ch_e "Pest."
-                    return
-                elif "asked boyfriend" in E_DailyActions:
-                    call EmmaFace("angry", 1)
-                    ch_e "Not today, little fly."
-                    return
-                elif E_Break[0]:                    
-                    call EmmaFace("angry", 1)                    
-                    ch_e "I don't share."
-                    if "dating" in R_Traits:   
-                        $ E_DailyActions.append("asked boyfriend")                     
-                        return
-                    elif "dating" in K_Traits:   
-                        $ E_DailyActions.append("asked boyfriend")                     
-                        return
-                    elif "ex" in R_Traits:
-                        ch_p "I'm not anymore."
-                    elif "ex" in K_Traits:
-                        ch_p "I'm not anymore."
+    while True:
+        menu:
+            ch_e "What did you want to talk about?"
                         
-                $ E_DailyActions.append("asked boyfriend")
-                
-                if P_Harem and "EmmaYes" not in P_Traits: 
-                    if len(P_Harem) >= 2:
-                        ch_e "I doubt they would understand, [E_Petname]."
+            "Do you want to be my girlfriend?" if "dating" not in E_Traits and "ex" not in E_Traits:
+                    $ E_DailyActions.append("relationship")
+                    if "asked boyfriend" in E_DailyActions and "angry" in E_DailyActions:
+                        call EmmaFace("angry", 1)
+                        ch_e "Pest."
+                        return
+                    elif "asked boyfriend" in E_DailyActions:
+                        call EmmaFace("angry", 1)
+                        ch_e "Not today, little fly."
+                        return
+                    elif E_Break[0]:                    
+                        call EmmaFace("angry", 1)                    
+                        ch_e "I don't share."
+                        if "dating" in R_Traits:   
+                            $ E_DailyActions.append("asked boyfriend")                     
+                            return
+                        elif "dating" in K_Traits:   
+                            $ E_DailyActions.append("asked boyfriend")                     
+                            return
+                        elif "ex" in R_Traits:
+                            ch_p "I'm not anymore."
+                        elif "ex" in K_Traits:
+                            ch_p "I'm not anymore."
+                            
+                    $ E_DailyActions.append("asked boyfriend")
+                    
+                    if P_Harem and "EmmaYes" not in P_Traits: 
+                        if len(P_Harem) >= 2:
+                            ch_e "I doubt they would understand, [E_Petname]."
+                        else:
+                            ch_e "I doubt [P_Harem[0]] would understand, [E_Petname]."
+                        return
+                                    
+                    
+                    if E_Event[5]:
+                        call EmmaFace("bemused", 1)
+                        ch_e "I believe I asked you first."
                     else:
-                        ch_e "I doubt [P_Harem[0]] would understand, [E_Petname]."
-                    return
-                                
-                
-                if E_Event[5]:
-                    call EmmaFace("bemused", 1)
-                    ch_e "I believe I asked you first."
-                else:
-                    call EmmaFace("surprised", 2)
-                    ch_e "Don't you think that might be inappropriate, [E_Petname]. . ." 
-                    call EmmaFace("smile", 1)
-                
-                call Emma_OtherWoman
-                
-                if E_Love >= 800:
-                        call EmmaFace("surprised", 1)
-                        $ E_Mouth = "smile"
-                        call Statup("Emma", "Love", 200, 40)
-                        ch_e "I suppose I've become accustomed to you. . ."
+                        call EmmaFace("surprised", 2)
+                        ch_e "Don't you think that might be inappropriate, [E_Petname]. . ." 
+                        call EmmaFace("smile", 1)
+                    
+                    call Emma_OtherWoman
+                    
+                    if E_Love >= 800:
+                            call EmmaFace("surprised", 1)
+                            $ E_Mouth = "smile"
+                            call Statup("Emma", "Love", 200, 40)
+                            ch_e "I suppose I've become accustomed to you. . ."
+                            if "boyfriend" not in E_Petnames:
+                                $ E_Petnames.append("boyfriend")                
+                            $ E_Traits.append("dating")                        
+                            if "EmmaYes" in P_Traits:       
+                                    $ P_Traits.remove("EmmaYes")
+                                    $ P_Harem.append("Emma")
+                                    call Harem_Initiation
+                            "Emma draws you in and kisses you deeply."
+                            call EmmaFace("kiss", 1) 
+                            $ E_Kissed += 1
+                    elif E_Obed >= 500:
+                            call EmmaFace("perplexed")
+                            ch_e "I don't believe \"dating\" would be the right term for it."    
+                    elif E_Inbt >= 500:
+                            call EmmaFace("smile")                
+                            ch_e "I don't think we should be \"exclusive.\""      
+                    else:
+                            call EmmaFace("perplexed", 1)
+                            ch_e "I really couldn't get serious about a student, [E_Petname]."
+                                    
+            "Do you want to get back together?" if "ex" in E_Traits:
+                    $ E_DailyActions.append("relationship")
+                    if "asked boyfriend" in E_DailyActions and "angry" in E_DailyActions:
+                        call EmmaFace("angry", 1)
+                        ch_e "Do I have to demonstrate how unlikely that is?"
+                        return
+                    elif "asked boyfriend" in E_DailyActions:
+                        call EmmaFace("angry", 1)
+                        ch_e "Now you're just embarrassing yourself."
+                        return
+                    elif E_Break[0]: 
+                        call EmmaFace("angry", 1)                    
+                        if "dating" in (R_Traits,K_Traits):   
+                            ch_e "I don't share."
+                            return
+                        elif "ex" in (R_Traits,K_Traits):
+                            ch_e "I don't share."
+                            ch_p "I'm not anymore."
+                            $ E_Break[0] = 0
+                        else:    
+                            if not ApprovalCheck("Emma", 1500) or E_Break[1] > 5:
+                                ch_e "Persistance will not be rewarded."
+                            else:
+                                call EmmaFace("sad", 1)
+                                ch_e "You couldn't even wait a few days to start sniffing around again?"
+                            $ E_DailyActions.append("asked boyfriend")
+                            return
+                            
+                    $ E_DailyActions.append("asked boyfriend")
+                    
+                    if P_Harem and "EmmaYes" not in P_Traits:
+                        if len(P_Harem) >= 2:
+                            ch_e "I doubt they would understand, [E_Petname]."
+                        else:
+                            ch_e "I doubt [P_Harem[0]] would understand, [E_Petname]."
+                        return
+                                    
+                    $ Cnt = 0
+                    call Emma_OtherWoman
+                                            
+                    if E_Love >= 800:
+                        call EmmaFace("sly", 1)
+                        call Statup("Emma", "Love", 90, 5)
+                        ch_e "Try as I might, I can't stay mad at you."
                         if "boyfriend" not in E_Petnames:
                             $ E_Petnames.append("boyfriend")                
-                        $ E_Traits.append("dating")                        
+                        $ E_Traits.append("dating")          
+                        $ E_Traits.remove("ex")                 
                         if "EmmaYes" in P_Traits:       
                                 $ P_Traits.remove("EmmaYes")
                                 $ P_Harem.append("Emma")
                                 call Harem_Initiation
-                        "Emma draws you in and kisses you deeply."
+                        "Emma leans in and kisses you deeply."
                         call EmmaFace("kiss", 1) 
                         $ E_Kissed += 1
-                elif E_Obed >= 500:
-                        call EmmaFace("perplexed")
-                        ch_e "I don't believe \"dating\" would be the right term for it."    
-                elif E_Inbt >= 500:
-                        call EmmaFace("smile")                
-                        ch_e "I don't think we should be \"exclusive.\""      
-                else:
-                        call EmmaFace("perplexed", 1)
-                        ch_e "I really couldn't get serious about a student, [E_Petname]."
-                    
-        "When you said you loved me. . ." if "lover" not in E_Traits and E_Event[6] >= 20:
-                call Emma_Love_Redux
-        
-        "Do you want to get back together?" if "ex" in E_Traits:
-                $ E_DailyActions.append("relationship")
-                if "asked boyfriend" in E_DailyActions and "angry" in E_DailyActions:
-                    call EmmaFace("angry", 1)
-                    ch_e "Do I have to demonstrate how unlikely that is?"
-                    return
-                elif "asked boyfriend" in E_DailyActions:
-                    call EmmaFace("angry", 1)
-                    ch_e "Now you're just embarrassing yourself."
-                    return
-                elif E_Break[0]: 
-                    call EmmaFace("angry", 1)                    
-                    if "dating" in (R_Traits,K_Traits):   
-                        ch_e "I don't share."
-                        return
-                    elif "ex" in (R_Traits,K_Traits):
-                        ch_e "I don't share."
-                        ch_p "I'm not anymore."
-                        $ E_Break[0] = 0
-                    else:    
-                        if not ApprovalCheck("Emma", 1500) or E_Break[1] > 5:
-                            ch_e "Persistance will not be rewarded."
-                        else:
-                            call EmmaFace("sad", 1)
-                            ch_e "You couldn't even wait a few days to start sniffing around again?"
-                        $ E_DailyActions.append("asked boyfriend")
-                        return
-                        
-                $ E_DailyActions.append("asked boyfriend")
-                
-                if P_Harem and "EmmaYes" not in P_Traits:
-                    if len(P_Harem) >= 2:
-                        ch_e "I doubt they would understand, [E_Petname]."
+                    elif E_Love >= 600 and ApprovalCheck("Emma", 1500):
+                        call EmmaFace("smile", 1)
+                        call Statup("Emma", "Love", 90, 5)
+                        ch_e "Hrm, very well."                 
+                        if "EmmaYes" in P_Traits:       
+                                $ P_Traits.remove("EmmaYes")
+                                $ P_Harem.append("Emma")
+                                call Harem_Initiation
+                        if "boyfriend" not in E_Petnames:
+                            $ E_Petnames.append("boyfriend")                
+                        $ E_Traits.append("dating")             
+                        $ E_Traits.remove("ex")
+                        call EmmaFace("kiss", 1) 
+                        "Emma gives you a quick kiss."
+                        call EmmaFace("sly", 1) 
+                        $ E_Kissed += 1
+                    elif E_Obed >= 500:
+                        call EmmaFace("sad")
+                        ch_e "Let's keep things as they are, for now."   
+                    elif E_Inbt >= 500:
+                        call EmmaFace("perplexed")                
+                        ch_e "No, \"casual\" works better for the time being."
                     else:
-                        ch_e "I doubt [P_Harem[0]] would understand, [E_Petname]."
-                    return
-                                
-                $ Cnt = 0
-                call Emma_OtherWoman
-                                        
-                if E_Love >= 800:
-                    call EmmaFace("sly", 1)
-                    call Statup("Emma", "Love", 90, 5)
-                    ch_e "Try as I might, I can't stay mad at you."
-                    if "boyfriend" not in E_Petnames:
-                        $ E_Petnames.append("boyfriend")                
-                    $ E_Traits.append("dating")          
-                    $ E_Traits.remove("ex")                 
-                    if "EmmaYes" in P_Traits:       
-                            $ P_Traits.remove("EmmaYes")
-                            $ P_Harem.append("Emma")
-                            call Harem_Initiation
-                    "Emma leans in and kisses you deeply."
-                    call EmmaFace("kiss", 1) 
-                    $ E_Kissed += 1
-                elif E_Love >= 600 and ApprovalCheck("Emma", 1500):
-                    call EmmaFace("smile", 1)
-                    call Statup("Emma", "Love", 90, 5)
-                    ch_e "Hrm, very well."                 
-                    if "EmmaYes" in P_Traits:       
-                            $ P_Traits.remove("EmmaYes")
-                            $ P_Harem.append("Emma")
-                            call Harem_Initiation
-                    if "boyfriend" not in E_Petnames:
-                        $ E_Petnames.append("boyfriend")                
-                    $ E_Traits.append("dating")             
-                    $ E_Traits.remove("ex")
-                    call EmmaFace("kiss", 1) 
-                    "Emma gives you a quick kiss."
-                    call EmmaFace("sly", 1) 
-                    $ E_Kissed += 1
-                elif E_Obed >= 500:
-                    call EmmaFace("sad")
-                    ch_e "Let's keep things as they are, for now."   
-                elif E_Inbt >= 500:
-                    call EmmaFace("perplexed")                
-                    ch_e "No, \"casual\" works better for the time being."
+                        call EmmaFace("perplexed", 1)
+                        ch_e "I can't be bothered with second chances."
+                    
+            # End Back Together
+             
+            "I wanted to ask about [[another girl]" if "Emma" in P_Harem:
+                    menu:
+                        "Have you reconsidered letting me date. . ."
+                        "Rogue" if "Rogue" not in P_Harem:
+                                call Poly_Start("Rogue",1)
+                        "Kitty" if "Kitty" not in P_Harem and "met" in K_History:
+                                call Poly_Start("Kitty",1)
+                        "Laura" if "Laura" not in P_Harem and "met" in L_History:
+                                call Poly_Start("Laura",1)
+                        "Never mind":
+                                pass           
+                                   
+            "I think we should break up." if "dating" in E_Traits or "Emma" in P_Harem:
+                if "breakup talk" in E_DailyActions:
+                    ch_e "You must be joking. Again?"
                 else:
-                    call EmmaFace("perplexed", 1)
-                    ch_e "I can't be bothered with second chances."
+                    call Breakup("Emma")       
                 
-        # End Back Together
-         
-        "I wanted to ask about [[another girl]" if "Emma" in P_Harem:
+            "About that talk we had before. . .":
                 menu:
-                    "Have you reconsidered letting me date. . ."
-                    "Rogue" if "Rogue" not in P_Harem:
-                            call Poly_Start("Rogue",1)
-                    "Kitty" if "Kitty" not in P_Harem:
-                            call Poly_Start("Kitty",1)
-                    "Laura" if "Laura" not in P_Harem:
-                            call Poly_Start("Laura",1)
-                    "Never mind":
-                            pass           
-                               
-#        "I think we should break up." if "dating" in E_Traits:
-#            if "breakup talk" in E_DailyActions:
-#                ch_e "You must be joking. Again?"
-#            else:
-#                call Emma_Breakup        #breakup not in yet?        
-            
-            
-#        "I'd like to bring Emma into this." if "poly Emma" not in R_Traits and not E_Break[0]:    #fix nonfunctional yet, switch over to Emma stuff
-            
-#            if "asked threesome" in R_RecentActions:
-#                ch_r "Persistence will NOT be rewarded here."
-#                return
-#            elif "asked threesome" in R_DailyActions:
-#                ch_r "I don't think my answer's changing any time soon." 
-#                return
-#            else:
-#                $ R_DailyActions.append("asked threesome")                
-#                $Cnt = int((R_LikeEmma - 500)/2)
-#                menu:
-#                    ch_r "What does she think about this?"
-                        
-#                    "She said I can be with you too." if "poly Rogue" in E_Traits:
-#                        if ApprovalCheck("Rogue", 1800, Bonus = Cnt):
-#                            call RogueFace("smile", 1)
-#                            if R_Love >= R_Obed:
-#                                ch_r "Just so long as we can be together, I can share."
-#                            elif R_Obed >= R_Inbt:
-#                                ch_r "I'm ok with that if she is."
-#                            else:
-#                                ch_r "Yeah, I mean I guess so."
-#                                $ R_Traits.append("poly Emma")
-#                        else:
-#                            call RogueFace("angry", 1)
-#                            ch_r "Well maybe she did, but I don't want to share."  
-                    
-#                    "I could ask if she'd be ok with me dating you both." if "poly Rogue" not in E_Traits:
-#                        if ApprovalCheck("Rogue", 1800, Bonus = Cnt) or :
-#                            call RogueFace("smile", 1)
-#                            if R_Love >= R_Obed:
-#                                ch_r "Just so long as we can be together, I can share."
-#                            elif R_Obed >= R_Inbt:
-#                                ch_r "I'm ok with that if she is."
-#                            else:
-#                                ch_r "Yeah, I mean I guess so."                        
-#                            ch_r "Go ask her, give me the night to think about it, and then come back tomorrow with her answer."
-#                        else:
-#                            call RogueFace("angry", 1)
-#                            ch_r "Well maybe she would, but I don't want to share."  
-                    
-#                    "Could you ask?":
-#                        if R_LikeEmma >= 700:
-#                            ch_r "I have to say I've kind of been thinking about it myself."  
-#                            call Statup("Rogue", "Love", 90, 5)
-#                            call Statup("Rogue", "Obed", 70, 1)
-#                            call Statup("Rogue", "Inbt", 80, 5)
-#                        elif R_LikeEmma >= 500:
-#                            ch_r "I guess, if that's what you want. . ." 
-#                        elif R_Obed >= 700:
-#                            ch_r "If that's what you want. . ." 
-#                        else:
-#                            ch_r "I can't really stand her, I don't think so."  
-                            
-                        
-#                    "You're right, I was dumb to ask.":
-#                        call RogueFace("sad")
-#                        ch_r "Yeah, you were."  
-                        
-            #end Emma Threesome
-                
-        "You said you wanted me to be more in control?" if "sir" not in E_Petnames and "sir" in E_History:
-                if "asked sub" in E_DailyActions:
-                        ch_e "I did, you didn't."          
-                else:
-                        call Emma_Sub_Asked
-        "You said you wanted me to be your Master?" if "master" not in E_Petnames and "master" in E_History:
-                if "asked sub" in E_DailyActions:
-                        ch_e "I seem to recall something about that. . ."            
-                else:
-                        call Emma_Sub_Asked                        
-        "Never Mind":
-            return
+                    "When you said you loved me. . ." if "lover" not in E_Traits and E_Event[6] >= 20:
+                            call Emma_Love_Redux     
+                    "You said you wanted me to be more in control?" if "sir" not in E_Petnames and "sir" in E_History:
+                            if "asked sub" in E_DailyActions:
+                                    ch_e "I did, you didn't."          
+                            else:
+                                    call Emma_Sub_Asked
+                    "You said you wanted me to be your Master?" if "master" not in E_Petnames and "master" in E_History:
+                            if "asked sub" in E_DailyActions:
+                                    ch_e "I seem to recall something about that. . ."            
+                            else:
+                                    call Emma_Sub_Asked                      
+                    "Never Mind":
+                        pass                     
+            "Never Mind":
+                return
               
     return
 
@@ -544,7 +507,6 @@ label Emma_OtherWoman(Cnt = 0):
             return
     $ Cnt = 0
     if "Rogue" == P_Harem[0]:        
-            # $ Other = "Rogue"
             $Cnt = int((E_LikeRogue - 500)/2)
     elif "Kitty" == P_Harem[0]:           
             $Cnt = int((E_LikeKitty - 500)/2)
@@ -650,10 +612,6 @@ label Emma_Settings:
                 ch_p "Could we talk about us?"
                 call Emma_Personality
         
-        "Dirty Talk":
-                    ch_p "About when we have sex. . ."
-                    call Emma_SexChat
-                    
         "Pet names":
             menu:
                 "Your Pet Name":
@@ -677,18 +635,6 @@ label Emma_Settings:
                 "Back":
                         pass
                     
-        "Other girls":
-            menu:
-                ch_p "How do you feel about. . ."
-                "Rogue?":
-                    call Emma_AboutRogue  
-                "Kitty?":
-                    call Emma_AboutKitty
-                "Laura?":
-                    call Emma_AboutLaura
-                "Never mind.":
-                    pass
-        
         "Follow options" if "follow" in E_Traits:
                 ch_p "You know how you ask if I want to follow you sometimes?"
                 $ Line = 0
@@ -746,33 +692,10 @@ label Emma_Settings:
                     elif Line == "lock":
                         $ E_Traits.append("lockedtravels")    
                     $ Line = 0        
-                              
-        "Gym clothes" if "asked gym" in E_DailyActions and "no ask gym" not in E_Traits:
-                    ch_p "You asked me about your gym clothes?"
-                    ch_p "Don't worry about that, your gym clothes are cute."   
-                    ch_e "I'm glad you approve."
-                    $ E_Traits.append("no ask gym")
-        "Gym clothes" if "no ask gym" in E_Traits:
-                    ch_p "You asked me about your gym clothes?"
-                    ch_p "Forget about that, I changed my mind."   
-                    ch_e "Ok, I'll keep that in mind."
-                    $ E_Traits.remove("no ask gym")
-        
-        "Private outfit" if E_Schedule[9]:
-                    #if comfy is in E_Traits, she won't ask before changing
-                    ch_p "You know that outfit you wear in private?"
-                    menu:
-                        ch_e "Yeah, what about it?"
-                        "Just put them on without asking me about it." if "comfy" not in E_Traits:
-                            $ E_Traits.append("comfy")
-                        "Ask before changing into that." if "comfy" in E_Traits:
-                            $ E_Traits.remove("comfy")
-                        "Never Mind":
-                            pass
-            
-        "Tasks" if "sir" in E_Petnames:
-                    ch_p "I have some tasks for you."
-                    call Emma_Controls
+                 
+#        "Tasks" if "sir" in E_Petnames:
+#                    ch_p "I have some tasks for you."
+#                    call Emma_Controls
             
         "Switch to. . .":
                 menu:
@@ -790,6 +713,183 @@ label Emma_Settings:
 
 # End Emma Settings  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
+
+label Emma_Monogamy:
+        #called from Emma_Settings to ask her not to hook up wiht other girls    
+        menu:
+            "Could you not hook up with other girls?" if "mono" not in E_Traits:
+                    if E_Thirst >= 50 and not ApprovalCheck("Emma", 1800, "LO", TabM=0):
+                            #she's too thirsty
+                            call AnyFace("Emma","sly",1) 
+                            if "mono" not in E_DailyActions:                                                         
+                                    call Statup("Emma", "Obed", 90, -2) 
+                            ch_e "You know, it's not like you leave me any alternatives. . ."
+                            return
+                    elif ApprovalCheck("Emma", 1300, "LO", TabM=0) and E_Love >= L_Obed:
+                            #she cares
+                            call AnyFace("Emma","sly",1) 
+                            if "mono" not in E_DailyActions:                                                         
+                                    call Statup("Emma", "Love", 90, 1) 
+                            ch_e "Jealousy is an adorable look on you. . ." 
+                            ch_e "I suppose I could restain myself. . ."
+                    elif ApprovalCheck("Emma", 750, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Emma","sly",1,Eyes="side") 
+                            ch_e "If you insist. . ."
+                    else:   
+                            #she doesn't care
+                            call AnyFace("Emma","sly",1,Brows="confused") 
+                            ch_e "I'm afraid my affairs are my own business." 
+                            ch_e "Don't leave me wanting. . ." 
+                            return                    
+                    if "mono" not in E_DailyActions:                                                         
+                            call Statup("Emma", "Obed", 90, 3) 
+                    call AnyWord("Emma",1,0,"mono") #Daily
+                    $ E_Traits.append("mono")   
+            "Don't hook up with other girls." if "mono" not in E_Traits:
+                    if ApprovalCheck("Emma", 900, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Emma","sly",1,Eyes="side") 
+                            ch_e "Oh very well."
+                    elif E_Thirst >= 60 and not ApprovalCheck("Emma", 1700, "LO", TabM=0):
+                            #she's too thirsty
+                            call AnyFace("Emma","sly",1) 
+                            if "mono" not in E_DailyActions:                                                         
+                                    call Statup("Emma", "Obed", 90, -2) 
+                            ch_e "You know, it's not like you leave me any alternatives. . ."
+                            return
+                    elif ApprovalCheck("Emma", 600, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Emma","sly",1,Eyes="side") 
+                            ch_e "If I must. . ."
+                    elif ApprovalCheck("Emma", 1500, "LO", TabM=0):
+                            #she cares
+                            call AnyFace("Emma","sly",1) 
+                            ch_e "You shouldn't take that tone with me." 
+                            ch_e "But I suppose I could let it slide. . ."
+                    else:   
+                            #she doesn't care
+                            call AnyFace("Emma","sly",1,Brows="confused") 
+                            ch_e "My affairs are my own business." 
+                            return                   
+                    if "mono" not in E_DailyActions:                                                         
+                            call Statup("Emma", "Obed", 90, 3) 
+                    call AnyWord("Emma",1,0,"mono") #Daily
+                    $ E_Traits.append("mono")   
+            "It's ok if you hook up with other girls." if "mono" in E_Traits:
+                    if ApprovalCheck("Emma", 700, "O", TabM=0):
+                            call AnyFace("Emma","sly",1,Eyes="side") 
+                            ch_e "Of course."
+                    elif ApprovalCheck("Emma", 800, "L", TabM=0):
+                            call AnyFace("Emma","sly",1) 
+                            ch_e "Only if I find myself. . . available. . ." 
+                    else:
+                            call AnyFace("Emma","sly",1,Brows="confused") 
+                            if "mono" not in E_DailyActions:                                                         
+                                    call Statup("Emma", "Love", 90, -2)
+                            ch_e "I wasn't aware that I needed your permission." 
+                    if "mono" not in E_DailyActions:                                                         
+                            call Statup("Emma", "Obed", 90, 3)
+                    if "mono" in E_Traits:
+                            $ E_Traits.remove("mono")   
+                    call AnyWord("Emma",1,0,"mono") #Daily
+            "Never mind.":
+                pass
+        return
+        
+# end Emma monogamy <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+label Emma_Jumped:
+        #called from Emma_Settings to ask her not to jump you  
+        ch_p "Hey, Remember that time you threw yourself at me?" 
+        call AnyFace("Emma","sly",1,Brows="confused") 
+        ch_e "I believe I recall something like that."
+        menu:
+            ch_e "What of it?"
+            "Could you maybe just ask instead?" if "chill" not in E_Traits:
+                    if E_Thirst >= 60 and not ApprovalCheck("Emma", 1600, "LO", TabM=0):
+                            #she's too thirsty
+                            call AnyFace("Emma","sly",1) 
+                            if "chill" not in E_DailyActions:                                                         
+                                    call Statup("Emma", "Obed", 90, -2) 
+                            ch_e "I do have certain. . . needs that must be met."
+                            ch_e "Stay on your toes."
+                            return
+                    elif ApprovalCheck("Emma", 1100, "LO", TabM=0) and E_Love >= L_Obed:
+                            #she cares
+                            call AnyFace("Emma","sly",1) 
+                            if "chill" not in E_DailyActions:                                                         
+                                    call Statup("Emma", "Love", 90, 1) 
+                            ch_e "I didn't intend to upset you, [E_Petname]. . ." 
+                            ch_e "I'll try to keep control. . ."
+                    elif ApprovalCheck("Emma", 600, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Emma","sly",1,Eyes="side") 
+                            ch_e "If that's what would make you comfortable. . ."
+                    else:   
+                            #she doesn't care
+                            call AnyFace("Emma","sly",1,Brows="confused") 
+                            ch_e "I'll see what I can do about that." 
+                            ch_e "Stay on your toes."
+                            return                    
+                    if "chill" not in E_DailyActions:                                                         
+                            call Statup("Emma", "Obed", 90, 3) 
+                    call AnyWord("Emma",1,0,"chill") #Daily
+                    $ E_Traits.append("chill")   
+            "Don't bother me like that." if "chill" not in E_Traits:
+                    if ApprovalCheck("Emma", 900, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Emma","sly",1,Eyes="side") 
+                            ch_e "Oh, very well."
+                    elif E_Thirst >= 60 and not ApprovalCheck("Emma", 600, "O", TabM=0):
+                            #she's too thirsty
+                            call AnyFace("Emma","sly",1) 
+                            if "chill" not in E_DailyActions:                                                         
+                                    call Statup("Emma", "Obed", 90, -2) 
+                            ch_e "I do have certain. . . needs that must be met."
+                            ch_e "Stay on your toes."
+                            return
+                    elif ApprovalCheck("Emma", 450, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Emma","sly",1,Eyes="side") 
+                            ch_e "Well, I wouldn't want to be a \"bother\". . ."
+                    elif ApprovalCheck("Emma", 500, "LO", TabM=0) and not ApprovalCheck("Emma", 500, "I", TabM=0):
+                            #she cares
+                            call AnyFace("Emma","sly",1) 
+                            ch_e "Don't press your luck, [E_Petname]." 
+                            ch_e "I will try to give you some space, however. . ."
+                    else:   
+                            #she doesn't care
+                            call AnyFace("Emma","sly",1,Brows="confused") 
+                            ch_e "I'll see what I can do about that." 
+                            ch_e "Stay on your toes."
+                            return                     
+                    if "chill" not in E_DailyActions:                                                         
+                            call Statup("Emma", "Obed", 90, 3) 
+                    call AnyWord("Emma",1,0,"chill") #Daily
+                    $ E_Traits.append("chill")   
+            "Knock yourself out.":
+                    if ApprovalCheck("Emma", 800, "L", TabM=0):
+                            call AnyFace("Emma","sly",1) 
+                            ch_e "You can count on it. . ." 
+                    elif ApprovalCheck("Emma", 700, "O", TabM=0):
+                            call AnyFace("Emma","sly",1,Eyes="side") 
+                            ch_e "Very well."
+                    else:
+                            call AnyFace("Emma","sly",1,Brows="confused") 
+                            if "chill" not in E_DailyActions:                                                         
+                                    call Statup("Emma", "Love", 90, -2)
+                            ch_e "We'll see. . ." 
+                    if "chill" not in E_DailyActions:                                                         
+                            call Statup("Emma", "Obed", 90, 3) 
+                    if "chill" in E_Traits:
+                            $ E_Traits.remove("chill")  
+                    call AnyWord("Emma",1,0,"chill") #Daily 
+            "Um, never mind.":
+                pass
+        return
+        
+# end Emma jumped <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Emma Sexchat <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 label Emma_SexChat(Line = "Hmm? What did you want to talk about?"):
@@ -980,7 +1080,6 @@ label Emma_SexChat(Line = "Hmm? What did you want to talk about?"):
                                                 
                                 # End Emma's favorite things.
                     
-                    
                 "Don't talk as much during sex." if "vocal" in E_Traits:
                         if "setvocal" in E_DailyActions:
                             call EmmaFace("perplexed")
@@ -1038,7 +1137,6 @@ label Emma_SexChat(Line = "Hmm? What did you want to talk about?"):
                             $ E_DailyActions.append("setvocal")  
                         # End Emma Dirty Talk
                     
-                    
                 "Don't do your own thing as much during sex." if "passive" not in E_Traits:
                         if "initiative" in E_DailyActions:
                             call EmmaFace("perplexed")
@@ -1093,13 +1191,29 @@ label Emma_SexChat(Line = "Hmm? What did you want to talk about?"):
                                 call Statup("Emma", "Inbt", 90, 5)
                                 ch_e "We'll see."  
                                 
-                            $ E_DailyActions.append("initiative")   
+                            $ E_DailyActions.append("initiative") 
+                            
+                
+                "About getting Jumped" if "jumped" in E_History:
+                    call Emma_Jumped
+                "About when you masturbate":
+                    call NoFap("Emma")
+                    
+                "Have you considered maybe having some fun in public?" if "taboocheck" not in E_History and "taboo" not in E_History:
+                        call Emma_Taboo_Talk
+                "We talked about maybe having some fun in public?" if "taboocheck" in E_History and "taboo" not in E_History:
+                        call Emma_Taboo_Talk
+                    
+                "Have you considered maybe having a threesome?" if "threecheck" not in E_History and "three" not in E_History:
+                        call Emma_ThreeCheck
+                "We talked about maybe having a threesome?" if "threecheck" in E_History and "three" not in E_History:
+                        call Emma_ThreeCheck
+                
                 "Never Mind" if Line == "Hmm? What did you want to talk about?":
                     return
                 "That's all." if Line != "Hmm? What did you want to talk about?":
                     return
-            if Line == "Hmm? What did you want to talk about?":
-                $ Line = "Anything else?"
+            $ Line = "Anything else?"
     return
 # End Emma Sexchat <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -1566,10 +1680,13 @@ label Emma_Flirt:
             "Say you love her":
                         call Love_You("Emma")
                 
-            "Touch her cheek.":                                                                                 #Touch her cheek 
+            "Touch her cheek.":
                     call E_TouchCheek
-                            
-            "Kiss her cheek":                                                                                   #Kiss her cheek
+            
+            "Hold hands":
+                    call Hold_Hands("Emma")    
+                    
+            "Kiss her cheek":     
                     "You lean over, tilt her head back, and kiss her on the cheek."                
                     if ApprovalCheck("Emma", 700, "L", TabM=2):
                         call EmmaFace("sexy", 1) 
@@ -2256,7 +2373,10 @@ label Emma_Controls:
             return
         "I want you to stop taking your own initiative." if "sub" not in E_Traits:
             $ E_Traits.append("sub")
-            ch_e "You do enjoy being in control. . ."                
+            ch_e "You do enjoy being in control. . ."         
+        "You can take your own initiative if you like." if "sub" in E_Traits:
+            $ E_Traits.remove("sub")
+            ch_e "I did have some ideas. . ."                  
         "Exit.":
             return
     jump Emma_Controls
@@ -2600,6 +2720,8 @@ label Emma_Gifts:
                             "She hands it back to you."
                             $ E_RecentActions.append("no gift bra")                      
                             $ E_DailyActions.append("no gift bra") 
+                        if "bikini top" in E_Inventory and "bikini bottoms" in E_Inventory:
+                                $ E_Swim[0] = 1
                     else: 
                         ch_e "I already have one of those."
                         
@@ -2654,6 +2776,8 @@ label Emma_Gifts:
                             "She hands them back to you."
                             $ E_RecentActions.append("no gift panties")                      
                             $ E_DailyActions.append("no gift panties") 
+                        if "bikini top" in E_Inventory and "bikini bottoms" in E_Inventory:
+                                $ E_Swim[0] = 1
                     else: 
                         ch_e "I already have one of those."
                 "Never mind":
@@ -3148,7 +3272,21 @@ label Emma_Summon(Tempmod=Tempmod):
                     ch_e "As I said, I've got things to do."   
                 $ E_RecentActions.append("no summon")
                 return
-                              
+                    
+    $ D20 = renpy.random.randint(1, 20) 
+    $ Line = 0
+    if E_Loc == "bg teacher": #fix change these if changed function
+        $ Tempmod = -30
+    elif E_Loc == "bg classroom":
+        $ Tempmod = -10
+    elif E_Loc == "bg dangerroom":    
+        $ Tempmod = -10
+    elif E_Loc == "bg showerroom":    
+        $ Tempmod = -30
+        
+    if D20 <= 3:                                                                        
+        #unlucky refusal
+        $ Line = "no"     
     if Current_Time == "Night": 
                 if ApprovalCheck("Emma", 700, "L") or ApprovalCheck("Emma", 300, "O"):                              
                         #It's night time but she likes you.
@@ -3160,21 +3298,23 @@ label Emma_Summon(Tempmod=Tempmod):
                         ch_e "It's late, [E_Petname], tell me tomorrow."       
                         $ E_RecentActions.append("no summon")         
                 return
-                
-    $ D20 = renpy.random.randint(1, 20) 
-    $ Line = 0
-    if E_Loc == "bg teacher": #fix change these if changed function
-        $ Tempmod = -30
-    elif E_Loc == "bg classroom":
-        $ Tempmod = 10
-    elif E_Loc == "bg dangerroom":    
-        $ Tempmod = 10
-    elif E_Loc == "bg showerroom":    
-        $ Tempmod = 30
-        
-    if D20 <= 3:                                                                        
-        #unlucky refusal
-        $ Line = "no"       
+    elif "les" in E_RecentActions:
+            #if she's with another girl. . .
+            if ApprovalCheck("Emma", 2000):
+                    ch_e "I'm. . . entertaining at the moment, [E_Petname], care to join us?"
+                    menu:
+                        extend ""
+                        "Sure":
+                            $ Line = "go to"
+                        "No thanks.":
+                            ch_e "Your loss."
+                            return
+            else:            
+                    ch_e "Oh. . . that might be an issue, we're- I'm. . ."
+                    ch_e "indisposed. . ."
+                    ch_e "Perhaps we could meet later."      
+                    $ E_RecentActions.append("no summon") 
+                    return       
     elif not ApprovalCheck("Emma", 700, "L") or not ApprovalCheck("Emma", 600, "O"):                       
         #It's not night time, but she's busy 
         if not ApprovalCheck("Emma", 300):
@@ -3307,6 +3447,8 @@ label Emma_Summon(Tempmod=Tempmod):
             ch_e "I'll be right there, [E_Petname]."
         $ Line = "yes" 
         
+    $ Tempmod = 0
+    
     if not Line:                                                                        
             #You end the dialog neutrally               
             $ E_RecentActions.append("no summon")         
@@ -3349,6 +3491,15 @@ label Emma_Summon(Tempmod=Tempmod):
             elif E_Loc == "bg campus": 
                     ch_e "I've got a nice location picked out."
                     jump Campus
+            elif E_Loc == "bg rogue": 
+                    ch_e "I'll try to keep occupied."
+                    jump Rogue_Room
+            elif E_Loc == "bg kitty": 
+                    ch_e "I'll try to keep occupied."
+                    jump Kitty_Room
+            elif E_Loc == "bg laura": 
+                    ch_e "I'll try to keep occupied."
+                    jump Laura_Room
             else:
                     ch_e "You know, I'll just meet you in my room."
                     $ E_Loc = "bg emma"
@@ -3363,7 +3514,7 @@ label Emma_Summon(Tempmod=Tempmod):
     $ E_RecentActions.append("summoned")  
     $ Line = 0
     ch_e "I'll be there in a minute."   
-    if "locked" in P_RecentActions:
+    if "locked" in P_Traits:
             call Locked_Door("Emma")
             return
     $ E_Loc = bg_current 
@@ -3714,79 +3865,71 @@ label Emma_Dismissed(Leaving = 0):
     #end "you can leave"
     
 
-label Emma_AboutRogue:
+label Emma_About(Girl="Rogue"):
     ch_e "What do I think about her? Well. . ."
-    
-    if "poly Rogue" in E_Traits:  
-        ch_e "As you're aware, we've shared a great deal. . ."    
-    elif E_LikeRogue >= 900:
-        ch_e "I do find her rather mesmerizing. . ."
-    elif E_LikeRogue >= 800:
-        ch_e "That accent certainly did grow on me. . ."    
-    elif E_LikeRogue >= 700:
-        ch_e "We've become quite close."
-    elif E_LikeRogue >= 600:
-        ch_e "I'm rather fond of her."
-    elif E_LikeRogue >= 500:
-        ch_e "She's an adequate student."
-    elif E_LikeRogue >= 400:
-        ch_e "She can be a bit of a handful."
-    elif E_LikeRogue >= 300:
-        ch_e "I can barely tollerate her disrespectful nature." 
-    else:
-        ch_e "That swamp rat? What about her?"          
-    return
-label Emma_AboutKitty:
-    ch_e "What do I think about her? Well. . ."
-    
-    if "poly Kitty" in E_Traits:  
-        ch_e "As you're aware, we do get along quite well. . ."    
-    elif E_LikeKitty >= 900:
-        ch_e "She is rather. . . flexible. . ."
-    elif E_LikeKitty >= 800:
-        ch_e "She is rather adorable. . ."    
-    elif E_LikeKitty >= 700:
-        ch_e "She's something of a friend at this point."
-    elif E_LikeKitty >= 600:
-        ch_e "Once you get to know her, she's not bad."
-    elif E_LikeKitty >= 500:
-        ch_e "She's an adequate student."
-    elif E_LikeKitty >= 400:
-        ch_e "She can be a bit of a know it all."
-    elif E_LikeKitty >= 300:
-        ch_e "I can't stand her constant questions." 
-    else:
-        ch_e "That little bitch?"
-          
-    return
-    
-label Emma_AboutLaura:
-    ch_e "What do I think about her? Well. . ."
-    
-    if "poly Laura" in E_Traits:  
-        ch_e "She is quite. . . energetic. . ."    
-    elif E_LikeLaura >= 900:
-        ch_e "She's very durable. . ."
-    elif E_LikeLaura >= 800:
-        ch_e "She has a rough quality that is quite exciting. . ."    
-    elif E_LikeLaura >= 700:
-        ch_e "She's something of a friend at this point."
-    elif E_LikeLaura >= 600:
-        ch_e "Once you get to know her, she's not bad."
-    elif E_LikeLaura >= 500:
-        ch_e "She's an adequate student."
-    elif E_LikeLaura >= 400:
-        ch_e "She is a bit rough around the edges"
-    elif E_LikeLaura >= 300:
-        ch_e "Yes, a bit feral, that one." 
-    else:
-        ch_e "I'd put her down myself if I didn't have responsibilites."
+    if Girl == "Rogue":    
+            if "poly Rogue" in E_Traits:  
+                ch_e "As you're aware, we've shared a great deal. . ."    
+            elif E_LikeRogue >= 900:
+                ch_e "I do find her rather mesmerizing. . ."
+            elif E_LikeRogue >= 800:
+                ch_e "That accent certainly did grow on me. . ."    
+            elif E_LikeRogue >= 700:
+                ch_e "We've become quite close."
+            elif E_LikeRogue >= 600:
+                ch_e "I'm rather fond of her."
+            elif E_LikeRogue >= 500:
+                ch_e "She's an adequate student."
+            elif E_LikeRogue >= 400:
+                ch_e "She can be a bit of a handful."
+            elif E_LikeRogue >= 300:
+                ch_e "I can barely tollerate her disrespectful nature." 
+            else:
+                ch_e "That swamp rat? What about her?" 
+    elif Girl == "Kitty":    
+            if "poly Kitty" in E_Traits:  
+                ch_e "As you're aware, we do get along quite well. . ."    
+            elif E_LikeKitty >= 900:
+                ch_e "She is rather. . . flexible. . ."
+            elif E_LikeKitty >= 800:
+                ch_e "She is rather adorable. . ."    
+            elif E_LikeKitty >= 700:
+                ch_e "She's something of a friend at this point."
+            elif E_LikeKitty >= 600:
+                ch_e "Once you get to know her, she's not bad."
+            elif E_LikeKitty >= 500:
+                ch_e "She's an adequate student."
+            elif E_LikeKitty >= 400:
+                ch_e "She can be a bit of a know it all."
+            elif E_LikeKitty >= 300:
+                ch_e "I can't stand her constant questions." 
+            else:
+                ch_e "That little bitch?"
+    elif Girl == "Laura":    
+            if "poly Laura" in E_Traits:  
+                ch_e "She is quite. . . energetic. . ."    
+            elif E_LikeLaura >= 900:
+                ch_e "She's very durable. . ."
+            elif E_LikeLaura >= 800:
+                ch_e "She has a rough quality that is quite exciting. . ."    
+            elif E_LikeLaura >= 700:
+                ch_e "She's something of a friend at this point."
+            elif E_LikeLaura >= 600:
+                ch_e "Once you get to know her, she's not bad."
+            elif E_LikeLaura >= 500:
+                ch_e "She's an adequate student."
+            elif E_LikeLaura >= 400:
+                ch_e "She is a bit rough around the edges"
+            elif E_LikeLaura >= 300:
+                ch_e "Yes, a bit feral, that one." 
+            else:
+                ch_e "I'd put her down myself if I didn't have responsibilites."
           
     return
 #End Emma_AboutRogue
     
 
-## Emma's Clothes ///////////////////
+## Emma's Clothes // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 label Emma_Clothes(Public=0,Bonus=0):   
     if "exhibitionist" in E_Traits:
             $ Public += 1
@@ -3800,49 +3943,32 @@ label Emma_Clothes(Public=0,Bonus=0):
         
     call EmmaFace
     menu:
-        ch_e "You wanted to discuss my clothing choices?"
-        "Let's talk about your modded clothes.":
-                    jump Emma_Modded_Clothes_Menu
-        "Let's talk about your outfits.":
-                    jump Emma_Clothes_Outfits        
-        "Let's talk about your over shirts.":
+        ch_e "You wanted to discuss my clothing choices?"   
+        "Overshirts":
                     jump Emma_Clothes_Over        
-        "Let's talk about your legwear.":
+        "Legwear":
                     jump Emma_Clothes_Legs
-        "Let's talk about your underwear.":
+        "Underwear":
                     jump Emma_Clothes_Under
-        "Let's talk about the other stuff.":
+        "Accessories":
                     jump Emma_Clothes_Misc
-        "That looks really good on you, you should remember that one. [[Set Custom]":
-                menu:
-                    "Which slot would you like this saved in?"
-                    "Custom 1":
-                                call Emma_OutfitShame(3,1)
-                    "Custom 2":
-                                call Emma_OutfitShame(5,1)
-                    "Custom 3":
-                                call Emma_OutfitShame(6,1)
-                    "Custom 4":
-                                call Emma_OutfitShame(15,1)
-                    "Custom 5":
-                                call Emma_OutfitShame(16,1)
-                    "Custom 6":
-                                call Emma_OutfitShame(17,1)
-                    "Custom 7":
-                                call Emma_OutfitShame(18,1)
-                    "Custom 8":
-                                call Emma_OutfitShame(19,1)
-                    "Custom 9":
-                                call Emma_OutfitShame(20,1)
-                    "Gym Clothes":
-                                call Emma_OutfitShame(7,1)
-                    "Sleepwear":
-                                call Emma_OutfitShame(9,1)
-                    "Swimwear":
-                                call Emma_OutfitShame(10,1)
-                    "Never mind":
-                                pass        
+        "Outfits":
+                    jump Emma_Clothes_Outfits    
+        "Let's talk about what you wear around.":
+                    call Emma_Clothes_Schedule                     
         "Switch to. . .":   
+                $ E_TempClothes[1] = E_Arms  
+                $ E_TempClothes[2] = E_Legs 
+                $ E_TempClothes[3] = E_Over
+                $ E_TempClothes[4] = E_Neck 
+                $ E_TempClothes[5] = E_Chest 
+                $ E_TempClothes[6] = E_Panties
+                $ E_TempClothes[7] = E_Boots
+                $ E_TempClothes[8] = E_Hair
+                $ E_TempClothes[9] = E_Hose
+                $ E_TempClothes[0] = 1 
+                $ E_Outfit = "temporary"
+                $ E_OutfitDay = "temporary"      
                 menu:              
                     "Rogue":
                         call Rogue_Chat_Set("wardrobe")
@@ -3888,252 +4014,186 @@ label Emma_Clothes(Public=0,Bonus=0):
         
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
 
-    menu Emma_Clothes_Outfits:                                                                                 # Outfits
+    menu Emma_Clothes_Outfits:                                                                                 
+        # Outfits
+        "You should remember that one. [[Set Custom]":
+                menu:
+                    "Which slot would you like this saved in?"
+                    "Custom 1":
+                                call Emma_OutfitShame(3,1)
+                    "Custom 2":
+                                call Emma_OutfitShame(5,1)
+                    "Custom 3":
+                                call Emma_OutfitShame(6,1)
+                    "Gym Clothes":
+                                call Emma_OutfitShame(4,1)
+                    "Sleepwear":
+                                call Emma_OutfitShame(7,1)
+                    "Swimwear":
+                                call Emma_OutfitShame(10,1)
+                    "Never mind":
+                                pass       
         "I really like that teacher's look you wear.": 
-            call EmmaOutfit("teacher")   
-            menu:
-                "You should wear this one out. [[set current outfit]":
-                    $ E_Outfit = "teacher"
-                    $ E_Shame = E_OutfitShame[1]
-                    ch_e "Yes, a very tasteful look."
-                "Let's try something else though.":
-                    ch_e "Very well."            
+                call EmmaOutfit("teacher")   
+                menu:
+                    "You should wear this one out. [[set current outfit]":
+                        $ E_Outfit = "teacher"
+                        $ E_Shame = E_OutfitShame[1]
+                        ch_e "Yes, a very tasteful look."
+                    "Let's try something else though.":
+                        ch_e "Very well."            
                     
         "That combat uniform you have looks really nice on you.":
-            call EmmaOutfit("costume")
-            menu:
-                "You should wear this one out. [[set current outfit]":
-                    $ E_Outfit = "costume"
-                    $ E_Shame = E_OutfitShame[2]
-                    ch_e "I really enjoyed wearing that one."
-                "Let's try something else though.":
-                    ch_e "Very well."            
+                call EmmaOutfit("costume")
+                menu:
+                    "You should wear this one out. [[set current outfit]":
+                        $ E_Outfit = "costume"
+                        $ E_Shame = E_OutfitShame[2]
+                        ch_e "I really enjoyed wearing that one."
+                    "Let's try something else though.":
+                        ch_e "Very well."            
                     
-        "Remember that outfit we put together? [[Set a custom outfit] (locked)" if not E_Custom[0] and not E_Custom2[0] and not E_Custom3[0] and not E_Custom4[0] and not E_Custom5[0] and not E_Custom6[0] and not E_Custom7[0] and not E_Custom8[0] and not E_Custom9[0]:
+        "Remember that outfit we put together? [[Set a custom outfit] (locked)" if not E_Custom[0] and not E_Custom2[0] and not E_Custom3[0]:
                         pass       
                         
-        "Remember that outfit we put together?" if E_Custom[0] or E_Custom2[0] or E_Custom3[0] or E_Custom4[0] or E_Custom5[0] or E_Custom6[0] or E_Custom7[0] or E_Custom8[0] or E_Custom9[0]: 
-            $ Cnt = 0
-            while 1:
-                menu:                
-                    "Throw on Custom 1 (locked)" if not E_Custom[0]:
-                        pass
-                    "Throw on Custom 1" if E_Custom[0]:
-                        $ E_Outfit = "custom1"
-                        call EmmaOutfit
-                        $ Cnt = 3
-                    "Throw on Custom 2 (locked)" if not E_Custom2[0]:
-                        pass
-                    "Throw on Custom 2" if E_Custom2[0]:
-                        $ E_Outfit = "custom2"
-                        call EmmaOutfit
-                        $ Cnt = 5
-                    "Throw on Custom 3 (locked)" if not E_Custom3[0]:
-                        pass
-                    "Throw on Custom 3" if E_Custom3[0]:
-                        $ E_Outfit = "custom3"
-                        call EmmaOutfit
-                        $ Cnt = 6
-                    
-                    "Throw on Custom 4 (locked)" if not E_Custom4[0]:
-                        pass
-                    "Throw on Custom 4" if E_Custom4[0]:
-                        $ E_Outfit = "custom4"
-                        call EmmaOutfit
-                        $ Cnt = 15
-                    "Throw on Custom 5 (locked)" if not E_Custom5[0]:
-                        pass
-                    "Throw on Custom 5" if E_Custom5[0]:
-                        $ E_Outfit = "custom5"
-                        call EmmaOutfit
-                        $ Cnt = 16
-                    "Throw on Custom 6 (locked)" if not E_Custom6[0]:
-                        pass
-                    "Throw on Custom 6" if E_Custom6[0]:
-                        $ E_Outfit = "custom6"
-                        call EmmaOutfit
-                        $ Cnt = 17
-                    "Throw on Custom 7 (locked)" if not E_Custom7[0]:
-                        pass
-                    "Throw on Custom 7" if E_Custom7[0]:
-                        $ E_Outfit = "custom7"
-                        call EmmaOutfit
-                        $ Cnt = 18
-                    "Throw on Custom 8 (locked)" if not E_Custom8[0]:
-                        pass
-                    "Throw on Custom 8" if E_Custom8[0]:
-                        $ E_Outfit = "custom8"
-                        call EmmaOutfit
-                        $ Cnt = 19
-                    "Throw on Custom 9 (locked)" if not E_Custom9[0]:
-                        pass
-                    "Throw on Custom 9" if E_Custom9[0]:
-                        $ E_Outfit = "custom9"
-                        call EmmaOutfit
-                        $ Cnt = 20
-                    "You should wear this one in our rooms. (locked)" if not Cnt:
-                        pass
-                    "You should wear this one in our rooms." if Cnt:
-                        if Cnt == 5:
-                            $ E_Schedule[9] = "custom2"
-                        elif Cnt == 15:
-                            $ E_Schedule[9] = "custom4"
-                        elif Cnt == 16:
-                            $ E_Schedule[9] = "custom5"
-                        elif Cnt == 17:
-                            $ E_Schedule[9] = "custom6"
-                        elif Cnt == 18:
-                            $ E_Schedule[9] = "custom7"
-                        elif Cnt == 19:
-                            $ E_Schedule[9] = "custom8"
-                        elif Cnt == 20:
-                            $ E_Schedule[9] = "custom9"
-                        elif Cnt == 6:
-                            $ E_Schedule[9] = "custom3"
-                        else:
-                            $ E_Schedule[9] = "custom1"
-                        ch_e "Ok, sure."
-                    
-                    
-                    "On second thought, forget about that one outfit. . .":
-                        menu:
-                            "Custom 1 [[clear custom 1]" if E_Custom[0]:
-                                ch_e "Very well."
-                                $ E_Custom[0] = 0
-                            "Custom 1 [[clear custom 1] (locked)" if not E_Custom[0]:
+        "Remember that outfit we put together?" if E_Custom[0] or E_Custom2[0] or E_Custom3[0]: 
+                $ Cnt = 0
+                while 1:
+                    menu:                
+                        "Throw on Custom 1 (locked)" if not E_Custom[0]:
                                 pass
-                            "Custom 2 [[clear custom 2]" if E_Custom2[0]:
-                                ch_e "Very well."
-                                $ E_Custom2[0] = 0
-                            "Custom 2 [[clear custom 1] (locked)" if not E_Custom2[0]:
+                        "Throw on Custom 1" if E_Custom[0]:
+                                call EmmaOutfit("custom1")
+                                $ Cnt = 3
+                        "Throw on Custom 2 (locked)" if not E_Custom2[0]:
                                 pass
-                            "Custom 3 [[clear custom 3]" if E_Custom3[0]:
-                                ch_e "Very well."
-                                $ E_Custom3[0] = 0
-                            "Custom 3 [[clear custom 3] (locked)" if not E_Custom3[0]:
+                        "Throw on Custom 2" if E_Custom2[0]:
+                                call EmmaOutfit("custom2")
+                                $ Cnt = 5
+                        "Throw on Custom 3 (locked)" if not E_Custom3[0]:
                                 pass
-                            "Custom 4 [[clear custom 4]" if E_Custom4[0]:
-                                ch_e "Very well."
-                                $ E_Custom4[0] = 0
-                            "Custom 4 [[clear custom 4] (locked)" if not E_Custom4[0]:
+                        "Throw on Custom 3" if E_Custom3[0]:
+                                call EmmaOutfit("custom3")
+                                $ Cnt = 6
+                        
+                        "You should wear this one in private. (locked)" if not Cnt:
                                 pass
-                            "Custom 5 [[clear custom 5]" if E_Custom5[0]:
-                                ch_e "Very well."
-                                $ E_Custom5[0] = 0
-                            "Custom 5 [[clear custom 5] (locked)" if not E_Custom5[0]:
+                        "You should wear this one in private." if Cnt:
+                                if Cnt == 5:
+                                    $ E_Schedule[9] = "custom2"
+                                elif Cnt == 6:
+                                    $ E_Schedule[9] = "custom3"
+                                else:
+                                    $ E_Schedule[9] = "custom1"
+                                ch_e "Ok, sure."
+                                                
+                        "On second thought, forget about that one outfit. . .":
+                                menu:
+                                    "Custom 1 [[clear custom 1]" if E_Custom[0]:
+                                        ch_e "Very well."
+                                        $ E_Custom[0] = 0
+                                    "Custom 1 [[clear custom 1] (locked)" if not E_Custom[0]:
+                                        pass
+                                    "Custom 2 [[clear custom 2]" if E_Custom2[0]:
+                                        ch_e "Very well."
+                                        $ E_Custom2[0] = 0
+                                    "Custom 2 [[clear custom 2] (locked)" if not E_Custom2[0]:
+                                        pass
+                                    "Custom 3 [[clear custom 3]" if E_Custom3[0]:
+                                        ch_e "Very well."
+                                        $ E_Custom3[0] = 0
+                                    "Custom 3 [[clear custom 3] (locked)" if not E_Custom3[0]:
+                                        pass
+                                    "Never mind, [[back].":
+                                        pass    
+                                                   
+                        "You should wear this one out. [[choose outfit first](locked)" if not Cnt:
                                 pass
-                            "Custom 6 [[clear custom 6]" if E_Custom6[0]:
-                                ch_e "Very well."
-                                $ E_Custom6[0] = 0
-                            "Custom 6 [[clear custom 6] (locked)" if not E_Custom6[0]:
-                                pass
-                            "Custom 7 [[clear custom 7]" if E_Custom7[0]:
-                                ch_e "Very well."
-                                $ E_Custom7[0] = 0
-                            "Custom 7 [[clear custom 7] (locked)" if not E_Custom7[0]:
-                                pass
-                            "Custom 8 [[clear custom 8]" if E_Custom8[0]:
-                                ch_e "Very well."
-                                $ E_Custom8[0] = 0
-                            "Custom 8 [[clear custom 8] (locked)" if not E_Custom8[0]:
-                                pass
-                            "Custom 9 [[clear custom 9]" if E_Custom9[0]:
-                                ch_e "Very well."
-                                $ E_Custom9[0] = 0
-                            "Custom 9 [[clear custom 9] (locked)" if not E_Custom9[0]:
-                                pass
-                            "Never mind, [[back].":
-                                pass    
-                                            
-                                            
-                    "You should wear this one out. [[choose outfit first](locked)" if not Cnt:
-                        pass
-                    "You should wear this one out." if Cnt:
-                        call Emma_Custom_Out(Cnt)
-                    "Ok, back to what we were talking about. . .":
-                        $ Cnt = 0
-                        jump Emma_Clothes_Outfits                    
+                        "You should wear this one out." if Cnt:
+                                call Emma_Custom_Out(Cnt)
+                        "Ok, back to what we were talking about. . .":
+                                $ Cnt = 0
+                                jump Emma_Clothes_Outfits                    
         
-        "Your birthday suit looks really great. . .":                                     
-            #Nude
-            call EmmaFace("sly", 1)
-            $ Line = 0
-            if not E_Chest and not E_Panties and not E_Over and not E_Legs and not E_Hose:  
-                # if already naked (yes)
-                ch_e "Apparently so. . ."  
-            elif E_SeenChest and E_SeenPussy and ApprovalCheck("Emma", 1200, TabM=(5-Public)):
-                #if you've seen it all and she likes you well enough (yes)
-                ch_e "I'll take that as an invitation. . ."  
-                $ Line = 1
-            elif ApprovalCheck("Emma", 2000, TabM=(5-Public)):
-                #if you haven't seen everything but she really likes you (yes)
-                ch_e "I suppose you've earned it. . ."    
-                $ Line = 1
-            elif E_SeenChest and E_SeenPussy and ApprovalCheck("Emma", 1200, TabM=0):
-                # if you've seen it but it's in public (no)
-                ch_e "As you're well aware, but this isn't the appropriate venue. . ."  
-            elif ApprovalCheck("Emma", 2000, TabM=0):
-                #if you haven't seen everything but she really likes you and it's public (no) 
-                ch_e "I assure you it is, but this isn't the appropriate venue. . ."  
-            elif ApprovalCheck("Emma", 1000, TabM=0):     
-                #if you haven't seen everything and she kinda likes you but it's public (no)
-                call EmmaFace("surprised", 1)
-                ch_e "I assure you that it is, but that's not the way to ask."
-                $ E_Blush = 0
-            else:
-                # if she refuses. (no) 
-                call EmmaFace("angry", 1)
-                ch_e "Not the worst line I've heard."
-                ch_e ". . . but close."
-                
-            if Line:                                                            #If she got nude. . .                            
-                call EmmaOutfit("nude")
-                "She strips down."
-                call Emma_First_Topless
-                call Emma_First_Bottomless(1)
-                call EmmaFace("sexy")
-                menu:
-                    "You know, you should wear this one out. [[set current outfit]":
-                        if "exhibitionist" in E_Traits:
-                            call EmmaFace("sexy",2,Eyes="down")
-                            ch_e "Mmmmm. . ." 
-                            $ E_Outfit = "nude"
-                            call Statup("Emma", "Lust", 50, 10) 
-                            call Statup("Emma", "Lust", 70, 5) 
-                            $ E_Shame = E_OutfitShame[0]
-                            call EmmaFace("sexy",1)
-                        elif ApprovalCheck("Emma", 800, "I") or ApprovalCheck("Emma", 2800, TabM=0): 
-                            ch_e "Oooh, that would cause quite a stir. . ." 
-                            $ E_Outfit = "nude"
-                            $ E_Shame = E_OutfitShame[0]
-                        elif ApprovalCheck("Emma", 400, "I") and ApprovalCheck("Emma", 1200, TabM=0): 
-                            call EmmaFace("bemused", 1,Eyes="side")
-                            ch_e "You shouldn't suggest such things. . ."
-                        else:
-                            call EmmaFace("sexy", 1,Eyes="surprised")
-                            ch_e "Impossible." 
+        "Gym Clothes?" if not Taboo or bg_current == "bg dangerroom":
+                call EmmaOutfit("gym")
+            
+        "Sleepwear?" if not Taboo:
+                call EmmaOutfit("sleep")
+            
+        "Swimwear?" if not Taboo or bg_current == "bg pool":
+                call EmmaOutfit("swimwear")
                             
-                    "Let's try something else though.":
-                        if "exhibitionist" in E_Traits:
-                            ch_e "Too much for you to handle?"                         
-                        elif ApprovalCheck("Emma", 800, "I") or ApprovalCheck("Emma", 2800, TabM=0):       
-                            call EmmaFace("bemused", 1)             
-                            ch_e "Because obviously I couldn't go around like this. . ."
-                        else:
-                            call EmmaFace("confused", 1)
-                            ch_e "So long as it's just the two of us, I don't mind this."   
-            $ Line = 0
-                
-        "How about throwing on your sleepwear?" if not Taboo:
-            #fix add conditions
-            call EmmaOutfit("sleep")
-        "How about throwing on your swimwear?" if not Taboo or bg_current == "bg pool":
-            #fix add conditions
-            call EmmaOutfit("swimwear")
-            
-        "Let's talk about what you wear outside.":
-            call Emma_Clothes_Schedule
-            
+        "Your birthday suit looks really great. . .":                                     
+                #Nude
+                call EmmaFace("sly", 1)
+                $ Line = 0
+                if not E_Chest and not E_Panties and not E_Over and not E_Legs and not E_Hose:  
+                    # if already naked (yes)
+                    ch_e "Apparently so. . ."  
+                elif E_SeenChest and E_SeenPussy and ApprovalCheck("Emma", 1200, TabM=(5-Public)):
+                    #if you've seen it all and she likes you well enough (yes)
+                    ch_e "I'll take that as an invitation. . ."  
+                    $ Line = 1
+                elif ApprovalCheck("Emma", 2000, TabM=(5-Public)):
+                    #if you haven't seen everything but she really likes you (yes)
+                    ch_e "I suppose you've earned it. . ."    
+                    $ Line = 1
+                elif E_SeenChest and E_SeenPussy and ApprovalCheck("Emma", 1200, TabM=0):
+                    # if you've seen it but it's in public (no)
+                    ch_e "As you're well aware, but this isn't the appropriate venue. . ."  
+                elif ApprovalCheck("Emma", 2000, TabM=0):
+                    #if you haven't seen everything but she really likes you and it's public (no) 
+                    ch_e "I assure you it is, but this isn't the appropriate venue. . ."  
+                elif ApprovalCheck("Emma", 1000, TabM=0):     
+                    #if you haven't seen everything and she kinda likes you but it's public (no)
+                    call EmmaFace("surprised", 1)
+                    ch_e "I assure you that it is, but that's not the way to ask."
+                    $ E_Blush = 0
+                else:
+                    # if she refuses. (no) 
+                    call EmmaFace("angry", 1)
+                    ch_e "Not the worst line I've heard."
+                    ch_e ". . . but close."
+                    
+                if Line:                                                            #If she got nude. . .                            
+                    call EmmaOutfit("nude")
+                    "She strips down."
+                    call Emma_First_Topless
+                    call Emma_First_Bottomless(1)
+                    call EmmaFace("sexy")
+                    menu:
+                        "You know, you should wear this one out. [[set current outfit]":
+                            if "exhibitionist" in E_Traits:
+                                call EmmaFace("sexy",2,Eyes="down")
+                                ch_e "Mmmmm. . ." 
+                                $ E_Outfit = "nude"
+                                call Statup("Emma", "Lust", 50, 10) 
+                                call Statup("Emma", "Lust", 70, 5) 
+                                $ E_Shame = E_OutfitShame[0]
+                                call EmmaFace("sexy",1)
+                            elif ApprovalCheck("Emma", 800, "I") or ApprovalCheck("Emma", 2800, TabM=0): 
+                                ch_e "Oooh, that would cause quite a stir. . ." 
+                                $ E_Outfit = "nude"
+                                $ E_Shame = E_OutfitShame[0]
+                            elif ApprovalCheck("Emma", 400, "I") and ApprovalCheck("Emma", 1200, TabM=0): 
+                                call EmmaFace("bemused", 1,Eyes="side")
+                                ch_e "You shouldn't suggest such things. . ."
+                            else:
+                                call EmmaFace("sexy", 1,Eyes="surprised")
+                                ch_e "Impossible." 
+                                
+                        "Let's try something else though.":
+                            if "exhibitionist" in E_Traits:
+                                ch_e "Too much for you to handle?"                         
+                            elif ApprovalCheck("Emma", 800, "I") or ApprovalCheck("Emma", 2800, TabM=0):       
+                                call EmmaFace("bemused", 1)             
+                                ch_e "Because obviously I couldn't go around like this. . ."
+                            else:
+                                call EmmaFace("confused", 1)
+                                ch_e "So long as it's just the two of us, I don't mind this."   
+                $ Line = 0
+                            
         "Never mind":    
             jump Emma_Clothes     
             
@@ -4142,61 +4202,67 @@ label Emma_Clothes(Public=0,Bonus=0):
             
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
 
-    menu Emma_Clothes_Over:                                                                                            # Overshirts
+    menu Emma_Clothes_Over:                                                                                        
+        # Overshirts
         "Why don't you go with no [E_Over]?" if E_Over:
-            call EmmaFace("bemused", 1)
-            if ApprovalCheck("Emma", 800, TabM=(3-Public)) and (E_Chest or E_SeenChest):
-                ch_e "Certainly."
-            elif ApprovalCheck("Emma", 1200, TabM=0):
-                call Emma_NoBra
-                if not _return:
-                    jump Emma_Clothes                    
-            $ Line = E_Over
-            $ E_Over = 0   
-            call Emma_Tits_Up
-            "She shrugs off her [Line]."
-            if not E_Chest:
-                call Emma_First_Topless
+                call EmmaFace("bemused", 1)
+                if ApprovalCheck("Emma", 800, TabM=(3-Public)) and (E_Chest or E_SeenChest):
+                    ch_e "Certainly."
+                elif ApprovalCheck("Emma", 1200, TabM=0):
+                    call Emma_NoBra
+                    if not _return:
+                        jump Emma_Clothes  
+                else:
+                    ch_e "I'm afraid not."
+                    if not E_Chest:
+                        ch_e "I'm indecent under this. . ."
+                    jump Emma_Clothes                  
+                $ Line = E_Over
+                $ E_Over = 0   
+                call Emma_Tits_Up
+                "She shrugs off her [Line]."
+                if not E_Chest:
+                    call Emma_First_Topless
             
         "Try on that white jacket you have." if E_Over != "jacket":
-            call EmmaFace("bemused")
-            if E_Chest or E_SeenChest or ApprovalCheck("Emma", 500, TabM=(3-Public)):
-                ch_e "Yeah, ok."          
-            else:
-                call EmmaFace("bemused", 1)
-                ch_e "I'm not sure this is appropriate without something more substantial underneath."
-                jump Emma_Clothes    
-            $ E_Over = "jacket"   
+                call EmmaFace("bemused")
+                if E_Chest or E_SeenChest or ApprovalCheck("Emma", 500, TabM=(3-Public)):
+                    ch_e "Yeah, ok."          
+                else:
+                    call EmmaFace("bemused", 1)
+                    ch_e "I'm not sure this is appropriate without something more substantial underneath."
+                    jump Emma_Clothes    
+                $ E_Over = "jacket"   
             
         "Try on that lace nighty." if E_Over != "nighty":
-            call EmmaFace("bemused")
-            if E_Chest or E_SeenChest or ApprovalCheck("Emma", 500, TabM=(3-Public)):
-                ch_e "Yeah, ok."          
-            else:
-                call EmmaFace("bemused", 1)
-                ch_e "This is a bit shear for this top."
-                jump Emma_Clothes    
-            $ E_Over = "nighty"   
+                call EmmaFace("bemused")
+                if E_Chest or E_SeenChest or ApprovalCheck("Emma", 500, TabM=(3-Public)):
+                    ch_e "Yeah, ok."          
+                else:
+                    call EmmaFace("bemused", 1)
+                    ch_e "This is a bit shear for this top."
+                    jump Emma_Clothes    
+                $ E_Over = "nighty"   
                             
         "Maybe just throw on a towel?" if E_Over != "towel":
-            call EmmaFace("bemused", 1)
-            $ Bonus = 5 if bg_current == "bg showerroom" else 0
-            if E_Chest or (E_SeenChest and ApprovalCheck("Emma", 500, TabM=(3-Public-Bonus))):
-                ch_e "Oh, you like this?"
-            elif ApprovalCheck("Emma", 1000, TabM=(3-Public-Bonus)):
-                call EmmaFace("perplexed", 1)
-                ch_e "Fine."          
-            else:
-                ch_e "This wouldn't leave much to the imagination."
-                jump Emma_Clothes  
-            call Emma_NoBra
-            if not _return:
-                jump Emma_Clothes
-            $ E_Over = "towel"       
-            call Emma_Tits_Up
+                call EmmaFace("bemused", 1)
+                $ Bonus = 5 if bg_current == "bg showerroom" else 0
+                if E_Chest or (E_SeenChest and ApprovalCheck("Emma", 500, TabM=(3-Public-Bonus))):
+                    ch_e "Oh, you like this?"
+                elif ApprovalCheck("Emma", 1000, TabM=(3-Public-Bonus)):
+                    call EmmaFace("perplexed", 1)
+                    ch_e "Fine."          
+                else:
+                    ch_e "This wouldn't leave much to the imagination."
+                    jump Emma_Clothes  
+                call Emma_NoBra
+                if not _return:
+                    jump Emma_Clothes
+                $ E_Over = "towel"       
+                call Emma_Tits_Up
                             
         "Never mind":
-            pass
+                pass
     jump Emma_Clothes
     #End of Emma Top
             
@@ -4256,55 +4322,56 @@ label Emma_Clothes(Public=0,Bonus=0):
        
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
 
-    menu Emma_Clothes_Legs:                                                                                                    # Leggings    
+    menu Emma_Clothes_Legs:                                                                                                   
+        # Leggings    
         "Maybe go without the [E_Legs]." if E_Legs:
-            call EmmaFace("sexy", 1)
-            if E_SeenPanties and E_Panties and ApprovalCheck("Emma", 500, TabM=(6-Public)):
-                ch_e "Fine."
-            elif E_SeenPussy and ApprovalCheck("Emma", 900, TabM=(5-Public)):
-                ch_e "Fine."
-            elif ApprovalCheck("Emma", 1300, TabM=(2-Public)) and E_Panties:
-                ch_e "It's not like I haven't worn this look before. . ."
-            elif ApprovalCheck("Emma", 800) and not E_Panties:
-                call Emma_NoPantiesOn
-                if not _return:
+                call EmmaFace("sexy", 1)
+                if E_SeenPanties and E_Panties and ApprovalCheck("Emma", 500, TabM=(6-Public)):
+                    ch_e "Fine."
+                elif E_SeenPussy and ApprovalCheck("Emma", 900, TabM=(5-Public)):
+                    ch_e "Fine."
+                elif ApprovalCheck("Emma", 1300, TabM=(2-Public)) and E_Panties:
+                    ch_e "It's not like I haven't worn this look before. . ."
+                elif ApprovalCheck("Emma", 800) and not E_Panties:
+                    call Emma_NoPantiesOn
+                    if not _return:
+                        jump Emma_Clothes
+                else:
+                    ch_e "I'm afraid not."
+                    if not E_Panties:
+                        ch_e "You understand, it could get. . . drafty. . ."
                     jump Emma_Clothes
-            else:
-                ch_e "I'm afraid not."
-                if not E_Panties:
-                    ch_e "You understand, it could get. . . drafty. . ."
-                jump Emma_Clothes
-            $ Line = E_Legs
-            $ E_Legs = 0    
-            "She peels her [Line] off."
-            $ Line = 0
-            call Emma_First_Bottomless
+                $ Line = E_Legs
+                $ E_Legs = 0    
+                "She peels her [Line] off."
+                $ Line = 0
+                call Emma_First_Bottomless
         
         "You look great in those white pants." if E_Legs != "pants":
-            ch_e "I know."
-            $ E_Legs = "pants"
+                ch_e "I know."
+                $ E_Legs = "pants"
                 
         "You look great in that little skirt." if E_Legs != "skirt":
-            ch_e "I agree."
-            $ E_Legs = "skirt"
+                ch_e "I agree."
+                $ E_Legs = "skirt"
             
         "You look great in boots." if E_Boots != "thigh boots":
-            ch_e "They do look nice on me."
-            $ E_Boots = "thigh boots"
+                ch_e "They do look nice on me."
+                $ E_Boots = "thigh boots"
         "Maybe lose the boots." if E_Boots == "thigh boots":
-            ch_e "I suppose."
-            $ E_Boots = 0
+                ch_e "I suppose."
+                $ E_Boots = 0
                 
         "You look great in yoga pants." if E_Legs != "yoga pants":
-            ch_e "Yeah, ok."
-            $ E_Legs = "yoga pants"
+                ch_e "Yeah, ok."
+                $ E_Legs = "yoga pants"
             
 #        "What about wearing your yellow shorts?" if E_Legs != "shorts":
-#            ch_e "K, no problem."
-#            $ E_Legs = "shorts"    
+#               ch_e "K, no problem."
+#               $ E_Legs = "shorts"    
                    
         "Never mind":
-            pass
+                pass
     jump Emma_Clothes
     #End of Emma Pants
     
@@ -4428,6 +4495,7 @@ label Emma_Clothes(Public=0,Bonus=0):
                                 ch_e "I don't know about wearing that here. . ." 
                 "Never mind":
                     pass 
+            jump Emma_Clothes_Under
                   
                                     
         "Hose and stockings options":
@@ -4444,124 +4512,119 @@ label Emma_Clothes(Public=0,Bonus=0):
                                 $ E_Hose = "garterbelt"  
                 "Never mind":
                         pass  
+            jump Emma_Clothes_Under
                       
         #Panties   
         "Panties":
             menu:
                 "You could lose those panties. . ." if E_Panties:
-                    call EmmaFace("bemused", 1)  
-                    if (ApprovalCheck("Emma", 900) or E_SeenPussy) and not Taboo:
-                        #If you've got decent approval and either she's wearing pants or you've seen her pussy and it's not in public
-                        
-                        if ApprovalCheck("Emma", 850, "L"):               
-                                ch_e "You like the view?"
-                        elif ApprovalCheck("Emma", 500, "O"):
-                                ch_e "If you'd like."
-                        elif ApprovalCheck("Emma", 350, "I"):
-                                ch_e "I do enjoy going without them. . ."
+                        call EmmaFace("bemused", 1)  
+                        if (ApprovalCheck("Emma", 900) or E_SeenPussy) and not Taboo:
+                            #If you've got decent approval and either she's wearing pants or you've seen her pussy and it's not in public
+                            
+                            if ApprovalCheck("Emma", 850, "L"):               
+                                    ch_e "You like the view?"
+                            elif ApprovalCheck("Emma", 500, "O"):
+                                    ch_e "If you'd like."
+                            elif ApprovalCheck("Emma", 350, "I"):
+                                    ch_e "I do enjoy going without them. . ."
+                            else:
+                                    ch_e "Very well."         
+                        else:                       
+                            #low approval or not wearing pants or in public 
+                            if ApprovalCheck("Emma", 1100, "LI", TabM=(4-Public)) and E_Love > E_Inbt:               
+                                    ch_e "I don't exactly mind you seeing. . ."
+                            elif ApprovalCheck("Emma", 700, "OI", TabM=(4-Public)) and E_Obed > E_Inbt:
+                                    ch_e "I suppose I could. . ."
+                            elif ApprovalCheck("Emma", 600, "I", TabM=(4-Public)):
+                                    ch_e "Why not."
+                            elif ApprovalCheck("Emma", 1300, TabM=(4-Public)):
+                                    ch_e "Fine."
+                            else: 
+                                    call EmmaFace("surprised")
+                                    $ E_Brows = "angry"
+                                    if Taboo > 20:
+                                        ch_e "I don't think I could out here, [E_Petname]!"
+                                    else:
+                                        ch_e "I could, but I won't, [E_Petname]!"
+                                    jump Emma_Clothes
+                                    
+                                    
+                        $ Line = E_Panties
+                        $ E_Panties = 0  
+                        if E_Legs:
+                            if Taboo or ApprovalCheck("Emma", 1100) or E_SeenPussy:
+                                "She pulls off her [E_Legs] then pulls her [Line] off, droping them to the ground, before putting them back on." 
+                                call Emma_First_Bottomless(1)
+                            else:
+                                "She asks you to turn around. After a few seconds, you turn back to her as she drops the [Line] to the ground."               
                         else:
-                                ch_e "Very well."         
-                    else:                       
-                        #low approval or not wearing pants or in public 
-                        if ApprovalCheck("Emma", 1100, "LI", TabM=(4-Public)) and E_Love > E_Inbt:               
-                                ch_e "I don't exactly mind you seeing. . ."
-                        elif ApprovalCheck("Emma", 700, "OI", TabM=(4-Public)) and E_Obed > E_Inbt:
-                                ch_e "I suppose I could. . ."
-                        elif ApprovalCheck("Emma", 600, "I", TabM=(4-Public)):
-                                ch_e "Why not."
-                        elif ApprovalCheck("Emma", 1300, TabM=(4-Public)):
-                                ch_e "Fine."
-                        else: 
-                                call EmmaFace("surprised")
-                                $ E_Brows = "angry"
-                                if Taboo > 20:
-                                    ch_e "I don't think I could out here, [E_Petname]!"
-                                else:
-                                    ch_e "I could, but I won't, [E_Petname]!"
-                                jump Emma_Clothes
-                                
-                                
-                    $ Line = E_Panties
-                    $ E_Panties = 0  
-                    if E_Legs:
-                        if Taboo or ApprovalCheck("Emma", 1100) or E_SeenPussy:
-                            "She pulls off her [E_Legs] then pulls her [Line] off, droping them to the ground, before putting them back on." 
-                            call Emma_First_Bottomless(1)
-                        else:
-                            "She asks you to turn around. After a few seconds, you turn back to her as she drops the [Line] to the ground."               
-                    else:
-                        "She pulls off her [Line] and lets them drop to the ground."
-                        call Emma_First_Bottomless
-                        call Statup("Emma", "Inbt", 50, 2)  
-                        
+                            "She pulls off her [Line] and lets them drop to the ground."
+                            call Emma_First_Bottomless
+                            call Statup("Emma", "Inbt", 50, 2)  
+                            
                 "Why don't you wear the white panties instead?" if E_Panties and E_Panties != "white panties":
-                    if ApprovalCheck("Emma", 1100, TabM=(4-Public)):
-                            ch_e "Ok."
-                            $ E_Panties = "white panties"  
-                    else:                
-                            ch_e "I really don't see how that's any of your concern."
+                        if ApprovalCheck("Emma", 1100, TabM=(4-Public)):
+                                ch_e "Ok."
+                                $ E_Panties = "white panties"  
+                        else:                
+                                ch_e "I really don't see how that's any of your concern."
                   
                 "Why don't you wear the sporty panties instead?" if E_Panties and E_Panties != "sports panties":
-                    if ApprovalCheck("Emma", 1200, TabM=(4-Public)):
-                            ch_e "Fine."
-                            $ E_Panties = "sports panties"
-                    else:
-                            ch_e "I really don't see how that's any of your concern."
-                            
+                        if ApprovalCheck("Emma", 1200, TabM=(4-Public)):
+                                ch_e "Fine."
+                                $ E_Panties = "sports panties"
+                        else:
+                                ch_e "I really don't see how that's any of your concern."
+                                
                 "Why don't you wear the lace panties instead?" if "lace panties" in E_Inventory and E_Panties and E_Panties != "lace panties":
-                    if ApprovalCheck("Emma", 1300, TabM=(4-Public)):
-                            ch_e "Fine."
-                            $ E_Panties = "lace panties"
-                    else:
-                            ch_e "I really don't see how that's any of your concern."
-                             
+                        if ApprovalCheck("Emma", 1300, TabM=(4-Public)):
+                                ch_e "Fine."
+                                $ E_Panties = "lace panties"
+                        else:
+                                ch_e "I really don't see how that's any of your concern."
+                                 
                 "I like those bikini bottoms." if E_Panties != "bikini bottoms" and "bikini bottoms" in E_Inventory:
-                    if bg_current == "bg pool":
-                            ch_e "Fine."   
-                            $ E_Panties = "bikini bottoms"         
-                    else:                
-                            if ApprovalCheck("Emma", 800, TabM=2):
+                        if bg_current == "bg pool":
                                 ch_e "Fine."   
                                 $ E_Panties = "bikini bottoms"         
-                            else:                
-                                ch_e "I don't know about wearing those here. . ." 
+                        else:                
+                                if ApprovalCheck("Emma", 800, TabM=2):
+                                    ch_e "Fine."   
+                                    $ E_Panties = "bikini bottoms"         
+                                else:                
+                                    ch_e "I don't know about wearing those here. . ." 
                                 
                 "You know, you could wear some panties with that. . ." if not E_Panties:
-                    call EmmaFace("bemused", 1)
-                    if (E_Love+E_Obed) <= (2* E_Inbt):
-                        $ E_Mouth = "smile"
-                        ch_e "I could, but won't."
-                        call Statup("Emma", "Inbt", 70, 2)
-                        menu:
-                            "Fine by me":
-                                call Statup("Emma", "Love", 90, 2)
-                                call Statup("Emma", "Inbt", 70, 2)
-                                jump Emma_Clothes
-                            "I insist, put some on.":
-                                if (E_Love+E_Obed) <= E_Inbt:
-                                    call EmmaFace("angry", Eyes="side")
-                                    call Statup("Emma", "Inbt", 99, 5)
-                                    call Statup("Emma", "Obed", 80, -5)
-                                    ch_e "How disappointing that must be for you."
+                        call EmmaFace("bemused", 1)
+                        if (E_Love+E_Obed) <= (2* E_Inbt):
+                            $ E_Mouth = "smile"
+                            ch_e "I could, but won't."
+                            menu:
+                                "Fine by me":
                                     jump Emma_Clothes
-                                else:
-                                    call EmmaFace("sadside")
-                                    call Statup("Emma", "Inbt", 200, -5)
-                                    call Statup("Emma", "Obed", 80, 5)
-                                    ch_e "If you insist."   
-                    menu:
-                        ch_e "If you insist. . ."
-                        "How about the white ones?":
-                            ch_e "Fine."
-                            $ E_Panties = "white panties"
-                        "How about the sporty ones?":
-                            ch_e "Fine."
-                            $ E_Panties = "sports panties"
-                        "How about the lace ones?" if "lace panties" in E_Inventory:
-                            ch_e "Fine."                
-                            $ E_Panties  = "lace panties"
+                                "I insist, put some on.":
+                                    if (E_Love+E_Obed) <= E_Inbt:
+                                        call EmmaFace("angry", Eyes="side")
+                                        ch_e "How disappointing that must be for you."
+                                        jump Emma_Clothes
+                                    else:
+                                        call EmmaFace("sadside")
+                                        ch_e "If you insist."   
+                        menu:
+                            ch_e "If you insist. . ."
+                            "How about the white ones?":
+                                ch_e "Fine."
+                                $ E_Panties = "white panties"
+                            "How about the sporty ones?":
+                                ch_e "Fine."
+                                $ E_Panties = "sports panties"
+                            "How about the lace ones?" if "lace panties" in E_Inventory:
+                                ch_e "Fine."                
+                                $ E_Panties  = "lace panties"
                 "Never mind":
                     pass
+            jump Emma_Clothes_Under
         "Never mind":
             pass
     jump Emma_Clothes
@@ -4570,126 +4633,134 @@ label Emma_Clothes(Public=0,Bonus=0):
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  
         
     menu Emma_Clothes_Misc:                     
-        #Misc
-        "Maybe lose the gloves." if E_Arms:
-            $ E_Arms = 0
-            ch_e "Ok."
-        "Put your gloves on." if not E_Arms:
-            $ E_Arms = 1
-            ch_e "Ok."       
+        #Misc        
         "You look good with your hair flowing." if E_Hair != "wave":
-            if ApprovalCheck("Emma", 600):
-                ch_e "Like this?"
-                $ E_Hair = "wave"
-            else:
-                ch_e "Yes, I do."
+                if ApprovalCheck("Emma", 600):
+                    ch_e "Like this?"
+                    $ E_Hair = "wave"
+                else:
+                    ch_e "Yes, I do."
                 
         "Maybe keep your hair straight." if E_Hair != "wet":
-            if ApprovalCheck("Emma", 600):
-                ch_e "You think?"
-                $ E_Hair = "wet"
-            else:
-                ch_e "I tend to prefer it a bit more loose."
+                if ApprovalCheck("Emma", 600):
+                    ch_e "You think?"
+                    $ E_Hair = "wet"
+                else:
+                    ch_e "I tend to prefer it a bit more loose."
                         
-        "You know, I like some nice hair down there. Maybe grow it out." if not E_Pubes and "pubes" in E_Todo:
-            call EmmaFace("bemused", 1)
-            ch_e "Rome wasn't built in a day. . ."
-        "You know, I like some nice hair down there. Maybe grow it out." if not E_Pubes and "pubes" not in E_Todo:
-            call EmmaFace("bemused", 1)
-            $ Approval = ApprovalCheck("Emma", 1150, TabM=0)
-            if ApprovalCheck("Emma", 850, "L", TabM=0) or (Approval and E_Love > 2 * E_Obed):               
-                ch_e "If you like that sort of thing. . ."
-            elif ApprovalCheck("Emma", 500, "I", TabM=0) or (Approval and E_Inbt > E_Obed):
-                ch_e "I could go a bit more. . . wild."
-            elif ApprovalCheck("Emma", 400, "O", TabM=0) or Approval:
-                ch_e "If you insist. . ."
-            else: 
-                call EmmaFace("surprised")
-                $ E_Brows = "angry"
-                ch_e "I don't see how that's your concern, [E_Petname]."
-                jump Emma_Clothes
-            $ E_Todo.append("pubes")
-            $ E_PubeC = 6
+        "You know, I like some nice hair down there. Maybe grow it out." if not E_Pubes and "pubes" not in E_Todo: 
+                if "pubes" in E_Todo:
+                    call EmmaFace("bemused", 1)
+                    ch_e "Rome wasn't built in a day. . ."
+                else:                    
+                    call EmmaFace("bemused", 1)
+                    $ Approval = ApprovalCheck("Emma", 1150, TabM=0)
+                    if ApprovalCheck("Emma", 850, "L", TabM=0) or (Approval and E_Love > 2 * E_Obed):               
+                        ch_e "If you like that sort of thing. . ."
+                    elif ApprovalCheck("Emma", 500, "I", TabM=0) or (Approval and E_Inbt > E_Obed):
+                        ch_e "I could go a bit more. . . wild."
+                    elif ApprovalCheck("Emma", 400, "O", TabM=0) or Approval:
+                        ch_e "If you insist. . ."
+                    else: 
+                        call EmmaFace("surprised")
+                        $ E_Brows = "angry"
+                        ch_e "I don't see how that's your concern, [E_Petname]."
+                        jump Emma_Clothes
+                    $ E_Todo.append("pubes")
+                    $ E_PubeC = 6
         
         "I like it waxed clean down there." if E_Pubes == 1:
-            call EmmaFace("bemused", 1)            
-            if "shave" in E_Todo:
-                ch_e "Yes, yes, it's on my schedule."
-            else:
-                $ Approval = ApprovalCheck("Emma", 1150, TabM=0)
-                
-                if ApprovalCheck("Emma", 850, "L", TabM=0) or (Approval and E_Love > 2 * E_Obed):               
-                    ch_e "I know you love it."
-                elif ApprovalCheck("Emma", 500, "I", TabM=0) or (Approval and E_Inbt > E_Obed):
-                    ch_e "I like it kept tidy."
-                elif ApprovalCheck("Emma", 400, "O", TabM=0) or Approval:
-                    ch_e "If you insist."
+                call EmmaFace("bemused", 1)            
+                if "shave" in E_Todo:
+                    ch_e "Yes, yes, it's on my schedule."
+                else:
+                    $ Approval = ApprovalCheck("Emma", 1150, TabM=0)
+                    
+                    if ApprovalCheck("Emma", 850, "L", TabM=0) or (Approval and E_Love > 2 * E_Obed):               
+                        ch_e "I know you love it."
+                    elif ApprovalCheck("Emma", 500, "I", TabM=0) or (Approval and E_Inbt > E_Obed):
+                        ch_e "I like it kept tidy."
+                    elif ApprovalCheck("Emma", 400, "O", TabM=0) or Approval:
+                        ch_e "If you insist."
+                    else: 
+                        call EmmaFace("surprised")
+                        $ E_Brows = "angry"
+                        ch_e "I don't see how that's your concern, [E_Petname]."
+                        jump Emma_Clothes
+                    $ E_Todo.append("shave")        
+        "Piercings. [[See what she looks like without them first] (locked)" if not E_SeenPussy and not E_SeenChest:
+                pass
+            
+        "You know, you'd look really nice with some ring body piercings." if E_Pierce != "ring" and (E_SeenPussy or E_SeenChest):    
+                if "ring" in E_Todo:
+                        ch_e "Yes, yes, it's on my schedule."
+                else:                    
+                        call EmmaFace("bemused", 1)
+                        $ Approval = ApprovalCheck("Emma", 1350, TabM=0)
+                        if ApprovalCheck("Emma", 900, "L", TabM=0) or (Approval and E_Love > 2* E_Obed):   
+                                ch_e "A little handhold, I assume?"
+                        elif ApprovalCheck("Emma", 600, "I", TabM=0) or (Approval and E_Inbt > E_Obed):
+                                ch_e "I do like a nice ring. . ."
+                        elif ApprovalCheck("Emma", 500, "O", TabM=0) or Approval:
+                                ch_e "I didn't know you were into that sort of thing."
+                        else: 
+                                call EmmaFace("surprised")
+                                $ E_Brows = "angry"
+                                ch_e "Well, I'm just not ready for that sort of thing, [E_Petname]."
+                                jump Emma_Clothes            
+                        $ E_Todo.append("ring")
+        
+        "You know, you'd look really nice with some barbell body piercings." if E_Pierce != "barbell" and (E_SeenPussy or E_SeenChest):    
+                if "barbell" in K_Todo:
+                        ch_e "Yes, yes, it's on my schedule."
+                else:                    
+                        call EmmaFace("bemused", 1)
+                        $ Approval = ApprovalCheck("Emma", 1350, TabM=0)
+                        if ApprovalCheck("Emma", 900, "L", TabM=0) or (Approval and E_Love > 2 * E_Obed): 
+                            ch_e "A little handhold, I assume?"
+                        elif ApprovalCheck("Emma", 600, "I", TabM=0) or (Approval and E_Inbt > E_Obed):
+                            ch_e "They might look nice on these. . ."
+                        elif ApprovalCheck("Emma", 500, "O", TabM=0) or Approval:
+                            ch_e "I didn't know you were into that sort of thing."
+                        else: 
+                            call EmmaFace("surprised")
+                            $ E_Brows = "angry"
+                            ch_e "Well, I'm just not ready for that sort of thing, [E_Petname]."
+                            jump Emma_Clothes                
+                        $ E_Todo.append("barbell")
+                        $ E_Pierce = "barbell"
+            
+        "You know, you'd look better without those piercings." if E_Pierce:
+                call EmmaFace("bemused", 1)
+                $ Approval = ApprovalCheck("Emma", 1350, TabM=0)
+                if ApprovalCheck("Emma", 950, "L", TabM=0) or (Approval and E_Love > E_Obed):   
+                    ch_e "If they aren't working for you. . ."
+                elif ApprovalCheck("Emma", 700, "I", TabM=0) or (Approval and E_Inbt > E_Obed):
+                    ch_e "They were being a nuisance."
+                elif ApprovalCheck("Emma", 600, "O", TabM=0) or Approval:
+                    ch_e "I'll remove them then."
                 else: 
                     call EmmaFace("surprised")
                     $ E_Brows = "angry"
-                    ch_e "I don't see how that's your concern, [E_Petname]."
-                    jump Emma_Clothes
-                $ E_Todo.append("shave")        
-        "Piercings. [[See what she looks like without them first] (locked)" if not E_SeenPussy and not E_SeenChest:
-            pass
-            
-        "You know, you'd look really nice with some ring body piercings." if E_Pierce != "ring" and (E_SeenPussy or E_SeenChest) and "ring" not in E_Todo:
-            call EmmaFace("bemused", 1)
-            $ Approval = ApprovalCheck("Emma", 1350, TabM=0)
-            if ApprovalCheck("Emma", 900, "L", TabM=0) or (Approval and E_Love > 2* E_Obed):   
-                    ch_e "A little handhold, I assume?"
-            elif ApprovalCheck("Emma", 600, "I", TabM=0) or (Approval and E_Inbt > E_Obed):
-                    ch_e "I do like a nice ring. . ."
-            elif ApprovalCheck("Emma", 500, "O", TabM=0) or Approval:
-                    ch_e "I didn't know you were into that sort of thing."
-            else: 
-                    call EmmaFace("surprised")
-                    $ E_Brows = "angry"
-                    ch_e "Well, I'm just not ready for that sort of thing, [E_Petname]."
+                    ch_e "Well {i}I{/i} enjoy them."
                     jump Emma_Clothes            
-            $ E_Todo.append("ring")
-        
-        "You know, you'd look really nice with some barbell body piercings." if E_Pierce != "barbell" and (E_SeenPussy or E_SeenChest)and "barbell" not in E_Todo:
-            call EmmaFace("bemused", 1)
-            $ Approval = ApprovalCheck("Emma", 1350, TabM=0)
-            if ApprovalCheck("Emma", 900, "L", TabM=0) or (Approval and E_Love > 2 * E_Obed): 
-                ch_e "A little handhold, I assume?"
-            elif ApprovalCheck("Emma", 600, "I", TabM=0) or (Approval and E_Inbt > E_Obed):
-                ch_e "They might look nice on these. . ."
-            elif ApprovalCheck("Emma", 500, "O", TabM=0) or Approval:
-                ch_e "I didn't know you were into that sort of thing."
-            else: 
-                call EmmaFace("surprised")
-                $ E_Brows = "angry"
-                ch_e "Well, I'm just not ready for that sort of thing, [E_Petname]."
-                jump Emma_Clothes                
-            $ E_Todo.append("barbell")
-            $ E_Pierce = "barbell"
-            
-        "You know, you'd look better without those piercings." if E_Pierce:
-            call EmmaFace("bemused", 1)
-            $ Approval = ApprovalCheck("Emma", 1350, TabM=0)
-            if ApprovalCheck("Emma", 950, "L", TabM=0) or (Approval and E_Love > E_Obed):   
-                ch_e "If they aren't working for you. . ."
-            elif ApprovalCheck("Emma", 700, "I", TabM=0) or (Approval and E_Inbt > E_Obed):
-                ch_e "They were being a nuisance."
-            elif ApprovalCheck("Emma", 600, "O", TabM=0) or Approval:
-                ch_e "I'll remove them then."
-            else: 
-                call EmmaFace("surprised")
-                $ E_Brows = "angry"
-                ch_e "Well {i}I{/i} enjoy them."
-                jump Emma_Clothes            
-            $ E_Pierce = 0 
+                $ E_Pierce = 0 
+                
         "Why don't you try on that white choker." if E_Neck != "choker":
-            ch_e "Ok. . ."         
-            $ E_Neck = "choker"
+                ch_e "Ok. . ."         
+                $ E_Neck = "choker"
         "Maybe go without a collar." if E_Neck:
-            ch_e "Ok. . ."         
-            $ E_Neck = 0
+                ch_e "Ok. . ."         
+                $ E_Neck = 0
             
+        "Maybe lose the gloves." if E_Arms:
+                $ E_Arms = 0
+                ch_e "Ok."
+        "Put your gloves on." if not E_Arms:
+                $ E_Arms = 1
+                ch_e "Ok."       
         "Never mind":
-            pass         
+                pass         
     jump Emma_Clothes
     #End of Emma Misc Wardrobe
     
@@ -4704,11 +4775,12 @@ return
 
 label Emma_Clothes_Schedule(Cnt = 0):
         #Sets clothing for different days, if Cnt is 3 it's all days, 2 is TuThu, 1 is only weekends
+        #Schedule 0-6= mon-fri, Schedule 7 is dates, 9 is private, 8 is while teaching
         
         if ApprovalCheck("Emma", 1500, "LO"):
                 ch_e "I'm open to suggestions."
                 $ Cnt = 3
-        elif ApprovalCheck("Kitty", 1200, "LO"):
+        elif ApprovalCheck("Emma", 1200, "LO"):
                 ch_e "I could let you choose a few days. . ."
                 $ Cnt = 2
         elif ApprovalCheck("Emma", 1000, "LO"):
@@ -4718,81 +4790,127 @@ label Emma_Clothes_Schedule(Cnt = 0):
                 ch_e "I'd prefer to handle my own wardrobe."
                 return
             
-        menu:
-                extend ""
-                "Weekdays":
-                    menu:
-                        "On Monday you should wear. . ." if Cnt > 1:
-                            call Emma_Clothes_ScheduleB
-                            $ E_Schedule[0] = _return
-                        "On Monday you should wear. . . (locked)" if Cnt <= 1:
-                            pass
+        while True:    
+            menu:
+                    extend ""
+                    "Every Day":
+                        "This sets her outfit for every day of the week in one go."
+                        "This overwrites the default schedule, and any scheduling you've already made."
+                        "Any choices you make later will overwrite this choice."
+                        menu:
+                            "Pick an outfit to wear":                                
+                                call Emma_Clothes_ScheduleB
+                                if Cnt > 1:
+                                        $ E_Schedule[0] = _return
+                                if Cnt > 2:
+                                        $ E_Schedule[1] = _return
+                                if Cnt > 1:
+                                        $ E_Schedule[2] = _return
+                                if Cnt > 2:
+                                        $ E_Schedule[3] = _return
+                                if Cnt > 1:
+                                        $ E_Schedule[4] = _return
+                                $ E_Schedule[5] = _return
+                                $ E_Schedule[6] = _return
+                            "Never mind.":
+                                pass
+                    "Weekdays":
+                        menu:
+                            "On Monday you should wear. . ." if Cnt > 1:
+                                call Emma_Clothes_ScheduleB
+                                $ E_Schedule[0] = _return
+                            "On Monday you should wear. . . (locked)" if Cnt <= 1:
+                                pass
+                                
+                            "On Tuesday you should wear. . ." if Cnt > 2:
+                                call Emma_Clothes_ScheduleB
+                                $ E_Schedule[1] = _return        
+                            "On Tuesday you should wear. . . (locked)" if Cnt <= 2:
+                                pass
+                                
+                            "On Wednesday you should wear. . ." if Cnt > 1:
+                                call Emma_Clothes_ScheduleB
+                                $ E_Schedule[2] = _return
+                            "On Wednesday you should wear. . . (locked)" if Cnt <= 1:
+                                pass   
+                                
+                            "On Thursday you should wear. . ." if Cnt > 2:
+                                call Emma_Clothes_ScheduleB
+                                $ E_Schedule[3] = _return
+                            "On Thursday you should wear. . . (locked)" if Cnt <= 2:
+                                pass
+                                
+                            "On Friday you should wear. . ." if Cnt > 1:
+                                call Emma_Clothes_ScheduleB
+                                $ E_Schedule[4] = _return
+                            "On Friday you should wear. . . (locked)" if Cnt <= 1:
+                                pass
+                            "Back":
+                                pass    
+                                
+                    "Other":
+                        menu:
+                            "On Saturday you should wear. . . (locked)" if Cnt < 1:
+                                pass
+                            "On Saturday you should wear. . ." if Cnt >= 1:
+                                call Emma_Clothes_ScheduleB
+                                $ E_Schedule[5] = _return
+                                
+                            "On Sunday you should wear. . . (locked)" if Cnt < 1:
+                                pass
+                            "On Sunday you should wear. . ." if Cnt >= 1:
+                                call Emma_Clothes_ScheduleB
+                                $ E_Schedule[6] = _return
+                                
+                            "In our rooms you should wear. . . (locked)" if Cnt < 1:
+                                pass
+                            "In our rooms you should wear. . ." if Cnt >= 1:
+                                call Emma_Clothes_ScheduleB(99)
+                                $ E_Schedule[9] = _return   
+                                
+                            "On dates you should wear. . . (locked)" if Cnt < 2:
+                                pass
+                            "On dates you should wear. . ." if Cnt >= 2:
+                                call Emma_Clothes_ScheduleB
+                                $ E_Schedule[7] = _return    
+                                
+                            "When teaching you should wear. . . (locked)" if Cnt < 3:
+                                pass
+                            "When teaching you should wear. . ." if Cnt >= 3:
+                                call Emma_Clothes_ScheduleB(90)
+                                $ E_Schedule[8] = _return  
+                            "Back":
+                                pass    
                             
-                        "On Tuesday you should wear. . ." if Cnt > 2:
-                            call Emma_Clothes_ScheduleB
-                            $ E_Schedule[1] = _return        
-                        "On Tuesday you should wear. . . (locked)" if Cnt <= 2:
-                            pass
-                            
-                        "On Wednesday you should wear. . ." if Cnt > 1:
-                            call Emma_Clothes_ScheduleB
-                            $ E_Schedule[2] = _return
-                        "On Wednesday you should wear. . . (locked)" if Cnt <= 1:
-                            pass   
-                            
-                        "On Thursday you should wear. . ." if Cnt > 2:
-                            call Emma_Clothes_ScheduleB
-                            $ E_Schedule[3] = _return
-                        "On Thursday you should wear. . . (locked)" if Cnt <= 2:
-                            pass
-                            
-                        "On Friday you should wear. . ." if Cnt > 1:
-                            call Emma_Clothes_ScheduleB
-                            $ E_Schedule[4] = _return
-                        "On Friday you should wear. . . (locked)" if Cnt <= 1:
-                            pass
-                        "Back":
-                            pass    
-                            
-                "Other":
-                    menu:
-                        "On Saturday you should wear. . . (locked)" if Cnt < 1:
-                            pass
-                        "On Saturday you should wear. . ." if Cnt >= 1:
-                            call Emma_Clothes_ScheduleB
-                            $ E_Schedule[5] = _return
-                            
-                        "On Sunday you should wear. . . (locked)" if Cnt < 1:
-                            pass
-                        "On Sunday you should wear. . ." if Cnt >= 1:
-                            call Emma_Clothes_ScheduleB
-                            $ E_Schedule[6] = _return
-                            
-                        "In our rooms you should wear. . . (locked)" if Cnt < 1:
-                            pass
-                        "In our rooms you should wear. . ." if Cnt >= 1:
-                            call Emma_Clothes_ScheduleB(99)
-                            $ E_Schedule[9] = _return   
-                            
-                        "On dates you should wear. . . (locked)" if Cnt < 2:
-                            pass
-                        "On dates you should wear. . ." if Cnt >= 2:
-                            call Emma_Clothes_ScheduleB
-                            $ E_Schedule[7] = _return    
-                            
-                        "When teaching you should wear. . . (locked)" if Cnt < 3:
-                            pass
-                        "When teaching you should wear. . ." if Cnt >= 3:
-                            call Emma_Clothes_ScheduleB(90)
-                            $ E_Schedule[8] = _return  
-                        "Back":
-                            pass         
+                    "About Gym clothes":
+                        menu:
+                            ch_p "You asked me before about your gym clothes?"
+                            "Don't ask before changing into gym clothes" if "no ask gym" not in E_Traits:
+                                        ch_e "Very well."
+                                        $ E_Traits.append("no ask gym")
+                            "Ask me before changing into gym clothes" if "no ask gym" in E_Traits:
+                                        ch_e "Very Well."
+                                        $ E_Traits.remove("no ask gym")    
+                            "Never Mind":
+                                pass                              
+                                
+                    "Private outfit" if E_Schedule[9]:
+                                #if comfy is in L_Traits, she won't ask before changing
+                                ch_p "You know that outfit you wear in private?"
+                                menu:
+                                    ch_e "Yes?"
+                                    "Just put them on without asking me about it." if "comfy" not in E_Traits:
+                                        ch_e "All right."
+                                        $ E_Traits.append("comfy")
+                                    "Ask before changing into that." if "comfy" in E_Traits:
+                                        ch_e "All right."
+                                        $ E_Traits.remove("comfy")
+                                    "Never Mind":
+                                        pass        
                     
-                "Never mind [[Done]":
-                    return        
+                    "Never mind [[Done]":
+                        return        
         jump Emma_Clothes_Schedule
-    
-    
     
 label Emma_Clothes_ScheduleB(Count = 0):
 #This is called by Emma_Clothes_Schedule when setting her outfit for a given day
@@ -4803,7 +4921,7 @@ label Emma_Clothes_ScheduleB(Count = 0):
                     $ Count = 1
                 "Your superhero outfit.":
                     $ Count = 2
-                "That outfit we put together [[custom]" if E_Custom[0] or E_Custom2[0] or E_Custom3[0] or E_Custom4[0] or E_Custom5[0] or E_Custom6[0] or E_Custom7[0] or E_Custom8[0] or E_Custom9[0]:
+                "That outfit we put together [[custom]":
                             menu:
                                 ch_e "Which were you thinking?"
                                 "The first one. (locked)" if not E_Custom[0]:
@@ -4827,54 +4945,6 @@ label Emma_Clothes_ScheduleB(Count = 0):
                                 "The third one." if E_Custom3[0]:
                                     if E_Custom3[0] == 2 or Count == 99:
                                         $ Count = 6
-                                    else:
-                                        ch_e "I said I'm not wearing that one in public."
-                                        
-                                "The fourth one. (locked)" if not E_Custom4[0]:
-                                    pass
-                                "The fourth one." if E_Custom4[0]:
-                                    if E_Custom4[0] == 2 or Count == 99:
-                                        $ Count = 15
-                                    else:
-                                        ch_e "I said I'm not wearing that one in public."
-                                        
-                                "The fifth one. (locked)" if not E_Custom5[0]:
-                                    pass
-                                "The fifth one." if E_Custom5[0]:
-                                    if E_Custom5[0] == 2 or Count == 99:
-                                        $ Count = 16
-                                    else:
-                                        ch_e "I said I'm not wearing that one in public."
-                                        
-                                "The sixth one. (locked)" if not E_Custom6[0]:
-                                    pass
-                                "The sixth one." if E_Custom6[0]:
-                                    if E_Custom6[0] == 2 or Count == 99:
-                                        $ Count = 17
-                                    else:
-                                        ch_e "I said I'm not wearing that one in public."
-                                        
-                                "The seventh one. (locked)" if not E_Custom7[0]:
-                                    pass
-                                "The seventh one." if E_Custom7[0]:
-                                    if E_Custom7[0] == 2 or Count == 99:
-                                        $ Count = 18
-                                    else:
-                                        ch_e "I said I'm not wearing that one in public."
-                                        
-                                "The eighth one. (locked)" if not E_Custom8[0]:
-                                    pass
-                                "The eighth one." if E_Custom8[0]:
-                                    if E_Custom8[0] == 2 or Count == 99:
-                                        $ Count = 19
-                                    else:
-                                        ch_e "I said I'm not wearing that one in public."
-                                        
-                                "The ninth one. (locked)" if not E_Custom9[0]:
-                                    pass
-                                "The ninth one." if E_Custom9[0]:
-                                    if E_Custom9[0] == 2 or Count == 99:
-                                        $ Count = 20
                                     else:
                                         ch_e "I said I'm not wearing that one in public."
                                         
@@ -4902,7 +4972,6 @@ label Emma_Clothes_ScheduleB(Count = 0):
             return Count    
 #End Emma Clothes Scheduling Check
 
-
 label E_AltClothes(Outfit=8):
         #1 = "teacher", 2 = "costume"
         #3 = "custom1", 5 = "custom2", 6 = "custom3", 7 = "sleep", 4 = "gym", 10 = "swimwear"
@@ -4913,18 +4982,6 @@ label E_AltClothes(Outfit=8):
                     $ E_Outfit = "teacher"
         elif E_Schedule[Outfit] == 2:
                     $ E_Outfit = "costume"
-        elif E_Schedule[Outfit] == 15:
-                    $ E_Outfit = "custom4"
-        elif E_Schedule[Outfit] == 16:
-                    $ E_Outfit = "custom5"
-        elif E_Schedule[Outfit] == 17:
-                    $ E_Outfit = "custom6"
-        elif E_Schedule[Outfit] == 18:
-                    $ E_Outfit = "custom7"
-        elif E_Schedule[Outfit] == 19:
-                    $ E_Outfit = "custom8"
-        elif E_Schedule[Outfit] == 20:
-                    $ E_Outfit = "custom9"
         elif E_Schedule[Outfit] == 3:
                     $ E_Outfit = "custom1"
         elif E_Schedule[Outfit] == 5:
@@ -4941,6 +4998,11 @@ label E_AltClothes(Outfit=8):
   
 label E_Private_Outfit:
     #sets Emma's private outfit in private
+    if E_Break[0] or "angry" in E_DailyActions:
+            return
+    if E_Outfit == "temporary":
+            #if you manually set a different option, keep it
+            return
     if "comfy" in E_RecentActions or "comfy" in E_Traits or E_Outfit == E_Schedule[9]:
             call E_AltClothes(9)
             call EmmaOutfit(Changed=1)
@@ -4977,24 +5039,6 @@ label Emma_Custom_Out(Custom = 3, Shame = 0, Agree = 1):
                         if Custom == 5 and E_Custom2[0] == 2:
                             $ E_Outfit = "custom2"                    
                             $ E_Shame = E_OutfitShame[5]
-                        elif Custom == 15 and E_Custom4[0] == 2:
-                                    $ E_Outfit = "custom4"
-                                    $ E_Shame = E_OutfitShame[Custom]
-                        elif Custom == 16 and E_Custom5[0] == 2:
-                                    $ E_Outfit = "custom5"
-                                    $ E_Shame = E_OutfitShame[Custom]
-                        elif Custom == 17 and E_Custom6[0] == 2:
-                                    $ E_Outfit = "custom6"
-                                    $ E_Shame = E_OutfitShame[Custom]
-                        elif Custom == 18 and E_Custom7[0] == 2:
-                                    $ E_Outfit = "custom7"
-                                    $ E_Shame = E_OutfitShame[Custom]
-                        elif Custom == 19 and E_Custom8[0] == 2:
-                                    $ E_Outfit = "custom8"
-                                    $ E_Shame = E_OutfitShame[Custom]
-                        elif Custom == 20 and E_Custom9[0] == 2:
-                                    $ E_Outfit = "custom9"
-                                    $ E_Shame = E_OutfitShame[Custom]
                         elif Custom == 6 and E_Custom3[0] == 2:
                             $ E_Outfit = "custom3"                    
                             $ E_Shame = E_OutfitShame[6]
@@ -5005,18 +5049,6 @@ label Emma_Custom_Out(Custom = 3, Shame = 0, Agree = 1):
             
             if Custom == 5 and E_Custom2[0] == 2:
                         $ E_Outfit = "custom2"   
-            elif Custom == 15 and E_Custom4[0] == 2:
-                        $ E_Outfit = "custom4"
-            elif Custom == 16 and E_Custom5[0] == 2:
-                        $ E_Outfit = "custom5"
-            elif Custom == 17 and E_Custom6[0] == 2:
-                        $ E_Outfit = "custom6"
-            elif Custom == 18 and E_Custom7[0] == 2:
-                        $ E_Outfit = "custom7"
-            elif Custom == 19 and E_Custom8[0] == 2:
-                        $ E_Outfit = "custom8"
-            elif Custom == 20 and E_Custom9[0] == 2:
-                        $ E_Outfit = "custom9"
             elif Custom == 6 and E_Custom3[0] == 2:
                         $ E_Outfit = "custom3"   
             elif E_Custom[0] == 2: #if custom 1:
@@ -5053,24 +5085,22 @@ label Emma_Custom_Out(Custom = 3, Shame = 0, Agree = 1):
                                 
 label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree = 1): 
             #Custom determines which custom outfit is being checked against.    
-            #If Custom1 = 3, if custom2 = 5, if custom3 = 6, if gym = 7, if private = 9, if swimsuit = 10, if 20, quickcheck
+            #If Custom1 = 3, if custom2 = 5, if custom3 = 6, if gym = 4, if sleepwear 7, if private = 9, if swimsuit = 10
             #if not a check, then it is only applied if it's in a taboo area
             # Tempshame is a throwaway value, 0-50, Agree is whether she will wear it out, 2 if yes, 1 if only around you.
             
             if not Check and not Taboo and Custom != 20:
-                #if this is not a custom check and you're in a safe space,
-                if E_Schedule[9]:
-                    #if there is a "private outfit" set, ask to change.
-                    call E_Private_Outfit
-                return
+                    #if this is not a custom check and you're in a safe space,
+                    if E_Schedule[9]:
+                            #if there is a "private outfit" set, ask to change.
+                            call E_Private_Outfit
+                    return
                         
             #If she's wearing a bra of some kind
             if Custom == 20 and E_Uptop: 
                 $ Count = 0
             elif E_Chest == "corset":  
                 $ Count = 15
-            elif IsOutfitModdedEmma("Chest"):
-                $ Count = Mod_Emma_OutfitShame("Chest")
             elif E_Chest == "sports bra":
                 $ Count = 15
             elif E_Chest == "bikini top":
@@ -5088,8 +5118,6 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
             #If she's wearing an overshirt
             if Custom == 20 and E_Uptop: 
                 $ Count = 0
-            elif IsOutfitModdedEmma("Over"):                                             
-                $ Count += Mod_Emma_OutfitShame("Over")                                             
             elif E_Over == "jacket":                                             
                 $ Count += 15
             elif E_Over == "towel":      
@@ -5099,7 +5127,7 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
             #else: nothing    
             
             call EmmaFace("sexy", 0)
-            if Custom == 9:
+            if Custom == 9 or Custom == 7:
                         #It's for private only
                         pass
             elif Count >= 20:
@@ -5136,8 +5164,6 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
                     else:
                             # if commando
                             $ Count = 25                
-                elif IsOutfitModdedEmma("Panties"):      #If wearing only sports panties
-                    $ Count = Mod_Emma_OutfitShame("Panties")      #If wearing only sports panties
                 elif E_Panties == "sports panties":      #If wearing only sports panties
                     $ Count = 20           
                 elif E_Panties == "bikini bottoms":      #If wearing only bikini bottoms
@@ -5159,7 +5185,7 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
             if not Check:
                         #If this isn't a custom check, skip this dialog stuff
                         pass
-            elif Custom == 9:
+            elif Custom == 9 or Custom == 7:
                         #It's for private only
                         pass
             elif Count >= 20:
@@ -5194,9 +5220,9 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
             
             if Check:
                     #if this is a custom outfit check
-                    if Custom == 7:
+                    if Custom == 4:
                         ch_p "So would you work out in that?"
-                    elif Custom == 9:
+                    elif Custom == 7:
                         ch_p "So would you sleep in that?"
                     else:
                         ch_p "So would you wear that outside?"  
@@ -5215,7 +5241,7 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
                             ch_e "Yes, it's a fine choice."
                     elif Tempshame <= 15 and (ApprovalCheck("Emma", 1700, TabM=0, C = 0) or ApprovalCheck("Emma", 400, "I", TabM=0, C = 0)):        
                             ch_e "Rather daring, how could I resist?"
-                    elif Custom == 9:
+                    elif Custom == 7:
                             #if it's sleepwear      
                             call EmmaFace("bemused", 1)
                             if Tempshame >= 30:
@@ -5262,79 +5288,6 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
                             $ E_Custom2[9] = E_Hose
                             $ E_Custom2[0] = 2 if Agree else 1
                             call Clothing_Schedule_Check("Emma",5,1) 
-#MOD CUSTOM OUTFITS OUTFITSHAME
-                    elif Custom == 20:
-                            $ E_Custom9[1] = E_Arms  
-                            $ E_Custom9[2] = E_Legs 
-                            $ E_Custom9[3] = E_Over
-                            $ E_Custom9[4] = E_Neck 
-                            $ E_Custom9[5] = E_Chest 
-                            $ E_Custom9[6] = E_Panties
-                            $ E_Custom9[7] = E_Boots
-                            $ E_Custom9[8] = E_Hair
-                            $ E_Custom9[9] = E_Hose
-                            $ E_Custom9[0] = 2 if Agree else 1
-                            call Clothing_Schedule_Check("Emma",Custom,1) 
-                    elif Custom == 19:
-                            $ E_Custom8[1] = E_Arms  
-                            $ E_Custom8[2] = E_Legs 
-                            $ E_Custom8[3] = E_Over
-                            $ E_Custom8[4] = E_Neck 
-                            $ E_Custom8[5] = E_Chest 
-                            $ E_Custom8[6] = E_Panties
-                            $ E_Custom8[7] = E_Boots
-                            $ E_Custom8[8] = E_Hair
-                            $ E_Custom8[9] = E_Hose
-                            $ E_Custom8[0] = 2 if Agree else 1
-                            call Clothing_Schedule_Check("Emma",Custom,1) 
-                    elif Custom == 18:
-                            $ E_Custom7[1] = E_Arms  
-                            $ E_Custom7[2] = E_Legs 
-                            $ E_Custom7[3] = E_Over
-                            $ E_Custom7[4] = E_Neck 
-                            $ E_Custom7[5] = E_Chest 
-                            $ E_Custom7[6] = E_Panties
-                            $ E_Custom7[7] = E_Boots
-                            $ E_Custom7[8] = E_Hair
-                            $ E_Custom7[9] = E_Hose
-                            $ E_Custom7[0] = 2 if Agree else 1
-                            call Clothing_Schedule_Check("Emma",Custom,1) 
-                    elif Custom == 17:
-                            $ E_Custom6[1] = E_Arms  
-                            $ E_Custom6[2] = E_Legs 
-                            $ E_Custom6[3] = E_Over
-                            $ E_Custom6[4] = E_Neck 
-                            $ E_Custom6[5] = E_Chest 
-                            $ E_Custom6[6] = E_Panties
-                            $ E_Custom6[7] = E_Boots
-                            $ E_Custom6[8] = E_Hair
-                            $ E_Custom6[9] = E_Hose
-                            $ E_Custom6[0] = 2 if Agree else 1
-                            call Clothing_Schedule_Check("Emma",Custom,1) 
-                    elif Custom == 16:
-                            $ E_Custom5[1] = E_Arms  
-                            $ E_Custom5[2] = E_Legs 
-                            $ E_Custom5[3] = E_Over
-                            $ E_Custom5[4] = E_Neck 
-                            $ E_Custom5[5] = E_Chest 
-                            $ E_Custom5[6] = E_Panties
-                            $ E_Custom5[7] = E_Boots
-                            $ E_Custom5[8] = E_Hair
-                            $ E_Custom5[9] = E_Hose
-                            $ E_Custom5[0] = 2 if Agree else 1
-                            call Clothing_Schedule_Check("Emma",Custom,1) 
-                    elif Custom == 15:
-                            $ E_Custom4[1] = E_Arms  
-                            $ E_Custom4[2] = E_Legs 
-                            $ E_Custom4[3] = E_Over
-                            $ E_Custom4[4] = E_Neck 
-                            $ E_Custom4[5] = E_Chest 
-                            $ E_Custom4[6] = E_Panties
-                            $ E_Custom4[7] = E_Boots
-                            $ E_Custom4[8] = E_Hair
-                            $ E_Custom4[9] = E_Hose
-                            $ E_Custom4[0] = 2 if Agree else 1
-                            call Clothing_Schedule_Check("Emma",Custom,1) 
                     elif Custom == 6:
                             $ E_Custom3[1] = E_Arms  
                             $ E_Custom3[2] = E_Legs 
@@ -5347,7 +5300,7 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
                             $ E_Custom3[9] = E_Hose
                             $ E_Custom3[0] = 2 if Agree else 1
                             call Clothing_Schedule_Check("Emma",6,1) 
-                    elif Custom == 7 and Agree:
+                    elif Custom == 4 and Agree:
                             $ E_Gym[1] = E_Arms  
                             $ E_Gym[2] = E_Legs 
                             $ E_Gym[3] = E_Over
@@ -5359,7 +5312,7 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
                             $ E_Gym[9] = E_Hose
                             $ E_Gym[0] = 2   
                             call Clothing_Schedule_Check("Emma",4,1) 
-                    elif Custom == 9 and Agree:
+                    elif Custom == 7 and Agree:
                             $ E_Sleepwear[1] = E_Arms  
                             $ E_Sleepwear[2] = E_Legs 
                             $ E_Sleepwear[3] = E_Over
@@ -5416,7 +5369,7 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
             elif Tempshame <= 15 and (ApprovalCheck("Emma", 1600) or ApprovalCheck("Emma", 550, "I")):
                     #If the outfit is hot but she's ok     
                     pass
-            elif Tempshame <= 20 and E_Loc == "bg dangerroom": 
+            elif Tempshame <= 20 and (E_Loc == "bg dangerroom" or E_Loc == "bg pool"): 
                     #If the outfit is light but she's in the gym
                     pass
             elif Tempshame <= 20 and (ApprovalCheck("Emma", 1800) or ApprovalCheck("Emma", 650, "I")):
@@ -5431,8 +5384,14 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
             elif Custom == 9 and not Taboo:
                     pass
             else:
-                    ch_e "I'm afraid I'll have to change, one moment."
-                    $ E_Outfit = "teacher"
+                    if E_Loc == bg_current:
+                            ch_e "I'm afraid I'll have to change, one moment."
+                    if E_Loc == "bg dangerroom":
+                            $ E_Outfit =  "gym"
+                    elif E_Loc == "bg pool" and E_Swim[0]:
+                            $ E_Outfit =  "swimwear"                        
+                    else:
+                            $ E_Outfit = "teacher"
                     $ E_Water = 0
                     call EmmaOutfit(Changed = 1) 
                     ch_e "Sorry for the wait."
@@ -5586,3 +5545,5 @@ label Emma_Tits_Up:
         #if all checks fail,
         $ E_Tits = 0    
     return
+            
+            

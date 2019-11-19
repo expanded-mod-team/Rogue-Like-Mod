@@ -43,54 +43,7 @@ label L_Sex_P:
              
         
     $ Approval = ApprovalCheck("Laura", 1400, TabM = 5) # 135, 150, 165, Taboo -200(335)
-    
-    if Situation == "Laura":                                                                  #Laura auto-starts   
-                if Approval > 2:                                                      # fix, add laura auto stuff here
-                    call Laura_Sex_Launch("L")   
-                    if L_Legs == "skirt":
-                        "Laura lays back, sliding her skirt up as she does so."
-                        $ L_Upskirt = 1
-                    elif PantsNum("Laura") >= 5:
-                        "Laura lays back, sliding her [L_Legs] off as she does so." 
-                        $ L_Legs = 0
-                    else:
-                        "Laura lays back."
-                    $ L_SeenPanties = 1
-                    "She slides the tip along her pussy and seems to want you to insert it."
-                    menu:
-                        "What do you do?"
-                        "Nothing.":                    
-                            call Statup("Laura", "Inbt", 80, 3) 
-                            call Statup("Laura", "Inbt", 50, 2)
-                            "Laura slides it in."
-                        "Praise her.":       
-                            call LauraFace("sexy", 1)                    
-                            call Statup("Laura", "Inbt", 80, 3) 
-                            ch_p "Oh yeah, [L_Pet], let's do this."
-                            call Laura_Namecheck
-                            "Laura slides it in."
-                            call Statup("Laura", "Love", 85, 1)
-                            call Statup("Laura", "Obed", 90, 1)
-                            call Statup("Laura", "Obed", 50, 2)
-                        "Ask her to stop.":
-                            call LauraFace("surprised")       
-                            call Statup("Laura", "Inbt", 70, 1) 
-                            ch_p "Let's not do that right now, [L_Pet]."
-                            call Laura_Namecheck
-                            "Laura pulls back."
-                            call LauraOutfit
-                            call Statup("Laura", "Obed", 90, 1)
-                            call Statup("Laura", "Obed", 50, 1)
-                            call Statup("Laura", "Obed", 30, 2)
-                            return            
-                    jump L_SexPrep
-                    # End high approval
-                else:                
-                    $ Tempmod = 0                               # fix, add laura auto stuff here
-                    $ Trigger2 = 0
-                return   
-    #End Laura's lead
-    
+        
     if Situation == "auto":   
                 call Laura_Sex_Launch("L")   
                 if L_Legs == "skirt":
@@ -98,7 +51,7 @@ label L_Sex_P:
                     $ L_Upskirt = 1                
                 elif PantsNum("Laura") >= 5:
                     "You push Laura onto her back, sliding her pants down as you do."    
-                    $ L_Legs = 0    
+                    $ L_Upskirt = 1    
                 else:
                     "You push Laura onto her back."
                 $ L_SeenPanties = 1
@@ -353,12 +306,54 @@ label L_Sex_P:
     return
 
 label L_SexPrep:
-    call Seen_First_Peen("Laura",Partner)
+    call Seen_First_Peen("Laura",Partner,React=Situation)
     call Laura_Sex_Launch("hotdog")
-    
-    if Situation != "auto":
-        call Laura_Bottoms_Off       
-        
+             
+    if Situation == "Laura":                                                                 
+            #Laura auto-starts   
+            $ Situation = 0
+            if L_Legs == "skirt":
+                "Laura lays back, sliding her skirt up as she does so."
+                $ L_Upskirt = 1
+            elif PantsNum("Laura") >= 5:
+                "Laura lays back, sliding her [L_Legs] down as she does so." 
+                $ L_Upskirt = 1
+            else:
+                "Laura rolls back and pulls you toward her."
+            $ L_SeenPanties = 1
+            "She slides the tip along her pussy and seems to want you to insert it."
+            menu:
+                "What do you do?"
+                "Go with it.":                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    call Statup("Laura", "Inbt", 50, 2)
+                    "Laura slides it in."
+                "Praise her.":       
+                    call LauraFace("sexy", 1)                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    ch_p "Oh yeah, [L_Pet], let's do this."
+                    call Laura_Namecheck
+                    "Laura slides it in."
+                    call Statup("Laura", "Love", 85, 1)
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call LauraFace("surprised")       
+                    call Statup("Laura", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [L_Pet]."
+                    call Laura_Namecheck
+                    "Laura pulls back."
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 1)
+                    call Statup("Laura", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Laura",1,"refused","refused")  
+                    return      
+            $ L_PantiesDown = 1  
+            call Laura_First_Bottomless(1)
+            
+    elif Situation != "auto":
+        call Laura_Bottoms_Off 
         
         if (L_Panties and not L_PantiesDown) or (L_Legs and not L_Upskirt) or HoseNum("Laura") >= 6: #If she refuses to take off her pants but agreed to anal
             ch_l "Huh. . ."
@@ -673,6 +668,8 @@ label L_Sex_Cycle: #Repeating strokes
                                     jump L_SexAfter
         #End Count check
    
+        call Escalation("Laura","L") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_l "It's getting kinda late. . ."  
         elif Round == 5:
@@ -779,54 +776,6 @@ label L_Sex_A:
             
     $ Approval = ApprovalCheck("Laura", 1550, TabM = 5) # 155, 170, 185, Taboo -200(355)
     
-    if Situation == "Laura":                                                                  
-            #Laura auto-starts   
-            if Approval > 2:                                                      
-                # fix, add laura auto stuff here
-                call Laura_Sex_Launch("L")   
-                if L_Legs == "skirt":
-                    "Laura lays back, sliding her skirt up as she does so."
-                    $ L_Upskirt = 1
-                elif PantsNum("Laura") >= 5:
-                    "Laura lays back, sliding her [L_Legs] off as she does so." 
-                    $ L_Legs = 0
-                else:
-                    "Laura lays back."
-                $ L_SeenPanties = 1
-                "She slides the tip up to her back door, and presses against it."
-                menu:
-                    "What do you do?"
-                    "Nothing.":                    
-                        call Statup("Laura", "Inbt", 80, 3) 
-                        call Statup("Laura", "Inbt", 50, 2)
-                        "Laura slides it in."
-                    "Praise her.":       
-                        call LauraFace("sexy", 1)                    
-                        call Statup("Laura", "Inbt", 80, 3) 
-                        ch_p "Ooo, dirty girl, [L_Pet], let's do this."
-                        call Laura_Namecheck
-                        "Laura slides it in."
-                        call Statup("Laura", "Love", 85, 1)
-                        call Statup("Laura", "Obed", 90, 1)
-                        call Statup("Laura", "Obed", 50, 2)
-                    "Ask her to stop.":
-                        call LauraFace("surprised")       
-                        call Statup("Laura", "Inbt", 70, 1) 
-                        ch_p "Let's not do that right now, [L_Pet]."
-                        call Laura_Namecheck
-                        "Laura pulls back."
-                        call LauraOutfit
-                        call Statup("Laura", "Obed", 90, 1)
-                        call Statup("Laura", "Obed", 50, 1)
-                        call Statup("Laura", "Obed", 30, 2)                    
-                        return            
-                jump L_AnalPrep
-            else:                
-                $ Tempmod = 0                               # fix, add laura auto stuff here
-                $ Trigger2 = 0
-            return  
-            #end if Laura initiates
-    
     if Situation == "auto":   
             call Laura_Sex_Launch("L")   
             if L_Legs == "skirt":
@@ -840,6 +789,7 @@ label L_Sex_A:
             $ L_SeenPanties = 1
             "You press the tip of your cock against her tight rim."        
             call LauraFace("surprised", 1)
+            call Laura_First_Bottomless(1)
             
             if (L_Anal and Approval) or (Approval > 1):                                                                      
                 #this is not the first time you've had sex, or she's into it    
@@ -1099,10 +1049,52 @@ label L_Sex_A:
     return
 
 label L_AnalPrep:    
-    call Seen_First_Peen("Laura",Partner)
+    call Seen_First_Peen("Laura",Partner,React=Situation)
     call Laura_Sex_Launch("hotdog")
-    
-    if Situation != "auto":
+        
+    if Situation == "Laura":                                                                 
+            #Laura auto-starts   
+            $ Situation = 0
+            if L_Legs == "skirt":
+                "Laura lays back, sliding her skirt up as she does so."
+                $ L_Upskirt = 1
+            elif PantsNum("Laura") >= 5:
+                "Laura lays back, sliding her [L_Legs] down as she does so." 
+                $ L_Upskirt = 1
+            else:
+                "Laura rolls back and pulls you toward her."
+            $ L_SeenPanties = 1
+            "She slides the tip along her asshole, and seems to want you to insert it."
+            menu:
+                "What do you do?"
+                "Go with it.":                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    call Statup("Laura", "Inbt", 50, 2)
+                    "Laura slides it in."
+                "Praise her.":       
+                    call LauraFace("sexy", 1)                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    ch_p "Oh yeah, [L_Pet], let's do this."
+                    call Laura_Namecheck
+                    "Laura slides it in."
+                    call Statup("Laura", "Love", 85, 1)
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call LauraFace("surprised")       
+                    call Statup("Laura", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [L_Pet]."
+                    call Laura_Namecheck
+                    "Laura pulls back."
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 1)
+                    call Statup("Laura", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Laura",1,"refused","refused")  
+                    return      
+            $ L_PantiesDown = 1  
+            call Laura_First_Bottomless(1)
+    elif Situation != "auto":
         call Laura_Bottoms_Off    
         if (L_Panties and not L_PantiesDown) or (L_Legs and not L_Upskirt) or HoseNum("Laura") >= 6: #If she refuses to take off her pants but agreed to anal
             ch_l "Huh. . ."
@@ -1526,41 +1518,6 @@ label L_Sex_H:
         
     $ Approval = ApprovalCheck("Laura", 1000, TabM = 3) # 100, 115, 130, Taboo -120(220)
     
-    if Situation == "Laura":                                                                  
-            #Laura auto-starts   
-            if Approval > 2:                                                      # fix, add laura auto stuff here
-                call Laura_Sex_Launch("L") 
-                "Laura pulls you onto her, rubbing your cock against against her mound."
-                menu:
-                    "What do you do?"
-                    "Nothing.":                     
-                        call Statup("Laura", "Inbt", 50, 3)
-                        "Laura starts to grind against you."
-                    "Praise her.":       
-                        call LauraFace("sexy", 1)                    
-                        call Statup("Laura", "Inbt", 80, 2) 
-                        ch_p "Hmmm, that's good, [L_Pet]."
-                        call Laura_Namecheck
-                        "Laura starts to grind against you."
-                        call Statup("Laura", "Love", 85, 1)
-                        call Statup("Laura", "Obed", 60, 2)
-                    "Ask her to stop.":
-                        call LauraFace("surprised")       
-                        call Statup("Laura", "Inbt", 70, 1) 
-                        ch_p "Let's not do that right now, [L_Pet]."
-                        call Laura_Namecheck
-                        "Laura pulls back."
-                        call LauraOutfit
-                        call Statup("Laura", "Obed", 80, 1)
-                        call Statup("Laura", "Obed", 30, 2)                    
-                        return            
-                jump L_HotdogPrep
-            else:                
-                $ Tempmod = 0                               # fix, add laura auto stuff here
-                $ Trigger2 = 0
-            return            
-            #end Laura initates
-    
     if Situation == "auto":   
             call Laura_Sex_Launch("L")   
             "You push Laura down, and press your cock against her."    
@@ -1802,10 +1759,41 @@ label L_Sex_H:
     return
 
 label L_HotdogPrep:  
-    call Seen_First_Peen("Laura",Partner)
+    call Seen_First_Peen("Laura",Partner,React=Situation)
     call Laura_Sex_Launch("hotdog")
     
-    if Situation != "auto":
+    if Situation == "Laura":                                                                 
+            #Laura auto-starts   
+            $ Situation = 0
+            "Laura rolls back and pulls you toward her, grinding against your cock."
+            menu:
+                "What do you do?"
+                "Go with it.":                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    call Statup("Laura", "Inbt", 50, 2)
+                    "Laura continues to grind."
+                "Praise her.":       
+                    call LauraFace("sexy", 1)                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    ch_p "Oh yeah, [L_Pet], let's do this."
+                    call Laura_Namecheck
+                    "Laura continues to grind."
+                    call Statup("Laura", "Love", 85, 1)
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call LauraFace("surprised")       
+                    call Statup("Laura", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [L_Pet]."
+                    call Laura_Namecheck
+                    "Laura pulls back."
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 1)
+                    call Statup("Laura", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Laura",1,"refused","refused")  
+                    return      
+    elif Situation != "auto":
 #        call Laura_Bottoms_Off    
         
         if Taboo: # Laura gets started. . .
@@ -2088,6 +2076,8 @@ label L_Hotdog_Cycle: #Repeating strokes
                                     jump L_HotdogAfter
         #End Count check
    
+        call Escalation("Laura","L") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_l "It's getting kinda late. . ."  
         elif Round == 5:

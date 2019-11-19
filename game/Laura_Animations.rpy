@@ -446,22 +446,45 @@ image Laura_Sprite_HairBack:
             "not L_Hair", Null(),
             "renpy.showing('Laura_BJ_Animation')", Null(), 
 #            "renpy.showing('Laura_SexSprite')", "images/LauraSex/Laura_Sprite_Hair_Long_UnderSex.png",
-            "L_HairColor and L_Hair == 'wet' or L_Water", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Wet_Under.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)),
             "L_Hair == 'wet' or L_Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Under.png",
-            "L_HairColor and L_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Under.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)),
             "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Under.png",   
             "True", Null(),        
             ),   
 #    "images/LauraSprite/Laura_Sprite_Hair_Long_Under.png"       
     anchor (0.6, 0.0)                
     zoom .5                   
-    
+
+image Laura_Sprite_HairMid: 
+    ConditionSwitch(
+            #hair back 
+            "not L_Hair", Null(),
+            "renpy.showing('Laura_BJ_Animation')", Null(), 
+#            "renpy.showing('Laura_SexSprite')", "images/LauraSex/Laura_Sprite_Hair_Long_UnderSex.png",
+            "L_Hair == 'wet' or L_Water", Null(),
+            "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Mid.png",   
+            "True", Null(),        
+            ),     
+    anchor (0.6, 0.0)                
+    zoom .5 
+ 
+image Laura_Sprite_HairTop: 
+    ConditionSwitch(
+            #hair back 
+            "not L_Hair", Null(),
+            "renpy.showing('Laura_SexSprite')", "images/LauraSex/Laura_Sprite_Hair_Long_OverSex.png",
+            "L_Hair == 'wet' or L_Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Over.png",
+            "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Over.png",
+            "True", Null(),        
+            ),   
+#    "images/LauraSprite/Laura_Sprite_Hair_Long_Under.png"       
+    anchor (0.6, 0.0)                
+    zoom .5                
+            
 image Laura_Sprite_Head:            
     LiveComposite(
         (806,806),      
         (0,0), ConditionSwitch(
                 # hair behind face
-                "L_HairColor and renpy.showing('Laura_SexSprite')", im.MatrixColor("images/LauraSex/Laura_Sprite_HairWhite_Long_UnderSex.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)),
                 "renpy.showing('Laura_SexSprite')", "images/LauraSex/Laura_Sprite_Hair_Long_UnderSex.png", 
                 "True", Null(),                        
                 ),         
@@ -529,9 +552,9 @@ image Laura_Sprite_Head:
         (0,0), ConditionSwitch(                
             #Hair mid
             "L_Over == 'jacket'", Null(),            
+            "renpy.showing('Laura_TJ_Animation')", Null(),
             "renpy.showing('Laura_Sex_Animation')", Null(),     
             "L_Hair == 'wet' or L_Water", Null(),
-            "L_HairColor and L_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Mid.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)),
             "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Mid.png",
             "True", Null(),
             ),           
@@ -542,18 +565,11 @@ image Laura_Sprite_Head:
 #            ),  
         (0,0), ConditionSwitch(                                                                         
             #Hair over
-            "not L_Hair or L_HairColor", Null(),
+            "not L_Hair", Null(),
+            "renpy.showing('Laura_TJ_Animation')", Null(),
             "renpy.showing('Laura_SexSprite')", "images/LauraSex/Laura_Sprite_Hair_Long_OverSex.png",
             "L_Hair == 'wet' or L_Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Over.png",
             "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Over.png",
-            "True", Null(),
-            ),  
-        (0,0), ConditionSwitch(                                                                         
-            #Hair over
-            "not L_Hair or not L_HairColor", Null(),
-            "renpy.showing('Laura_SexSprite')", im.MatrixColor("images/LauraSex/Laura_Sprite_HairWhite_Long_OverSex.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)),
-            "L_Hair == 'wet' or L_Water", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Wet_Over.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)),
-            "L_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Over.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)),
             "True", Null(),
             ),    
         (0,0), ConditionSwitch(
@@ -652,7 +668,16 @@ image Laura_SexSprite:
                     "Speed == 3", "Laura_Sex_Body_A3",#fast
                     "Speed >= 4", "Laura_Sex_Body_A4",#cumming
                     "True",       "Laura_Sex_Body_A0",#Static
-                    ),
+                    ),                    
+            "P_Cock == 'foot'", ConditionSwitch(                                      
+                    # If during Footjob
+                    "not P_Sprite","Laura_Sex_Body_F0",#Static
+                    "Speed == 1", "Laura_Sex_Body_F1",#heading
+                    "Speed >= 4", "Laura_Sex_Body_F0",#cumming
+                    "Speed >= 2", "Laura_Sex_Body_F2",#slow
+                    "True",       "Laura_Sex_Body_F0",#Static
+                    ),    
+            
             "True", ConditionSwitch(                                                              
                     # If neither
                     "not P_Sprite","Laura_Sex_Body_H0",#Static
@@ -681,6 +706,14 @@ image Laura_SexSprite:
                     "Speed >= 4", "Laura_Sex_Legs_A4",#cumming
                     "True", "Laura_Sex_Legs_A0",#Static
                     ),
+            "P_Cock == 'foot'", ConditionSwitch(                                      
+                    # If during Footjob
+                    "not P_Sprite","Laura_Sex_Legs_F0",#Static
+                    "Speed == 1", "Laura_Sex_Legs_F1",#heading
+                    "Speed >= 4", "Laura_Sex_Legs_F0",#cumming
+                    "Speed >= 2", "Laura_Sex_Legs_F2",#slow
+                    "True",       "Laura_Sex_Legs_F0",#Static   
+                    ),     
             "True", ConditionSwitch(                                                               
                     # If neither
                     "not P_Sprite","Laura_Sex_Legs_H0",#Static
@@ -721,7 +754,12 @@ image Laura_Sex_Body:
             "Laura_Sex_HairBack"        
     contains:
             # hand
-            "images/LauraSex/Laura_Sex_Hand.png"
+#            "images/LauraSex/Laura_Sex_Hand.png"
+                    
+            ConditionSwitch(
+                    "P_Cock == 'foot'", Null(), 
+                    "True", "images/LauraSex/Laura_Sex_Hand.png"       
+                    ) 
     contains:
             # Over under layer
         ConditionSwitch(   
@@ -928,8 +966,6 @@ image Laura_Sex_Legs:
             "L_Upskirt", Null(),
             "L_Legs == 'leather pants' and P_Cock == 'foot'", "images/LauraSex/Laura_Sex_Pants_Base_Foot.png", 
             "L_Legs == 'leather pants'", "images/LauraSex/Laura_Sex_Pants_Base_Up.png", 
-            "L_Legs == 'mesh pants' and P_Cock == 'foot'", "images/LauraSex/Laura_Sex_Pants_Mesh_Base_Foot.png", 
-            "L_Legs == 'mesh pants'", "images/LauraSex/Laura_Sex_Pants_Mesh_Base_Up.png", 
             "True", Null(),
             )
     contains:
@@ -975,7 +1011,7 @@ image Laura_Sex_Foot:
             # legs
         ConditionSwitch(    
             "L_Upskirt", Null(),
-            "L_Legs == 'leather pants' or L_Legs == 'mesh pants'", "images/LauraSex/Laura_Sex_Pants_Up.png", 
+            "L_Legs == 'leather pants'", "images/LauraSex/Laura_Sex_Pants_Up.png", 
             "True", Null(),
             )     
         xoffset  -2 #this shouldn't be needed, but otherwise there's a gap between the knee and leg. 
@@ -984,23 +1020,23 @@ image Laura_Sex_Foot:
 #    alpha 0.2
     pos (988,-553)#(988,-553)
 
-image Laura_Footjob_Foot:
-    #her movable foot in the footjob poses
-    contains:
-            # hose/base
-        ConditionSwitch(    
-            "L_Hose == 'stockings and garterbelt' or L_Hose == 'stockings'", "images/LauraSex/Laura_Sex_Stockings_Foot.png", 
-            "True", "images/LauraSex/Laura_Sex_Foot.png"
-            )              
-    contains:
-            # legs
-        ConditionSwitch(    
-            "L_Upskirt", Null(),
-            "L_Legs == 'leather pants' or L_Legs == 'mesh pants'", "images/LauraSex/Laura_Sex_Pants_Foot.png", 
-            "True", Null(),
-            )      
-    transform_anchor True
-    zoom 1 
+#image Laura_Footjob_Foot:
+#    #her movable foot in the footjob poses
+#    contains:
+#            # hose/base
+#        ConditionSwitch(    
+#            "L_Hose == 'stockings and garterbelt' or L_Hose == 'stockings'", "images/LauraSex/Laura_Sex_Stockings_Foot.png", 
+#            "True", "images/LauraSex/Laura_Sex_Foot.png"
+#            )              
+#    contains:
+#            # legs
+#        ConditionSwitch(    
+#            "L_Upskirt", Null(),
+#            "L_Legs == 'leather pants'", "images/LauraSex/Laura_Sex_Pants_Foot.png", 
+#            "True", Null(),
+#            )      
+#    transform_anchor True
+#    zoom 1 
 
 image Laura_CockRef:
     "images/LauraSex/Laura_Sex_Cocktest.png"
@@ -1897,50 +1933,269 @@ image Laura_AnalMask:
         anchor (.5,.5)
     zoom 1 
     anchor (0.5,0.5)
-                    
-#End Sex Animations / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+   
+   
 
+# Laura Footjob  Animations / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
-
-
-
-#image Laura_SexMask:
-#    contains:
-#        "images/LauraSex/Laura_Sex_PussyMaskTest2.png"
-#        pos (-300,-300)   
-##        block:
-##                    ease 1 xzoom .5
-##                    ease 1 xzoom 1
-##                    repeat
-#    zoom 1 
-#    transform_anchor True
-#    anchor (0.1,0.5)
-##    rotate 30
-                    
-#image Laura_Sex_Zero_Anim0:
-#        #this is the cock for Laura's sex animation, Speed 0 (static)
-##        contains: 
-##            "images/LauraSex/Laura_Sex_PussyMaskTestB.png"
-##            pos (-200,0)
-#        contains:
-#            subpixel True
-##            anchor (0.5,0)
-#            "Zero_Doggy_Insert" # Zero's cock, changes color and properties
-##            pos (498,530) #X less is left, Y less is up (498,520)
-#            zoom 1.6
-#            alpha 0.5
-#            pos(350,250) #466
-##            rotate -30
-#            block:
-#                    ease 1.25 ypos 100#630
-#                    ease 1.25 ypos 250#480
-#                    repeat
-#        size (1264,1061)#(1119,1186)
-#        anchor (0.1,0.5)
-#        transform_anchor True
-##        rotate 30
+image Laura_Footjob_Foot:
+    #her movable foot in the footjob poses
+    contains:
+            # hose/base
+        ConditionSwitch(    
+            "L_Hose == 'stockings and garterbelt' or L_Hose == 'stockings'", "images/LauraSex/Laura_Sex_Stockings_Foot.png", 
+            "True", "images/LauraSex/Laura_Sex_Foot.png"
+            )              
+    contains:
+            # legs
+        ConditionSwitch(    
+            "L_Upskirt", Null(),
+            "L_Legs == 'leather pants'", "images/LauraSex/Laura_Sex_Pants_Foot.png", 
+            "True", Null(),
+            )      
+    offset (1105,140) #
+    zoom 1 
     
+image Laura_Sex_Zero_Anim_F:
+            #cock used in laura's sex pose
+            "Zero_Blowcock"
+            zoom .7
+            anchor (0.5, 0.9)
+            offset (270,650)#(220,350)
+            rotate 0
+            
+# Start F1 (static) < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+   
+image Laura_Sex_Body_F0:                                                                        
+    #Her Body in the hotdogging pose, static
+    contains:
+        "Laura_Sex_Body"      
+        subpixel True       
+        pos (0,0) #top (0,-10)
+        block:#total 2s
+            pause 1.15
+            ease 0.6 ypos -5 #in
+            pause 0.65
+            ease .6 ypos 0 #out
+            repeat
+    yoffset -100
+            
+image Laura_Sex_Legs_F0:
+    # Her Legs in the hotdogging pose, static
+    contains:
+            #Body
+            "Laura_Sex_Legs"
+            subpixel True
+            pos (0,0) #top
+            block:#total 3s
+                pause 0.6
+                easeout 0.8 ypos -2 #-50
+                easein 0.2 ypos -5 #out
+                easeout 0.5 ypos -4 #-50
+                easein 0.9 ypos 0 #out
+                repeat         
+    contains:
+            #Foot
+            "Laura_Footjob_Foot"
+            subpixel True  
+            anchor (1100,140)
+            transform_anchor True       
+            pos (0,0) #top 
+            rotate 0
+            parallel:#total 3s
+                pause 0.6
+                easeout 0.8 ypos -2 #-2
+                easein 0.2 ypos -5 #out
+                easeout 0.5 ypos -4 #-4
+                easein 0.9 ypos 0 #out
+                repeat  
+            parallel:#total 3s
+                ease 2 rotate 5 #20  
+                ease 2 rotate -5 #0   
+                pause .5
+                repeat    
+    contains:
+            "Laura_Sex_Zero_Anim_F"
+            subpixel True
+            transform_anchor True  
+            pos (558,580) #538,475
+            rotate -5
+            parallel:#total 3s
+                pause 0.6
+                easeout 0.8 ypos 578 #578
+                easein 0.2 ypos 575 #out 575 
+                easeout 0.5 ypos 576 #575
+                easein 0.9 ypos 580 #out  580                
+                repeat
+            parallel:#total 3s
+                easeout 1 rotate -5 #-20  
+                easein 1 rotate -10 #-28  
+                pause .2
+                easeout .8 rotate -5 #-20   
+                easein 1 rotate 0 #-5  
+                pause .5
+                repeat   
+    
+    yoffset -100
+    # End Legs hotdogging static
+                    
+            
+# End F0 (static) < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
+
+# Start F1 (static) < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+   
+image Laura_Sex_Body_F1:                                                                        
+    #Her Body in the hotdogging pose, static
+    contains:
+        "Laura_Sex_Body"      
+        subpixel True       
+        pos (0,0) #top (0,-10)
+        block:#total 2s
+            pause 1.15
+            ease 0.6 ypos -5 #in
+            pause 0.65
+            ease .6 ypos 0 #out
+            repeat
+    yoffset -100
+            
+image Laura_Sex_Legs_F1:
+    # Her Legs in the hotdogging pose, static
+    contains:
+            #Body
+            "Laura_Sex_Legs"
+            subpixel True
+            pos (0,0) #top
+            block:#total 3s
+                pause 0.6
+                easeout 0.8 ypos -2 #-50
+                easein 0.2 ypos -5 #out
+                easeout 0.5 ypos -4 #-50
+                easein 0.9 ypos 0 #out
+                repeat            
+    contains:
+            "Laura_Sex_Zero_Anim_F"
+            subpixel True
+            transform_anchor True  
+            pos (558,580) #538,475
+            rotate -5
+            parallel:#total 3s
+                pause 0.6
+                easeout 0.8 ypos 578 #455
+                easein 0.2 ypos 575 #out  
+                easeout 0.5 ypos 576 #455
+                easein 0.9 ypos 580 #out                  
+                repeat
+            parallel:#total 3s
+                easeout 1 rotate -20 #-50  
+                easein 1 rotate -28 #-50  
+                pause .2
+                easeout .8 rotate -20 #-50   
+                easein 1 rotate -5 #-50  
+                pause .5
+                repeat  
+    contains:
+            #Foot
+            "Laura_Footjob_Foot"
+            subpixel True  
+            anchor (1100,140)
+            transform_anchor True       
+            pos (0,0) #top 
+            rotate 0
+            parallel:#total 3s
+                pause 0.6
+                easeout 0.8 ypos -2 #-50
+                easein 0.2 ypos -5 #out
+                easeout 0.5 ypos -4 #-50
+                easein 0.9 ypos 0 #out
+                repeat  
+            parallel:#total 3s
+                ease 2 rotate 20 #-50  
+                ease 2 rotate 0 #-50   
+                pause .5
+                repeat  
+    
+    yoffset -100
+    # End Legs hotdogging static
+                              
+# End F1 (slow) < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
+
+# Start F2 (fast) < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+   
+image Laura_Sex_Body_F2:                                                                        
+    #Her Body in the hotdogging pose, fast
+    contains:
+        "Laura_Sex_Body"      
+        subpixel True       
+        pos (0,0) #top (0,-10)
+        block:#total 2s
+            ease .7 ypos -10 #in
+            ease .7 ypos 0 #out
+            repeat
+    rotate 15
+    yoffset -250
+    xoffset 500#400
+    xzoom -1
+                
+image Laura_Sex_Legs_F2:
+    # Her Legs in the hotdogging pose, fast
+    contains:
+            #Body
+            "Laura_Sex_Legs"
+            subpixel True
+            pos (0,0) #top
+            block:#total 3
+                ease 0.5 ypos -2 #-50
+                ease 1 ypos -10 #-50
+                pause .1
+                repeat                      
+    contains:
+            "Laura_Sex_Zero_Anim_F"
+            subpixel True
+            transform_anchor True  
+            pos (808,380) #(558,580)
+            rotate -55
+            parallel:#total 3s
+                easeout .25 rotate -58 #-20  
+                easein .25 rotate -60 #-28  
+                pause .1
+                easeout .4 rotate -58 #-20   
+                easein .5 rotate -55 #-5  
+                pause .1#.25
+                repeat  
+    contains:
+            #Foot
+            "Laura_Footjob_Foot"
+            subpixel True  
+            anchor (1100,140)
+            transform_anchor True       
+            pos (0,0) #top 
+            rotate 0
+            parallel:#total 3s
+                pause 0.15
+                easeout 0.2 ypos -2 #-50
+                easein 0.05 ypos -5 #out
+                easeout 0.25 ypos -4 #-50
+                easein 0.45 ypos 0 #out
+                repeat  
+            parallel:#total 3s
+                ease .5 rotate 20 #-50  top
+                ease 1 rotate 0 #-50   
+                pause .1#.25
+                repeat  
+    
+    yoffset -400
+    xoffset 300#200
+    rotate 50
+    # End Legs hotdogging fast
+                               
+            
+# End F2 (fast) < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+                    
+#End Footjob Animations / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+#End Sex Animations / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
 
 image Laura_SexMaskX:                    
@@ -2166,9 +2421,7 @@ image Laura_Sprite_BJ_HairBack:
     ConditionSwitch(                                                                         
             #Hair over
             "not L_Hair", Null(),
-            "L_HairColor and L_Hair == 'wet' or L_Water", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Wet_Under.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)),
             "L_Hair == 'wet' or L_Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Under.png",
-            "L_HairColor and L_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Under.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)),
             "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Under.png",
             "True", Null(),
             )        
@@ -2252,7 +2505,6 @@ image Laura_Sprite_BJ_Head:
             #Hair mid
             "L_Over == 'jacket'", Null(),
             "L_Hair == 'wet' or L_Water", Null(),
-            "L_HairColor and L_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Mid.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)),
             "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Mid.png",
             "True", Null(),
             ),       
@@ -2263,16 +2515,9 @@ image Laura_Sprite_BJ_Head:
 #            ),
         (0,0), ConditionSwitch(                                                                         
             #Hair over
-            "not L_Hair or L_HairColor", Null(),
+            "not L_Hair", Null(),
             "L_Hair == 'wet' or L_Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Over.png",
             "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Over.png",
-            "True", Null(),
-            ),  
-        (0,0), ConditionSwitch(                                                                         
-            #Hair over
-            "not L_Hair or not L_HairColor", Null(),
-            "L_Hair == 'wet' or L_Water", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Wet_Over.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)),
-            "L_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Over.png",im.matrix.tint(float(L_HairCustomColor.red)/255.0, float(L_HairCustomColor.green)/255.0, float(L_HairCustomColor.blue)/255.0)),
             "True", Null(),
             ),        
         (0,0), ConditionSwitch(
@@ -3479,6 +3724,1113 @@ label Laura_HJ_Reset: # The sequence to the Rogue animations from handjob to def
 # End Laura Handjob Animations / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
     
 
+
+
+
+# Laura's TJ animations start / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+# Animation components / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+# start base animation / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+image Laura_TJ_Animation:
+            #core TJ animation   
+            contains:
+                ConditionSwitch(                                                              
+                    # Laura's upper body     
+                    "not P_Sprite","Laura_TJ_0",#Static
+                    "Speed == 1", "Laura_TJ_1",#slow
+                    "Speed == 4", "Laura_TJ_4",#cumming high
+                    "Speed == 5", "Laura_TJ_5",#cumming low
+                    "Speed >= 2", "Laura_TJ_2",#fast
+                    "True",       "Laura_TJ_0",#Static
+                    )
+            zoom .7 #0.6
+            transform_anchor True
+            anchor (.5,.5)
+# end base animation / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+            
+            
+    
+image Laura_TJ_HairBack:
+            #Hair underlay
+            "Laura_Sprite_HairBack"
+            transform_anchor True
+            zoom 2.5
+            anchor (0.5, 0.5)
+            offset (320,100)
+            rotate 0
+  
+image Laura_TJ_Head:
+            #Hair underlay
+            "Laura_Sprite_Head"
+            transform_anchor True
+            zoom 2.5
+            anchor (0.5, 0.5)
+            offset (320,100)
+            rotate 0
+    
+image Laura_TJ_HairMid:
+            #Hair midlayer
+            "Laura_Sprite_HairMid"
+            transform_anchor True
+            zoom 2.5
+            anchor (0.5, 0.5)
+            rotate 20
+            offset (320,100)
+            rotate 0
+
+image Laura_TJ_HairTop:
+            #Hair overlay
+            "Laura_Sprite_HairTop"
+            transform_anchor True
+            zoom 2.5 #2.1
+            anchor (0.5, 0.5)
+            offset (320,100) # (300,275)
+            rotate 0
+
+image Laura_TJ_ZeroCock:
+            #cock used in laura's sex pose
+            "Zero_Blowcock"
+            transform_anchor True
+            zoom .7
+            anchor (0.5, 0.5)
+            offset (220,670)#(300,750)
+            rotate 0
+
+image Laura_TJ_Body:
+            #body underlay
+            contains:
+                "images/LauraSex/Laura_Titjob_Body.png"  
+            contains:               
+                ConditionSwitch(
+                        "not L_Neck",Null(),                                
+                        "True",       "images/LauraSex/Laura_Titjob_Neck_[L_Neck].png",
+                        )      
+            contains:               
+                ConditionSwitch(
+                        "'tits' not in L_Spunk",Null(),                                
+                        "True",       "images/LauraSex/Laura_Titjob_Spunk_Chest.png",
+                        )                 
+            transform_anchor True
+            zoom 1
+            anchor (0.4, 1.0)
+            offset (410,770) # (300,275)
+            rotate 0
+    
+  
+image Laura_TJ_LeftArm:
+            #left arm
+            contains:
+                "images/LauraSex/Laura_Titjob_LeftHand.png" 
+            contains:               
+                ConditionSwitch(
+                        "not L_Arms",Null(),                                
+                        "True",       "images/LauraSex/Laura_Titjob_[L_Arms].png",
+                        )   
+            contains:
+                # Left Piercings
+                ConditionSwitch(
+                        "not L_Pierce",Null(),        
+                        "True",       "images/LauraSex/Laura_Titjob_Left_[L_Pierce].png",
+                        )    
+    
+# Animations start / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+# Start 0 (static) < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+image Laura_TJ_0:                                                                        
+        #Her Body in the TJ pose, static
+        contains:
+                #hairback
+                "Laura_TJ_HairBack"   
+                subpixel True       
+                pos (0,0) #top (0,-10)
+                transform_anchor True
+                rotate 0
+                parallel:
+                    ease 2 ypos -20
+                    pause .1
+                    ease 2 ypos 0
+                    pause .1
+                    repeat  
+                parallel:
+                    pause .1
+                    ease 2 rotate -5
+                    pause .1
+                    ease 2 rotate 0
+                    repeat  
+        contains:
+                #base body test
+                "Laura_TJ_Body"  
+                subpixel True       
+                pos (0,0) #top (0,-10)
+                transform_anchor True
+                parallel:
+                    ease 2 ypos -20
+                    pause .1
+                    ease 2 ypos 0
+                    pause .1
+                    repeat 
+        contains:
+                #right hand backside
+                "images/LauraSex/Laura_Titjob_RightHandBack.png"      
+                subpixel True       
+                pos (0,-15) #top (0,-10)    
+                transform_anchor True 
+                parallel:
+                    ease 2 ypos -5
+                    pause .1
+                    ease 2 ypos -15
+                    pause .1
+                    repeat 
+        contains:
+                contains:
+                    "images/LauraSex/Laura_Titjob_RightTit.png"            
+                contains:
+                    ConditionSwitch(
+                            "'tits' not in L_Spunk",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Spunk_Right.png",
+                            )      
+                subpixel True       
+                pos (0,-15) #top (0,-10)
+                transform_anchor True 
+                parallel:
+                    pause .1
+                    ease 2 ypos -5
+                    pause .1
+                    ease 2 ypos -15
+                    repeat 
+        contains:
+                #right hand
+                contains:
+                    "images/LauraSex/Laura_Titjob_RightHand.png"    
+                contains:
+                    # Right Piercings                    
+                    ConditionSwitch(
+                            "not L_Pierce",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Right_[L_Pierce].png",
+                            )                           
+                subpixel True     
+                pos (0,-15) #top (0,-10)  
+                transform_anchor True 
+                parallel:
+                    ease 2 ypos -5
+                    pause .1
+                    ease 2 ypos -15
+                    pause .1
+                    repeat 
+        contains:
+                #head
+                "Laura_TJ_Head"   
+                subpixel True       
+                pos (0,0) #top (0,-10)
+                transform_anchor True
+                rotate 0
+                parallel:
+                    ease 2 ypos -20
+                    pause .1
+                    ease 2 ypos 0
+                    pause .1
+                    repeat  
+                parallel:
+                    pause .1
+                    ease 2 rotate -5
+                    pause .1
+                    ease 2 rotate 0
+                    repeat  
+        contains:
+                #zero cock
+                subpixel True
+                "Laura_TJ_ZeroCock"
+                pos (0,30) #top (0,-10)
+                transform_anchor True
+                rotate -2
+                parallel:
+                    ease 2 rotate -2
+                    pause .1
+                    ease 2 rotate 3
+                    pause .1
+                    repeat      
+        contains:
+                #left tit
+                contains:
+                    "images/LauraSex/Laura_Titjob_LeftTit.png"    
+                contains:
+                    ConditionSwitch(
+                            "'tits' not in L_Spunk",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Spunk_Left.png",
+                            )                            
+                subpixel True       
+                pos (0,0) #top (0,-10)
+                transform_anchor True
+                parallel:
+                    pause .1
+                    ease 2 ypos -40
+                    pause .1
+                    ease 2 ypos 0
+                    repeat 
+        contains:
+                #left hand
+                "Laura_TJ_LeftArm"
+#                contains:
+#                    "images/LauraSex/Laura_Titjob_LeftHand.png"    
+#                contains:
+#                    # Left Piercings
+#                    ConditionSwitch(
+#                            "not L_Pierce",Null(),        
+#                            "True",       "images/LauraSex/Laura_Titjob_Left_[L_Pierce].png",
+#                            )  
+                subpixel True       
+                pos (0,0) #top (0,-10)   
+                transform_anchor True
+                parallel:
+                    ease 2 ypos -40
+                    pause .1
+                    ease 2 ypos 0
+                    pause .1
+                    repeat 
+        contains:
+                #mid hair
+                "Laura_TJ_HairMid"   
+                subpixel True       
+                pos (0,0) #top (0,+10)
+                transform_anchor True
+                rotate 0
+                parallel:
+                    ease 2 ypos -20
+                    pause .1
+                    ease 2 ypos 0
+                    pause .1
+                    repeat  
+                parallel:
+                    pause .1
+                    ease 2 rotate -5
+                    pause .1
+                    ease 2 rotate 0
+                    repeat   
+        contains:
+                #head
+                "Laura_TJ_HairTop"   
+                subpixel True       
+                pos (0,0) #top (0,-10)
+                transform_anchor True
+                rotate 0
+                parallel:
+                    ease 2 ypos -20
+                    pause .1
+                    ease 2 ypos 0
+                    pause .1
+                    repeat    
+                parallel:
+                    pause .1
+                    ease 2 rotate -5
+                    pause .1
+                    ease 2 rotate 0
+                    repeat  
+# End Laura TJ Pose 0 / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+
+# Start 1 (slow) < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+image Laura_TJ_1:                                                                        
+        #Her Body in the TJ pose, slow
+        contains:
+                #hairback
+                "Laura_TJ_HairBack"   
+                subpixel True       
+                pos (0,150) #top (0,-10)
+                transform_anchor True
+                rotate -5
+                parallel:
+                    ease 2 ypos 0
+                    pause .2
+                    ease 2 ypos 150
+                    pause .5
+                    repeat    
+                parallel:
+                    ease 2 rotate 0
+                    pause .2
+                    ease 2 rotate -5
+                    pause .5
+                    repeat  
+        contains:
+                #base body
+                "Laura_TJ_Body"      
+                subpixel True       
+                pos (0,150) #top (0,-10)
+                transform_anchor True
+                parallel:
+                    ease 2 ypos 0
+                    pause .2
+                    ease 2 ypos 150
+                    pause .5
+                    repeat  
+        contains:
+                #right hand backside
+                "images/LauraSex/Laura_Titjob_RightHandBack.png"      
+                subpixel True       
+                pos (0,150) #top (0,-10)    
+                transform_anchor True  
+                block:
+                    ease 2 ypos -20
+                    pause .4
+                    ease 1.8 ypos 150
+                    pause .5
+                    repeat  
+        contains:
+                contains:
+                    "images/LauraSex/Laura_Titjob_RightTit.png"            
+                contains:
+                    ConditionSwitch(
+                            "'tits' not in L_Spunk",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Spunk_Right.png",
+                            )        
+                subpixel True       
+                pos (0,150) #top (0,-10)
+                transform_anchor True
+                block:
+                    pause .1
+                    ease 1.9 ypos -20
+                    pause .4
+                    ease 1.8 ypos 150
+                    ease .5 ypos 140   
+                    repeat
+        contains:
+                #right hand
+                contains:
+                    "images/LauraSex/Laura_Titjob_RightHand.png"    
+                contains:
+                    # Right Piercings                    
+                    ConditionSwitch(
+                            "not L_Pierce",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Right_[L_Pierce].png",
+                            )                           
+                subpixel True     
+                pos (0,150) #top (0,-10)  
+                transform_anchor True 
+                block:
+                    ease 2 ypos -20                    
+                    pause .4
+                    ease 1.8 ypos 150
+                    pause .5
+                    repeat  
+        contains:
+                #head
+                "Laura_TJ_Head"   
+                subpixel True       
+                pos (0,150) #top (0,-10)
+                transform_anchor True
+                rotate -5
+                parallel:
+                    ease 2 ypos 0
+                    pause .2
+                    ease 2 ypos 150
+                    pause .5
+                    repeat    
+                parallel:
+                    ease 2 rotate 0
+                    pause .2
+                    ease 2 rotate -5
+                    pause .5
+                    repeat  
+        contains:
+                #zero cock
+                subpixel True
+                "Laura_TJ_ZeroCock"
+                pos (0,25) #top (0,-10)
+                transform_anchor True
+                rotate -5
+                parallel:                  
+                    ease 2 ypos 0
+                    pause .4
+                    ease 1.8 ypos 25
+                    pause .5
+                    repeat     
+                parallel:
+                    ease 2 rotate 0
+                    pause .2
+                    ease 2 rotate -5
+                    pause .5
+                    repeat      
+        contains:
+                #left tit
+                contains:
+                    "images/LauraSex/Laura_Titjob_LeftTit.png"      
+                contains:
+                    ConditionSwitch(
+                            "'tits' not in L_Spunk",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Spunk_Left.png",
+                            )                           
+                subpixel True       
+                pos (0,150) #top (0,-10)
+                transform_anchor True
+                block:
+                    pause .1
+                    ease 1.9 ypos -20
+                    pause .4
+                    ease 1.8 ypos 150
+                    ease .5 ypos 140    
+                    repeat
+        contains:
+                #left hand
+                "Laura_TJ_LeftArm"
+                subpixel True       
+                pos (0,150) #top (0,-10)   
+                transform_anchor True
+                block:
+                    ease 2 ypos -20
+                    pause .4
+                    ease 1.8 ypos 150
+                    pause .5
+                    repeat  
+        contains:
+                #mid hair
+                "Laura_TJ_HairMid"   
+                subpixel True       
+                pos (0,160) #top (0,150)
+                transform_anchor True
+                rotate -5
+                parallel:
+                    ease 2 ypos -20#-20
+                    pause .4
+                    ease 1.8 ypos 160
+                    pause .5
+                    repeat   
+                parallel:
+                    ease 2 rotate 0
+                    pause .2
+                    ease 2 rotate -5
+                    pause .5
+                    repeat  
+        contains:
+                #head
+                "Laura_TJ_HairTop"   
+                subpixel True       
+                pos (0,150) #top (0,-10)
+                transform_anchor True
+                rotate -5
+                parallel:
+                    ease 2 ypos 0
+                    pause .2
+                    ease 2 ypos 150
+                    pause .5
+                    repeat    
+                parallel:
+                    ease 2 rotate 0
+                    pause .2
+                    ease 2 rotate -5
+                    pause .5
+                    repeat  
+# End Laura TJ Pose 1 / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+             
+ 
+# Start 2 (fast) < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+image Laura_TJ_2:                                                                        
+        #Her Body in the TJ pose, fast
+        contains:
+                #hairback
+                "Laura_TJ_HairBack"   
+                subpixel True       
+                pos (0,80) #top (0,-10)
+                transform_anchor True
+                parallel:
+                    ease 1 ypos -20
+                    pause .1
+                    ease .5 ypos 80
+                    repeat    
+                parallel:
+                    ease 1 rotate 0
+                    pause .1
+                    ease .5 rotate -5
+                    repeat  
+        contains:
+                #base body
+                "Laura_TJ_Body"      
+                subpixel True       
+                pos (0,80) #top (0,-10)
+                transform_anchor True
+                parallel:
+                    ease 1 ypos -20
+                    pause .1
+                    ease .5 ypos 80
+                    repeat   
+        contains:
+                #right hand backside
+                "images/LauraSex/Laura_Titjob_RightHandBack.png"      
+                subpixel True       
+                pos (0,80) #top (0,-10)    
+                transform_anchor True  
+                block:
+                    ease 1 ypos -40
+                    pause .2
+                    ease .4 ypos 80
+                    repeat  
+        contains:
+                contains:
+                    "images/LauraSex/Laura_Titjob_RightTit.png"            
+                contains:
+                    ConditionSwitch(
+                            "'tits' not in L_Spunk",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Spunk_Right.png",
+                            )      
+                subpixel True       
+                pos (0,80) #top (0,-10)
+                transform_anchor True                
+                block:
+                    ease .3 ypos 40  
+                    ease .7 ypos -40
+                    pause .2
+                    ease .4 ypos 80
+                    repeat
+        contains:
+                #right hand
+                contains:
+                    "images/LauraSex/Laura_Titjob_RightHand.png"    
+                contains:
+                    # Right Piercings                    
+                    ConditionSwitch(
+                            "not L_Pierce",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Right_[L_Pierce].png",
+                            )                           
+                subpixel True     
+                pos (0,80) #top (0,-10)  
+                transform_anchor True 
+                block:
+                    ease 1 ypos -40
+                    pause .2
+                    ease .4 ypos 80
+                    repeat  
+        contains:
+                #head
+                "Laura_TJ_Head"   
+                subpixel True       
+                pos (0,80) #top (0,-10)
+                transform_anchor True
+                parallel:
+                    ease 1 ypos -20
+                    pause .1
+                    ease .5 ypos 80
+                    repeat    
+                parallel:
+                    ease 1 rotate 0
+                    pause .1
+                    ease .5 rotate -5
+                    repeat  
+        contains:
+                #zero cock
+                subpixel True
+                "Laura_TJ_ZeroCock"
+                pos (0,30) #top (0,-10)
+                transform_anchor True
+                rotate -2
+                parallel:                  
+                    ease 1 ypos 0
+                    pause .2
+                    ease .4 ypos 30
+                    repeat     
+                parallel:
+                    ease 1 rotate 0
+                    pause .1
+                    ease .5 rotate -2
+                    repeat      
+        contains:
+                #left tit
+                contains:
+                    "images/LauraSex/Laura_Titjob_LeftTit.png"        
+                contains:
+                    ConditionSwitch(
+                            "'tits' not in L_Spunk",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Spunk_Left.png",
+                            )                         
+                subpixel True       
+                pos (0,80) #top (0,-10)
+                transform_anchor True
+                block:
+                    ease .3 ypos 40  
+                    ease .7 ypos -40
+                    pause .2
+                    ease .4 ypos 80   
+                    repeat
+        contains:
+                #left hand
+                "Laura_TJ_LeftArm"
+                subpixel True       
+                pos (0,80) #top (0,-10)   
+                transform_anchor True
+                block:
+                    ease 1 ypos -40
+                    pause .2
+                    ease .4 ypos 80
+                    repeat  
+        contains:
+                #mid hair
+                "Laura_TJ_HairMid"   
+                subpixel True       
+                pos (0,90) #top (0,+10)
+                transform_anchor True
+                rotate -5
+                parallel:
+                    ease 1 ypos -40#-20
+                    pause .2
+                    ease .4 ypos 90
+                    repeat   
+                parallel:
+                    ease 1 rotate 0
+                    pause .2
+                    ease .4 rotate -5
+                    repeat  
+        contains:
+                #head
+                "Laura_TJ_HairTop"   
+                subpixel True       
+                pos (0,80) #top (0,-10)
+                transform_anchor True
+                rotate -5
+                parallel:
+                    ease 1 ypos -20
+                    pause .1
+                    ease .5 ypos 80
+                    repeat    
+                parallel:
+                    ease 1 rotate 0
+                    pause .1
+                    ease .5 rotate -5
+                    repeat  
+# End Laura TJ Pose 2 / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+                   
+                   
+# Start 4 (cumming high) < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+image Laura_TJ_4:                                                                        
+        #Her Body in the TJ pose, cumming
+        contains:
+                #hairback
+                "Laura_TJ_HairBack"   
+                subpixel True       
+                pos (0,0) #top (0,-10)
+                transform_anchor True
+                rotate 0
+                parallel:
+                    ease 2 ypos -20
+                    pause .1
+                    ease 2 ypos 0
+                    pause .1
+                    repeat  
+                parallel:
+                    pause .1
+                    ease 2 rotate -5
+                    pause .1
+                    ease 2 rotate 0
+                    repeat  
+        contains:
+                #base body
+                "Laura_TJ_Body"      
+                subpixel True       
+                pos (0,0) #top (0,-10)
+                transform_anchor True
+                parallel:
+                    ease 2 ypos -20
+                    pause .1
+                    ease 2 ypos 0
+                    pause .1
+                    repeat 
+        contains:
+                #right hand backside
+                "images/LauraSex/Laura_Titjob_RightHandBack.png"      
+                subpixel True       
+                pos (0,0) #top (0,-10)    
+                transform_anchor True 
+                parallel:
+                    ease 2 ypos -30
+                    pause .1
+                    ease 2 ypos 0
+                    pause .1
+                    repeat  
+        contains:
+                contains:
+                    "images/LauraSex/Laura_Titjob_RightTit.png"            
+                contains:
+                    ConditionSwitch(
+                            "'tits' not in L_Spunk",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Spunk_Right.png",
+                            )        
+                subpixel True       
+                pos (0,5) #top (0,-10)
+                transform_anchor True 
+                parallel:
+                    pause .2
+                    ease 1.9 ypos -30
+                    pause .2
+                    ease 1.9 ypos 5
+                    repeat  
+        contains:
+                #right hand
+                contains:
+                    "images/LauraSex/Laura_Titjob_RightHand.png"    
+                contains:
+                    # Right Piercings                    
+                    ConditionSwitch(
+                            "not L_Pierce",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Right_[L_Pierce].png",
+                            )                           
+                subpixel True     
+                pos (0,0) #top (0,-10)  
+                transform_anchor True 
+                parallel:
+                    ease 2 ypos -30
+                    pause .1
+                    ease 2 ypos 0
+                    pause .1
+                    repeat  
+        contains:
+                #head
+                "Laura_TJ_Head"   
+                subpixel True       
+                pos (0,0) #top (0,-10)
+                transform_anchor True
+                rotate 0
+                parallel:
+                    ease 2 ypos -20
+                    pause .1
+                    ease 2 ypos 0
+                    pause .1
+                    repeat  
+                parallel:
+                    pause .1
+                    ease 2 rotate -5
+                    pause .1
+                    ease 2 rotate 0
+                    repeat  
+        contains:
+                #zero cock
+                subpixel True
+                "Laura_TJ_ZeroCock"
+                pos (0,20) #top (0,-10)
+                transform_anchor True
+                rotate 2
+                parallel:                  
+                    ease 2 ypos 0    
+                    pause .1
+                    ease 2 ypos 20
+                    pause .1
+                    repeat         
+        contains:
+                #left tit
+                contains:
+                    "images/LauraSex/Laura_Titjob_LeftTit.png"        
+                contains:
+                    ConditionSwitch(
+                            "'tits' not in L_Spunk",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Spunk_Left.png",
+                            )                         
+                subpixel True       
+                pos (0,5) #top (0,-10)
+                transform_anchor True
+                parallel:
+                    pause .2
+                    ease 1.9 ypos -30
+                    pause .2
+                    ease 1.9 ypos 5
+                    repeat  
+        contains:
+                #left hand
+                "Laura_TJ_LeftArm"
+                subpixel True       
+                pos (0,0) #top (0,-10)   
+                transform_anchor True
+                parallel:
+                    ease 2 ypos -30
+                    pause .1
+                    ease 2 ypos 0
+                    pause .1
+                    repeat  
+        contains:
+                #mid hair
+                "Laura_TJ_HairMid"   
+                subpixel True       
+                pos (0,0) #top (0,+10)
+                transform_anchor True
+                rotate 0
+                parallel:
+                    ease 2 ypos -15
+                    pause .1
+                    ease 2 ypos 0
+                    pause .1
+                    repeat  
+                parallel:
+                    pause .1
+                    ease 2 rotate -5
+                    pause .1
+                    ease 2 rotate 0
+                    repeat   
+        contains:
+                #head
+                "Laura_TJ_HairTop"   
+                subpixel True       
+                pos (0,0) #top (0,-10)
+                transform_anchor True
+                rotate 0
+                parallel:
+                    ease 2 ypos -20
+                    pause .1
+                    ease 2 ypos 0
+                    pause .1
+                    repeat    
+                parallel:
+                    pause .1
+                    ease 2 rotate -5
+                    pause .1
+                    ease 2 rotate 0
+                    repeat  
+# End Laura TJ Pose 4 cumming / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+
+# Start 5 (cumming low) < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+image Laura_TJ_5:                                                                        
+        #Her Body in the TJ pose, cumming low
+        contains:
+                #hairback
+                "Laura_TJ_HairBack"   
+                subpixel True    
+                pos (-30,155)
+                transform_anchor True
+                rotate -20
+                parallel:
+                    ease 2 ypos 140
+                    pause .1
+                    ease 2 ypos 155
+                    pause .1
+                    repeat
+#        contains:
+#                #base body
+#                contains:
+#                    "images/LauraSex/Laura_Titjob_Body.png"      
+#                subpixel True   
+#                pos (-80,-200)
+#                transform_anchor True
+#                rotate -20
+#                parallel:
+#                    ease 2 ypos -220
+#                    pause .1
+#                    ease 2 ypos -200
+#                    pause .1
+#                    repeat 
+        contains:
+                #base body 
+                "Laura_TJ_Body"      
+                subpixel True        
+                pos (185,70)
+                transform_anchor True
+                rotate -20
+                parallel:
+                    ease 2 ypos 50
+                    pause .1
+                    ease 2 ypos 70
+                    pause .1
+                    repeat                   
+        contains:
+                #right hand backside
+                contains:
+                    "images/LauraSex/Laura_Titjob_RightHandBack.png"      
+                subpixel True     
+                pos (-80,-180)
+                transform_anchor True
+                rotate -10
+                parallel:
+                    ease 2 ypos -200
+                    pause .1
+                    ease 2 ypos -180
+                    pause .1
+                    repeat  
+        contains:
+                #right tit
+                contains:
+                    "images/LauraSex/Laura_Titjob_RightTit.png"            
+                contains:
+                    ConditionSwitch(
+                            "'tits' not in L_Spunk",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Spunk_Right.png",
+                            )       
+                subpixel True       
+                pos (-80,-160)
+                transform_anchor True
+                rotate -10
+                parallel:
+                    ease .4 ypos -170
+                    ease 1.7 ypos -190
+                    pause .1
+                    ease 2 ypos -160
+                    repeat  
+        contains:
+                #right hand
+                contains:
+                    "images/LauraSex/Laura_Titjob_RightHand.png"    
+                contains:
+                    # Right Piercings                    
+                    ConditionSwitch(
+                            "not L_Pierce",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Right_[L_Pierce].png",
+                            )                           
+                subpixel True     
+                pos (-80,-180)
+                transform_anchor True
+                rotate -10
+                parallel:
+                    ease 2 ypos -200
+                    pause .1
+                    ease 2 ypos -180
+                    pause .1
+                    repeat   
+        contains:
+                #head
+                "Laura_TJ_Head"   
+                subpixel True       
+                pos (-30,155)
+                transform_anchor True
+                rotate -20
+                parallel:
+                    ease 2 ypos 140
+                    pause .1
+                    ease 2 ypos 155
+                    pause .1
+                    repeat 
+        contains:
+                #zero cock
+                subpixel True
+                "Laura_TJ_ZeroCock"
+                pos (0,20) #top (0,-10)
+                transform_anchor True
+                rotate 2  
+                parallel:                  
+                    ease 2 ypos 0    
+                    pause .1
+                    ease 2 ypos 20
+                    pause .1
+                    repeat 
+        contains:
+                #left tit
+                contains:
+                    "images/LauraSex/Laura_Titjob_LeftTit.png"         
+                contains:
+                    ConditionSwitch(
+                            "'tits' not in L_Spunk",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Spunk_Left.png",
+                            )                           
+                subpixel True   
+                pos (-80,-160)
+                transform_anchor True
+                rotate -10
+                parallel:
+                    ease .4 ypos -170
+                    ease 1.7 ypos -190
+                    pause .1
+                    ease 2 ypos -160
+                    repeat  
+        contains:
+                #left hand
+                "Laura_TJ_LeftArm"
+                subpixel True     
+                pos (-80,-180)
+                transform_anchor True
+                rotate -10
+                parallel:
+                    ease 2 ypos -200
+                    pause .1
+                    ease 2 ypos -180
+                    pause .1
+                    repeat  
+        contains:
+                #mid hair
+                "Laura_TJ_HairMid"   
+                subpixel True   
+                pos (-30,115)
+                transform_anchor True
+                rotate -10
+                parallel:
+                    ease 2 ypos 95
+                    pause .1
+                    ease 2 ypos 115
+                    pause .1
+                    repeat  
+        contains:
+                #head
+                "Laura_TJ_HairTop"   
+                subpixel True    
+                pos (-30,155)
+                transform_anchor True
+                rotate -20
+                parallel:
+                    ease 2 ypos 140
+                    pause .1
+                    ease 2 ypos 155
+                    pause .1
+                    repeat  
+# End Laura TJ Pose 5 cumming / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+# Laura's TJ animations end / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+label Laura_TJ_Launch(Line = 0):    # The sequence to launch the Laura Titfuck animations   
+    if renpy.showing("Laura_TJ_Animation"):
+        return
+    call Laura_Hide
+    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
+        alpha 1
+        ease 1 zoom 2.3 xpos 750 yoffset -100
+#    if Taboo: # Laura gets started. . .
+#        if R_Loc == bg_current:
+#            "Laura looks back at Rogue to see if she's watching."
+#        elif L_Loc == bg_current:
+#            "Laura looks back at Laura to see if she's watching."
+#        else:
+#            "Laura looks around to see if anyone can see her."
+    
+    if L_Chest and L_Over:
+        "She throws off her [L_Over] and her [L_Chest]."                
+    elif L_Over:
+        "She throws off her [L_Over], baring her breasts underneath."
+    elif L_Chest:
+        "She tugs off her [L_Chest] and throws it aside."
+    $ L_Over = 0
+    $ L_Chest = 0
+    $ Laura_Arms = 0
+    
+    call Laura_First_Topless      #restore if topless          
+     
+    show blackscreen onlayer black with dissolve   
+    show Laura_Sprite zorder LauraLayer:
+        alpha 0
+    $ Speed = 0
+    if Line != "cum":
+        $ Trigger = "titjob"
+    show Laura_TJ_Animation zorder 150:
+        pos (700,520) #700,420)
+    $ P_Sprite = 1
+    hide blackscreen onlayer black with dissolve
+    return
+    
+label Laura_TJ_Reset: # The sequence to the Laura animations from Titfuck to default
+    if not renpy.showing("Laura_TJ_Animation"):
+        return
+#    hide Laura_TJ_Animation
+    call Laura_Hide 
+    $ P_Sprite = 0
+    
+    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
+        zoom 2.3 xpos 750 yoffset -100
+    show Laura_Sprite zorder LauraLayer:
+        alpha 1
+        ease 1 zoom 1.5 xpos 700 yoffset 50
+        pause .5
+        ease .5 zoom 1 xpos L_SpriteLoc yoffset 0         
+    "Laura pulls back"
+    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
+        alpha 1
+        zoom 1 offset (0,0) xpos L_SpriteLoc  
+    return
+            
+# End Laura TJ Animations / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+
+
+
+
+
+
 # Laura Misc Animations / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
        
         
@@ -3517,7 +4869,9 @@ label L_Pussy_Launch(T = Trigger):
         ease 0.5 pos (700,-400) offset (0,0) zoom 2 alpha 1
     return
         
-label L_Pos_Reset(Pose = 0):    
+label L_Pos_Reset(Pose = 0):  
+    if L_Loc != bg_current:
+            return
     call Laura_Hide 
     show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
         ease .5 offset (0,0) anchor (0.5, 0.0) zoom 1 alpha 1 xzoom 1 yzoom 1

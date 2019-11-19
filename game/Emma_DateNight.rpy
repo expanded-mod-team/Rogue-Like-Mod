@@ -276,12 +276,6 @@ label Emma_Date_Prep:
         $ Options = ["teacher", "costume"]
         $ Options.append("custom1") if E_Custom[0] == 2 else Options
         $ Options.append("custom2") if E_Custom2[0] == 2 else Options
-        $ Options.append("custom4") if E_Custom4[0] == 2 else Options
-        $ Options.append("custom5") if E_Custom5[0] == 2 else Options
-        $ Options.append("custom6") if E_Custom6[0] == 2 else Options
-        $ Options.append("custom7") if E_Custom7[0] == 2 else Options
-        $ Options.append("custom8") if E_Custom8[0] == 2 else Options
-        $ Options.append("custom9") if E_Custom9[0] == 2 else Options
         $ Options.append("custom3") if E_Custom3[0] == 2 else Options
         $ renpy.random.shuffle(Options) 
         $ E_Outfit = Options[0]

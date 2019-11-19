@@ -33,47 +33,7 @@ label K_Handjob:
         $ Tempmod -= 10 if "no hand" in K_RecentActions else 0    
         
     $ Approval = ApprovalCheck("Kitty", 1100, TabM = 3) # 110, 125, 140, Taboo -120(230)
-    
-    if Situation == "Kitty":                                                                  #Kitty auto-starts   
-        if Approval > 2:                                                      # fix, add kitty auto stuff here
-            if Trigger2 == "jackin":
-                "Kitty brushes your hand aside and starts stroking your cock."
-            else:
-                "Kitty gives you a mischevious smile, and starts to fondle your cock."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Kitty", "Inbt", 70, 3) 
-                    call Statup("Kitty", "Inbt", 30, 2)                     
-                    "Kitty continues her actions."
-                "Praise her.":       
-                    call KittyFace("sexy", 1)                    
-                    call Statup("Kitty", "Inbt", 70, 3) 
-                    ch_p "Oooh, that's good, [K_Pet]."
-                    call Kitty_Namecheck
-                    "Kitty continues her actions."
-                    call Statup("Kitty", "Love", 80, 1)
-                    call Statup("Kitty", "Obed", 90, 1)
-                    call Statup("Kitty", "Obed", 50, 2)
-                "Ask her to stop.":
-                    call KittyFace("surprised")       
-                    call Statup("Kitty", "Inbt", 70, 1) 
-                    ch_p "Let's not do that for now, [K_Pet]."
-                    call Kitty_Namecheck
-                    "Kitty puts it down."
-                    call Statup("Kitty", "Obed", 90, 1)
-                    call Statup("Kitty", "Obed", 50, 1)
-                    call Statup("Kitty", "Obed", 30, 2)
-                    return            
-            if Trigger:
-                $ Trigger3 = "hand"
-                return
-            jump KHJ_Prep
-        else:                
-            $ Tempmod = 0                               # fix, add kitty auto stuff here
-            $ Trigger2 = 0
-            return            
-    
+            
     if not K_Hand and "no hand" not in K_RecentActions:        
         call KittyFace("confused", 2)
         ch_k "So you want a handy then?"
@@ -267,6 +227,7 @@ label K_Handjob:
     return
     
 
+label K_HJ_Prep:
 label KHJ_Prep:
     if Trigger2 == "hand": 
         return
@@ -283,8 +244,44 @@ label KHJ_Prep:
         $ K_Eyes = "sexy"
         $ K_Mouth = "smile"
     
-    call Seen_First_Peen("Kitty",Partner)
+    call Seen_First_Peen("Kitty",Partner,React=Situation)
     call Kitty_HJ_Launch("L")
+        
+    if Situation == "Kitty":                                                          
+            #Kitty auto-starts  
+            $ Situation = 0 
+            if Trigger2 == "jackin":
+                "Kitty brushes your hand aside and starts stroking your cock."
+            else:
+                "Kitty gives you a mischevious smile, and starts to fondle your cock."
+            menu:
+                "What do you do?"
+                "Nothing.":                    
+                    call Statup("Kitty", "Inbt", 70, 3) 
+                    call Statup("Kitty", "Inbt", 30, 2)                     
+                    "Kitty continues her actions."
+                "Praise her.":       
+                    call KittyFace("sexy", 1)                    
+                    call Statup("Kitty", "Inbt", 70, 3) 
+                    ch_p "Oooh, that's good, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty continues her actions."
+                    call Statup("Kitty", "Love", 80, 1)
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call KittyFace("surprised")       
+                    call Statup("Kitty", "Inbt", 70, 1) 
+                    ch_p "Let's not do that for now, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty puts it down."
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 1)
+                    call Statup("Kitty", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Kitty",1,"refused","refused")  
+                    return   
+                    
     if not K_Hand:        
         if K_Forced:
             call Statup("Kitty", "Love", 90, -20)
@@ -440,7 +437,7 @@ label KHJ_Cycle:
                                 call Kitty_HJ_Reset
                                 return    
                             call Statup("Kitty", "Lust", 200, 5) 
-                            if 100 > K_Lust >= 70 and K_OCount < 2:             
+                            if 100 > K_Lust >= 70 and K_OCount < 2 and K_SEXP >= 20:             
                                 $ K_RecentActions.append("unsatisfied")                      
                                 $ K_DailyActions.append("unsatisfied") 
                             
@@ -517,6 +514,8 @@ label KHJ_Cycle:
                     ch_k "Can we[K_Like]be done with this now? I'm getting sore."         
         #End Count check
                    
+        call Escalation("Kitty","K") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_k "It's kind of time to get moving."   
         elif Round == 5:
@@ -609,41 +608,6 @@ label K_Titjob:
         $ Tempmod -= 10 if "no titjob" in K_RecentActions else 0    
         
     $ Approval = ApprovalCheck("Kitty", 1200, TabM = 5) # 120, 135, 150, Taboo -200(320)
-    
-    if Situation == "Kitty":                                                                  #Kitty auto-starts   
-        if Approval > 2:                                                      # fix, add kitty auto stuff here
-            call Kitty_TJ_Launch("L")            
-            "Kitty slides down and presses your dick against her chest."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Kitty", "Inbt", 80, 3) 
-                    call Statup("Kitty", "Inbt", 40, 2)                     
-                    "Kitty starts to slide up and down against it."
-                "Praise her.":       
-                    call KittyFace("sexy", 1)                    
-                    call Statup("Kitty", "Inbt", 80, 3) 
-                    ch_p "Oh, that sounds like a good idea, [K_Pet]."
-                    call Kitty_Namecheck
-                    "Kitty continues her actions."
-                    call Statup("Kitty", "Love", 85, 1)
-                    call Statup("Kitty", "Obed", 90, 1)
-                    call Statup("Kitty", "Obed", 50, 2)
-                "Ask her to stop.":     
-                    call KittyFace("confused")  
-                    call Statup("Kitty", "Inbt", 70, 1) 
-                    ch_p "Let's not do that for now, [K_Pet]."
-                    call Kitty_Namecheck
-                    "Kitty lets it drop."
-                    call Statup("Kitty", "Obed", 90, 1)
-                    call Statup("Kitty", "Obed", 50, 3)
-                    call Kitty_TJ_Reset  
-                    return            
-            jump KTJ_Cycle
-        else:                
-            $ Tempmod = 0                               # fix, add kitty auto stuff here
-            $ Trigger2 = 0
-            return            
     
     if not K_Tit and "no titjob" not in K_RecentActions:        
         call KittyFace("surprised", 1)
@@ -867,6 +831,7 @@ label K_Titjob:
     $ Tempmod = 0    
     return
     
+label K_TJ_Prep:
 label KTJ_Prep:
       
     if Taboo:
@@ -882,8 +847,40 @@ label KTJ_Prep:
         $ K_Eyes = "sexy"
         $ K_Mouth = "smile"
         
-    call Seen_First_Peen("Kitty",Partner)
-    call Kitty_TJ_Launch("L")    
+    call Seen_First_Peen("Kitty",Partner,React=Situation)
+    call Kitty_TJ_Launch("L") 
+    
+    if Situation == "Kitty":                                                               
+            #Kitty auto-starts   
+            $ Situation = 0
+            call Kitty_TJ_Launch("L")            
+            "Kitty slides down and presses your dick between her tits."
+            menu:
+                "What do you do?"
+                "Nothing.":                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    call Statup("Kitty", "Inbt", 40, 2)                     
+                    "Kitty starts to slide up and down."
+                "Praise her.":       
+                    call KittyFace("sexy", 1)                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    ch_p "Oh, that sounds like a good idea, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty continues her actions."
+                    call Statup("Kitty", "Love", 85, 1)
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 2)
+                "Ask her to stop.":     
+                    call KittyFace("confused")  
+                    call Statup("Kitty", "Inbt", 70, 1) 
+                    ch_p "Let's not do that for now, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty lets it drop out from between her breasts."
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 3)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Kitty",1,"refused","refused")  
+                    return 
     if not K_Tit:        
         if K_Forced:
             call Statup("Kitty", "Love", 90, -25)
@@ -1047,7 +1044,7 @@ label KTJ_Cycle: #Repeating strokes
                                 call Kitty_TJ_Reset
                                 return    
                             call Statup("Kitty", "Lust", 200, 5) 
-                            if 100 > K_Lust >= 70 and K_OCount < 2:             
+                            if 100 > K_Lust >= 70 and K_OCount < 2 and K_SEXP >= 20:             
                                 $ K_RecentActions.append("unsatisfied")                      
                                 $ K_DailyActions.append("unsatisfied") 
                             
@@ -1127,6 +1124,8 @@ label KTJ_Cycle: #Repeating strokes
                             jump KTJ_After
             #End Count check
                
+        call Escalation("Kitty","K") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_k "It's kinda time to get moving."   
         elif Round == 5:
@@ -1208,39 +1207,6 @@ label K_Blowjob:
         $ Tempmod -= 10 if "no blow" in K_RecentActions else 0    
     
     $ Approval = ApprovalCheck("Kitty", 1300, TabM = 4) # 130, 145, 160, Taboo -160(290)
-    
-    if Situation == "Kitty":                                                                  #Kitty auto-starts   
-        if Approval > 2:                                                      # fix, add kitty auto stuff here
-            "Kitty slides down and gives your cock a little lick."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Kitty", "Inbt", 80, 3) 
-                    call Statup("Kitty", "Inbt", 40, 2)                     
-                    "Kitty continues licking at it."
-                "Praise her.":       
-                    call KittyFace("sexy", 1)                    
-                    call Statup("Kitty", "Inbt", 80, 3) 
-                    ch_p "Hmmm, keep doing that, [K_Pet]."
-                    call Kitty_Namecheck
-                    "Kitty continues her actions."
-                    call Statup("Kitty", "Love", 85, 1)
-                    call Statup("Kitty", "Obed", 90, 1)
-                    call Statup("Kitty", "Obed", 50, 2)
-                "Ask her to stop.":     
-                    call KittyFace("surprised")  
-                    call Statup("Kitty", "Inbt", 70, 1) 
-                    ch_p "Let's not do that for now, [K_Pet]."
-                    call Kitty_Namecheck
-                    "Kitty puts it down."
-                    call Statup("Kitty", "Obed", 90, 1)
-                    call Statup("Kitty", "Obed", 50, 3)
-                    return            
-            jump KBJ_Prep
-        else:                
-            $ Tempmod = 0                               # fix, add kitty auto stuff here
-            $ Trigger2 = 0
-            return            
     
     if not K_Blow and "no blow" not in K_RecentActions:        
         call KittyFace("surprised", 2)
@@ -1461,6 +1427,7 @@ label K_Blowjob:
     return
     
 
+label K_BJ_Prep:
 label KBJ_Prep:   
     if renpy.showing("Kitty_HJ_Animation"):
         hide Kitty_HJ_Animation with easeoutbottom
@@ -1476,8 +1443,39 @@ label KBJ_Prep:
         $ K_Eyes = "sexy"
         $ K_Mouth = "smile"
     
-    call Seen_First_Peen("Kitty",Partner)
-    call Kitty_BJ_Launch("L")
+    call Seen_First_Peen("Kitty",Partner,React=Situation)
+    call Kitty_BJ_Launch("L")   
+    
+    if Situation == "Kitty":                                                                  
+            #Kitty auto-starts   
+            $ Situation = 0      
+            "Kitty slides down and gives your cock a little lick."
+            menu:
+                "What do you do?"
+                "Nothing.":                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    call Statup("Kitty", "Inbt", 40, 2)                     
+                    "Kitty continues licking at it."
+                "Praise her.":       
+                    call KittyFace("sexy", 1)                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    ch_p "Hmmm, keep doing that, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty continues her actions."
+                    call Statup("Kitty", "Love", 85, 1)
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 2)
+                "Ask her to stop.":     
+                    call KittyFace("surprised")  
+                    call Statup("Kitty", "Inbt", 70, 1) 
+                    ch_p "Let's not do that for now, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty puts it down."
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 3)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Kitty",1,"refused","refused")  
+                    return  
     if not K_Blow:        
         if K_Forced:
             call Statup("Kitty", "Love", 90, -70)
@@ -1676,7 +1674,7 @@ label KBJ_Cycle: #Repeating strokes
                                 call Kitty_BJ_Reset
                                 return    
                             call Statup("Kitty", "Lust", 200, 5) 
-                            if 100 > K_Lust >= 70 and K_OCount < 2:             
+                            if 100 > K_Lust >= 70 and K_OCount < 2 and K_SEXP >= 20:             
                                 $ K_RecentActions.append("unsatisfied")                      
                                 $ K_DailyActions.append("unsatisfied") 
                             
@@ -1754,6 +1752,8 @@ label KBJ_Cycle: #Repeating strokes
                     $ K_Brows = "confused"
                     ch_k "Are you getting close here? I'm cramping up."  
         #End Count check
+        
+        call Escalation("Kitty","K") #sees if she wants to escalate things
         
         if Round == 10:
             ch_k "It's kind of time to get moving."   
@@ -3347,7 +3347,7 @@ label KFJ_Prep:
         $ K_Eyes = "sexy"
         $ K_Mouth = "smile"
     
-    call Seen_First_Peen("Kitty",Partner)
+    call Seen_First_Peen("Kitty",Partner,React=Situation)
     
     if not K_Foot:        
         if K_Forced:
@@ -3597,6 +3597,8 @@ label KFJ_Cycle:
                     ch_k "Can we[K_Like]be done with this now? I'm getting sore."         
         #End Count check
                    
+        call Escalation("Kitty","K") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_k "It's kind of time to get moving."   
         elif Round == 5:
@@ -3667,10 +3669,12 @@ label K_Les_Interupted:
                 jump K_Les_After
         call DrainWord("Kitty","unseen",1,0) #She sees you, so remove unseens
         call DrainWord(Partner,"unseen",1,0) #She sees you, so remove unseens
-        call KittyFace("surprised", 2)
+        call KittyFace("surprised", 2) 
+        call AnyFace(Partner,"surprised",2) 
         "Suddenly, Kitty jerks up from what she was doing with a start, and gives [Partner] a nudge."
         ch_k "Eep! [Playername], how long have you been there?!"
-        call KittyFace("surprised", 1)
+        call KittyFace("perplexed", 1) 
+        call AnyFace(Partner,"perplexed",1) 
         $ K_Action -= 1 if K_Action > 0 else 0
         call Checkout(1)
         $ Line = 0
@@ -3776,8 +3780,6 @@ label K_LesScene(Bonus = 0): #Repeating strokes
         
     if R_Loc == bg_current:
             #if it's Rogue. . .
-            $ R_RecentActions.append("noticed Kitty")
-            $ K_RecentActions.append("noticed Rogue")
             $ Partner = "Rogue"  
             if K_LikeRogue >= 900:
                     $ Bonus += 150
@@ -3792,8 +3794,6 @@ label K_LesScene(Bonus = 0): #Repeating strokes
             call DrainWord("Rogue","unseen",1,0) #She sees you, so remove unseens
     elif E_Loc == bg_current:
             #if it's Emma. . .
-            $ E_RecentActions.append("noticed Kitty")
-            $ K_RecentActions.append("noticed Emma")
             $ Partner = "Emma"  
             if K_LikeEmma >= 900:
                     $ Bonus += 150
@@ -3808,8 +3808,6 @@ label K_LesScene(Bonus = 0): #Repeating strokes
             call DrainWord("Emma","unseen",1,0) #She sees you, so remove unseens
     elif L_Loc == bg_current:
             #if it's Laura. . .
-            $ L_RecentActions.append("noticed Kitty")
-            $ K_RecentActions.append("noticed Laura")
             $ Partner = "Laura"  
             if K_LikeLaura >= 900:
                     $ Bonus += 150
@@ -3822,6 +3820,34 @@ label K_LesScene(Bonus = 0): #Repeating strokes
             elif K_LikeLaura <= 500:
                     $ Bonus -= 100
             call DrainWord("Laura","unseen",1,0) #She sees you, so remove unseens
+            
+     
+    if R_Loc == bg_current:
+            #if it's Rogue. . .
+            $ Partner = "Rogue"  
+    elif E_Loc == bg_current:
+            #if it's Emma. . .
+            $ Partner = "Emma"  
+    elif L_Loc == bg_current:
+            #if it's Laura. . .
+            $ Partner = "Laura"  
+           
+    $ Line = GirlLikeCheck("Kitty",Partner)      
+    if Line >= 900:
+            $ Bonus += 150
+    elif Line >= 800 or "poly "+Partner in K_Traits:
+            $ Bonus += 100
+    elif Line >= 700:
+            $ Bonus += 50
+    elif Line <= 200:
+            $ Bonus -= 200
+    elif Line <= 500:
+            $ Bonus -= 100
+    call DrainWord(Partner,"unseen",1,0) #She sees you, so remove unseens    
+    $ Line = 0
+            
+    call AnyWord("Kitty",1,"noticed "+Partner,"noticed "+Partner) #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,1,"noticed Kitty","noticed Kitty") #ie $ R_RecentActions.append("noticed Laura") 
             
     if bg_current in ("bg player", "bg kitty", "bg rogue", "bg emma"):
         $ Taboo == 0
@@ -3968,14 +3994,17 @@ label K_LesScene(Bonus = 0): #Repeating strokes
                     call KittyFace("sexy", 1)
                     call Statup("Kitty", "Love", 90, 1)
                     call Statup("Kitty", "Inbt", 50, 3) 
-                    $ Line = renpy.random.choice(["Well. . . ok.",                 
-                        "I don't mind getting cozy with her. . .",
-                        "I kinda needed this anyways. . .",
-                        "Sure!", 
-                        "I guess. . .",
-                        "Heh, ok, fine."]) 
-                    ch_k "[Line]"
-                    $ Line = 0
+                    if Situation == "interrupted":
+                            ch_k "Well I guess we could get back to it. . ."
+                    else:
+                            $ Line = renpy.random.choice(["Well. . . ok.",                 
+                                "I don't mind getting cozy with her. . .",
+                                "I kinda needed this anyways. . .",
+                                "Sure!", 
+                                "I guess. . .",
+                                "Heh, ok, fine."]) 
+                            ch_k "[Line]"
+                            $ Line = 0
                 call Statup("Kitty", "Obed", 20, 1)
                 call Statup("Kitty", "Obed", 60, 1)
                 call Statup("Kitty", "Inbt", 70, 2) 
@@ -4112,24 +4141,15 @@ label K_Les_Partner:
 label K_Les_Prep:    
     #sets the scene up   
     
-    if R_Loc == bg_current:
-            if "noticed Kitty" not in R_RecentActions:
-                    $ R_RecentActions.append("noticed Kitty")  
-            if "noticed Rogue" not in K_RecentActions:
-                    $ K_RecentActions.append("noticed Rogue")           
+    if R_Loc == bg_current:          
             $ Partner = "Rogue"  
-    elif E_Loc == bg_current:
-            if "noticed Kitty" not in E_RecentActions:
-                    $ E_RecentActions.append("noticed Kitty")  
-            if "noticed Emma" not in K_RecentActions:
-                    $ K_RecentActions.append("noticed Emma")           
+    elif E_Loc == bg_current:        
             $ Partner = "Emma"  
-    elif L_Loc == bg_current:
-            if "noticed Kitty" not in L_RecentActions:
-                    $ L_RecentActions.append("noticed Kitty")  
-            if "noticed Laura" not in K_RecentActions:
-                    $ K_RecentActions.append("noticed Laura")           
+    elif L_Loc == bg_current:      
             $ Partner = "Laura" 
+            
+    call AnyWord("Kitty",1,"noticed "+Partner,"noticed "+Partner) #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,1,"noticed Kitty","noticed Kitty") #ie $ R_RecentActions.append("noticed Laura") 
             
     if "unseen" not in K_RecentActions:
             #if she knows you're there. . .
@@ -4158,8 +4178,8 @@ label K_Les_Prep:
     if Taboo:
         call DrainWord("Kitty","tabno")
     call DrainWord("Kitty","no lesbian")
-    $ K_RecentActions.append("lesbian")                      
-    $ K_DailyActions.append("lesbian") 
+    call AnyWord("Kitty",0,"lesbian","lesbian") #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,0,"lesbian","lesbian") #ie $ R_RecentActions.append("noticed Laura") 
     
 label K_Les_Cycle: #Repeating strokes
     while Round >=0:  
@@ -4352,52 +4372,10 @@ label K_Les_After:
                     ch_k "Hmm, that's kinda fun with an audience. . ." 
     
     if not Situation:
-            ch_k "That was fun. . ."
-            if R_Loc == bg_current:
-                if "les kitty" not in R_History:
-                        if K_LikeRogue >= 600:
-                                ch_k "You're really good at that!"
-                        else:
-                                ch_k "That was. . . interesting. . ."
-                        if R_LikeKitty >= 600:
-                                ch_r "Um, yeah, you too. . ."
-                        else:
-                                ch_r "I guess. . ."
-                        $ K_History.append("les rogue")   
-                        $ R_History.append("les kitty")  
-                else:
-                    #second time
-                    ch_r "Mmmm yeah. . ."
-            elif E_Loc == bg_current:
-                if "les kitty" not in E_History:
-                        if K_LikeEmma >= 600:
-                                ch_k "Wow, you're pretty amazing!"
-                        else:
-                                ch_k "That wasn't awful. . ."
-                        if E_LikeKitty >= 600:
-                                ch_e "Practice, dear. . ."
-                        else:
-                                ch_e "It would be better if you'd had more practice, dear."
-                        $ K_History.append("les emma")   
-                        $ E_History.append("les kitty")  
-                else:
-                    #second time
-                    ch_e "Certainly. . ."
-            elif L_Loc == bg_current:
-                if "les kitty" not in L_History:
-                        if K_LikeLaura >= 600:
-                                ch_k "You seem to know your way around."
-                        else:
-                                ch_k "I guess that was ok. . ."
-                        if L_LikeKitty >= 600:
-                                ch_l "Yeah, I try. . ."
-                        else:
-                                ch_l "Uh-huh."
-                        $ K_History.append("les laura")   
-                        $ L_History.append("les kitty")  
-                else:
-                    #second time
-                    ch_l "Yup. . ."
+            call Post_Les_Dialog("Kitty")
+                    
+    call AnyWord("Kitty",1,0,0,0,"les "+Partner) #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,1,0,0,0,"les Kitty") #ie $ R_RecentActions.append("noticed Laura") 
                     
                         
      
@@ -4669,7 +4647,7 @@ label K_Les_Response(Girl="Rogue", Step=1, B=0, B2=0, Tempmod=0, Result=0, Appro
 label K_Les_FirstKiss:
     # called when there is a first kiss situation between two girls
     if Partner == "Rogue":
-            if "les rogue" in K_History:
+            if "les Rogue" in K_History:
                 #if they've been together before              
                 $ Line = "experienced"
             elif K_Les and R_Les:   
@@ -4682,7 +4660,7 @@ label K_Les_FirstKiss:
                 #Rogue's had experience                
                 $ Line = "first partner"
     elif Partner == "Emma":
-            if "les emma" in K_History:
+            if "les Emma" in K_History:
                 #if they've been together before              
                 $ Line = "experienced"
             elif K_Les and E_Les:   
@@ -4695,7 +4673,7 @@ label K_Les_FirstKiss:
                 #Emma's had experience                
                 $ Line = "first partner"
     elif Partner == "Laura":
-            if "les laura" in K_History:
+            if "les Laura" in K_History:
                 #if they've been together before              
                 $ Line = "experienced"
             elif K_Les and L_Les:   

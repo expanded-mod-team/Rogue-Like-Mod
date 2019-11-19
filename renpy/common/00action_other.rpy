@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+﻿# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -252,22 +252,6 @@ init -1500 python:
 
     #########################################################################
 
-    def GetTooltip(screen=None):
-        """
-        :doc: get_tooltip
-
-        Returns the tooltip of the currently focused displayable, or None
-        if no displatable is focused.
-
-        `screen`
-            If not None, this should be the name or tag of a screen. If
-            given, this function only returns the tooltip if the focused
-            displayable is part of the screen.
-        """
-
-        return renpy.display.focus.get_tooltip(screen)
-
-
     class __TooltipAction(Action, FieldEquality):
 
         identity_fields = [ "tooltip", "value" ]
@@ -287,7 +271,6 @@ init -1500 python:
                 renpy.restart_interaction()
 
     _m1_00screen__TooltipAction = __TooltipAction
-
 
     class Tooltip(object):
         """

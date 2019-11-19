@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -195,15 +195,10 @@ class ArgumentInfo(object):
 def __newobj__(cls, *args):
     return cls.__new__(cls, *args)
 
-
-# A list of pyexprs that need to be precompiled.
-pyexpr_list = [ ]
+# This represents a string containing python code.
 
 
 class PyExpr(unicode):
-    """
-    Represents a string containing python code.
-    """
 
     __slots__ = [
         'filename',
@@ -214,10 +209,6 @@ class PyExpr(unicode):
         self = unicode.__new__(cls, s)
         self.filename = filename
         self.linenumber = linenumber
-
-        # Queue the string for precompilation.
-        if self and (renpy.game.script.all_pyexpr is not None):
-            renpy.game.script.all_pyexpr.append(self)
 
         return self
 
@@ -338,13 +329,6 @@ class Node(object):
     # True if the node is releveant to translation, and has to be processed by
     # take_translations.
     translation_relevant = False
-
-    # How does the node participate in rollback?
-    #
-    # * "normal" in normal mode.
-    # * "never" generally never.
-    # * "force" force it to start.
-    rollback = "normal"
 
     def __init__(self, loc):
         """
@@ -500,9 +484,6 @@ def say_menu_with(expression, callback):
         callback(what)
 
 
-fast_who_pattern = re.compile(r'[a-zA-Z_][a-zA-Z_0-9]*$')
-
-
 def eval_who(who, fast=None):
     """
     Evaluates the `who` parameter to a say statement.
@@ -512,7 +493,7 @@ def eval_who(who, fast=None):
         return None
 
     if fast is None:
-        fast = bool(fast_who_pattern.match(who))
+        fast = bool(re.match(renpy.parser.word_regexp + "$", who))
 
     if fast:
 
@@ -734,8 +715,6 @@ class Init(Node):
 
 
 class Label(Node):
-
-    rollback = "force"
 
     translation_relevant = True
 
@@ -1743,13 +1722,8 @@ class UserStatement(Node):
         self.code_block = None
         self.parsed = None
 
-        self.name = self.call("label")
-
-        # Do not store the parse.
-        self.parsed = None
-
-    def __repr__(self):
-        return "<UserStatement {!r}>".format(self.line)
+        # Do not store the parse quite yet.
+        _parse_info = renpy.statements.parse(self, self.line, self.block)
 
     def get_children(self, f):
         f(self)
@@ -1869,8 +1843,6 @@ def get_namespace(store):
 # and then again at init time.
 EARLY_CONFIG = { "save_directory" }
 
-define_statements = [ ]
-
 
 class Define(Node):
 
@@ -1907,8 +1879,6 @@ class Define(Node):
         next_node(self.next)
         statement_name("define")
 
-        define_statements.append(self)
-
         value = renpy.python.py_eval_bytecode(self.code.bytecode)
 
         if self.store == 'store':
@@ -1919,25 +1889,6 @@ class Define(Node):
 
         ns, _special = get_namespace(self.store)
         ns.set(self.varname, value)
-
-    def redefine(self, stores):
-
-        if self.store not in stores:
-            return
-
-        value = renpy.python.py_eval_bytecode(self.code.bytecode)
-        ns, _special = get_namespace(self.store)
-        ns.set(self.varname, value)
-
-
-def redefine(stores):
-    """
-    Re-runs the given define statements.
-    """
-
-    for i in define_statements:
-        i.redefine(stores)
-
 
 
 # All the default statements, in the order they were registered.
@@ -2062,8 +2013,6 @@ class Translate(Node):
     goes to the end of the translate statement in the None language.
     """
 
-    rollback = "never"
-
     translation_relevant = True
 
     __slots__ = [
@@ -2143,8 +2092,6 @@ class EndTranslate(Node):
     A node added implicitly after each translate block. It's responsible for
     resetting the translation identifier.
     """
-
-    rollback = "never"
 
     def __init__(self, loc):
         super(EndTranslate, self).__init__(loc)

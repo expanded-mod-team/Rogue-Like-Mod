@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -44,7 +44,6 @@ text_tags = dict(
     plain=True,
     font=True,
     color=True,
-    outlinecolor=True,
     size=True,
     nw=False,
     s=True,
@@ -194,10 +193,10 @@ class ParameterizedText(object):
 
     def _duplicate(self, args):
 
-        if len(args.args) == 0:
+        if len(args.args) != 1:
             raise Exception("'%s' takes a single string parameter." % ' '.join(args.name))
 
-        param = "".join(args.args)
+        param = args.args[0]
         string = renpy.python.py_eval(param)
 
         return renpy.text.text.Text(string, style=self.style, **self.properties)

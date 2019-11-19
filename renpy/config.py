@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -435,9 +435,6 @@ new_character_image_argument = True
 # corresponding to a shown image.
 say_attribute_transition = None
 
-# The layer the say_attribute_transition runs on.
-say_attribute_transition_layer = None
-
 # What is the name and version of this game?
 name = ""
 version = ""
@@ -810,60 +807,6 @@ preload_fonts = [ ]
 
 # Should Ren'Py process multiple ATL events in a single update?
 atl_multiple_events = True
-
-# A callback that's called when checking to see if a file is loadable.
-loadable_callback = None
-
-# How many frames should be drawn fast each time the screen needs to be
-# updated?
-fast_redraw_frames = 4
-
-# The color passed to glClearColor when clearing the screen.
-gl_clear_color = "#000"
-
-# Screens that are updated once per frame rather than once per interaction.
-per_frame_screens = [ ]
-
-# How long we store performance data for.
-performance_window = 5.0
-
-# How long does a frame have to take (to the event) to trigger profiling.
-profile_time = 1.0 / 50.0
-
-# What event do we check to see if the profile needs to be printed?
-profile_to_event = "end frame"
-
-# Should we instantly zap transient displayables, or properly hide them?
-fast_unhandled_event = True
-
-# Should a fast path be used when displaying empty windows.
-fast_empty_window = True
-
-# Should all nodes participate in rollback?
-all_nodes_rollback = False
-
-# Should Ren'Py manage GC itself?
-manage_gc = True
-
-# Default thresholds that apply to garbage collection.
-gc_thresholds = (25000, 10, 10)
-
-# The threshold for a level 0 gc when we have the time.
-idle_gc_count = 2500
-
-# Should we print unreachable.
-gc_print_unreachable = "RENPY_GC_PRINT_UNREACHABLE" in os.environ
-
-# The first frame that we consider to be "idle", so we can do gc and
-# prediction.
-idle_frame = 4
-
-# Does taking the transform state go through image reference targets?
-take_state_from_target = False
-
-# Does ui.viewport set the child_size if not set?
-scrollbar_child_size = True
-
 
 del os
 del collections

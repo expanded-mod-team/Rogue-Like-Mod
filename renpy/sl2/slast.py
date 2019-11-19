@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -26,14 +26,12 @@
 # When adding fields to a class in an __init__ method, we need to ensure that
 # field is copied in the copy() method.
 
-from __future__ import print_function
 
 import ast
 import collections
 import linecache
 from cPickle import loads, dumps
 import zlib
-import weakref
 
 import renpy.display
 import renpy.pyanalysis
@@ -45,15 +43,13 @@ from renpy.display.predict import displayable as predict_displayable
 
 from renpy.python import py_eval_bytecode
 from renpy.pyanalysis import Analysis, NOT_CONST, GLOBAL_CONST, ccache
-
 import hashlib
-import time
 
 # This file contains the abstract syntax tree for a screen language
 # screen.
 
 # A serial number that makes each SLNode unique.
-serial = int(time.time() * 1000000)
+serial = 0
 
 # A sentinel used to indicate we should use the value found in the
 # expression.
@@ -654,7 +650,7 @@ class SLDisplayable(SLBlock):
 
         cache = context.cache.get(self.serial, None)
 
-        if not isinstance(cache, SLCache):
+        if cache is None:
             context.cache[self.serial] = cache = SLCache()
 
         copy_on_change = cache.copy_on_change
@@ -863,8 +859,6 @@ class SLDisplayable(SLBlock):
                     fail = True
 
         finally:
-
-            ctx.keywords = None
 
             stack.pop()
 
@@ -1092,7 +1086,7 @@ class SLDisplayable(SLBlock):
     def copy_on_change(self, cache):
         c = cache.get(self.serial, None)
 
-        if isinstance(c, SLCache):
+        if c is not None:
             c.copy_on_change = True
 
         for i in self.children:
@@ -1184,6 +1178,7 @@ class SLIf(SLNode):
             context.predicted.add(self.serial)
 
         for cond, block in self.prepared_entries:
+
             try:
                 cond_value = (cond is None) or eval(cond, context.globals, context.scope)
             except:
@@ -1397,9 +1392,6 @@ class SLFor(SLBlock):
         newcaches = {}
         oldcaches = context.cache.get(self.serial, newcaches)
 
-        if not isinstance(oldcaches, dict):
-            oldcaches = newcaches
-
         ctx = SLContext(context)
 
         for index, v in enumerate(value):
@@ -1408,7 +1400,7 @@ class SLFor(SLBlock):
 
             cache = oldcaches.get(index, None)
 
-            if not isinstance(cache, dict):
+            if cache is None:
                 cache = {}
 
             newcaches[index] = cache
@@ -1436,8 +1428,7 @@ class SLFor(SLBlock):
 
     def copy_on_change(self, cache):
         c = cache.get(self.serial, None)
-
-        if not isinstance(c, dict):
+        if c is None:
             return
 
         for child_cache in c.values():
@@ -1656,7 +1647,7 @@ class SLUse(SLNode):
                 if cache is None:
                     cache = context.cache.get(self.serial, None)
 
-                if not isinstance(cache, dict):
+                if cache is None:
                     cache = { }
 
             context.cache[self.serial] = cache
@@ -1668,7 +1659,7 @@ class SLUse(SLNode):
 
             cache = context.cache.get(self.serial, None)
 
-            if not isinstance(cache, dict):
+            if cache is None:
                 context.cache[self.serial] = cache = { }
 
         # Evaluate the arguments.
@@ -1710,17 +1701,14 @@ class SLUse(SLNode):
         ctx = SLContext(context)
         ctx.scope = scope
         ctx.cache = cache
-        ctx.parent = weakref.ref(context)
+        ctx.parent = context
 
         if update:
             ctx.updating = True
 
         ctx.transclude = self.block
 
-        try:
-            ast.execute(ctx)
-        finally:
-            del scope["_scope"]
+        ast.execute(ctx)
 
         if ctx.fail:
             context.fail = True
@@ -1755,16 +1743,12 @@ class SLTransclude(SLNode):
 
         cache = context.cache.get(self.serial, None)
 
-        if not isinstance(cache, dict):
+        if cache is None:
             context.cache[self.serial] = cache = { }
 
         cache["transclude"] = context.transclude
 
-        parent = context.parent
-        if parent is not None:
-            parent = parent()
-
-        ctx = SLContext(parent)
+        ctx = SLContext(context.parent)
 
         ctx.cache = cache
 
@@ -2005,7 +1989,7 @@ class SLScreen(SLBlock):
         main_cache = current_screen.cache
 
         cache = main_cache.get(name, None)
-        if (not isinstance(cache, dict)) or (cache["version"] != self.version):
+        if cache is None or (cache["version"] != self.version):
             cache = { "version" : self.version }
             main_cache[name] = cache
 

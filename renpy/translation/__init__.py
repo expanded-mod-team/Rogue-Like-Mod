@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -347,9 +347,7 @@ class StringTranslator(object):
             raise Exception("A translation for %r already exists." % old)
 
         self.translations[old] = new
-
-        if newloc is not None:
-            self.translation_loc[old] = newloc
+        self.translation_loc[old] = newloc
 
     def translate(self, old):
 
@@ -404,7 +402,6 @@ def add_string_translation(language, old, new, newloc):
     stl = tl.strings[language]
     tl.languages.add(language)
     stl.add(old, new, newloc)
-
 
 Default = renpy.object.Sentinel("default")
 
@@ -471,7 +468,7 @@ def load_rpt(fn):
             if old is None:
                 raise Exception("{0} translation {1!r} doesn't belong to a string.".format(language, s))
 
-            add_string_translation(language, old, s, None)
+            add_string_translation(language, old, s)
             old = None
 
     f.close()
@@ -493,7 +490,6 @@ def load_all_rpts():
 # Changing language
 ################################################################################
 
-
 style_backup = None
 
 
@@ -508,7 +504,6 @@ def init_translation():
     load_all_rpts()
 
     renpy.store._init_language()  # @UndefinedVariable
-
 
 old_language = "language never set"
 
@@ -564,7 +559,7 @@ def new_change_language(tl, language):
     renpy.game.invoke_in_new_context(run_blocks)
 
 
-def change_language(language, force=False):
+def change_language(language):
     """
     :doc: translation_functions
 
@@ -592,7 +587,7 @@ def change_language(language, force=False):
     for i in renpy.config.change_language_callbacks:
         i()
 
-    if force or (old_language != language):
+    if old_language != language:
 
         # Reset various parts of the system. Most notably, this clears the image
         # cache, letting us load translated images.

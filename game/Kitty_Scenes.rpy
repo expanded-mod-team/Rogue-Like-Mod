@@ -2093,6 +2093,7 @@ label Kitty_Fuckbuddy:
 label Kitty_Daddy:      
     $ K_DailyActions.append("relationship")
     call Shift_Focus("Kitty")
+    call Set_The_Scene
     ch_k ". . ."
     if "dating" in K_Traits:
         ch_k "Hey, so[K_like]we've been dating,"  

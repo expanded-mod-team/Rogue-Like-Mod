@@ -42,6 +42,7 @@ define ch_e = Character('[EmmaName]', color="#98bee7", image = "arrow", show_two
 define ch_b = Character('Dr. McCoy', color="#1033b2", image = "arrow", show_two_window=True)
 define ch_l = Character('[LauraName]', color="#d8b600", image = "arrow", show_two_window=True)
 define ch_u = Character('???', color="#85bb65", image = "arrow", show_two_window=True)
+define ch_n = Character('Neutral', color="#85bb65", image = "arrow", show_two_window=True) #non-character, uses Ch_Focus
 define ch_g = Character('[GwenName]', color="#F08080", image = "arrowG", show_two_window=True,background=Frame("images/WordballoonG.png",50,50))
 define ch_usher = Character('Usher', color="#DF0174", show_two_window=True)
 define ch_danger = Character('Danger Room:', color="#1033b2",what_color="#1033b2",what_font="dungeon.ttf",show_two_window=False)
@@ -68,7 +69,7 @@ label splashscreen:
 init -1:  
 
 #World Stats
-    default SaveVersion = 983
+    default SaveVersion = 984
     default Day = 1
     default Cheat = 0
     default Time_Options = ["Morning", "Midday", "Evening", "Night"]
@@ -89,7 +90,7 @@ init -1:
     default Trigger3 = 0                #Girl's offhand    
     default Trigger4 = 0                #this is the 4th sexual act performed by the second girl 
     default Trigger5 = 0                #this is the 5th sexual act performed by the second girl if masturbating
-    default ThreeCount = 0              #This is a timer for changing sexual positions on auto
+    default ThreeCount = 100              #This is a timer for changing sexual positions on auto
     default Adjacent = []               #this is the girl you're sitting next to in class
     default Nearby = []                 #this tracks girls in the same room, but distant from you
     default Present = []                #This list tracks which girls are in this scene
@@ -157,7 +158,7 @@ init -1:
     default Digits = []
     default Keys = [] 
     default PunishmentX = 0
-    default GwenName = "???"
+    default GwenName = "????"
 # Player Sprite
     default P_Sprite = 0
     default P_Color = "green"
@@ -170,6 +171,7 @@ init -1:
     default R_Inbt = 0
     default R_Obed = 0
     default R_Lust = 10
+    default R_Thirst = 0                 #set Thirst to go up when they see you do things
     default R_LikeKitty = 600
     default R_LikeEmma = 500
     default R_LikeLaura = 500
@@ -296,6 +298,7 @@ init -1:
     default K_Obed = 100
     default K_Inbt = 0
     default K_Lust = 10
+    default K_Thirst = 0 
     default K_LikeRogue = 700
     default K_LikeEmma = 400
     default K_LikeLaura = 500
@@ -421,6 +424,7 @@ init -1:
     default E_Obed = 0
     default E_Inbt = 200
     default E_Lust = 10
+    default E_Thirst = 0 
     default E_LikeRogue = 500
     default E_LikeKitty = 500
     default E_LikeLaura = 500
@@ -546,6 +550,7 @@ init -1:
     default L_Obed = 0
     default L_Inbt = 200
     default L_Lust = 20
+    default L_Thirst = 0 
     default L_LikeRogue = 500
     default L_LikeKitty = 500
     default L_LikeEmma = 500
@@ -666,7 +671,6 @@ init -1:
     default L_Date = 0 
     default L_Forced = 0                                        #This is a toggle for if she's being coerced
     default L_ForcedCount = 0                                   #This is a counter for each time she's been coerced lately    
-    call mod_default_Variables
 #Xavier Sprite Variables    
     default X_Brows = "happy"
     default X_Mouth = "happy"
@@ -685,6 +689,41 @@ label start:
     show screen R_Status_screen    
     show screen Inventorybutton            
         
+    if config.developer:
+#        show screen roguebutton
+#        show screen statbutton
+            # Testing settings
+            $ P_Cash = 200
+            $ Cheat = 1
+            $ R_Kissed = 5
+            $ Digits.append("Rogue") 
+            $ Keys.append("Rogue") 
+            $ K_Kissed = 5      
+            $ Digits.append("Kitty")
+            $ Keys.append("Kitty")
+            $ K_History.append("met")
+            $ E_Kissed = 5      
+            $ E_Petname = "Mr. Zero"
+            $ Digits.append("Emma")
+            $ Keys.append("Emma")
+            $ E_History.append("met")
+            $ E_History.append("classcaught")         
+            $ Digits.append("Laura")
+            $ Keys.append("Laura")
+            $ L_History.append("met")
+            $ P_Traits.append("focus")
+            $ R_Event[1] = 1 
+            $ R_Addictionrate = 10
+            #$ R_Resistance = 1 #how fast her rate falls
+            $ Day = 16
+            $ Time_Options = ["Morning", "Midday", "Evening", "Night"]
+            $ Time_Count = 4
+            $ Current_Time = "Midday"   
+            $ Week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+            $ Weekday = 6
+            $ DayofWeek = Week[Weekday]
+            call Wait
+            jump Rogue_Room_Test             
         
     jump Prologue
 
@@ -692,7 +731,6 @@ label start:
 # After loading, this runs ////////////////////////////////////////////////////////////////
 label after_load: 
 label VersionNumber: 
-    call mod_Save_Version
     $ SaveVersion = 0 if "SaveVersion" not in globals().keys() else SaveVersion    
     if SaveVersion == 975: #error correction, remove this eventually
         $ SaveVersion = 957  
@@ -1241,7 +1279,7 @@ label VersionNumber:
                     
             if "lockedclass" in P_RecentActions:
                 $ P_RecentActions.remove("lockedclass")
-                $ P_RecentActions.append("locked")
+                $ P_Traits.append("locked")
             $ SaveVersion = 982
             #end Save 982 prep          
             
@@ -1264,9 +1302,55 @@ label VersionNumber:
             call Clothing_Schedule_Check("Laura",5,1) 
             call Clothing_Schedule_Check("Laura",6,1) 
 #            $ K_Arms = 0
-#            $ SaveVersion = 983
+            $ SaveVersion = 983
             #end Save 983 prep          
                     
+        if SaveVersion < 984:   
+            #shifts case of these words. . .
+            if "les kitty" in R_History:
+                    $ R_History.remove("les kitty")
+                    $ R_History.append("les Kitty")
+            if "les emma" in R_History:
+                    $ R_History.remove("les emma")
+                    $ R_History.append("les Emma")
+            if "les laura" in R_History:
+                    $ R_History.remove("les laura")
+                    $ R_History.append("les Laura")                    
+            if "les rogue" in K_History:
+                    $ K_History.remove("les rogue")
+                    $ K_History.append("les Rogue")
+            if "les emma" in K_History:
+                    $ K_History.remove("les emma")
+                    $ K_History.append("les Emma")
+            if "les laura" in K_History:
+                    $ K_History.remove("les laura")
+                    $ K_History.append("les Laura")                    
+            if "les rogue" in E_History:
+                    $ E_History.remove("les rogue")
+                    $ E_History.append("les Rogue")
+            if "les kitty" in E_History:
+                    $ E_History.remove("les kitty")
+                    $ E_History.append("les Kitty")
+            if "les laura" in E_History:
+                    $ E_History.remove("les laura")
+                    $ E_History.append("les Laura")                    
+            if "les rogue" in L_History:
+                    $ L_History.remove("les rogue")
+                    $ L_History.append("les Rogue")
+            if "les kitty" in L_History:
+                    $ L_History.remove("les kitty")
+                    $ L_History.append("les Kitty")
+            if "les emma" in L_History:
+                    $ L_History.remove("les emma")
+                    $ L_History.append("les Emma")
+            #end shifts case of these words. . .
+             
+            if "locked" in P_RecentActions:
+                $ P_RecentActions.remove("locked")
+                $ P_Traits.append("locked")       
+                    
+#            $ SaveVersion = 984
+            #end Save 983 prep    
                 
                 
         
@@ -1277,8 +1361,7 @@ label VersionNumber:
 # Event calls ////////////////////////////////////////////////////////////////////
 label EventCalls:
         call Present_Check           
-        $ D20 = renpy.random.randint(1, 20)  
-        #Disables events when it's too early in the game or the turn is about to end      
+        $ D20 = renpy.random.randint(1, 20)       
         call Get_Dressed
         
         if Current_Time == "Evening" and "yesdate" in P_DailyActions:
@@ -1296,8 +1379,9 @@ label EventCalls:
                             jump Campus_Entry
                         "No":
                             "Suit yourself. . ."
-        call Mod_EventCalls
-        if Day < 5 or Round < 10:
+        
+        if Day < 5 or Round <= 10:
+                    #Disables events when it's too early in the game or the turn is about to end 
                     return
                     
 #        #Activate's "Rogue like spunk" chat        
@@ -1323,43 +1407,46 @@ label EventCalls:
                     call LauraMeet
                     return       
         
+        #Calls Kitty starting dressup event
         if bg_current == "bg campus" and Current_Time != "Night" and "met" in L_History and "met" in K_History:
-            if "dress3" not in L_History and "dress1" not in L_History:
-                #Calls Kitty starting dressup event
-                call Laura_Dressup
+                if "dress3" not in L_History and "dress1" not in L_History:
+                    call Laura_Dressup
             
         #Activates Emma meet and class stuff
         if "traveling" in P_RecentActions and bg_current == "bg classroom" and Weekday < 5:
-            #if you are in motion, in the classroom, and it's a school day, 
-            if "met" not in E_History:     
-                    jump EmmaMeet
-                    return   
-            elif Current_Time == "Evening" and not Party:
-                #If you've met Emma, it's evening, and nobody is with you, 
-                if "classcaught" not in E_History:     
-                    jump Emma_Caught_Classroom
-                    return     
-                elif D20 <= 10:  
-                    #50/50 chance of catching Emma in class
-                    if E_Lust >= 50:
-                            jump Emma_Caught_Classroom
-                            return   
-                    else:
-                        $ E_Loc = "bg classroom"
+                #if you are in motion, in the classroom, and it's a school day, 
+                if "met" not in E_History:     
+                        jump EmmaMeet
+                        return   
+                elif Current_Time == "Evening" and not Party:
+                    #If you've met Emma, it's evening, and nobody is with you, 
+                    if "classcaught" not in E_History:     
+                        jump Emma_Caught_Classroom
+                        return     
+                    elif D20 <= 10:  
+                        #50/50 chance of catching Emma in class
+                        if E_Lust >= 50:
+                                jump Emma_Caught_Classroom
+                                return   
+                        else:
+                            $ E_Loc = "bg classroom"
         elif bg_current == "bg classroom" and Current_Time == "Evening" and Weekday < 5 and Round >= 70:
                 #if you are in class and not travelling. . .
                 if "met" in E_History:    
                         $ E_Loc = "bg classroom"
             
         if "detention" in P_Traits and bg_current == "bg classroom" and Weekday < 5 and Current_Time == "Evening" and not Party:    
-                    jump Emma_Detention
-                    return     
+                jump Emma_Detention
+                return     
         
-        if "angry" not in R_RecentActions:
-            #activates if you haven't done an addiciton event today    
-            if "addiction" not in R_DailyActions and R_Action >= 1:
+        if "locked" in P_Traits:
+            #exits if the door is locked, but maybe open this up a bit later. 
+            return
+            
+        #activates if you haven't done an addiciton event today 
+        if "angry" not in R_RecentActions and "addiction" not in R_DailyActions and R_Action >= 1:                    
                     #Activates if she needs her fix
-                    if R_Resistance and R_Addict >= 60 and not R_Event[3]:
+                    if R_Addict >= 60 and R_Resistance and not R_Event[3]:
                                 if (bg_current == "bg rogue" or bg_current == "bg player") and R_Loc == bg_current:
                                     jump Rogue_Fix
                                 elif bg_current == "bg player":
@@ -1392,67 +1479,47 @@ label EventCalls:
                         jump Rogue_Addicted3               
                    
         #Activates if Rogue or Kitty caught you cheating
-        if "saw with Kitty" in R_Traits and "dating" in R_Traits:  
-                    if bg_current == "bg rogue" or bg_current == "bg player":
-                        call Rogue_Cheated("Kitty")        
-                        return
-                    else:
-                        call AskedMeet("Rogue","angry")    
-                    
-        elif "saw with Rogue" in K_Traits and "dating" in K_Traits:  
-                    if bg_current == "bg kitty" or bg_current == "bg player":
-                        call Kitty_Cheated("Rogue")        
-                        return
-                    else:
-                        call AskedMeet("Kitty","angry")  
-        
+        if "meet girl" in P_DailyActions:
+                #skips if you already have an appointment
+                pass
+        else:
+                #checks to see if any of the girls noticed you cheating on them
+                #returns if not
+                call CheatCheck
+                                        
         #This scene has Rogue ask Kitty if she wants to have a poly Relationship with you    
-        if "ask Kitty" in R_Traits:                                 
-                if K_Break[0]:
-                        "Rogue sends you a text."
-                        ch_r "She said to \"give it a rest?\""
-                        ch_r "I guess we can see if she comes around on the idea."
-                elif R_Loc != bg_current and K_Loc != bg_current:                 
-                        $ R_Traits.remove("ask Kitty")
-                        if ApprovalCheck("Kitty", 2000, Bonus = int((K_LikeRogue - 500)/2)) or ApprovalCheck("Kitty", 950, "L", Bonus = int((K_LikeRogue - 500)/6)) or K_LikeRogue >= 900:
-                                #applies the "dating?" tag to note that she asked Kitty about it and Kitty was ok with it. 
-                                $ K_Traits.append("poly Rogue")
-                                $ K_Traits.append("dating?") 
-                        else:                    
-                                #If Kitty refuses to share you
-                                "Rogue sends you a text."
-                                if not ApprovalCheck("Kitty", 2000):
-                                        ch_r "I talked to Kitty about sharing you, and she said she wasn't into that sort of thing,"
-                                        ch_r "She's just not into you like that."
-                                        call Statup("Kitty", "Love", 200, -15)
-                                        call Statup("Kitty", "Obed", 50, -5)
-                                        call Statup("Kitty", "Inbt", 50, 5)
-                                else:
-                                        ch_r "I talked to Kitty about sharing you, and she said she wasn't into that sort of thing,"
-                                        ch_r "She doesn't really like me that much. . ."
-                                        call Statup("Kitty", "Love", 200, -5)
-                                $ K_Break[0] = 7 #means that she won't be available to ask again for another 7 days
-                                return
+        call ShareCheck
         
-        #Cues a dating event if Rogue is asked by Kitty to join a poly situation
-        if "dating?" in R_Traits and "dating" not in R_Traits:
-                    if bg_current == "bg rogue" or bg_current == "bg player":
-                        call Rogue_BF        
-                        return
-                    else:
-                        call AskedMeet("Rogue","bemused")  
-        #fix duplicate the stuff above to add kitty-centric poly situations.                    
-                
+        call JumperCheck #checks to see if a girl wants to jump you. . .
+              
+        #Checks to see if any girls want to fap. 
+        #If they have "wannafap" in their daily, and "nofap" in their traits, and are not in the room, they will ask you
+        #otherwise, they will automatically fap. If you meet them after this, they will be fapping, 
+        #if you keep them busy, they will do it overnight
+        if Time_Count >= 2 and "fapcall" not in P_DailyActions:
+                #if it's evening or later and nobody has yet called you about fapping. . .
+                $ Options = ["Rogue","Kitty","Emma","Laura"]
+                $ renpy.random.shuffle(Options)
+                while Options:
+                    if CheckWord(Options[0],"Daily","wannafap"):
+                            #if she's wants to fap and is not in the room with you                         
+                            call CalltoFap(Options[0]) #checks to see if she's allowed
+                    $ Options.remove(Options[0])
+        #end fap call check
+        
         #Rogue relationship stuff        
         if "relationship" not in R_DailyActions and "angry" not in R_DailyActions:
                 if "stoodup" in R_Traits: #you stood her up
                             call Rogue_Date_Stood_Up
                             return  
-                if not R_Event[0] and R_Sleep >= 5:               
+                if R_Break[0]:
+                        #skip all this if you're broken up
+                        pass
+                elif not R_Event[0] and R_Sleep >= 5:               
                         if R_Loc == bg_current or "Rogue" in Party:
                             call Rogue_Key
                             return  
-                if "boyfriend" not in R_Petnames and R_Love >= 800 and R_Event[5] != 20 and "RogueNo" not in P_Traits: # R_Event[5]
+                elif "boyfriend" not in R_Petnames and R_Love >= 800 and R_Event[5] != 20 and "RogueNo" not in P_Traits: # R_Event[5]
                         # R_Event[5] is 20 if you refused due to other girlfriend    
                         # if "RogueNo" it means you can't date her.                    
                         if P_Harem and "RogueYes" not in P_Traits:
@@ -1502,11 +1569,15 @@ label EventCalls:
                 if "stoodup" in K_Traits: #you stood her up
                             call Kitty_Date_Stood_Up
                             return                    
-                if not K_Event[0] and K_Sleep >= 5:               
+                 
+                if K_Break[0]:
+                        #skip all this if you're broken up
+                        pass
+                elif not K_Event[0] and K_Sleep >= 5:               
                             if K_Loc == bg_current or "Kitty" in Party:
                                 call Kitty_Key
                                 return                              
-                if "boyfriend" not in K_Petnames and K_Love >= 800 and K_Event[5] != 20 and "KittyNo" not in P_Traits: # K_Event[5]
+                elif "boyfriend" not in K_Petnames and K_Love >= 800 and K_Event[5] != 20 and "KittyNo" not in P_Traits: # K_Event[5]
                         # K_Event[5] is 20 if you refused due to other girlfriend
                         # if "KittyNo" it means you can't date her.
                         if P_Harem and "KittyYes" not in P_Traits:
@@ -1555,12 +1626,15 @@ label EventCalls:
         if "relationship" not in E_DailyActions and "angry" not in E_DailyActions: 
                 if "stoodup" in E_Traits: #you stood her up
                             call Emma_Date_Stood_Up
-                            return          
-                if not E_Event[0] and E_Sleep >= 5:               
+                            return    
+                if E_Break[0]:
+                        #skip all this if you're broken up
+                        pass
+                elif not E_Event[0] and E_Sleep >= 5:               
                             if E_Loc == bg_current or "Emma" in Party:
                                 call Emma_Key
                                 return            
-                if "boyfriend" not in E_Petnames and E_Love >= 800 and E_Event[5] != 20 and "EmmaNo" not in P_Traits: # E_Event[5]
+                elif "boyfriend" not in E_Petnames and E_Love >= 800 and E_Event[5] != 20 and "EmmaNo" not in P_Traits: # E_Event[5]
                         if P_Harem and "EmmaYes" not in P_Traits:
                             call Poly_Start("Emma")    
                             return
@@ -1606,11 +1680,15 @@ label EventCalls:
                 if "stoodup" in L_Traits: #you stood her up
                             call Laura_Date_Stood_Up
                             return  
-                if not L_Event[0] and L_Sleep >= 5:               
+                 
+                if L_Break[0]:
+                        #skip all this if you're broken up
+                        pass
+                elif not L_Event[0] and L_Sleep >= 5:               
                             if L_Loc == bg_current or "Laura" in Party:
                                 call Laura_Key
                                 return                    
-                if "boyfriend" not in L_Petnames and L_Love >= 800 and L_Event[5] != 20 and "LauraNo" not in P_Traits: # L_Event[5]
+                elif "boyfriend" not in L_Petnames and L_Love >= 800 and L_Event[5] != 20 and "LauraNo" not in P_Traits: # L_Event[5]
                         if P_Harem and "LauraYes" not in P_Traits:
                             call Poly_Start("Laura")    
                             return
@@ -1637,20 +1715,20 @@ label EventCalls:
                             return 
                         else:
                             call AskedMeet("Laura","bemused")
-#                elif "daddy" not in L_Petnames and ApprovalCheck("Laura", 750, "L") and ApprovalCheck("Laura", 500, "O") and ApprovalCheck("Laura", 500, "I"): # L_Event[5]
-#                        if (bg_current == "bg laura" or bg_current == "bg player") and L_Loc == bg_current:
-#                            call Laura_Daddy
-#                            return 
-#                        else:
-#                            call AskedMeet("Laura","bemused")
-#                elif "sex friend" not in L_Petnames and L_Inbt >= 500 and bg_current == "bg classroom" and Time_Count == 2: # L_Event[9]  Fix this one
-#                            call Laura_Sexfriend
-#                            return 
+                elif "daddy" not in L_Petnames and ApprovalCheck("Laura", 750, "L") and ApprovalCheck("Laura", 500, "O") and ApprovalCheck("Laura", 500, "I"): # L_Event[5]
+                        if (bg_current == "bg laura" or bg_current == "bg player") and L_Loc == bg_current:
+                            call Laura_Daddy
+                            return 
+                        else:
+                            call AskedMeet("Laura","bemused")
+                elif "sex friend" not in L_Petnames and L_Inbt >= 500: # L_Event[9]
+                            call Laura_Sexfriend
+                            return 
                            
-#                elif "fuck buddy" not in L_Petnames and L_Inbt >= 800 and bg_current != L_Loc: # L_Event[10]  Fix this one
-#                        #if she's not a fuckbuddy yet, and is not around at the time
-#                        call Laura_Fuckbuddy
-#                        return  
+                elif "fuck buddy" not in L_Petnames and L_Inbt >= 800 and bg_current == "bg player" and bg_current != L_Loc: # L_Event[10]
+                            #if she's not a fuckbuddy yet, and is not around at the time
+                            call Laura_Fuckbuddy
+                            return  
         #End Laura relationsip stuff                   
 #End primary events
         
@@ -1784,151 +1862,51 @@ label QuickEvents:
         return   
 #End Quick Events
 
-label AskedMeet(Character = "Rogue", Emotion = "bemused"): # Use AskedMeet("Rogue","angry")
-    #This asks the player to meet the chosen character later
-    if Character == "Rogue":
-            if "asked meet" not in R_DailyActions:
-                    call RogueFace(Emotion)
-                    "Rogue asks if you could meet her in your room later."
-                    $ R_DailyActions.append("asked meet") 
-    elif Character == "Kitty":
-            if "asked meet" not in K_DailyActions:
-                    call KittyFace(Emotion)
-                    "Kitty asks if you could meet her in your room later."
-                    $ K_DailyActions.append("asked meet") 
-    elif Character == "Emma":
-            if "asked meet" not in E_DailyActions:
-                    call EmmaFace(Emotion)
-                    "Emma asks if you could meet her in your room later."
-                    $ E_DailyActions.append("asked meet") 
-    elif Character == "Laura":
-            if "asked meet" not in L_DailyActions:
-                    call LauraFace(Emotion)
-                    "Laura asks if you could meet her in your room later."
-                    $ L_DailyActions.append("asked meet") 
+label AskedMeet(Girl = "Rogue", Emotion = "bemused"): # Use AskedMeet("Rogue","angry")
+    #This asks the player to meet the chosen character later    
+    if CheckWord(Girl,"Daily","asked meet"):
+                    call AnyFace(Girl,Emotion)
+                    "[Girl] asks if you could meet her in your room later."
+                    call AnyWord(Girl,1,0,"asked meet",0,0) #$ R_DailyActions.append("asked meet") 
+                    $ P_DailyActions.append("meet girl")
     return
+                    
+#    if Girl == "Rogue":
+#            if "asked meet" not in R_DailyActions:
+#                    call RogueFace(Emotion)
+#                    "Rogue asks if you could meet her in your room later."
+#                    $ R_DailyActions.append("asked meet") 
+#    elif Girl == "Kitty":
+#            if "asked meet" not in K_DailyActions:
+#                    call KittyFace(Emotion)
+#                    "Kitty asks if you could meet her in your room later."
+#                    $ K_DailyActions.append("asked meet") 
+#    elif Girl == "Emma":
+#            if "asked meet" not in E_DailyActions:
+#                    call EmmaFace(Emotion)
+#                    "Emma asks if you could meet her in your room later."
+#                    $ E_DailyActions.append("asked meet") 
+#    elif Girl == "Laura":
+#            if "asked meet" not in L_DailyActions:
+#                    call LauraFace(Emotion)
+#                    "Laura asks if you could meet her in your room later."
+#                    $ L_DailyActions.append("asked meet") 
+#    return
     
 # End Event Calls //////////////////////////////////////////////////////////////    
     
     
     
-    
-# Rogue's Faces //////////////////////////////////////////////
-label RogueFace(Emote = R_Emote, B = R_Blush, M = 0, Mouth = 0, Eyes = 0, Brows = 0):
-        # Emote is the chosen emote, B is the lush state, 
-        # M is whether the character is in a  manic state         
-        $ Emote = R_Emote if Emote == 5 else Emote
-        $ B = R_Blush if B == 5 else B
-        
-        if (R_Forced or "angry" in R_RecentActions) and Emote in ("normal", "bemused", "sexy", "sly", "smile", "startled"):
-                $ Emote = "angry"   
-        elif R_ForcedCount > 0 and Emote in ("normal", "bemused", "sexy", "sly", "smile", "startled"):
-                $ Emote = "sad" 
-                
-        if Emote == "normal":
-                $ R_Mouth = "normal"
-                $ R_Brows = "normal"
-                $ R_Eyes = "normal"
-        elif Emote == "angry":
-                $ R_Mouth = "sad"
-                $ R_Brows = "angry"
-                $ R_Eyes = "sexy"
-        elif Emote == "bemused":
-                $ R_Mouth = "lipbite"
-                $ R_Brows = "sad"
-                $ R_Eyes = "squint"
-        elif Emote == "closed":
-                $ R_Mouth = "lipbite"
-                $ R_Brows = "sad"
-                $ R_Eyes = "closed"  
-        elif Emote == "confused":
-                $ R_Mouth = "kiss"
-                $ R_Brows = "confused"
-                $ R_Eyes = "surprised"
-        elif Emote == "kiss":
-                $ R_Mouth = "kiss"
-                $ R_Brows = "normal"
-                $ R_Eyes = "closed"
-        elif Emote == "tongue":
-                $ R_Mouth = "tongue"
-                $ R_Brows = "sad"
-                $ R_Eyes = "sexy"
-        elif Emote == "manic":
-                $ R_Mouth = "grimace"
-                $ R_Brows = "sad"
-                $ R_Eyes = "manic"
-                $ R_Blush = 1
-        elif Emote == "sad":
-                $ R_Mouth = "sad"
-                $ R_Brows = "sad"
-                $ R_Eyes = "sexy"
-        elif Emote == "sadside":
-                $ R_Mouth = "sad"
-                $ R_Brows = "sad"
-                $ R_Eyes = "side"
-        elif Emote == "sexy":
-                $ R_Mouth = "lipbite"
-                $ R_Brows = "normal"
-                $ R_Eyes = "sexy"
-        elif Emote == "smile":
-                $ R_Mouth = "smile"
-                $ R_Brows = "normal"
-                $ R_Eyes = "normal"
-        elif Emote == "sucking":
-                $ R_Mouth = "sucking"
-                $ R_Brows = "normal"
-                $ R_Eyes = "closed"
-        elif Emote == "surprised":
-                $ R_Mouth = "surprised"
-                $ R_Brows = "surprised"
-                $ R_Eyes = "surprised"
-        elif Emote == "oh":
-                $ R_Mouth = "kiss"
-                $ R_Brows = "surprised"
-                $ R_Eyes = "surprised"
-        elif Emote == "startled":
-                $ R_Mouth = "grimace"
-                $ R_Brows = "surprised"
-                $ R_Eyes = "surprised"
-        elif Emote == "down":
-                $ R_Mouth = "surprised"
-                $ R_Brows = "sad"
-                $ R_Eyes = "down"  
-        elif Emote == "perplexed":
-                $ R_Mouth = "sad"
-                $ R_Brows = "confused"
-                $ R_Eyes = "normal"
-        elif Emote == "sly":
-                $ R_Mouth = "grimace"
-                $ R_Brows = "normal"
-                $ R_Eyes = "squint" 
-            
-        if M:
-                $ R_Eyes = "manic"        
-        if B > 1:
-                $ R_Blush = 2
-        elif B:
-                $ R_Blush = 1
-        else:
-                $ R_Blush = 0
-                
-        if Mouth:
-                $ R_Mouth = Mouth
-        if Eyes:
-                $ R_Eyes = Eyes
-        if Brows:
-                $ R_Brows = Brows
-                
-        return
-        
 
 # Rogue's Outfit //////////////////////////////////////////////
 label RogueOutfit(R_OutfitTemp = R_Outfit, Spunk = 0, Undressed = 0, Changed = 1):                                                      #add transitions    
         # R_OutfitTemp is the chosen new outfit, Spunk removes sperm on her, Undressed determines whether she is under dressed
         
-        if R_OutfitTemp == 5: #this sets it to default if using AnyOutfit
+        if R_OutfitTemp == 5: 
+                #this sets it to default if using AnyOutfit
                 $ R_OutfitTemp = R_Outfit
-        elif R_OutfitTemp == 6: #this sets it to default if using AnyOutfit
+        elif R_OutfitTemp == 6: 
+                #this sets it to daily default if using AnyOutfit
                 $ R_OutfitTemp = R_OutfitDay
             
         if renpy.showing("NightMask", layer='nightmask') and Current_Time == "Morning":
@@ -2080,138 +2058,6 @@ label RogueOutfit(R_OutfitTemp = R_Outfit, Spunk = 0, Undressed = 0, Changed = 1
                     $ R_Hair = R_Custom3[8] if R_Custom3[8] else "evo"
                     $ R_Hose = R_Custom3[9]        
                     $ R_Shame = R_OutfitShame[6]
-        elif R_OutfitTemp == "custom9":
-                    if not R_Legs and R_Custom9[2]:            
-                        $ Undressed = 1
-                    elif not R_Over and R_Custom9[3]:          
-                        $ Undressed = 1
-                    elif not R_Chest and R_Custom9[5]:          
-                        $ Undressed = 1
-                    elif not R_Panties and R_Custom9[6] and "pantyless" not in R_DailyActions:          
-                        $ Undressed = 1
-                    elif not R_Hose and R_Custom9[9]:          
-                        $ Undressed = 1
-                        
-                    $ R_Arms = R_Custom9[1]
-                    $ R_Legs = R_Custom9[2]
-                    $ R_Over = R_Custom9[3]
-                    $ R_Neck = R_Custom9[4] 
-                    $ R_Chest = R_Custom9[5]
-                    $ R_Panties = R_Custom9[6]
-            #        $ R_Pubes = R_Custom9[7]
-                    $ R_Hair = R_Custom9[8] if R_Custom9[8] else "evo"
-                    $ R_Hose = R_Custom9[9]        
-                    $ R_Shame = R_OutfitShame[20]
-        elif R_OutfitTemp == "custom8":
-                    if not R_Legs and R_Custom8[2]:            
-                        $ Undressed = 1
-                    elif not R_Over and R_Custom8[3]:          
-                        $ Undressed = 1
-                    elif not R_Chest and R_Custom8[5]:          
-                        $ Undressed = 1
-                    elif not R_Panties and R_Custom8[6] and "pantyless" not in R_DailyActions:          
-                        $ Undressed = 1
-                    elif not R_Hose and R_Custom8[9]:          
-                        $ Undressed = 1
-                        
-                    $ R_Arms = R_Custom8[1]
-                    $ R_Legs = R_Custom8[2]
-                    $ R_Over = R_Custom8[3]
-                    $ R_Neck = R_Custom8[4] 
-                    $ R_Chest = R_Custom8[5]
-                    $ R_Panties = R_Custom8[6]
-            #        $ R_Pubes = R_Custom8[7]
-                    $ R_Hair = R_Custom8[8] if R_Custom8[8] else "evo"
-                    $ R_Hose = R_Custom8[9]        
-                    $ R_Shame = R_OutfitShame[19]
-        elif R_OutfitTemp == "custom7":
-                    if not R_Legs and R_Custom7[2]:            
-                        $ Undressed = 1
-                    elif not R_Over and R_Custom7[3]:          
-                        $ Undressed = 1
-                    elif not R_Chest and R_Custom7[5]:          
-                        $ Undressed = 1
-                    elif not R_Panties and R_Custom7[6] and "pantyless" not in R_DailyActions:          
-                        $ Undressed = 1
-                    elif not R_Hose and R_Custom7[9]:          
-                        $ Undressed = 1
-                        
-                    $ R_Arms = R_Custom7[1]
-                    $ R_Legs = R_Custom7[2]
-                    $ R_Over = R_Custom7[3]
-                    $ R_Neck = R_Custom7[4] 
-                    $ R_Chest = R_Custom7[5]
-                    $ R_Panties = R_Custom7[6]
-            #        $ R_Pubes = R_Custom7[7]
-                    $ R_Hair = R_Custom7[8] if R_Custom7[8] else "evo"
-                    $ R_Hose = R_Custom7[9]        
-                    $ R_Shame = R_OutfitShame[18]
-        elif R_OutfitTemp == "custom6":
-                    if not R_Legs and R_Custom6[2]:            
-                        $ Undressed = 1
-                    elif not R_Over and R_Custom6[3]:          
-                        $ Undressed = 1
-                    elif not R_Chest and R_Custom6[5]:          
-                        $ Undressed = 1
-                    elif not R_Panties and R_Custom6[6] and "pantyless" not in R_DailyActions:          
-                        $ Undressed = 1
-                    elif not R_Hose and R_Custom6[9]:          
-                        $ Undressed = 1
-                        
-                    $ R_Arms = R_Custom6[1]
-                    $ R_Legs = R_Custom6[2]
-                    $ R_Over = R_Custom6[3]
-                    $ R_Neck = R_Custom6[4] 
-                    $ R_Chest = R_Custom6[5]
-                    $ R_Panties = R_Custom6[6]
-            #        $ R_Pubes = R_Custom6[7]
-                    $ R_Hair = R_Custom6[8] if R_Custom6[8] else "evo"
-                    $ R_Hose = R_Custom6[9]        
-                    $ R_Shame = R_OutfitShame[17]
-        elif R_OutfitTemp == "custom5":
-                    if not R_Legs and R_Custom5[2]:            
-                        $ Undressed = 1
-                    elif not R_Over and R_Custom5[3]:          
-                        $ Undressed = 1
-                    elif not R_Chest and R_Custom5[5]:          
-                        $ Undressed = 1
-                    elif not R_Panties and R_Custom5[6] and "pantyless" not in R_DailyActions:          
-                        $ Undressed = 1
-                    elif not R_Hose and R_Custom5[9]:          
-                        $ Undressed = 1
-                        
-                    $ R_Arms = R_Custom5[1]
-                    $ R_Legs = R_Custom5[2]
-                    $ R_Over = R_Custom5[3]
-                    $ R_Neck = R_Custom5[4] 
-                    $ R_Chest = R_Custom5[5]
-                    $ R_Panties = R_Custom5[6]
-            #        $ R_Pubes = R_Custom5[7]
-                    $ R_Hair = R_Custom5[8] if R_Custom5[8] else "evo"
-                    $ R_Hose = R_Custom5[9]        
-                    $ R_Shame = R_OutfitShame[16]
-        elif R_OutfitTemp == "custom4":
-                    if not R_Legs and R_Custom4[2]:            
-                        $ Undressed = 1
-                    elif not R_Over and R_Custom4[3]:          
-                        $ Undressed = 1
-                    elif not R_Chest and R_Custom4[5]:          
-                        $ Undressed = 1
-                    elif not R_Panties and R_Custom4[6] and "pantyless" not in R_DailyActions:          
-                        $ Undressed = 1
-                    elif not R_Hose and R_Custom4[9]:          
-                        $ Undressed = 1
-                        
-                    $ R_Arms = R_Custom4[1]
-                    $ R_Legs = R_Custom4[2]
-                    $ R_Over = R_Custom4[3]
-                    $ R_Neck = R_Custom4[4] 
-                    $ R_Chest = R_Custom4[5]
-                    $ R_Panties = R_Custom4[6]
-            #        $ R_Pubes = R_Custom4[7]
-                    $ R_Hair = R_Custom4[8] if R_Custom4[8] else "evo"
-                    $ R_Hose = R_Custom4[9]        
-                    $ R_Shame = R_OutfitShame[15]
         elif R_OutfitTemp == "temporary":
                     if not R_Legs and R_TempClothes[2]:            
                             $ Undressed = 1
@@ -2304,10 +2150,14 @@ label RogueOutfit(R_OutfitTemp = R_Outfit, Spunk = 0, Undressed = 0, Changed = 1
                     $ R_Hose = R_Custom2[9]        
                     $ R_Shame = R_OutfitShame[5]
         elif R_OutfitTemp == "swimwear":
-                    if not R_Swim[0] and "bikini top" not in R_Inventory or "bikini bottoms" not in R_Inventory:
-                            #if she doesn't own her swimsuit components. . .
-                            ch_r "I don't really have any swimsuit I could wear. . ."
-                            return
+                    if not R_Swim[0]:
+                            if "bikini top" not in R_Inventory or "bikini bottoms" not in R_Inventory:
+                                #if she doesn't own her swimsuit components. . .
+                                if not CheckWord("Rogue","Daily","swim"):
+                                        ch_r "I don't really have any swimsuit I could wear. . ."
+                                return
+                            else:
+                                $ R_Swim[0] = 1
                     if not R_Swim[0] and R_Inbt >= 500:
                             $ R_Swim[3] = 0
                     if not R_Legs and R_Swim[2]:            
@@ -2355,7 +2205,7 @@ label RogueOutfit(R_OutfitTemp = R_Outfit, Spunk = 0, Undressed = 0, Changed = 1
                         "Rogue throws on a towel."
                 elif Undressed:
                         "Rogue throws her clothes back on."        
-        call Mod_Update_Rogue_Image
+        
         return
 #End Rogue Outfits
 
@@ -2377,7 +2227,10 @@ label Rogue_Schedule(Clothes = 1, Location = 1, LocTemp = R_Loc):
                                         
         if (Current_Time == "Morning" and Clothes and Round >= 90) or Clothes == 2:
                 #In the morning, or if ordered to reschedule, pick an outfit for the day. 
-                if R_Schedule[Weekday] == 1:
+                $ R_OutfitDay = 0
+                if R_Break[0]:
+                    pass #she won't pick clothes if she's mad at you
+                elif R_Schedule[Weekday] == 1:
                         $ R_OutfitDay = "evo_green"
                 elif R_Schedule[Weekday] == 2:
                         $ R_OutfitDay = "evo_pink"
@@ -2385,33 +2238,16 @@ label Rogue_Schedule(Clothes = 1, Location = 1, LocTemp = R_Loc):
                         $ R_OutfitDay = "custom1"
                 elif R_Schedule[Weekday] == 4:
                         $ R_OutfitDay = "gym"
-                elif R_Schedule[Weekday] == 15 and R_Custom4[0]:
-                        $ R_OutfitDay = "custom4"
-                elif R_Schedule[Weekday] == 16 and R_Custom5[0]:
-                        $ R_OutfitDay = "custom5"
-                elif R_Schedule[Weekday] == 17 and R_Custom6[0]:
-                        $ R_OutfitDay = "custom6"
-                elif R_Schedule[Weekday] == 18 and R_Custom7[0]:
-                        $ R_OutfitDay = "custom7"
-                elif R_Schedule[Weekday] == 19 and R_Custom8[0]:
-                        $ R_OutfitDay = "custom8"
-                elif R_Schedule[Weekday] == 20 and R_Custom9[0]:
-                        $ R_OutfitDay = "custom9"
                 elif R_Schedule[Weekday] == 5 and R_Custom2[0]:
                         $ R_OutfitDay = "custom2"
                 elif R_Schedule[Weekday] == 6 and R_Custom3[0]:
                         $ R_OutfitDay = "custom3"
-                else: 
+                if not R_OutfitDay: 
                         $ Options = ["evo_pink", "evo_green"]
-                        $ Options.append("custom1") if R_Custom[0] == 2 else Options
-                        $ Options.append("custom2") if R_Custom2[0] == 2 else Options
-                        $ Options.append("custom4") if R_Custom4[0] == 2 else Options
-                        $ Options.append("custom5") if R_Custom5[0] == 2 else Options
-                        $ Options.append("custom6") if R_Custom6[0] == 2 else Options
-                        $ Options.append("custom7") if R_Custom7[0] == 2 else Options
-                        $ Options.append("custom8") if R_Custom8[0] == 2 else Options
-                        $ Options.append("custom9") if R_Custom9[0] == 2 else Options
-                        $ Options.append("custom3") if R_Custom3[0] == 2 else Options
+                        if not R_Break[0]:
+                            $ Options.append("custom1") if R_Custom[0] == 2 else Options
+                            $ Options.append("custom2") if R_Custom2[0] == 2 else Options
+                            $ Options.append("custom3") if R_Custom3[0] == 2 else Options
                         $ renpy.random.shuffle(Options) 
                         $ R_OutfitDay = Options[0]
                         $ del Options[:] 
@@ -2440,7 +2276,7 @@ label Rogue_Schedule(Clothes = 1, Location = 1, LocTemp = R_Loc):
                 if Current_Time == "Morning":
                         $ R_Loc = "bg dangerroom"
                 elif Current_Time == "Midday":
-                        $ R_Loc = "bg campus"
+                        $ R_Loc = "bg pool"
                 else:
                         $ R_Loc = "bg rogue"
                                                  
@@ -2623,132 +2459,6 @@ label KittyOutfit(K_OutfitTemp = K_Outfit, Spunk = 0, Undressed = 0, Changed = 1
                     $ K_Hose = K_Custom3[9]   
                     $ K_Hair = K_Custom3[8] if K_Custom3[8] else K_Hair
                     $ K_Shame = K_OutfitShame[6]
-        elif K_OutfitTemp == "custom9":
-                    if not K_Legs and K_Custom9[2]:            
-                            $ Undressed = 1
-                    elif not K_Over and K_Custom9[3]:          
-                            $ Undressed = 1
-                    elif not K_Chest and K_Custom9[5]:          
-                            $ Undressed = 1
-                    elif not K_Panties and K_Custom9[6] and "pantyless" not in K_DailyActions:         
-                            $ Undressed = 1
-                    elif not K_Hose and K_Custom9[9]:          
-                            $ Undressed = 1
-                        
-                    $ K_Arms = K_Custom9[1]
-                    $ K_Legs = K_Custom9[2]
-                    $ K_Over = K_Custom9[3]
-                    $ K_Neck = K_Custom9[4]
-                    $ K_Chest = K_Custom9[5]
-                    $ K_Panties = K_Custom9[6]    
-                    $ K_Hose = K_Custom9[9]   
-                    $ K_Hair = K_Custom9[8] if K_Custom9[8] else K_Hair
-                    $ K_Shame = K_OutfitShame[20]
-        elif K_OutfitTemp == "custom8":
-                    if not K_Legs and K_Custom8[2]:            
-                            $ Undressed = 1
-                    elif not K_Over and K_Custom8[3]:          
-                            $ Undressed = 1
-                    elif not K_Chest and K_Custom8[5]:          
-                            $ Undressed = 1
-                    elif not K_Panties and K_Custom8[6] and "pantyless" not in K_DailyActions:         
-                            $ Undressed = 1
-                    elif not K_Hose and K_Custom8[9]:          
-                            $ Undressed = 1
-                        
-                    $ K_Arms = K_Custom8[1]
-                    $ K_Legs = K_Custom8[2]
-                    $ K_Over = K_Custom8[3]
-                    $ K_Neck = K_Custom8[4]
-                    $ K_Chest = K_Custom8[5]
-                    $ K_Panties = K_Custom8[6]    
-                    $ K_Hose = K_Custom8[9]   
-                    $ K_Hair = K_Custom8[8] if K_Custom8[8] else K_Hair
-                    $ K_Shame = K_OutfitShame[19]
-        elif K_OutfitTemp == "custom7":
-                    if not K_Legs and K_Custom7[2]:            
-                            $ Undressed = 1
-                    elif not K_Over and K_Custom7[3]:          
-                            $ Undressed = 1
-                    elif not K_Chest and K_Custom7[5]:          
-                            $ Undressed = 1
-                    elif not K_Panties and K_Custom7[6] and "pantyless" not in K_DailyActions:         
-                            $ Undressed = 1
-                    elif not K_Hose and K_Custom7[9]:          
-                            $ Undressed = 1
-                        
-                    $ K_Arms = K_Custom7[1]
-                    $ K_Legs = K_Custom7[2]
-                    $ K_Over = K_Custom7[3]
-                    $ K_Neck = K_Custom7[4]
-                    $ K_Chest = K_Custom7[5]
-                    $ K_Panties = K_Custom7[6]    
-                    $ K_Hose = K_Custom7[9]   
-                    $ K_Hair = K_Custom7[8] if K_Custom7[8] else K_Hair
-                    $ K_Shame = K_OutfitShame[18]
-        elif K_OutfitTemp == "custom6":
-                    if not K_Legs and K_Custom6[2]:            
-                            $ Undressed = 1
-                    elif not K_Over and K_Custom6[3]:          
-                            $ Undressed = 1
-                    elif not K_Chest and K_Custom6[5]:          
-                            $ Undressed = 1
-                    elif not K_Panties and K_Custom6[6] and "pantyless" not in K_DailyActions:         
-                            $ Undressed = 1
-                    elif not K_Hose and K_Custom6[9]:          
-                            $ Undressed = 1
-                        
-                    $ K_Arms = K_Custom6[1]
-                    $ K_Legs = K_Custom6[2]
-                    $ K_Over = K_Custom6[3]
-                    $ K_Neck = K_Custom6[4]
-                    $ K_Chest = K_Custom6[5]
-                    $ K_Panties = K_Custom6[6]    
-                    $ K_Hose = K_Custom6[9]   
-                    $ K_Hair = K_Custom6[8] if K_Custom6[8] else K_Hair
-                    $ K_Shame = K_OutfitShame[17]
-        elif K_OutfitTemp == "custom5":
-                    if not K_Legs and K_Custom5[2]:            
-                            $ Undressed = 1
-                    elif not K_Over and K_Custom5[3]:          
-                            $ Undressed = 1
-                    elif not K_Chest and K_Custom5[5]:          
-                            $ Undressed = 1
-                    elif not K_Panties and K_Custom5[6] and "pantyless" not in K_DailyActions:         
-                            $ Undressed = 1
-                    elif not K_Hose and K_Custom5[9]:          
-                            $ Undressed = 1
-                        
-                    $ K_Arms = K_Custom5[1]
-                    $ K_Legs = K_Custom5[2]
-                    $ K_Over = K_Custom5[3]
-                    $ K_Neck = K_Custom5[4]
-                    $ K_Chest = K_Custom5[5]
-                    $ K_Panties = K_Custom5[6]    
-                    $ K_Hose = K_Custom5[9]   
-                    $ K_Hair = K_Custom5[8] if K_Custom5[8] else K_Hair
-                    $ K_Shame = K_OutfitShame[16]
-        elif K_OutfitTemp == "custom4":
-                    if not K_Legs and K_Custom4[2]:            
-                            $ Undressed = 1
-                    elif not K_Over and K_Custom4[3]:          
-                            $ Undressed = 1
-                    elif not K_Chest and K_Custom4[5]:          
-                            $ Undressed = 1
-                    elif not K_Panties and K_Custom4[6] and "pantyless" not in K_DailyActions:         
-                            $ Undressed = 1
-                    elif not K_Hose and K_Custom4[9]:          
-                            $ Undressed = 1
-                        
-                    $ K_Arms = K_Custom4[1]
-                    $ K_Legs = K_Custom4[2]
-                    $ K_Over = K_Custom4[3]
-                    $ K_Neck = K_Custom4[4]
-                    $ K_Chest = K_Custom4[5]
-                    $ K_Panties = K_Custom4[6]    
-                    $ K_Hose = K_Custom4[9]   
-                    $ K_Hair = K_Custom4[8] if K_Custom4[8] else K_Hair
-                    $ K_Shame = K_OutfitShame[15]
         elif K_OutfitTemp == "temporary":
                     if not K_Legs and K_TempClothes[2]:            
                             $ Undressed = 1
@@ -2817,10 +2527,23 @@ label KittyOutfit(K_OutfitTemp = K_Outfit, Spunk = 0, Undressed = 0, Changed = 1
                     $ K_Hose = K_Gym[9]     
                     $ K_Shame = K_OutfitShame[7]   
         elif K_OutfitTemp == "swimwear":
-                    if not K_Swim[0] and "bikini top" not in K_Inventory or "bikini bottoms" not in K_Inventory:
-                            #if she doesn't own her swimsuit components. . .
-                            ch_k "I wish I had something cute to wear, but I don't. . ."
-                            return
+                    if not K_Swim[0]:
+                            if "bikini top" not in K_Inventory or "bikini bottoms" not in K_Inventory:
+                                #if she doesn't own her swimsuit components. . .
+                                if not CheckWord("Kitty","Daily","swim"):
+                                        ch_k "I wish I had something cute to wear, but I don't. . ."
+                                return
+                            elif K_Inbt <= 400 and "blue skirt" not in K_Inventory:
+                                if not CheckWord("Kitty","Daily","swim"):
+                                        ch_k "I don't know, I do have a suit, but it's a little daring. . ."
+                                        ch_k "If only I had a little skirt or something. . ."
+                                return                                
+                            else:
+                                $ K_Swim[0] = 1
+                                
+                            if K_Inbt > 400:
+                                $ K_Legs = 0      
+                                        
                     if not K_Swim[0] and K_Inbt >= 500:
                             $ K_Swim[2] = 0
                     if not K_Legs and K_Swim[2]:            
@@ -2834,19 +2557,8 @@ label KittyOutfit(K_OutfitTemp = K_Outfit, Spunk = 0, Undressed = 0, Changed = 1
                     elif not K_Hose and K_Swim[9]:          
                         $ Undressed = 1
                         
-                    $ K_Arms = K_Swim[1]
-                    
-                    if not K_Swim[0] and "blue skirt" not in K_Inventory:
-                            #if she has no custom swimsuit and no blue skirt. . .
-                            if K_Inbt <= 400:
-                                ch_k "I don't know, I do have a suit, but it's a little daring. . ."
-                                ch_k "If only I had a little skirt or something. . ."
-                                return
-                            else:
-                                $ K_Legs = 0
-                    else:
-                        $ K_Legs = K_Swim[2]
-                    
+                    $ K_Arms = K_Swim[1]                    
+                    $ K_Legs = K_Swim[2]
                     $ K_Over = K_Swim[3]
                     $ K_Neck = K_Swim[4] 
                     $ K_Chest = K_Swim[5]
@@ -2879,7 +2591,7 @@ label KittyOutfit(K_OutfitTemp = K_Outfit, Spunk = 0, Undressed = 0, Changed = 1
                         "She throws on a towel."
                 elif Undressed:
                         "She throws her clothes back on."
-        call Mod_Update_Kitty_Image
+        
         if Undressed:
             return 1
         else:
@@ -2901,7 +2613,10 @@ label Kitty_Schedule(Clothes = 1, Location = 1, LocTemp = K_Loc):
                 
         if (Current_Time == "Morning" and Clothes and Round >= 90) or Clothes == 2:
                 #Pick clothes for the day
-                if K_Schedule[Weekday] == 1: #Tue
+                $ K_OutfitDay = 0
+                if K_Break[0]:
+                    pass #she won't pick clothes if she's mad at you
+                elif K_Schedule[Weekday] == 1: #Tue
                         $ K_OutfitDay = "pink outfit"
                 elif K_Schedule[Weekday] == 2: #Wed
                         $ K_OutfitDay = "red outfit"
@@ -2909,33 +2624,16 @@ label Kitty_Schedule(Clothes = 1, Location = 1, LocTemp = K_Loc):
                         $ K_OutfitDay = "custom1"
                 elif K_Schedule[Weekday] == 4: #Fri
                         $ K_OutfitDay = "gym"
-                elif K_Schedule[Weekday] == 15 and K_Custom4[0]: #Sat
-                        $ K_OutfitDay = "custom4" #Sat
-                elif K_Schedule[Weekday] == 16 and K_Custom5[0]: #Sat
-                        $ K_OutfitDay = "custom5" #Sat
-                elif K_Schedule[Weekday] == 17 and K_Custom6[0]: #Sat
-                        $ K_OutfitDay = "custom6" #Sat
-                elif K_Schedule[Weekday] == 18 and K_Custom7[0]: #Sat
-                        $ K_OutfitDay = "custom7" #Sat
-                elif K_Schedule[Weekday] == 19 and K_Custom8[0]: #Sat
-                        $ K_OutfitDay = "custom8" #Sat
-                elif K_Schedule[Weekday] == 20 and K_Custom9[0]: #Sat
-                        $ K_OutfitDay = "custom9" #Sat
                 elif K_Schedule[Weekday] == 5 and K_Custom2[0]: #Sat
                         $ K_OutfitDay = "custom2"
                 elif K_Schedule[Weekday] == 6 and K_Custom3[0]: #Sun
                         $ K_OutfitDay = "custom3"
-                else: #Mon
+                if not K_OutfitDay: 
                         $ Options = ["pink outfit", "red outfit"]
-                        $ Options.append("custom1") if K_Custom[0] == 2 else Options
-                        $ Options.append("custom2") if K_Custom2[0] == 2 else Options
-                        $ Options.append("custom4") if K_Custom4[0] == 2 else Options
-                        $ Options.append("custom5") if K_Custom5[0] == 2 else Options
-                        $ Options.append("custom6") if K_Custom6[0] == 2 else Options
-                        $ Options.append("custom7") if K_Custom7[0] == 2 else Options
-                        $ Options.append("custom8") if K_Custom8[0] == 2 else Options
-                        $ Options.append("custom9") if K_Custom9[0] == 2 else Options
-                        $ Options.append("custom3") if K_Custom3[0] == 2 else Options
+                        if not K_Break[0]:
+                                $ Options.append("custom1") if K_Custom[0] == 2 else Options
+                                $ Options.append("custom2") if K_Custom2[0] == 2 else Options
+                                $ Options.append("custom3") if K_Custom3[0] == 2 else Options
                         $ renpy.random.shuffle(Options) 
                         $ K_OutfitDay = Options[0]
                         $ del Options[:]  
@@ -2960,7 +2658,7 @@ label Kitty_Schedule(Clothes = 1, Location = 1, LocTemp = K_Loc):
                 if Current_Time == "Morning":
                         $ K_Loc = "bg classroom"
                 elif Current_Time == "Midday":
-                        $ K_Loc = "bg dangerroom"
+                        $ K_Loc = "bg pool"
                 else:
                         $ K_Loc = "bg kitty"
         else:
@@ -3162,138 +2860,6 @@ label EmmaOutfit(E_OutfitTemp = E_Outfit, Spunk = 0, Undressed = 0, Changed = 1)
                     $ E_Hair = E_Custom3[8] if E_Custom3[8] else E_Hair  
                     $ E_Hose = E_Custom3[9]                         
                     $ E_Shame = E_OutfitShame[6]
-        elif E_OutfitTemp == "custom9":
-                    if not E_Legs and E_Custom9[2]:            
-                            $ Undressed = 1
-                    elif not E_Over and E_Custom9[3]:          
-                            $ Undressed = 1
-                    elif not E_Chest and E_Custom9[5]:          
-                            $ Undressed = 1
-                    elif not E_Panties and E_Custom9[6] and "pantyless" not in E_DailyActions:         
-                            $ Undressed = 1
-                    elif not E_Hose and E_Custom9[9]:          
-                            $ Undressed = 1
-                        
-                    $ E_Arms = E_Custom9[1]
-                    $ E_Legs = E_Custom9[2]
-                    $ E_Over = E_Custom9[3]
-                    $ E_Neck = E_Custom9[4]
-                    $ E_Chest = E_Custom9[5]
-                    $ E_Panties = E_Custom9[6] 
-                    $ E_Boots = E_Custom9[7]  
-                    $ E_Hair = E_Custom9[8] if E_Custom9[8] else E_Hair  
-                    $ E_Hose = E_Custom9[9]                         
-                    $ E_Shame = E_OutfitShame[20]
-        elif E_OutfitTemp == "custom8":
-                    if not E_Legs and E_Custom8[2]:            
-                            $ Undressed = 1
-                    elif not E_Over and E_Custom8[3]:          
-                            $ Undressed = 1
-                    elif not E_Chest and E_Custom8[5]:          
-                            $ Undressed = 1
-                    elif not E_Panties and E_Custom8[6] and "pantyless" not in E_DailyActions:         
-                            $ Undressed = 1
-                    elif not E_Hose and E_Custom8[9]:          
-                            $ Undressed = 1
-                        
-                    $ E_Arms = E_Custom8[1]
-                    $ E_Legs = E_Custom8[2]
-                    $ E_Over = E_Custom8[3]
-                    $ E_Neck = E_Custom8[4]
-                    $ E_Chest = E_Custom8[5]
-                    $ E_Panties = E_Custom8[6] 
-                    $ E_Boots = E_Custom8[7]  
-                    $ E_Hair = E_Custom8[8] if E_Custom8[8] else E_Hair  
-                    $ E_Hose = E_Custom8[9]                         
-                    $ E_Shame = E_OutfitShame[19]
-        elif E_OutfitTemp == "custom7":
-                    if not E_Legs and E_Custom7[2]:            
-                            $ Undressed = 1
-                    elif not E_Over and E_Custom7[3]:          
-                            $ Undressed = 1
-                    elif not E_Chest and E_Custom7[5]:          
-                            $ Undressed = 1
-                    elif not E_Panties and E_Custom7[6] and "pantyless" not in E_DailyActions:         
-                            $ Undressed = 1
-                    elif not E_Hose and E_Custom7[9]:          
-                            $ Undressed = 1
-                        
-                    $ E_Arms = E_Custom7[1]
-                    $ E_Legs = E_Custom7[2]
-                    $ E_Over = E_Custom7[3]
-                    $ E_Neck = E_Custom7[4]
-                    $ E_Chest = E_Custom7[5]
-                    $ E_Panties = E_Custom7[6] 
-                    $ E_Boots = E_Custom7[7]  
-                    $ E_Hair = E_Custom7[8] if E_Custom7[8] else E_Hair  
-                    $ E_Hose = E_Custom7[9]                         
-                    $ E_Shame = E_OutfitShame[18]
-        elif E_OutfitTemp == "custom6":
-                    if not E_Legs and E_Custom6[2]:            
-                            $ Undressed = 1
-                    elif not E_Over and E_Custom6[3]:          
-                            $ Undressed = 1
-                    elif not E_Chest and E_Custom6[5]:          
-                            $ Undressed = 1
-                    elif not E_Panties and E_Custom6[6] and "pantyless" not in E_DailyActions:         
-                            $ Undressed = 1
-                    elif not E_Hose and E_Custom6[9]:          
-                            $ Undressed = 1
-                        
-                    $ E_Arms = E_Custom6[1]
-                    $ E_Legs = E_Custom6[2]
-                    $ E_Over = E_Custom6[3]
-                    $ E_Neck = E_Custom6[4]
-                    $ E_Chest = E_Custom6[5]
-                    $ E_Panties = E_Custom6[6] 
-                    $ E_Boots = E_Custom6[7]  
-                    $ E_Hair = E_Custom6[8] if E_Custom6[8] else E_Hair  
-                    $ E_Hose = E_Custom6[9]                         
-                    $ E_Shame = E_OutfitShame[17]
-        elif E_OutfitTemp == "custom5":
-                    if not E_Legs and E_Custom5[2]:            
-                            $ Undressed = 1
-                    elif not E_Over and E_Custom5[3]:          
-                            $ Undressed = 1
-                    elif not E_Chest and E_Custom5[5]:          
-                            $ Undressed = 1
-                    elif not E_Panties and E_Custom5[6] and "pantyless" not in E_DailyActions:         
-                            $ Undressed = 1
-                    elif not E_Hose and E_Custom5[9]:          
-                            $ Undressed = 1
-                        
-                    $ E_Arms = E_Custom5[1]
-                    $ E_Legs = E_Custom5[2]
-                    $ E_Over = E_Custom5[3]
-                    $ E_Neck = E_Custom5[4]
-                    $ E_Chest = E_Custom5[5]
-                    $ E_Panties = E_Custom5[6] 
-                    $ E_Boots = E_Custom5[7]  
-                    $ E_Hair = E_Custom5[8] if E_Custom5[8] else E_Hair  
-                    $ E_Hose = E_Custom5[9]                         
-                    $ E_Shame = E_OutfitShame[16]
-        elif E_OutfitTemp == "custom4":
-                    if not E_Legs and E_Custom4[2]:            
-                            $ Undressed = 1
-                    elif not E_Over and E_Custom4[3]:          
-                            $ Undressed = 1
-                    elif not E_Chest and E_Custom4[5]:          
-                            $ Undressed = 1
-                    elif not E_Panties and E_Custom4[6] and "pantyless" not in E_DailyActions:         
-                            $ Undressed = 1
-                    elif not E_Hose and E_Custom4[9]:          
-                            $ Undressed = 1
-                        
-                    $ E_Arms = E_Custom4[1]
-                    $ E_Legs = E_Custom4[2]
-                    $ E_Over = E_Custom4[3]
-                    $ E_Neck = E_Custom4[4]
-                    $ E_Chest = E_Custom4[5]
-                    $ E_Panties = E_Custom4[6] 
-                    $ E_Boots = E_Custom4[7]  
-                    $ E_Hair = E_Custom4[8] if E_Custom4[8] else E_Hair  
-                    $ E_Hose = E_Custom4[9]                         
-                    $ E_Shame = E_OutfitShame[15]
         elif E_OutfitTemp == "temporary":
                     if not E_Legs and E_TempClothes[2]:            
                             $ Undressed = 1
@@ -3361,10 +2927,15 @@ label EmmaOutfit(E_OutfitTemp = E_Outfit, Spunk = 0, Undressed = 0, Changed = 1)
                     $ E_Hose = E_Gym[9]     
                     $ E_Shame = E_OutfitShame[7]   
         elif E_OutfitTemp == "swimwear":
-                    if not E_Swim[0] and "bikini top" not in E_Inventory or "bikini bottoms" not in E_Inventory:
-                            #if she doesn't own her swimsuit components. . .
-                            ch_e "I really don't own the proper attire. . ."
-                            return
+                    if not E_Swim[0]:
+                            if "bikini top" not in E_Inventory or "bikini bottoms" not in E_Inventory:
+                                #if she doesn't own her swimsuit components. . .
+                                if not CheckWord("Emma","Daily","swim"):
+                                        ch_e "I really don't own the proper attire. . ."
+                                return
+                            else:
+                                $ E_Swim[0] = 1
+                                
                     if not E_Legs and E_Swim[2]:            
                         $ Undressed = 1
                     elif not E_Over and E_Swim[3]:          
@@ -3410,7 +2981,6 @@ label EmmaOutfit(E_OutfitTemp = E_Outfit, Spunk = 0, Undressed = 0, Changed = 1)
                         "She throws on a towel."
                 elif Undressed:
                         "She throws her clothes back on."  
-        call Mod_Update_Emma_Image
         return
 #End Emma's Outfits
       
@@ -3429,7 +2999,10 @@ label Emma_Schedule(Clothes = 1, Location = 1, LocTemp = E_Loc):
         
         if (Current_Time == "Morning" and Clothes and Round >= 90) or Clothes == 2:
                 #Pick clothes for the day
-                if E_Schedule[Weekday] == 1:
+                $ E_OutfitDay = 0
+                if E_Break[0]:
+                        pass #she won't pick clothes if she's mad at you
+                elif E_Schedule[Weekday] == 1:
                         $ E_OutfitDay = "teacher"
                 elif E_Schedule[Weekday] == 2:
                         $ E_OutfitDay = "costume"
@@ -3437,34 +3010,17 @@ label Emma_Schedule(Clothes = 1, Location = 1, LocTemp = E_Loc):
                         $ E_OutfitDay = "custom1"
                 elif E_Schedule[Weekday] == 4:
                         $ E_OutfitDay = "gym"
-                elif E_Schedule[Weekday] == 15 and E_Custom4[0]:
-                        $ E_OutfitDay = "custom4"
-                elif E_Schedule[Weekday] == 16 and E_Custom5[0]:
-                        $ E_OutfitDay = "custom5"
-                elif E_Schedule[Weekday] == 17 and E_Custom6[0]:
-                        $ E_OutfitDay = "custom6"
-                elif E_Schedule[Weekday] == 18 and E_Custom7[0]:
-                        $ E_OutfitDay = "custom7"
-                elif E_Schedule[Weekday] == 19 and E_Custom8[0]:
-                        $ E_OutfitDay = "custom8"
-                elif E_Schedule[Weekday] == 20 and E_Custom9[0]:
-                        $ E_OutfitDay = "custom9"
                 elif E_Schedule[Weekday] == 5 and E_Custom2[0]:
                         $ E_OutfitDay = "custom2"
                 elif E_Schedule[Weekday] == 6 and E_Custom3[0]: 
                         $ E_OutfitDay = "custom3"
-                else: # random
+                if not E_OutfitDay: 
                         $ Options = ["teacher"]
                         $ Options.append("costume") if ApprovalCheck("Emma", 1000) else Options
-                        $ Options.append("custom1") if E_Custom[0] == 2 else Options
-                        $ Options.append("custom2") if E_Custom2[0] == 2 else Options
-                        $ Options.append("custom4") if E_Custom4[0] == 2 else Options
-                        $ Options.append("custom5") if E_Custom5[0] == 2 else Options
-                        $ Options.append("custom6") if E_Custom6[0] == 2 else Options
-                        $ Options.append("custom7") if E_Custom7[0] == 2 else Options
-                        $ Options.append("custom8") if E_Custom8[0] == 2 else Options
-                        $ Options.append("custom9") if E_Custom9[0] == 2 else Options
-                        $ Options.append("custom3") if E_Custom3[0] == 2 else Options
+                        if not E_Break[0]:
+                                $ Options.append("custom1") if E_Custom[0] == 2 else Options
+                                $ Options.append("custom2") if E_Custom2[0] == 2 else Options
+                                $ Options.append("custom3") if E_Custom3[0] == 2 else Options
                         $ renpy.random.shuffle(Options) 
                         $ E_OutfitDay = Options[0]
                         $ del Options[:]  
@@ -3481,6 +3037,8 @@ label Emma_Schedule(Clothes = 1, Location = 1, LocTemp = E_Loc):
                         $ E_Loc = "bg teacher"
                 elif Current_Time == "Midday": 
                         $ E_Loc = "bg teacher"
+                elif Current_Time == "Evening": 
+                        $ E_Loc = "bg classroom"
                 else:
                         $ E_Loc = "bg emma"
         elif Weekday == 1 or Weekday == 3:
@@ -3496,9 +3054,9 @@ label Emma_Schedule(Clothes = 1, Location = 1, LocTemp = E_Loc):
         else:
         #Weekend                               
                 if Current_Time == "Morning":
-                        $ E_Loc = "bg campus"
+                        $ E_Loc = "bg pool"
                 elif Current_Time == "Midday":
-                        $ E_Loc = "bg dangerroom"
+                        $ E_Loc = "bg pool"
                 else:
                         $ E_Loc = "bg emma"
         
@@ -3544,7 +3102,7 @@ label LauraOutfit(L_OutfitTemp = L_Outfit, Spunk = 0, Undressed = 0, Changed = 1
                 $ L_OutfitTemp = L_Outfit
         elif L_OutfitTemp == 6: #this sets it to default if using AnyOutfit
                 $ L_OutfitTemp = L_OutfitDay
-                
+        
         if renpy.showing("NightMask", layer='nightmask') and Current_Time == "Morning":
                 #Skips theis check if it's a sleepover
                 return
@@ -3689,138 +3247,6 @@ label LauraOutfit(L_OutfitTemp = L_Outfit, Spunk = 0, Undressed = 0, Changed = 1
                     $ L_Hair = L_Custom3[8] if L_Custom3[8] else L_Hair  
                     $ L_Hose = L_Custom3[9]                         
                     $ L_Shame = L_OutfitShame[6]
-        elif L_OutfitTemp == "custom9":
-                    if not L_Legs and L_Custom9[2]:            
-                            $ Undressed = 1
-                    elif not L_Over and L_Custom9[3]:          
-                            $ Undressed = 1
-                    elif not L_Chest and L_Custom9[5]:          
-                            $ Undressed = 1
-                    elif not L_Panties and L_Custom9[6] and "pantyless" not in L_DailyActions:         
-                            $ Undressed = 1
-                    elif not L_Hose and L_Custom9[9]:          
-                            $ Undressed = 1
-                        
-                    $ L_Arms = L_Custom9[1]
-                    $ L_Legs = L_Custom9[2]
-                    $ L_Over = L_Custom9[3]
-                    $ L_Neck = L_Custom9[4]
-                    $ L_Chest = L_Custom9[5]
-                    $ L_Panties = L_Custom9[6] 
-                    $ L_Boots = L_Custom9[7]  
-                    $ L_Hair = L_Custom9[8] if L_Custom9[8] else L_Hair  
-                    $ L_Hose = L_Custom9[9]                         
-                    $ L_Shame = L_OutfitShame[20]
-        elif L_OutfitTemp == "custom8":
-                    if not L_Legs and L_Custom8[2]:            
-                            $ Undressed = 1
-                    elif not L_Over and L_Custom8[3]:          
-                            $ Undressed = 1
-                    elif not L_Chest and L_Custom8[5]:          
-                            $ Undressed = 1
-                    elif not L_Panties and L_Custom8[6] and "pantyless" not in L_DailyActions:         
-                            $ Undressed = 1
-                    elif not L_Hose and L_Custom8[9]:          
-                            $ Undressed = 1
-                        
-                    $ L_Arms = L_Custom8[1]
-                    $ L_Legs = L_Custom8[2]
-                    $ L_Over = L_Custom8[3]
-                    $ L_Neck = L_Custom8[4]
-                    $ L_Chest = L_Custom8[5]
-                    $ L_Panties = L_Custom8[6] 
-                    $ L_Boots = L_Custom8[7]  
-                    $ L_Hair = L_Custom8[8] if L_Custom8[8] else L_Hair  
-                    $ L_Hose = L_Custom8[9]                         
-                    $ L_Shame = L_OutfitShame[19]
-        elif L_OutfitTemp == "custom7":
-                    if not L_Legs and L_Custom7[2]:            
-                            $ Undressed = 1
-                    elif not L_Over and L_Custom7[3]:          
-                            $ Undressed = 1
-                    elif not L_Chest and L_Custom7[5]:          
-                            $ Undressed = 1
-                    elif not L_Panties and L_Custom7[6] and "pantyless" not in L_DailyActions:         
-                            $ Undressed = 1
-                    elif not L_Hose and L_Custom7[9]:          
-                            $ Undressed = 1
-                        
-                    $ L_Arms = L_Custom7[1]
-                    $ L_Legs = L_Custom7[2]
-                    $ L_Over = L_Custom7[3]
-                    $ L_Neck = L_Custom7[4]
-                    $ L_Chest = L_Custom7[5]
-                    $ L_Panties = L_Custom7[6] 
-                    $ L_Boots = L_Custom7[7]  
-                    $ L_Hair = L_Custom7[8] if L_Custom7[8] else L_Hair  
-                    $ L_Hose = L_Custom7[9]                         
-                    $ L_Shame = L_OutfitShame[18]
-        elif L_OutfitTemp == "custom6":
-                    if not L_Legs and L_Custom6[2]:            
-                            $ Undressed = 1
-                    elif not L_Over and L_Custom6[3]:          
-                            $ Undressed = 1
-                    elif not L_Chest and L_Custom6[5]:          
-                            $ Undressed = 1
-                    elif not L_Panties and L_Custom6[6] and "pantyless" not in L_DailyActions:         
-                            $ Undressed = 1
-                    elif not L_Hose and L_Custom6[9]:          
-                            $ Undressed = 1
-                        
-                    $ L_Arms = L_Custom6[1]
-                    $ L_Legs = L_Custom6[2]
-                    $ L_Over = L_Custom6[3]
-                    $ L_Neck = L_Custom6[4]
-                    $ L_Chest = L_Custom6[5]
-                    $ L_Panties = L_Custom6[6] 
-                    $ L_Boots = L_Custom6[7]  
-                    $ L_Hair = L_Custom6[8] if L_Custom6[8] else L_Hair  
-                    $ L_Hose = L_Custom6[9]                         
-                    $ L_Shame = L_OutfitShame[17]
-        elif L_OutfitTemp == "custom5":
-                    if not L_Legs and L_Custom5[2]:            
-                            $ Undressed = 1
-                    elif not L_Over and L_Custom5[3]:          
-                            $ Undressed = 1
-                    elif not L_Chest and L_Custom5[5]:          
-                            $ Undressed = 1
-                    elif not L_Panties and L_Custom5[6] and "pantyless" not in L_DailyActions:         
-                            $ Undressed = 1
-                    elif not L_Hose and L_Custom5[9]:          
-                            $ Undressed = 1
-                        
-                    $ L_Arms = L_Custom5[1]
-                    $ L_Legs = L_Custom5[2]
-                    $ L_Over = L_Custom5[3]
-                    $ L_Neck = L_Custom5[4]
-                    $ L_Chest = L_Custom5[5]
-                    $ L_Panties = L_Custom5[6] 
-                    $ L_Boots = L_Custom5[7]  
-                    $ L_Hair = L_Custom5[8] if L_Custom5[8] else L_Hair  
-                    $ L_Hose = L_Custom5[9]                         
-                    $ L_Shame = L_OutfitShame[16]
-        elif L_OutfitTemp == "custom4":
-                    if not L_Legs and L_Custom4[2]:            
-                            $ Undressed = 1
-                    elif not L_Over and L_Custom4[3]:          
-                            $ Undressed = 1
-                    elif not L_Chest and L_Custom4[5]:          
-                            $ Undressed = 1
-                    elif not L_Panties and L_Custom4[6] and "pantyless" not in L_DailyActions:         
-                            $ Undressed = 1
-                    elif not L_Hose and L_Custom4[9]:          
-                            $ Undressed = 1
-                        
-                    $ L_Arms = L_Custom4[1]
-                    $ L_Legs = L_Custom4[2]
-                    $ L_Over = L_Custom4[3]
-                    $ L_Neck = L_Custom4[4]
-                    $ L_Chest = L_Custom4[5]
-                    $ L_Panties = L_Custom4[6] 
-                    $ L_Boots = L_Custom4[7]  
-                    $ L_Hair = L_Custom4[8] if L_Custom4[8] else L_Hair  
-                    $ L_Hose = L_Custom4[9]                         
-                    $ L_Shame = L_OutfitShame[15]
         elif L_OutfitTemp == "temporary":
                     if not L_Legs and L_TempClothes[2]:            
                             $ Undressed = 1
@@ -3889,10 +3315,14 @@ label LauraOutfit(L_OutfitTemp = L_Outfit, Spunk = 0, Undressed = 0, Changed = 1
                     $ L_Hose = L_Gym[9]     
                     $ L_Shame = L_OutfitShame[7]   
         elif L_OutfitTemp == "swimwear":
-                    if not L_Swim[0] and "bikini top" not in L_Inventory or "bikini bottoms" not in L_Inventory:
-                            #if she doesn't own her swimsuit components. . .
-                            ch_l "Don't have a suit. . ."
-                            return
+                    if not L_Swim[0]:
+                            if "bikini top" not in L_Inventory or "bikini bottoms" not in L_Inventory:
+                                #if she doesn't own her swimsuit components. . .
+                                if not CheckWord("Laura","Daily","swim"):
+                                        ch_l "Don't have a suit. . ."
+                                return
+                            else:
+                                $ L_Swim[0] = 1
                     if not L_Legs and L_Swim[2]:            
                         $ Undressed = 1
                     elif not L_Over and L_Swim[3]:          
@@ -3956,7 +3386,10 @@ label Laura_Schedule(Clothes = 1, Location = 1, LocTemp = L_Loc):
                 
         if (Current_Time == "Morning" and Clothes and Round >= 90) or Clothes == 2:
                 #Pick clothes for the day
-                if L_Schedule[Weekday] == 1:
+                $ L_OutfitDay = 0
+                if L_Break[0]:
+                    pass #she won't pick clothes if she's mad at you
+                elif L_Schedule[Weekday] == 1:
                         $ L_OutfitDay = "mission"
                 elif L_Schedule[Weekday] == 2:
                         $ L_OutfitDay = "streets"               # fix, make this second costume
@@ -3964,34 +3397,18 @@ label Laura_Schedule(Clothes = 1, Location = 1, LocTemp = L_Loc):
                         $ L_OutfitDay = "custom1"
                 elif L_Schedule[Weekday] == 4:
                         $ L_OutfitDay = "gym"
-                elif L_Schedule[Weekday] == 15 and L_Custom4[0]:
-                        $ L_OutfitDay = "custom4"
-                elif L_Schedule[Weekday] == 16 and L_Custom5[0]:
-                        $ L_OutfitDay = "custom5"
-                elif L_Schedule[Weekday] == 17 and L_Custom6[0]:
-                        $ L_OutfitDay = "custom6"
-                elif L_Schedule[Weekday] == 18 and L_Custom7[0]:
-                        $ L_OutfitDay = "custom7"
-                elif L_Schedule[Weekday] == 19 and L_Custom8[0]:
-                        $ L_OutfitDay = "custom8"
-                elif L_Schedule[Weekday] == 20 and L_Custom9[0]:
-                        $ L_OutfitDay = "custom9"
                 elif L_Schedule[Weekday] == 5 and L_Custom2[0]:
                         $ L_OutfitDay = "custom2"
                 elif L_Schedule[Weekday] == 6 and L_Custom3[0]: 
                         $ L_OutfitDay = "custom3"
-                else: # random
+                if not L_OutfitDay:
+                        # random
                         $ Options = ["mission"]
                         $ Options.append("streets") if ApprovalCheck("Laura", 500, "I") else Options
-                        $ Options.append("custom1") if L_Custom[0] == 2 else Options
-                        $ Options.append("custom2") if L_Custom2[0] == 2 else Options
-                        $ Options.append("custom4") if L_Custom4[0] == 2 else Options
-                        $ Options.append("custom5") if L_Custom5[0] == 2 else Options
-                        $ Options.append("custom6") if L_Custom6[0] == 2 else Options
-                        $ Options.append("custom7") if L_Custom7[0] == 2 else Options
-                        $ Options.append("custom8") if L_Custom8[0] == 2 else Options
-                        $ Options.append("custom9") if L_Custom9[0] == 2 else Options
-                        $ Options.append("custom3") if L_Custom3[0] == 2 else Options
+                        if not L_Break[0]:
+                                $ Options.append("custom1") if L_Custom[0] == 2 else Options
+                                $ Options.append("custom2") if L_Custom2[0] == 2 else Options
+                                $ Options.append("custom3") if L_Custom3[0] == 2 else Options
                         $ renpy.random.shuffle(Options) 
                         $ L_OutfitDay = Options[0]
                         $ del Options[:]  
@@ -4004,7 +3421,7 @@ label Laura_Schedule(Clothes = 1, Location = 1, LocTemp = L_Loc):
         elif Weekday == 0 or Weekday == 2 or Weekday == 4:
         #MoWeFr   
                 if Current_Time == "Morning":
-                        $ L_Loc = "bg dangerroom"
+                        $ L_Loc = "bg pool"
                 elif Current_Time == "Midday": 
                         $ L_Loc = "bg classroom"
                 elif Current_Time == "Evening":
@@ -4022,7 +3439,7 @@ label Laura_Schedule(Clothes = 1, Location = 1, LocTemp = L_Loc):
         else:
         #Weekend                               
                 if Current_Time == "Morning":
-                        $ L_Loc = "bg campus"
+                        $ L_Loc = "bg pool"
                 elif Current_Time == "Midday":
                         $ L_Loc = "bg laura"
                 elif Current_Time == "Evening":
@@ -4196,6 +3613,25 @@ label Wait (Outfit = 1, Lights = 1):
                 $ R_Rep = 1000 if R_Rep > 1000 else R_Rep 
                 $ R_Lust -= 5 if R_Lust >= 50 else 0
                 
+                if R_SEXP >= 15: #raises thirst if you've had sex before
+                        if R_SEXP >= 50:
+                            $ R_Thirst += 8 if R_Thirst <= 70 else 4
+                        elif R_SEXP >= 25:
+                            $ R_Thirst += 5 if R_Thirst <= 60 else 2
+                        else:
+                            $ R_Thirst += 3 if R_Thirst <= 50 else 1
+                            
+                        $ R_Thirst -= 5 if R_Break[0] else 0
+                        $ R_Thirst += 1 if R_Lust >= 50 else 0  
+                
+                if "gonnafap" in R_DailyActions and Zero_Loc("Rogue") != bg_current:
+                        #if it's morning and she wanted to fap yesterday. . .
+                        $ R_Lust = 25
+                        $ R_Thirst -= int(R_Thirst/2) if R_Thirst >= 50 else int(R_Thirst/4) 
+                elif "wannafap" in R_DailyActions:
+                        #if it's morning and she didn't get to fap yesterday. . .
+                        $ R_Thirst += 10 if R_Thirst <= 50 else 5  
+                        
                 $ R_Break[0] -= 1 if R_Break[0] > 0 else 0
                 
                 if "painted" not in R_DailyActions or "cleaned" not in R_DailyActions:   
@@ -4209,8 +3645,6 @@ label Wait (Outfit = 1, Lights = 1):
                         $ R_Inbt += 10   
                     
         # Things about Kitty when you sleep:
-                if K_DynamicTan[0]:
-                    $ K_DynamicTan[0] -= 1
                 if K_Loc == "hold":
                         $ K_Loc = "bg kitty"  
                 if K_Todo:
@@ -4242,6 +3676,26 @@ label Wait (Outfit = 1, Lights = 1):
                 $ K_Rep += 10 if K_Rep < 800 else 0
                 $ K_Rep = 1000 if K_Rep > 1000 else K_Rep 
                 $ K_Lust -= 5 if K_Lust >= 50 else 0
+                
+                if K_SEXP >= 15: #raises thirst if you've had sex before
+                        if K_SEXP >= 50:
+                            $ K_Thirst += 8 if K_Thirst <= 70 else 4
+                        elif K_SEXP >= 25:
+                            $ K_Thirst += 5 if K_Thirst <= 60 else 2
+                        else:
+                            $ K_Thirst += 3 if K_Thirst <= 50 else 1
+                        $ K_Thirst -= 5 if K_Break[0] else 0
+                        $ K_Thirst += 1 if K_Lust >= 50 else 0  
+                
+                if "gonnafap" in K_DailyActions and Zero_Loc("Kitty") != bg_current:
+                        #if it's morning and she wanted to fap yesterday. . .
+                        $ K_Lust = 25
+                        $ K_Thirst -= int(K_Thirst/2) if K_Thirst >= 50 else int(K_Thirst/4) 
+                elif "wannafap" in K_DailyActions:
+                        #if it's morning and she didn't get to fap yesterday. . .
+                        $ K_Thirst += 10 if K_Thirst <= 50 else 5  
+                        
+                $ K_Break[0] -= 1 if K_Break[0] > 0 else 0
                 
                 if "painted" not in K_DailyActions or "cleaned" not in K_DailyActions:   
                         $ del K_Spunk[:]  
@@ -4286,6 +3740,26 @@ label Wait (Outfit = 1, Lights = 1):
                 $ E_Rep = 1000 if E_Rep > 1000 else E_Rep 
                 $ E_Lust -= 5 if E_Lust >= 50 else 0
                 
+                if E_SEXP >= 15: #raises thirst if you've had sex before
+                        if E_SEXP >= 50:
+                            $ E_Thirst += 8 if E_Thirst <= 70 else 4
+                        elif E_SEXP >= 25:
+                            $ E_Thirst += 5 if E_Thirst <= 60 else 2
+                        else:
+                            $ E_Thirst += 3 if E_Thirst <= 50 else 1
+                        $ E_Thirst -= 5 if E_Break[0] else 0
+                        $ E_Thirst += 1 if E_Lust >= 50 else 0  
+                  
+                if "gonnafap" in E_DailyActions and Zero_Loc("Emma") != bg_current:
+                        #if it's morning and she wanted to fap yesterday. . .
+                        $ E_Lust = 25
+                        $ E_Thirst -= int(E_Thirst/2) if E_Thirst >= 50 else int(E_Thirst/4) 
+                elif "wannafap" in E_DailyActions:
+                        #if it's morning and she didn't get to fap yesterday. . .
+                        $ E_Thirst += 10 if E_Thirst <= 50 else 5  
+                        
+                $ E_Break[0] -= 1 if E_Break[0] > 0 else 0
+                
                 if "painted" not in E_DailyActions or "cleaned" not in E_DailyActions:   
                         $ del E_Spunk[:]  
                 
@@ -4329,6 +3803,26 @@ label Wait (Outfit = 1, Lights = 1):
                 $ L_Rep = 1000 if L_Rep > 1000 else L_Rep 
                 $ L_Lust -= 5 if L_Lust >= 50 else 0
                 
+                if L_SEXP >= 15: #raises thirst if you've had sex before
+                        if L_SEXP >= 50:
+                            $ L_Thirst += 8 if L_Thirst <= 70 else 4
+                        elif L_SEXP >= 25:
+                            $ L_Thirst += 5 if L_Thirst <= 60 else 2
+                        else:
+                            $ L_Thirst += 3 if L_Thirst <= 50 else 1
+                        $ L_Thirst -= 5 if L_Break[0] else 0
+                        $ L_Thirst += 1 if L_Lust >= 50 else 0  
+                    
+                if "gonnafap" in L_DailyActions and Zero_Loc("Laura") != bg_current:
+                        #if it's morning and she wanted to fap yesterday. . .
+                        $ L_Lust = 25
+                        $ L_Thirst -= int(L_Thirst/2) if L_Thirst >= 50 else int(L_Thirst/4) 
+                elif "wannafap" in L_DailyActions:
+                        #if it's morning and she didn't get to fap yesterday. . .
+                        $ L_Thirst += 10 if L_Thirst <= 50 else 5  
+                        
+                $ L_Break[0] -= 1 if L_Break[0] > 0 else 0
+                
                 if "painted" not in L_DailyActions or "cleaned" not in L_DailyActions:   
                         $ del L_Spunk[:]  
                 
@@ -4352,7 +3846,8 @@ label Wait (Outfit = 1, Lights = 1):
     $ Round = 100
     $ R_OCount = 0    
     $ K_OCount = 0     
-    $ E_OCount = 0       
+    $ E_OCount = 0     
+    $ L_OCount = 0       
     # Clears out recent and daily actions    
     $ del P_RecentActions[:]                            
     if Time_Count == 0: 
@@ -4361,8 +3856,16 @@ label Wait (Outfit = 1, Lights = 1):
     call GirlWaitAttract #checks girls attraction based on who's in the room
     
     #Things that are about Rogue:      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    if R_Lust >= 70 and R_Loc != bg_current:
-        $ R_Lust = 25
+    if R_Lust >= 70 or R_Thirst >= 30 or renpy.random.randint(1, 20) >= 15:
+                # checks if she wants to fap
+                if "nofap" in R_Traits:
+                        call AnyWord("Rogue",1,0,"wannafap")  #adds "wannafap" tag to daily 
+                else:
+                        call AnyWord("Rogue",1,0,"gonnafap")  #adds "gonnafap" tag to daily 
+                    
+    if "les" in R_RecentActions: #if she had a lesbian encounter without you. . .
+                $ R_Thirst -= int(R_Thirst/2) 
+                $ R_Lust = 20 
     
     #Resets her flirt  options
     $ R_Chat[5] = 0  
@@ -4416,166 +3919,190 @@ label Wait (Outfit = 1, Lights = 1):
     #end Rogue hourly actions
         
         
-    #Things that are about Kitty:   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  
-    if K_Lust >= 70 and K_Loc != bg_current:
-        $ K_Lust = 25
+    #Things that are about Kitty:   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
+    if "met" in K_History:
+            if K_Lust >= 70 or K_Thirst >= 30 or renpy.random.randint(1, 20) >= 15:
+                        # checks if she wants to fap
+                        if "nofap" in K_Traits:
+                                call AnyWord("Kitty",1,0,"wannafap")  #adds "wannafap" tag to daily 
+                        else:
+                                call AnyWord("Kitty",1,0,"gonnafap")  #adds "gonnafap" tag to daily 
+            if "les" in K_RecentActions: #if she had a lesbian encounter without you. . .
+                        $ K_Thirst -= 30 
+                        $ K_Lust = 20 
+                    
+            #Resets her flirt  options
+            $ K_Chat[5] = 0 
             
-    #Resets her flirt  options
-    $ K_Chat[5] = 0 
-    
-    #Resets her addiction fix attempts
-    if K_Event[3]:
-        $ K_Event[3] -= 1               
-    
-    $ K_Forced = 0
-    if K_Loc == "bg classroom" or K_Loc == "bg dangerroom" :
-            $ K_XP += 10    
-    elif K_Loc == "bg showerroom":
-            call Remove_Girl("Kitty")
-        
-    #Appearance clean-up
-    $ K_Blush = 0
-    $ K_Water = 0
-    $ K_Held = 0 
-    
-    # Reduce addiction
-    $ K_Addictionrate -= K_Resistance if K_Addictionrate > 3 else 0    
-    $ K_Addictionrate = 0 if K_Addictionrate < 0 else K_Addictionrate    
-    
-    #Adjusts shame rate
-    if K_Taboo and K_Shame:
-            if K_Loc == "bg dangerroom":            
-                    $ K_Shame -= 10 if K_Shame >=10 else K_Shame
-            $ Count = int((K_Taboo * K_Shame) / 200)
-            call Statup("Kitty", "Inbt", 90, Count)         
-            call Statup("Kitty", "Obed", 90, Count) 
-            $ K_Rep -= Count
-    
-    $ K_Love -= 5*(Action_Check("Kitty","recent","unsatisfied")) #subtracts K_Love by 5* the number of recent unsatisfieds
-    
-    # Clears out recent and daily actions
-    $ del K_RecentActions[:]
-    if "angry" in K_DailyActions:
-        $ K_RecentActions.append("angry")
-    if Time_Count == 0: 
-        $ del K_DailyActions[:]
-    elif Time_Count == 3 and "yesdate" in K_DailyActions and "stoodup" not in K_Traits:
-                        #if you stood her up for a date. . .
-                        $ K_Traits.append("stoodup")
-        
-    call Kitty_Schedule
-    call Stat_Checks    
-    if Outfit:
-            call KittyOutfit(K_OutfitDay)
-    #end Kitty hourly actions
+            #Resets her addiction fix attempts
+            if K_Event[3]:
+                $ K_Event[3] -= 1               
+            
+            $ K_Forced = 0
+            if K_Loc == "bg classroom" or K_Loc == "bg dangerroom" :
+                    $ K_XP += 10    
+            elif K_Loc == "bg showerroom":
+                    call Remove_Girl("Kitty")
+                
+            #Appearance clean-up
+            $ K_Blush = 0
+            $ K_Water = 0
+            $ K_Held = 0 
+            
+            # Reduce addiction
+            $ K_Addictionrate -= K_Resistance if K_Addictionrate > 3 else 0    
+            $ K_Addictionrate = 0 if K_Addictionrate < 0 else K_Addictionrate    
+            
+            #Adjusts shame rate
+            if K_Taboo and K_Shame:
+                    if K_Loc == "bg dangerroom":            
+                            $ K_Shame -= 10 if K_Shame >=10 else K_Shame
+                    $ Count = int((K_Taboo * K_Shame) / 200)
+                    call Statup("Kitty", "Inbt", 90, Count)         
+                    call Statup("Kitty", "Obed", 90, Count) 
+                    $ K_Rep -= Count
+            
+            $ K_Love -= 5*(Action_Check("Kitty","recent","unsatisfied")) #subtracts K_Love by 5* the number of recent unsatisfieds
+            
+            # Clears out recent and daily actions
+            $ del K_RecentActions[:]
+            if "angry" in K_DailyActions:
+                $ K_RecentActions.append("angry")
+            if Time_Count == 0: 
+                $ del K_DailyActions[:]
+            elif Time_Count == 3 and "yesdate" in K_DailyActions and "stoodup" not in K_Traits:
+                                #if you stood her up for a date. . .
+                                $ K_Traits.append("stoodup")
+                
+            call Kitty_Schedule
+            call Stat_Checks    
+            if Outfit:
+                    call KittyOutfit(K_OutfitDay)
+            #end Kitty hourly actions
         
     #Things that are about Emma:   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  
-    if E_Lust >= 70 and E_Loc != bg_current:
-        $ E_Lust = 25
+    if "met" in E_History:
+            if E_Lust >= 70 or E_Thirst >= 30 or renpy.random.randint(1, 20) >= 15:
+                        # checks if she wants to fap
+                        if "nofap" in E_Traits:
+                                call AnyWord("Emma",1,0,"wannafap")  #adds "wannafap" tag to daily 
+                        else:
+                                call AnyWord("Emma",1,0,"gonnafap")  #adds "gonnafap" tag to daily 
+            if "les" in E_RecentActions: #if she had a lesbian encounter without you. . .
+                        $ E_Thirst -= 30 
+                        $ E_Lust = 20 
+                    
+            #Resets her flirt  options
+            $ E_Chat[5] = 0 
             
-    #Resets her flirt  options
-    $ E_Chat[5] = 0 
-    
-    #Resets her addiction fix attempts
-    if E_Event[3]:
-        $ E_Event[3] -= 1               
-    
-    $ E_Forced = 0
-    if E_Loc == "bg teacher" and "bg classroom" in (bg_current, R_Loc, K_Loc):
-            $ E_XP += 10 
-    if E_Loc == "bg classroom" or E_Loc == "bg dangerroom" :
-            $ E_XP += 10    
-    elif E_Loc == "bg showerroom":
-            call Remove_Girl("Emma")
-        
-    #Appearance clean-up
-    $ E_Blush = 0
-    $ E_Water = 0
-    $ E_Held = 0 
-    
-    # Reduce addiction
-    $ E_Addictionrate -= E_Resistance if E_Addictionrate > 3 else 0    
-    $ E_Addictionrate = 0 if E_Addictionrate < 0 else E_Addictionrate    
-    
-    #Adjusts shame rate
-    if E_Taboo and E_Shame:
-            if E_Loc == "bg dangerroom":            
-                    $ E_Shame -= 10 if E_Shame >=10 else E_Shame
-            $ Count = int((E_Taboo * E_Shame) / 200)
-            call Statup("Emma", "Inbt", 90, Count)         
-            call Statup("Emma", "Obed", 90, Count) 
-            $ E_Rep -= int(1.5 * Count)
-    
-    $ E_Love -= 5*(Action_Check("Emma","recent","unsatisfied")) #subtracts E_Love by 5* the number of recent unsatisfieds
-    
-    # Clears out recent and daily actions
-    $ del E_RecentActions[:]
-    if "angry" in E_DailyActions:
-        $ E_RecentActions.append("angry")
-    if Time_Count == 0: 
-        $ del E_DailyActions[:]
-    elif Time_Count == 3 and "yesdate" in E_DailyActions and "stoodup" not in E_Traits:
-                        #if you stood her up for a date. . .
-                        $ E_Traits.append("stoodup")
-        
-    call Emma_Schedule
-    call Stat_Checks    
-    if Outfit:
-            call EmmaOutfit(E_OutfitDay)
-    #end Emma hourly actions
+            #Resets her addiction fix attempts
+            if E_Event[3]:
+                $ E_Event[3] -= 1               
+            
+            $ E_Forced = 0
+            if E_Loc == "bg teacher" and "bg classroom" in (bg_current, R_Loc, K_Loc):
+                    $ E_XP += 10 
+            if E_Loc == "bg classroom" or E_Loc == "bg dangerroom" :
+                    $ E_XP += 10    
+            elif E_Loc == "bg showerroom":
+                    call Remove_Girl("Emma")
+                
+            #Appearance clean-up
+            $ E_Blush = 0
+            $ E_Water = 0
+            $ E_Held = 0 
+            
+            # Reduce addiction
+            $ E_Addictionrate -= E_Resistance if E_Addictionrate > 3 else 0    
+            $ E_Addictionrate = 0 if E_Addictionrate < 0 else E_Addictionrate    
+            
+            #Adjusts shame rate
+            if E_Taboo and E_Shame:
+                    if E_Loc == "bg dangerroom":            
+                            $ E_Shame -= 10 if E_Shame >=10 else E_Shame
+                    $ Count = int((E_Taboo * E_Shame) / 200)
+                    call Statup("Emma", "Inbt", 90, Count)         
+                    call Statup("Emma", "Obed", 90, Count) 
+                    $ E_Rep -= int(1.5 * Count)
+            
+            $ E_Love -= 5*(Action_Check("Emma","recent","unsatisfied")) #subtracts E_Love by 5* the number of recent unsatisfieds
+            
+            # Clears out recent and daily actions
+            $ del E_RecentActions[:]
+            if "angry" in E_DailyActions:
+                $ E_RecentActions.append("angry")
+            if Time_Count == 0: 
+                $ del E_DailyActions[:]
+            elif Time_Count == 3 and "yesdate" in E_DailyActions and "stoodup" not in E_Traits:
+                                #if you stood her up for a date. . .
+                                $ E_Traits.append("stoodup")
+                
+            call Emma_Schedule
+            call Stat_Checks    
+            if Outfit:
+                    call EmmaOutfit(E_OutfitDay)
+            #end Emma hourly actions
        
     #Things that are about Laura:   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  
-    if L_Lust >= 70 and L_Loc != bg_current:
-        $ L_Lust = 25
+    if "met" in L_History:
+            if L_Lust >= 70 or L_Thirst >= 30 or renpy.random.randint(1, 20) >= 15:
+                        # checks if she wants to fap
+                        if "nofap" in L_Traits:
+                                call AnyWord("Laura",1,0,"wannafap")  #adds "wannafap" tag to daily 
+                        else:
+                                call AnyWord("Laura",1,0,"gonnafap")  #adds "gonnafap" tag to daily 
+            if "les" in L_RecentActions: #if she had a lesbian encounter without you. . .
+                        $ L_Thirst -= 30 
+                        $ L_Lust = 20 
+                    
+            #Resets her flirt  options
+            $ L_Chat[5] = 0 
             
-    #Resets her flirt  options
-    $ L_Chat[5] = 0 
-    
-    #Resets her addiction fix attempts
-    if L_Event[3]:
-        $ L_Event[3] -= 1               
-    
-    $ L_Forced = 0
-    if L_Loc == "bg classroom" or L_Loc == "bg dangerroom" :
-            $ L_XP += 10    
-    elif L_Loc == "bg showerroom":
-            call Remove_Girl("Laura")
-        
-    #Appearance clean-up
-    $ L_Blush = 0
-    $ L_Water = 0
-    $ L_Held = 0 
-    
-    # Reduce addiction
-    $ L_Addictionrate -= L_Resistance if L_Addictionrate > 3 else 0    
-    $ L_Addictionrate = 0 if L_Addictionrate < 0 else L_Addictionrate    
-    
-    #Adjusts shame rate
-    if L_Taboo and L_Shame:
-            if L_Loc == "bg dangerroom":            
-                    $ L_Shame -= 10 if L_Shame >=10 else L_Shame
-            $ Count = int((L_Taboo * L_Shame) / 200)
-            call Statup("Laura", "Inbt", 90, Count)         
-            call Statup("Laura", "Obed", 90, Count) 
-            $ L_Rep -= int(1.5 * Count)
-    
-    $ L_Love -= 5*(Action_Check("Laura","recent","unsatisfied")) #subtracts L_Love by 5* the number of recent unsatisfieds
-    
-    # Clears out recent and daily actions
-    $ del L_RecentActions[:]
-    if "angry" in L_DailyActions:
-        $ L_RecentActions.append("angry")
-    if Time_Count == 0: 
-        $ del L_DailyActions[:]
-    elif Time_Count == 3 and "yesdate" in L_DailyActions and "stoodup" not in L_Traits:
-                        #if you stood her up for a date. . .
-                        $ L_Traits.append("stoodup")
-        
-    call Laura_Schedule
-    call Stat_Checks    
-    if Outfit:
-            call LauraOutfit(L_OutfitDay)
-    #end Laura hourly actions
+            #Resets her addiction fix attempts
+            if L_Event[3]:
+                $ L_Event[3] -= 1               
+            
+            $ L_Forced = 0
+            if L_Loc == "bg classroom" or L_Loc == "bg dangerroom" :
+                    $ L_XP += 10    
+            elif L_Loc == "bg showerroom":
+                    call Remove_Girl("Laura")
+                
+            #Appearance clean-up
+            $ L_Blush = 0
+            $ L_Water = 0
+            $ L_Held = 0 
+            
+            # Reduce addiction
+            $ L_Addictionrate -= L_Resistance if L_Addictionrate > 3 else 0    
+            $ L_Addictionrate = 0 if L_Addictionrate < 0 else L_Addictionrate    
+            
+            #Adjusts shame rate
+            if L_Taboo and L_Shame:
+                    if L_Loc == "bg dangerroom":            
+                            $ L_Shame -= 10 if L_Shame >=10 else L_Shame
+                    $ Count = int((L_Taboo * L_Shame) / 200)
+                    call Statup("Laura", "Inbt", 90, Count)         
+                    call Statup("Laura", "Obed", 90, Count) 
+                    $ L_Rep -= int(1.5 * Count)
+            
+            $ L_Love -= 5*(Action_Check("Laura","recent","unsatisfied")) #subtracts L_Love by 5* the number of recent unsatisfieds
+            
+            # Clears out recent and daily actions
+            $ del L_RecentActions[:]
+            if "angry" in L_DailyActions:
+                $ L_RecentActions.append("angry")
+            if Time_Count == 0: 
+                $ del L_DailyActions[:]
+            elif Time_Count == 3 and "yesdate" in L_DailyActions and "stoodup" not in L_Traits:
+                                #if you stood her up for a date. . .
+                                $ L_Traits.append("stoodup")
+                
+            call Laura_Schedule
+            call Stat_Checks    
+            if Outfit:
+                    call LauraOutfit(L_OutfitDay)
+            #end Laura hourly actions
     
     if Time_Count == 1:  
         if "sleepover" in R_Traits: 
@@ -4587,6 +4114,8 @@ label Wait (Outfit = 1, Lights = 1):
         if "sleepover" in L_Traits: 
                 $ L_Traits.remove("sleepover")
                 
+    call LesCheck #checks to see if the girls hook up with each other. . . 
+        
     #end wait items: 
     call Faces #Sets girls faces based on their emotions
     call Checkout
@@ -4656,11 +4185,11 @@ label CheckTaboo(Girl=0,Taboo_Check=0):
     
         if Taboo_Check in ("bg player", "bg rogue", "bg kitty", "bg emma", "bg laura"): 
                     call Set_Taboo(Girl,0)
-        elif Taboo_Check == "bg classroom" or "bg study":
+        elif Taboo_Check in ("bg classroom", "bg study"):
                 if Current_Time == "Night":
                     call Set_Taboo(Girl,5)
                 elif Current_Time == "Evening" or Weekday >= 5:
-                    if "locked" in P_RecentActions:
+                    if "locked" in P_Traits:
                             call Set_Taboo(Girl,0)
                     else:
                             call Set_Taboo(Girl,30)
@@ -4668,10 +4197,13 @@ label CheckTaboo(Girl=0,Taboo_Check=0):
                     call Set_Taboo(Girl,40)
         elif Taboo_Check == "bg dangerroom":
                 if Current_Time == "Night":
-                    call Set_Taboo(Girl,5)
+                    if "locked" in P_Traits:
+                            call Set_Taboo(Girl,0)
+                    else:
+                            call Set_Taboo(Girl,5)
                 else:
                     call Set_Taboo(Girl,40)
-        elif Taboo_Check == "bg campus" or bg_current == "bg pool":
+        elif Taboo_Check == "bg campus" or Taboo_Check == "bg pool":
                 if Current_Time == "Night":
                     call Set_Taboo(Girl,20)
                 else:
@@ -4755,7 +4287,7 @@ label Checkout(Total = 0):
             $ R_Love = 0 if R_Love < 0 else R_Love    
             $ R_Obed = 0 if R_Obed < 0 else R_Obed    
             $ R_Inbt = 0 if R_Inbt < 0 else R_Inbt    
-            $ R_Lust = 0 if R_Lust < 0 else R_Lust   
+            $ R_Lust = 0 if R_Lust < 0 else R_Lust    
                         
             $ R_Action = R_MaxAction if R_Action > R_MaxAction else R_Action  
             $ R_Action = 0 if R_Action < 0 else R_Action  
@@ -4763,7 +4295,9 @@ label Checkout(Total = 0):
             $ R_Addict = 100 if R_Addict > 100 else R_Addict  
             $ R_Addict = 0 if R_Addict < 0 else R_Addict  
             $ R_Addictionrate = 10 if R_Addictionrate > 10 else R_Addictionrate  
-            $ R_Addictionrate = 0 if R_Addictionrate < 0 else R_Addictionrate 
+            $ R_Addictionrate = 0 if R_Addictionrate < 0 else R_Addictionrate  
+            $ R_Thirst = 100 if R_Thirst > 100 else R_Thirst 
+            $ R_Thirst = 0 if R_Thirst < 0 else R_Thirst 
             
             $ R_LikeKitty = 1000 if R_LikeKitty > 1000 else R_LikeKitty     
             $ R_LikeKitty = 0 if R_LikeKitty < 0 else R_LikeKitty 
@@ -4772,7 +4306,7 @@ label Checkout(Total = 0):
             $ R_LikeLaura = 1000 if R_LikeLaura > 1000 else R_LikeLaura     
             $ R_LikeLaura = 0 if R_LikeLaura < 0 else R_LikeLaura 
             if R_Forced and R_ForcedCount < 10:
-                $ R_ForcedCount += 1
+                        $ R_ForcedCount += 1
             
         #Kitty
             $ K_Love = 1000 if K_Love > 1000 else K_Love    
@@ -4791,7 +4325,9 @@ label Checkout(Total = 0):
             $ K_Addict = 100 if K_Addict > 100 else K_Addict  
             $ K_Addict = 0 if K_Addict < 0 else K_Addict  
             $ K_Addictionrate = 10 if K_Addictionrate > 10 else K_Addictionrate  
-            $ K_Addictionrate = 0 if K_Addictionrate < 0 else K_Addictionrate  
+            $ K_Addictionrate = 0 if K_Addictionrate < 0 else K_Addictionrate   
+            $ K_Thirst = 100 if K_Thirst > 100 else K_Thirst 
+            $ K_Thirst = 0 if K_Thirst < 0 else K_Thirst 
             
             $ K_LikeRogue = 1000 if K_LikeRogue > 1000 else K_LikeRogue     
             $ K_LikeRogue = 0 if K_LikeRogue < 0 else K_LikeRogue 
@@ -4819,7 +4355,9 @@ label Checkout(Total = 0):
             $ E_Addict = 100 if E_Addict > 100 else E_Addict  
             $ E_Addict = 0 if E_Addict < 0 else E_Addict  
             $ E_Addictionrate = 10 if E_Addictionrate > 10 else E_Addictionrate  
-            $ E_Addictionrate = 0 if E_Addictionrate < 0 else E_Addictionrate  
+            $ E_Addictionrate = 0 if E_Addictionrate < 0 else E_Addictionrate   
+            $ E_Thirst = 100 if E_Thirst > 100 else E_Thirst 
+            $ E_Thirst = 0 if E_Thirst < 0 else E_Thirst 
             
             $ E_LikeRogue = 1000 if E_LikeRogue > 1000 else E_LikeRogue     
             $ E_LikeRogue = 0 if E_LikeRogue < 0 else E_LikeRogue 
@@ -4847,7 +4385,9 @@ label Checkout(Total = 0):
             $ L_Addict = 100 if L_Addict > 100 else L_Addict  
             $ L_Addict = 0 if L_Addict < 0 else L_Addict  
             $ L_Addictionrate = 10 if L_Addictionrate > 10 else L_Addictionrate  
-            $ L_Addictionrate = 0 if L_Addictionrate < 0 else L_Addictionrate  
+            $ L_Addictionrate = 0 if L_Addictionrate < 0 else L_Addictionrate   
+            $ L_Thirst = 100 if L_Thirst > 100 else L_Thirst 
+            $ L_Thirst = 0 if L_Thirst < 0 else L_Thirst 
             
             $ L_LikeRogue = 1000 if L_LikeRogue > 1000 else L_LikeRogue     
             $ L_LikeRogue = 0 if L_LikeRogue < 0 else L_LikeRogue 
@@ -4973,15 +4513,17 @@ label Set_The_Scene(Chr = 1, Entry = 0, Dress = 1, TrigReset = 1, Quiet=0):
                         hide Professor
                 
         else:            
-            call AllHide(1) #removes all girls that aren't there.  
+                call AllHide(1) #removes all girls that aren't there.  
         show Chibi_UI
         hide Cellphone
         
         if bg_current == "bg classroom" and E_Loc == "bg teacher": 
-            call E_AltClothes(8) #sets teaching outfit                            
-            call EmmaOutfit(Changed=1)
+                #if Emma is teaching, sets teaching outfit 
+                call E_AltClothes(8)                            
+                call EmmaOutfit(Changed=1)
                         
-        if TrigReset and Dress:            
+        if TrigReset and Dress:       
+                #resets your clothing if nude
                 call Get_Dressed
             
         if "Historia" in P_Traits: #Simulation haze
@@ -5332,7 +4874,6 @@ label Display_Emma(Dress = 1, TrigReset = 1, DLoc = E_SpriteLoc, Location = E_Lo
     
 label Display_Laura(Dress = 1, TrigReset = 1, DLoc = L_SpriteLoc, YLoc=50):
    # If Dress, then check whether the character is underdressed when displaying her
-    
     if Taboo and Dress: #If not in the showers, get dressed and dry off        
             call LauraOutfit(Changed=1)
             $ L_Wet = 0
@@ -5364,9 +4905,9 @@ label Display_Laura(Dress = 1, TrigReset = 1, DLoc = L_SpriteLoc, YLoc=50):
     #displays Laura if present, Sets her as local if in a party
     $ L_Loc = bg_current 
     
-#            if Dress:                       
-#                #If in public, check to see if clothes are too sexy, and change them if necessary
-#                call Laura_OutfitShame
+    if Dress:   
+            #If in public, check to see if clothes are too sexy, and change them if necessary
+            call Laura_OutfitShame
     
     
     $ L_Claws = 0 # Resets her claws
@@ -5946,10 +5487,10 @@ label Shop:
                         else:
                             "You don't have enough for that."  
                 "Buy blue miniskirt for $50." if "blue skirt" not in K_Inventory and "k blue skirt" not in P_Inventory:            
-                        if P_Cash >= 60:
+                        if P_Cash >= 50:
                             "You purchase the blue skirt, this will look nice on Kitty."
                             $ P_Inventory.append("k blue skirt")
-                            $ P_Cash -= 60
+                            $ P_Cash -= 50
                         else:
                             "You don't have enough for that."  
                 "Never mind.":
@@ -6009,7 +5550,7 @@ label Shop:
                         $ P_Cash -= 70
                     else:
                         "You don't have enough for that."
-                "Buy red lace corset for $90." if "corset" not in L_Inventory and "l lace corset" not in P_Inventory:            
+                "Buy red lace corset for $90." if "lace corset" not in L_Inventory and "l lace corset" not in P_Inventory:            
                     if P_Cash >= 90:
                         "You purchase the lace corset, this will look nice on Laura."
                         $ P_Inventory.append("l lace corset")

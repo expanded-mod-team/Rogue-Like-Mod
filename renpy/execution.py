@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -130,7 +130,7 @@ class Context(renpy.object.Object):
     does participates in rollback.
     """
 
-    __version__ = 15
+    __version__ = 14
 
     nosave = [ 'next_node' ]
 
@@ -185,9 +185,6 @@ class Context(renpy.object.Object):
         if version < 14:
             self.movie = { }
 
-        if version < 15:
-            self.abnormal_stack = [ False ] * len(self.return_stack)
-
     def __init__(self, rollback, context=None, clear=False):
         """
         `clear`
@@ -199,9 +196,6 @@ class Context(renpy.object.Object):
         self.current = None
         self.call_location_stack = [ ]
         self.return_stack = [ ]
-
-        # The value of abnormal at the time of the call.
-        self.abnormal_stack = [ ]
 
         # Two deeper then the return stack and call location stack.
         # 1 deeper is for the context top-level, 2 deeper is for
@@ -439,11 +433,6 @@ class Context(renpy.object.Object):
 
         while node:
 
-            this_node = node
-            type_node_name = type(node).__name__
-
-            renpy.plog(1, "--- start {} ({}:{})", type_node_name, node.filename, node.linenumber)
-
             self.current = node.name
             self.last_abnormal = self.abnormal
             self.abnormal = False
@@ -455,24 +444,12 @@ class Context(renpy.object.Object):
                 if ll_entry not in self.line_log:
                     self.line_log.append(ll_entry)
 
-            if self.force_checkpoint or (node.rollback == "force"):
-                update_rollback = True
-                force_rollback = True
-            elif not renpy.config.all_nodes_rollback and (node.rollback == "never"):
-                update_rollback = False
-                force_rollback = False
-            else:
-                update_rollback = True
-                force_rollback = False
+            if self.rollback and renpy.game.log:
+                renpy.game.log.begin()
 
-            if update_rollback:
-
-                if self.rollback and renpy.game.log:
-                    renpy.game.log.begin(force=force_rollback)
-
-                if self.force_checkpoint:
-                    renpy.game.log.checkpoint(hard=False)
-                    self.force_checkpoint = False
+            if self.force_checkpoint:
+                renpy.game.log.checkpoint(hard=False)
+                self.force_checkpoint = False
 
             self.seen = False
 
@@ -488,12 +465,7 @@ class Context(renpy.object.Object):
                     renpy.game.exception_info = "While running game code:"
 
                     self.next_node = None
-
-                    renpy.plog(2, "    before execute {} ({}:{})", type_node_name, node.filename, node.linenumber)
-
                     node.execute()
-
-                    renpy.plog(2, "    after execute {} ({}:{})", type_node_name, node.filename, node.linenumber)
 
                     if developer and self.next_node:
                         self.check_stacks()
@@ -545,10 +517,8 @@ class Context(renpy.object.Object):
                 renpy.game.persistent._seen_ever[self.current] = True  # @UndefinedVariable
                 renpy.game.seen_session[self.current] = True
 
-            renpy.plog(2, "    end {} ({}:{})", type_node_name, this_node.filename, this_node.linenumber)
-
-        if self.rollback and renpy.game.log:
-            renpy.game.log.complete()
+            if self.rollback and renpy.game.log:
+                renpy.game.log.complete()
 
     def mark_seen(self):
         """
@@ -572,7 +542,6 @@ class Context(renpy.object.Object):
 
         self.return_stack.append(return_site)
         self.dynamic_stack.append({ })
-        self.abnormal_stack.append(self.last_abnormal)
         self.current = label
 
         self.make_dynamic([ "_args", "_kwargs" ])
@@ -595,7 +564,6 @@ class Context(renpy.object.Object):
         self.return_stack.pop()
         self.call_location_stack.pop()
         self.pop_dynamic()
-        self.abnormal_stack.pop()
 
     def lookup_return(self, pop=True):
         """
@@ -620,14 +588,12 @@ class Context(renpy.object.Object):
                 self.return_stack.pop()
                 self.call_location_stack.pop()
                 self.pop_dynamic()
-                self.abnormal = self.abnormal_stack.pop()
 
                 continue
 
             if pop:
                 self.return_stack.pop()
                 self.call_location_stack.pop()
-                self.abnormal = self.abnormal_stack.pop()
 
             return node
 
@@ -649,10 +615,6 @@ class Context(renpy.object.Object):
 
         rv.translate_language = self.translate_language
         rv.translate_identifier = self.translate_identifier
-
-        rv.abnormal = self.abnormal
-        rv.last_abnormal = self.last_abnormal
-        rv.abnormal_stack = list(self.abnormal_stack)
 
         return rv
 
@@ -828,8 +790,6 @@ def run_context(top):
 
             if label and renpy.game.script.has_label(label):
                 context.call(label)
-                context.make_dynamic([ "_return" ])
-
             label = None
 
             context.run()

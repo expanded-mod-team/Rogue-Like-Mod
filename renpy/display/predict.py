@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -84,11 +84,11 @@ def prediction_coroutine(root_widget):
 
     global predicting
 
-    # Start the prediction thread (to clean out the cache).
-    renpy.display.im.cache.start_prediction()
-
     # Wait to be told to start.
     yield True
+
+    # Start the prediction thread (to clean out the cache).
+    renpy.display.im.cache.start_prediction()
 
     # Set up the image prediction method.
     global image

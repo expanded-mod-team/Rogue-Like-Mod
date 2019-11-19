@@ -54,9 +54,6 @@ label Worldmap:
         "The showers":
                     $ renpy.pop_call() 
                     jump Shower_Room_Entry    
-        "Brotherhood" if "met" in newgirl["Mystique"].History and not IsGirlInParty(): 
-                    $ renpy.pop_call() 
-                    jump Brotherhood_Entry
         "The pool": 
                     $ renpy.pop_call() 
                     jump Pool_Entry           
@@ -73,11 +70,13 @@ label Worldmap:
 label Misplaced:
         if Trigger:
             #sent here by a broken sex action
-            call Misplaced_Sex                  
+            call Misplaced_Sex 
+        if "locked" in P_Traits:
+                $ P_Traits.remove("locked")
         $ Count = renpy.call_stack_depth() #Count = number of items in the call stack
         while Count > 0:
-            $ renpy.pop_call()
             $ Count -= 1
+            $ renpy.pop_call()
         if bg_current == "bg player":
                 jump Player_Room 
         if bg_current == "bg rogue":
@@ -118,15 +117,15 @@ label Misplaced_Sex:
 
 # Player's Room Interface //////////////////////////////////////////////////////////////////////
 label Player_Room_Entry:
+    if "locked" in P_Traits:
+            $ P_Traits.remove("locked")
     $ bg_current = "bg player"   
-    jump Clear_Stack #removes stray calls in the call stack
     call Gym_Clothes
     $ P_RecentActions.append("traveling")
     $ Nearby = []
     call EventCalls
     call Set_The_Scene
-    if "locked" in P_RecentActions:
-            $ P_RecentActions.remove("locked")
+    jump Clear_Stack #removes stray calls in the call stack
     
 label Player_Room:
     $ bg_current = "bg player"
@@ -150,6 +149,16 @@ label Player_Room:
             
         "Would you like to study?":
                     call Study_Session
+                
+        "Lock the door" if "locked" not in P_Traits:
+                    "You lock the door"
+                    $ P_Traits.append("locked")
+                    call Taboo_Level
+                            
+        "Unlock the door" if "locked" in P_Traits:
+                    "You unlock the door"
+                    $ P_Traits.remove("locked")
+                    call Taboo_Level
                     
         "Sleep" if Current_Time == "Night":            
                     call Round10
@@ -193,6 +202,8 @@ label Player_Room:
 
 # Rogue's Room Interface //////////////////////////////////////////////////////////////////////
 label Rogue_Room_Entry:
+    if "locked" in P_Traits:
+            $ P_Traits.remove("locked")
     call Shift_Focus("Rogue")
     $ bg_current = "bg rogue"      
     $ Nearby = []     
@@ -200,8 +211,6 @@ label Rogue_Room_Entry:
     call Set_The_Scene(Entry = 1)    
     call Taboo_Level
     $ P_RecentActions.append("traveling")
-    if "locked" in P_RecentActions:
-            $ P_RecentActions.remove("locked")
     $ D20 = renpy.random.randint(1, 20)
     
     if "Rogue" in Party:
@@ -226,10 +235,13 @@ label Rogue_Room_Entry:
                     jump Rogue_Room   
     #End if Rogue in Party
     
-                    
-    if Round >= 10 and R_Loc == "bg rogue" and (D20 >=15 and R_Lust >= 70): 
-            #Rogue caught fapping  
-            call Girl_Caught_Mastubating("Rogue")
+    if Round >= 10 and R_Loc == bg_current and "les" in R_RecentActions:
+            call Girls_Caught_Lesing("Rogue")
+            if not _return: #if nobody was there for it, drop through
+                jump Rogue_Room
+    if Round >= 10 and R_Loc == bg_current and "gonnafap" in R_DailyActions: 
+                    #Rogue caught fapping  
+                    call Girl_Caught_Mastubating("Rogue")
     
     else: #not auto-caught fapping
             if "Rogue" in Keys:
@@ -245,7 +257,7 @@ label Rogue_Room_Entry:
             if Line != "knock" and "Rogue" in Keys: 
                 if R_Loc == "bg rogue":
                         if Round <= 10:        #add "no" condtion here
-                                if R_RecentActions in ("noentry", "angry"):
+                                if  "noentry" in R_RecentActions or "angry" in R_RecentActions:
                                         call RogueFace("angry")
                                         ch_r "Buzz off already."  
                                         "Rogue shoves you back into the hall."
@@ -253,9 +265,9 @@ label Rogue_Room_Entry:
                                 if Current_Time == "Night" :    
                                         "She's asleep in bed. You slip out quietly." #fix add options here.                            
                                         jump Campus_Map   
-                        elif (D20 >=19 and R_Lust >= 50) or (D20 >=15 and R_Lust >= 70) or (D20 >=10 and R_Lust >= 80):     
-                                #Rogue caught fapping
-                                call Rogue_Caught_Masturbating 
+                        elif "gonnafap" in R_DailyActions: 
+                                #Rogue caught fapping  
+                                call Girl_Caught_Mastubating("Rogue")
                         elif D20 >=15 and (Current_Time == "Night" or Current_Time == "Morning"):                          
                                 #Rogue caught changing
                                 call Rogue_Caught_Changing
@@ -314,7 +326,7 @@ label Rogue_Room_Entry:
                     "You head back."
                     jump Campus_Map 
                     
-            elif R_RecentActions in ("noentry", "angry"):
+            elif  "noentry" in R_RecentActions or "angry" in R_RecentActions:
                     call RogueFace("angry")
                     ch_r "Buzz off already."  
                     jump Campus_Map    
@@ -396,6 +408,19 @@ label Rogue_Room:
         
         "Would you like to study?":
                     call Study_Session
+                    
+        "Lock the door" if "locked" not in P_Traits:
+                if R_Loc == bg_current and not ApprovalCheck("Rogue", 1000):
+                    ch_r "Hey, could you maybe keep that open, [R_Petname]?"
+                else:
+                    "You lock the door"
+                    $ P_Traits.append("locked")   
+                    call Taboo_Level
+                   
+        "Unlock the door" if "locked" in P_Traits:
+                    "You unlock the door"
+                    $ P_Traits.remove("locked")
+                    call Taboo_Level  
             
         "Sleep." if Current_Time == "Night":
                     call Round10
@@ -567,20 +592,22 @@ label Campus_Map:
     $ Trigger = 0
     $ Trigger2 = 0
     $ Trigger3 = 0
-    $ bg_current = "bg campus"
+    $ bg_current = "bg campus"    
+    if "locked" in P_Traits:
+            $ P_Traits.remove("locked")
     call Set_The_Scene
     if not TravelMode: 
         call Worldmap
     jump Campus
     
 label Campus_Entry:
+    if "locked" in P_Traits:
+            $ P_Traits.remove("locked")
     $ bg_current = "bg campus"        
     $ Nearby = []             
     call Gym_Clothes  
     call Taboo_Level
     $ P_RecentActions.append("traveling")
-    if "locked" in P_RecentActions:
-            $ P_RecentActions.remove("locked")
     call EventCalls
     call Set_The_Scene
     
@@ -651,8 +678,6 @@ label Campus:
                     jump Danger_Room_Entry
         "Go to the showers" if TravelMode: 
                     jump Shower_Room_Entry   
-        "Go to Brotherhood" if TravelMode and "met" in newgirl["Mystique"].History and not IsGirlInParty(): 
-                    jump Brotherhood_Entry
         "Go to the pool" if TravelMode: 
                     jump Pool_Entry         
         "Xavier's Study" if TravelMode: 
@@ -670,24 +695,19 @@ label Campus:
 # Classroom Interface //////////////////////////////////////////////////////////////////////
 
 label Class_Room_Entry:
+    if "locked" in P_Traits:
+            $ P_Traits.remove("locked")
     $ Adjacent = []
     $ bg_current = "bg classroom"       
     $ Nearby = []               
     call Gym_Clothes 
     call Taboo_Level
     $ P_RecentActions.append("traveling")
-    if "locked" in P_RecentActions:
-            $ P_RecentActions.remove("locked")
     call EventCalls
     call Set_The_Scene(0) #won't display characters yet)
     if Current_Time != "Night" and Current_Time != "Evening" and Weekday < 5:   
             call Class_Room_Seating    
-    if E_Loc == "bg teacher":
-        $ Line = "As you sit down, you see "+ EmmaName +" at the podium. What would you like to do?" 
-    elif Current_Time == "Evening" or Weekday > 5:   
-        $ Line = "You enter the classroom. What would you like to do?" 
-    else:
-        $ Line = "You sit down at a desk. What would you like to do?" 
+    $ Line = "entry"
     if "goto" in P_RecentActions:
         $ P_RecentActions.remove("goto")
                 
@@ -712,8 +732,17 @@ label Class_Room:
                 call EventCalls
                 call Girls_Location
     call GirlsAngry  
-    if not Line:
-        $ Line = "You are in class right now. What would you like to do?" 
+    
+    if Line == "entry":
+        if E_Loc == "bg teacher":
+            $ Line = "As you sit down, you see "+ EmmaName +" at the podium. What would you like to do?" 
+        elif Current_Time == "Evening" or Weekday > 5:   
+            $ Line = "You enter the classroom. What would you like to do?" 
+        else:
+            $ Line = "You sit down at a desk. What would you like to do?" 
+    else:
+        if Line != "What would you like to do next?":
+                $ Line = "You are in class right now. What would you like to do?" 
     #End Room Set-up
     
 # Class Room Menu Start <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<        
@@ -736,19 +765,18 @@ label Class_Room:
                 call Chat
                 $ Line = "You are in class right now. What would you like to do?" 
            
-        "Lock the door" if "locked" not in P_RecentActions:
-                    if Current_Time == "Evening" or Weekday >=5:
+        "Lock the door" if "locked" not in P_Traits:
+                    if Current_Time == "Evening" or Current_Time == "Night" or Weekday >=5:
                             "You lock the door"
-                            $ P_RecentActions.append("locked")
+                            $ P_Traits.append("locked")
                             call Taboo_Level
                     else:
                             "You can't really do that during class."
                             
-        "Unlock the door" if "locked" in P_RecentActions:
+        "Unlock the door" if "locked" in P_Traits:
                     "You unlock the door"
-                    $ P_RecentActions.remove("locked")
-                    call Taboo_Level
-                    
+                    $ P_Traits.remove("locked")
+                    call Taboo_Level                    
                     
         "Wait" if Current_Time != "Night":
                 "You hang out for a bit."
@@ -951,6 +979,8 @@ label Class_Room_Seating(Girls=[],GirlB=0,GirlLike=0,Line=0,D20=0):
 # Danger Room Interface //////////////////////////////////////////////////////////////////////
 
 label Danger_Room_Entry:
+    if "locked" in P_Traits:
+            $ P_Traits.remove("locked")
     $ bg_current = "bg dangerroom"       
     $ Nearby = []     
     call Taboo_Level
@@ -958,8 +988,6 @@ label Danger_Room_Entry:
     call EventCalls
     call Gym_Clothes("pre")#Automatically puts them in gym clothes if they've been here
     call Set_The_Scene
-    if "locked" in P_RecentActions:
-            $ P_RecentActions.remove("locked")
     
 label Danger_Room:
     $ bg_current = "bg dangerroom"  
@@ -998,7 +1026,20 @@ label Danger_Room:
         "Historical Simulator":    
                 ch_danger "This function allows you to revisit previous events in your history."
                 call Danger_Room_Historia
-                
+              
+        "Lock the door" if "locked" not in P_Traits:
+                    if Current_Time == "Night":
+                            "You lock the door"
+                            $ P_Traits.append("locked")
+                            call Taboo_Level
+                    else:
+                            "You can't really do that during free hours."
+                            
+        "Unlock the door" if "locked" in P_Traits:
+                    "You unlock the door"
+                    $ P_Traits.remove("locked")
+                    call Taboo_Level        
+                    
         "Wait. (locked)" if Current_Time == "Night":
                 pass
         "Wait." if Current_Time != "Night":
@@ -1143,6 +1184,8 @@ label Rogue_TightsRipped(Count = 0):
 # Danger Room Interface //////////////////////////////////////////////////////////////////////
 
 label Pool_Entry:
+    if "locked" in P_Traits:
+            $ P_Traits.remove("locked")
     $ bg_current = "bg pool"       
     $ Nearby = []     
     call Taboo_Level
@@ -1150,8 +1193,6 @@ label Pool_Entry:
     call EventCalls
     call Gym_Clothes
     call Set_The_Scene
-    if "locked" in P_RecentActions:
-            $ P_RecentActions.remove("locked")
     
 label Pool_Room:
     $ bg_current = "bg pool"  
@@ -1214,31 +1255,36 @@ label Pool_Swim:
     
     $ Line = 0
     if bg_current == R_Loc and ApprovalCheck("Rogue", 900):                                
-            if ChestNum("Rogue") or OverNum("Rogue") or PantiesNum("Rogue") or PantsNum("Rogue") or HoseNum("Rogue"):
+            if ChestNum("Rogue") or OverNum("Rogue") or PantiesNum("Rogue") or PantsNum("Rogue") or HoseNum("Rogue"):                
                     call AnyOutfit("Rogue","swimwear")
-                    $ Line = "Rogue"
-            $ R_Water = 1
+            $ Line = "Rogue"            
+            call AnyWord("Rogue",0,"swim","swim")  #adds "swim" tag to recent and daily actions             
     if bg_current == K_Loc and ApprovalCheck("Kitty", 900):   
             if ChestNum("Kitty") or OverNum("Kitty") or PantiesNum("Kitty") or PantsNum("Kitty") or HoseNum("Kitty"):          
                     call AnyOutfit("Kitty","swimwear")
-                    $ Line = "Kitty" if Line > 0 else -1 #should be -1 if there are multiple girls, otherwise name.
-            $ K_Water = 1
+            $ Line = "Kitty" if Line > 0 else -1 #should be -1 if there are multiple girls, otherwise name.
+            call AnyWord("Kitty",0,"swim","swim")  #adds "swim" tag to recent and daily actions 
     if bg_current == E_Loc and ApprovalCheck("Emma", 900):   
             if ChestNum("Emma") or OverNum("Emma") or PantiesNum("Emma") or PantsNum("Emma") or HoseNum("Emma"):           
                     call AnyOutfit("Emma","swimwear")
-                    $ Line = "Emma" if Line > 0 else -1
-            $ E_Water = 1
+            $ Line = "Emma" if Line > 0 else -1
+            call AnyWord("Emma",0,"swim","swim")  #adds "swim" tag to recent and daily actions 
     if bg_current == L_Loc and ApprovalCheck("Laura", 900):  
             if ChestNum("Laura") or OverNum("Laura") or PantiesNum("Laura") or PantsNum("Laura") or HoseNum("Laura"):             
                     call AnyOutfit("Laura","swimwear")
-                    $ Line = "Kitty" if Line > 0 else -1
-            $ L_Water = 1
+            $ Line = "Laura" if Line > 0 else -1
+            call AnyWord("Laura",0,"swim","swim")  #adds "swim" tag to recent and daily actions 
     if Line == -1:
         "The girls get changed and join you."
     elif Line:
         "[Line] gets changed and joins you." 
-            
+        
+    call ShowPool #displays pool graphics
+    
     if D20 >= 15:
+            call Pool_Topless
+            
+    if D20 >= 11:
             "You take a nice, refreshing swim." 
     elif D20 == 2:
             "You join some of the others in a rousing game of Marco Polo."
@@ -1269,32 +1315,91 @@ label Pool_Swim:
     call GirlWaitAttract(1,3,80) #makes any girls in the room like each other a bit more.
     call RoomStatboost("Love",80,3)
     call RoomStatboost("Lust",30,5)
-    $ Round -= 20 if Round >= 20 else Round
-    
-    jump Pool_Room
-
+    $ Round -= 20 if Round >= 20 else Round    
+    hide FullPool
+    call Set_The_Scene(1,0,0)
+    "You all get out of the pool and rest for a bit."
+    return   
                 
 # end Pool Interface //////////////////////////////////////////////////////////////////////
 
+
+image FullPool:
+        #water
+        AlphaMask("bg_pool", "images/PoolMask.png")
+        
+label ShowPool(DLoc=0):
+        #displays the pool with girls in it
+        if R_Loc == bg_current:
+                    $ R_Water = 1
+                    $ DLoc = 500 if Ch_Focus == "Rogue" else 650                        
+                    show Rogue zorder RogueLayer:
+                            alpha 1
+                            zoom .45
+                            offset (0,0)
+                            anchor (0.5, 0.0)  
+                            pos (DLoc,450)   
+                    show Rogue at Pool_Bob
+        if K_Loc == bg_current:
+                    $ K_Water = 1
+                    $ DLoc = 500 if Ch_Focus == "Kitty" else 650 
+                    show Kitty_Sprite zorder KittyLayer:
+                            alpha 1
+                            zoom .45
+                            offset (0,0)
+                            anchor (0.5, 0.0)  
+                            pos (DLoc,450)  
+                    show Kitty_Sprite at Pool_Bob
+        if E_Loc == bg_current:
+                    $ E_Water = 1
+                    $ DLoc = 500 if Ch_Focus == "Emma" else 650 
+                    show Emma_Sprite zorder EmmaLayer:
+                            alpha 1
+                            zoom .45
+                            offset (0,0)
+                            anchor (0.5, 0.0)  
+                            pos (DLoc,450)  
+                    show Emma_Sprite at Pool_Bob
+        if L_Loc == bg_current:
+                    $ L_Water = 1
+                    $ DLoc = 500 if Ch_Focus == "Laura" else 650 
+                    show Laura_Sprite zorder LauraLayer:
+                            alpha 1
+                            zoom .45
+                            offset (0,0)
+                            anchor (0.5, 0.0)  
+                            pos (DLoc,450)   
+                    show Laura_Sprite at Pool_Bob            
+        show FullPool zorder 175 #should put masked pool above girls
+        return
+        
+transform Pool_Bob():     
+        subpixel True 
+        xoffset 0
+        yoffset 0
+        choice:
+            yoffset 0
+        choice:
+            pause .3
+        choice:
+            pause .5
+        block:     
+            ease 1 yoffset 10 
+            ease 1.5 yoffset 0 
+            repeat
+        
 # Showers Interface //////////////////////////////////////////////////////////////////////
 label Shower_Room_Entry:
     $ bg_current = "bg showerroom"      
-    if "locked" in P_RecentActions:
-            $ P_RecentActions.remove("locked")  
+    if "locked" in P_Traits:
+            $ P_Traits.remove("locked")  
     $ Nearby = []             
     call Gym_Clothes  
     call Taboo_Level
     call Set_The_Scene(0,1,0)
     if Round <= 10 or len(Party) >= 2:         
             jump Shower_Room
-            
-#    #remove diagnostic
-#    $ R_Loc = "bg dangerroom"  
-#    $ K_Loc = "bg dangerroom" 
-#    $ E_Loc = "bg dangerroom"  
-#    $ L_Loc = "bg dangerroom"  
-#    #remove diagnostic
-            
+                        
     $ Options = []
     if "Rogue" not in Party and "showered" not in R_DailyActions and (R_Loc == "bg rogue" or R_Loc == "bg dangerroom"):  #Checks if Rogue is in the shower
             $ Options.append("Rogue")   
@@ -1329,40 +1434,7 @@ label Shower_Room_Entry:
                         $ L_Loc = "nearby"  
                 jump Shower_Room
 
-    if D20 > 15 and Options[0]:
-#            if Options[0] == "Rogue":      
-#                    if (D20 >= 19 and R_Lust >= 70) or (D20 >= 17 and R_Lust >= 80):
-#                        "As you approach the showers, you hear some shallow moans from inside."
-#                        $ R_Wet = 2
-#                    else:
-#                        "As you approach the showers, you hear some humming noises from inside." 
-#                    $ Options = []         
-#                    jump Rogue_Caught_Shower
-#            elif Options[0] == "Kitty":  
-#                    if (D20 >= 19 and K_Lust >= 70) or (D20 >= 17 and K_Lust >= 80):
-#                        "As you approach the showers, you hear some shallow moans from inside."
-#                        $ K_Wet = 2
-#                    else:
-#                        "As you approach the showers, you hear some humming noises from inside." 
-#                    $ Options = []                    
-#                    jump Kitty_Caught_Shower
-#            elif Options[0] == "Emma":  
-#                    if (D20 >= 19 and E_Lust >= 70) or (D20 >= 17 and E_Lust >= 80):
-#                        "As you approach the showers, you hear some shallow moans from inside."
-#                        $ E_Wet = 2
-#                    else:
-#                        "As you approach the showers, you hear some humming noises from inside." 
-#                    $ Options = []                    
-#                    jump Emma_Caught_Shower
-#            elif Options[0] == "Laura":   
-#                    if (D20 >= 19 and L_Lust >= 70) or (D20 >= 17 and L_Lust >= 80):
-#                        "As you approach the showers, you hear some shallow moans from inside."
-#                        $ L_Wet = 2
-#                    else:
-#                        "As you approach the showers, you hear some humming noises from inside." 
-#                    $ Options = []                    
-#                    jump Laura_Caught_Shower
-                    
+    if D20 > 15 and Options[0]:                    
             call Girl_Caught_Shower(Options[0])
             if _return:
                 jump Campus_Map #if there is a return value, jump to the campus, but not otherwise
@@ -1484,6 +1556,17 @@ label Shower_Room:
         "Shower [[no time](locked)" if Round <= 30:            
                 pass
             
+        "Lock the door" if "locked" not in P_Traits:
+                    "You lock the door"
+                    $ P_Traits.append("locked")                    
+                    $ Nearby = []             
+                    call Taboo_Level
+                   
+        "Unlock the door" if "locked" in P_Traits:
+                    "You unlock the door"
+                    $ P_Traits.remove("locked")
+                    call Taboo_Level      
+                    
         "Wait." if Current_Time != "Night":
                 "You hang out for a bit."
                 "In the showers."
@@ -2222,6 +2305,8 @@ label Showering(Occupants = [], StayCount=[] , Showered = 0, Line = 0):
     #insert random events here
     $ P_RecentActions.append("showered")
     $ P_DailyActions.append("showered")
+    if "scent" in P_DailyActions:
+            $ P_DailyActions.remove("scent") 
                    
     call Get_Dressed
     if R_Loc == bg_current:  
@@ -3331,6 +3416,8 @@ label Laura_Caught_Shower:
 
 # Kitty's Room Interface //////////////////////////////////////////////////////////////////////
 label Kitty_Room_Entry:   
+    if "locked" in P_Traits:
+            $ P_Traits.remove("locked")
     $ Nearby = []     
     call Shift_Focus("Kitty")
     $ bg_current = "bg kitty"           
@@ -3338,8 +3425,6 @@ label Kitty_Room_Entry:
     call Taboo_Level
     call Set_The_Scene(Entry = 1)  
     $ P_RecentActions.append("traveling")
-    if "locked" in P_RecentActions:
-            $ P_RecentActions.remove("locked")
     $ D20 = renpy.random.randint(1, 20)
     
     if "Kitty" in Party:
@@ -3362,14 +3447,19 @@ label Kitty_Room_Entry:
                     jump Kitty_Room   
     #End if Kitty in Party
     
+    if Round >= 10 and K_Loc == bg_current and "les" in K_RecentActions:
+            call Girls_Caught_Lesing("Kitty")
+            if not _return:
+                jump Kitty_Room
+                
     if "dress2" in L_History and not Party:
             #if you helped buy clothes for Laura earlier. . .
             call Laura_Dressup3
             jump Campus
                     
-    if Round >= 10 and K_Loc == "bg kitty" and (D20 >=15 and K_Lust >= 70): 
-            #Kitty caught fapping     
-            call Girl_Caught_Mastubating("Kitty")
+    if Round >= 10 and K_Loc == bg_current and "gonnafap" in K_DailyActions: 
+                    #Kitty caught fapping  
+                    call Girl_Caught_Mastubating("Kitty")
     
     else: #not auto-caught fapping
             if "Kitty" in Keys:
@@ -3385,7 +3475,7 @@ label Kitty_Room_Entry:
             if Line != "knock" and "Kitty" in Keys: 
                 if K_Loc == "bg kitty":
                         if Round <= 10:        
-                                if K_RecentActions in ("noentry", "angry"):
+                                if  "noentry" in K_RecentActions or "angry" in K_RecentActions:
                                         call KittyFace("angry")
                                         ch_k "GTFO."    
                                         "Kitty shoves you back into the hall."
@@ -3393,9 +3483,9 @@ label Kitty_Room_Entry:
                                 if Current_Time == "Night" :    
                                         "She's asleep in bed. You slip out quietly." #fix add options here.                            
                                         jump Campus_Map   
-                        elif (D20 >=19 and K_Lust >= 50) or (D20 >=15 and K_Lust >= 70) or (D20 >=10 and K_Lust >= 80):     
-                                #Kitty caught fapping
-                                call Kitty_Caught_Masturbating 
+                        elif "gonnafap" in K_DailyActions: 
+                                #Kitty caught fapping  
+                                call Girl_Caught_Mastubating("Kitty")
                         elif D20 >=15 and (Current_Time == "Night" or Current_Time == "Morning"):                           
                                 #Kitty caught changing
                                 call Kitty_Caught_Changing
@@ -3454,7 +3544,7 @@ label Kitty_Room_Entry:
                     "You head back."
                     jump Campus_Map 
                     
-            elif K_RecentActions in ("noentry", "angry"):
+            elif  "noentry" in K_RecentActions or "angry" in K_RecentActions:
                     call KittyFace("angry")
                     ch_k "What part of \"GTFO\" was unclear?"  
                     jump Campus_Map    
@@ -3536,7 +3626,20 @@ label Kitty_Room:
         
         "Would you like to study?":
                     call Study_Session
-            
+          
+        "Lock the door" if "locked" not in P_Traits:
+                if K_Loc == bg_current and not ApprovalCheck("Kitty", 1000):
+                    ch_k "Um, I'd[K_like]rather you didn't lock my door, [K_Petname]?"
+                else:
+                    "You lock the door"
+                    $ P_Traits.append("locked")     
+                    call Taboo_Level
+                   
+        "Unlock the door" if "locked" in P_Traits:
+                    "You unlock the door"
+                    $ P_Traits.remove("locked")
+                    call Taboo_Level  
+                    
         "Sleep." if Current_Time == "Night" and K_Loc == bg_current:
                     call Round10
                     call Girls_Location
@@ -3775,6 +3878,8 @@ label Kitty_Caught_Changing:
 
 # Emma's Room Interface //////////////////////////////////////////////////////////////////////
 label Emma_Room_Entry:   
+    if "locked" in P_Traits:
+            $ P_Traits.remove("locked")
     $ Nearby = []     
     call Shift_Focus("Emma")
     $ bg_current = "bg emma"           
@@ -3782,8 +3887,6 @@ label Emma_Room_Entry:
     call Taboo_Level
     call Set_The_Scene(Entry = 1) 
     $ P_RecentActions.append("traveling")
-    if "locked" in P_RecentActions:
-            $ P_RecentActions.remove("locked")
     $ D20 = renpy.random.randint(1, 20)
     
     if "Emma" in Party:
@@ -3804,10 +3907,15 @@ label Emma_Room_Entry:
                     jump Emma_Room   
     #End if Emma in Party
     
-                    
-    if Round >= 10 and E_Loc == "bg emma" and (D20 >=15 and E_Lust >= 70): 
-            #Emma caught fapping     
-            call Girl_Caught_Mastubating("Emma")
+         
+    if Round >= 10 and E_Loc == bg_current and "les" in E_RecentActions:
+            call Girls_Caught_Lesing("Emma")
+            if not _return:
+                jump Emma_Room
+                
+    if Round >= 10 and E_Loc == bg_current and "gonnafap" in E_DailyActions: 
+                    #Emma caught fapping  
+                    call Girl_Caught_Mastubating("Emma")
     
     else: #not auto-caught fapping
             if "Emma" in Keys:
@@ -3823,7 +3931,7 @@ label Emma_Room_Entry:
             if Line != "knock" and "Emma" in Keys: 
                 if E_Loc == "bg emma":
                         if Round <= 10:        
-                                if E_RecentActions in ("noentry", "angry"):
+                                if  "noentry" in E_RecentActions or "angry" in E_RecentActions:
                                         call EmmaFace("angry")
                                         ch_e "Out!"    
                                         "Emma shoves you back into the hall."
@@ -3831,9 +3939,9 @@ label Emma_Room_Entry:
                                 if Current_Time == "Night" :    
                                         "She's asleep in bed. You slip out quietly." #fix add options here.                            
                                         jump Campus_Map   
-                        elif (D20 >=19 and E_Lust >= 50) or (D20 >=15 and E_Lust >= 70) or (D20 >=10 and E_Lust >= 80):     
-                                #Emma caught fapping
-                                call Emma_Caught_Masturbating 
+                        elif "gonnafap" in E_DailyActions: 
+                                #Emma caught fapping  
+                                call Girl_Caught_Mastubating("Emma")
                         elif D20 >=15 and (Current_Time == "Night" or Current_Time == "Morning"):                           
                                 #Emma caught changing
                                 call Emma_Caught_Changing
@@ -3889,7 +3997,7 @@ label Emma_Room_Entry:
                     "You head back."
                     jump Campus_Map 
                     
-            elif E_RecentActions in ("noentry", "angry"):
+            elif  "noentry" in E_RecentActions or "angry" in E_RecentActions:
                     call EmmaFace("angry")
                     ch_e "I believe I've made myself clear."  
                     jump Campus_Map    
@@ -3948,7 +4056,7 @@ label Emma_Room:
     if "traveling" in P_RecentActions:
         $ P_RecentActions.remove("traveling")
     call Taboo_Level
-    call Set_The_Scene(Quiet=1)
+    call Set_The_Scene(Quiet=1)   
     call QuickEvents
     call Checkout(1)
     if Round <= 10: 
@@ -3971,6 +4079,19 @@ label Emma_Room:
         "Would you like to study?":                
                     call Study_Session
             
+        "Lock the door" if "locked" not in P_Traits:
+                if E_Loc == bg_current and not ApprovalCheck("Emma", 1000):
+                    ch_e "Do you really think it's appropriate for you to lock the door to my room?"
+                else:
+                    "You lock the door"
+                    $ P_Traits.append("locked")     
+                    call Taboo_Level
+                   
+        "Unlock the door" if "locked" in P_Traits:
+                    "You unlock the door"
+                    $ P_Traits.remove("locked")
+                    call Taboo_Level  
+                    
         "Sleep." if Current_Time == "Night" and E_Loc == bg_current:
                     call Round10
                     call Girls_Location
@@ -4136,6 +4257,8 @@ label Emma_Caught_Changing:
 
 # Laura's Room Interface //////////////////////////////////////////////////////////////////////
 label Laura_Room_Entry:
+    if "locked" in P_Traits:
+            $ P_Traits.remove("locked")
     call Shift_Focus("Laura")
     $ bg_current = "bg laura"      
     $ Nearby = []     
@@ -4143,8 +4266,6 @@ label Laura_Room_Entry:
     call Set_The_Scene(Entry = 1)    
     call Taboo_Level
     $ P_RecentActions.append("traveling")
-    if "locked" in P_RecentActions:
-            $ P_RecentActions.remove("locked")
     $ D20 = renpy.random.randint(1, 20)
     
     if "Laura" in Party:
@@ -4167,10 +4288,15 @@ label Laura_Room_Entry:
                     jump Laura_Room   
     #End if Laura in Party
     
-                    
-    if Round >= 10 and L_Loc == "bg laura" and (D20 >=15 and L_Lust >= 70): 
-            #Laura caught fapping      
-            call Girl_Caught_Mastubating("Laura")    
+     
+    if Round >= 10 and L_Loc == bg_current and "les" in L_RecentActions:
+            call Girls_Caught_Lesing("Laura")
+            if not _return:
+                jump Laura_Room
+                
+    if Round >= 10 and L_Loc == bg_current and "gonnafap" in L_DailyActions: 
+                    #Laura caught fapping  
+                    call Girl_Caught_Mastubating("Laura") 
     else: 
             #not auto-caught fapping
             if "Laura" in Keys:
@@ -4186,7 +4312,7 @@ label Laura_Room_Entry:
             if Line != "knock" and "Laura" in Keys: 
                     if L_Loc == "bg laura":
                         if Round <= 10:        #add "no" condtion here
-                                if L_RecentActions in ("noentry", "angry"):
+                                if  "noentry" in L_RecentActions or "angry" in L_RecentActions:
                                         call LauraFace("angry")
                                         ch_l "Get out of my face."  
                                         "Laura shoves you back into the hall."
@@ -4194,9 +4320,9 @@ label Laura_Room_Entry:
                                 if Current_Time == "Night" :    
                                         "She's asleep in bed. You slip out quietly." #fix add options here.                            
                                         jump Campus_Map   
-                        elif (D20 >=19 and L_Lust >= 50) or (D20 >=15 and L_Lust >= 70) or (D20 >=10 and L_Lust >= 80):    
-                                #Laura caught fapping
-                                call Laura_Caught_Masturbating 
+                        elif "gonnafap" in L_DailyActions: 
+                                #Laura caught fapping  
+                                call Girl_Caught_Mastubating("Laura") 
                         elif D20 >=15 and (Current_Time == "Night" or Current_Time == "Morning"):                          
                                 #Laura caught changing
 #                                call Laura_Caught_Changing
@@ -4253,7 +4379,7 @@ label Laura_Room_Entry:
                     "You head back."
                     jump Campus_Map 
                     
-            elif L_RecentActions in ("noentry", "angry"):
+            elif "noentry" in L_RecentActions or "angry" in L_RecentActions:
                     call LauraFace("angry")
                     ch_l "Fuck off."  
                     jump Campus_Map    
@@ -4324,7 +4450,20 @@ label Laura_Room:
         
         "Would you like to study?":
                     call Study_Session
-            
+         
+        "Lock the door" if "locked" not in P_Traits:
+                if L_Loc == bg_current and not ApprovalCheck("Laura", 1200):
+                    ch_l "I don't want to feel caged up like that, [L_Petname]."
+                else:
+                    "You lock the door"
+                    $ P_Traits.append("locked") 
+                    call Taboo_Level
+                   
+        "Unlock the door" if "locked" in P_Traits:
+                    "You unlock the door"
+                    $ P_Traits.remove("locked")
+                    call Taboo_Level  
+                    
         "Sleep." if Current_Time == "Night":
                     call Round10
                     call Girls_Location
@@ -4487,64 +4626,6 @@ label Laura_Room:
 # end Laura's Room Interface //////////////////////////////////////////////////////////////////////
 
 
-label Girl_Caught_Mastubating(Girl=0):
-    #called by room entry dialog if the girl was masturbating
-    if not Girl:
-        return
-    "As you approach her room, you hear soft moans from inside, and notice that the door is slightly ajar."
-    menu:
-        extend ""
-        "Knock politely":
-            $ Line = "knock"
-        "Peek inside":
-            call Set_The_Scene
-            $ Trigger = "masturbation"
-            $ Trigger3 = "fondle pussy"
-            "You see [Girl], eyes closed and stroking herself vigorously."
-            menu:
-                extend ""
-                "Enter Quietly":
-                        $ Line = "enter"
-                "Pull back and knock":                        
-                        $ Line = "knock"
-                "Leave quietly":
-                        $ Line = "leave"
-        "Enter quietly":
-                $ Line = "enter"
-        "Leave quietly":
-                $ Line = "leave"
-    
-    if Line == "leave":      
-            call Statup([Girl], "Lust", 80, 20)
-            "You leave [Girl] to her business and slip out."
-            $ renpy.pop_call()  
-            jump Campus_Map 
-    elif Line == "knock":
-            "You hear some soft moans, followed by some shuffling around as items tumble to the ground."
-            "After several seconds and some more shuffling of clothing, [Girl] comes to the door."
-            call AnyFace([Girl],"confused",1,Eyes = "surprised",Mouth = "smile") 
-            $ Trigger = 0
-            $ Trigger3 = 0
-            call Set_The_Scene            
-            if Girl == "Rogue":
-                    ch_r "Sorry about that [L_Petname], I was. . . working out."
-            elif Girl == "Kitty":
-                    ch_k "Oh, hey, [K_Petname], I was. . . never mind."
-            elif Girl == "Emma":
-                    ch_e "Well, I suppose you could tell I was a bit. . . occupied."
-            elif Girl == "Laura":                
-                    ch_l "Um, hey [L_Petname], just working off some stress."
-            $ Tempmod += 10
-    elif Line == "enter":
-            if Girl == "Rogue":
-                    call Rogue_Caught_Masturbating
-            elif Girl == "Kitty":
-                    call Kitty_Caught_Masturbating
-            elif Girl == "Emma":
-                    call Emma_Caught_Masturbating
-            elif Girl == "Laura":
-                    call Laura_Caught_Masturbating
-    return
  
 
 #label Girl_Caught_Changing(Girl=0):
@@ -4718,13 +4799,12 @@ label Girl_Caught_Mastubating(Girl=0):
 ##            jump Laura_Room
 #            return
 ##End Girl Caught Changing / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
-            
-
-label Study_Room_Entry:   
+         
+label Study_Room_Entry:  
+    if "locked" in P_Traits:
+            $ P_Traits.remove("locked") 
     $ Nearby = []     
-    $ bg_current = "bg study"  
-    if "locked" in P_RecentActions:
-            $ P_RecentActions.remove("locked")         
+    $ bg_current = "bg study"     
     call Gym_Clothes
     call Taboo_Level
     call Set_The_Scene(Entry = 1)  

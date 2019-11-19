@@ -1265,7 +1265,9 @@ label Kitty_ToplessorNothing:
 label Kitty_First_Topless(Silent = 0, TempLine = 0):  
     if ChestNum("Kitty") > 1 or OverNum("Kitty") > 2:
         #if she's wearing substantial clothing. . .
-        return        
+        return          
+    if K_Loc != bg_current:
+            return
     $ K_RecentActions.append("topless")                      
     $ K_DailyActions.append("topless")
     call DrainWord("Kitty","no topless")    
@@ -1804,6 +1806,8 @@ label Kitty_First_Bottomless(Silent = 0):
     if PantiesNum("Kitty") > 1 or PantsNum("Kitty") > 2 or HoseNum("Kitty") > 9:
         #if she's wearing substantial clothing. . .
         return     
+    if K_Loc != bg_current:
+            return
     $ K_RecentActions.append("bottomless")                      
     $ K_DailyActions.append("bottomless")
     call DrainWord("Kitty","no bottomless")

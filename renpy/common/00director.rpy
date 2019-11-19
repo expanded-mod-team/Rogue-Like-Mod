@@ -1,4 +1,4 @@
-﻿# Copyright 2017 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2017 Tom Rothamel <pytom@bishoujo.us>
 
 # Permission to use, copy, modify, and/or distribute this software for
 # non-commerical purposes is hereby granted, provided that the above
@@ -83,12 +83,6 @@ init python in director:
     UNINTERESTING_NODES = (
         renpy.ast.Translate,
         renpy.ast.EndTranslate,
-    )
-
-    # Nodes that are only interesting when on a line by itself.
-    ALONE_NODES = (
-        renpy.ast.Label,
-        renpy.ast.Pass,
     )
 
     def audio_code_to_filename(channel, fn):
@@ -238,10 +232,6 @@ init python in director:
             if isinstance(node, UNINTERESTING_NODES):
                 continue
 
-            if isinstance(node, ALONE_NODES):
-                if [ i for i in renpy.scriptedit.nodes_on_line(filename, line) if not isinstance(i, ALONE_NODES) ]:
-                    continue
-
             if filename.startswith("renpy/"):
                 show_director = False
                 continue
@@ -345,7 +335,7 @@ init python in director:
 
         else:
 
-            if state.change and (state.attributes == state.original_attributes):
+            if state.attributes == state.original_attributes:
                 attributes = state.attributes
             else:
 

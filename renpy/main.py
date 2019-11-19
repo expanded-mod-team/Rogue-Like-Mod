@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -31,8 +31,6 @@ import os
 import sys
 import time
 import zipfile
-import gc
-
 import __main__
 
 last_clock = time.time()
@@ -394,16 +392,11 @@ def main():
     if game.persistent._virtual_size:
         renpy.config.screen_width, renpy.config.screen_height = game.persistent._virtual_size
 
-    # Init save locations and loadsave.
+    # Init save locations.
     renpy.savelocation.init()
 
     # We need to be 100% sure we kill the savelocation thread.
     try:
-
-        # Init save slots.
-        renpy.loadsave.init()
-
-        log_clock("Loading save slot metadata.")
 
         # Load persistent data from all save locations.
         renpy.persistent.update()
@@ -485,20 +478,6 @@ def main():
         renpy.python.make_clean_stores()
         log_clock("Making clean stores")
 
-        gc.collect()
-
-        if renpy.config.manage_gc:
-            gc.set_threshold(*renpy.config.gc_thresholds)
-
-            gc_debug = int(os.environ.get("RENPY_GC_DEBUG", 0))
-
-            if renpy.config.gc_print_unreachable:
-                gc_debug |= gc.DEBUG_SAVEALL
-
-            gc.set_debug(gc_debug)
-
-        log_clock("Initial gc.")
-
         # Start debugging file opens.
         renpy.debug.init_main_thread_open()
 
@@ -534,8 +513,6 @@ def main():
                 renpy.loadsave.autosave_not_running.wait(3.0)
 
     finally:
-
-        gc.set_debug(0)
 
         renpy.loader.auto_quit()
         renpy.savelocation.quit()

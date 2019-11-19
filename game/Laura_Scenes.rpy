@@ -16,6 +16,8 @@ label LauraMeet(Topics=[],Loop=1):
     $ L_SpriteLoc = StageCenter
     call Set_The_Scene(0)
     $ L_Petname = Playername   
+    $ L_Outfit = "mission"
+    call LauraOutfit
     
     "As you approach the Danger Room, you hear a ferocious clanging of metal."
     "Just as you pass through the door, a robotic arm smashes into your face."
@@ -2052,6 +2054,259 @@ label Laura_Master:
 
 # end Laura_Master//////////////////////////////////////////////////////////
 
+
+
+# start Laura_Sexfriend//////////////////////////////////////////////////////////
+
+label Laura_Sexfriend:   #Laura_Update 
+    #set this to occur after class
+    $ L_Lust = 70
+    $ L_Loc = bg_current
+    call Set_The_Scene
+    $ L_DailyActions.append("relationship")
+    call Taboo_Level
+    $ Line = 0         
+    call LauraFace("sly",2,Eyes="side")
+    "Laura approaches you and pulls you aside. She seems to be shivering a little bit."
+    "She seems to be squirming around and rubbing her thighs together."
+    $ L_Petnames.append("sex friend")   
+    call LauraFace("sly",2)
+    if "Laura" in P_Harem:        
+            ch_l "Hey."
+            ch_l "I need some alone time with you."
+    elif "lover" in L_Petnames or "master" in L_Petnames or "lover" in L_Petnames or "sir" in L_Petnames:
+            #if you have done the lover thing
+            ch_l "Hey."
+            ch_l "I need some alone time with you."
+    else:
+            #if you've done no relationship stuff yet. . .
+            ch_l "Hey, so. . . "
+            if L_SEXP >= 50:
+                ch_l "I know we're kind of casual and all. . ."
+            else:
+                ch_l "Maybe this seems a bit out of the blue, but. . ."
+            ch_l "I'd really just like to have some sex."
+            ch_l "Like lots of sex." 
+            ch_l "With you."
+            menu:
+                extend ""
+                "Sure":
+                    call LauraFace("sly",2,Mouth="smile")
+                    $Line = "yes"
+                "No thanks":
+                    call LauraFace("confused",2)
+                    $Line = "no"
+                ". . .":
+                    call Statup("Laura", "Obed", 90, 5)
+                    call LauraFace("confused",2)
+                
+            if not Line:
+                    ch_l "Now, if at all possible. . ."
+                    menu:
+                        extend ""
+                        "Sure":
+                            call LauraFace("sly",2,Mouth="smile")
+                            $Line = "yes"
+                        "No thanks":
+                            call LauraFace("confused",2)
+                            $Line = "no"
+                            
+            if Line == "no":
+                call Statup("Laura", "Love", 200, -5)
+                call Statup("Laura", "Obed", 80, 5)
+                ch_l "What? Why not?"
+                menu:
+                    extend ""
+                    "Ok, fine":
+                        call LauraFace("confused",2,Mouth="smile")
+                        ch_l "Love the enthusiasm."
+                        $Line = "yes"
+                    "Not interested":
+                        call LauraFace("confused",2)
+                                
+                    "There's someone else":
+                        call Statup("Laura", "Love", 95, -5)
+                        call Statup("Laura", "Obed", 90, 5)
+                        if P_Harem:
+                                call LauraFace("surprised",2)
+                                ch_l "Oh, [P_Harem[0]]?"
+                                call GirlLikesGirl("Laura",P_Harem[0],600,-25,1)
+                        call LauraFace("sly",2)
+                        ch_l "Well, she doesn't need to know about it. . ."
+                        menu:
+                            extend ""
+                            "Ok, fine":
+                                ch_l "Love the enthusiasm."
+                                $Line = "yes"
+                            "Still no":
+                                pass
+                                
+    if Line == "no":
+                call Statup("Laura", "Love", 200, -10)
+                call Statup("Laura", "Obed", 90, 15)
+                call Statup("Laura", "Inbt", 90, 10)
+                call LauraFace("sad",2)
+                ch_l "Really?"
+                ch_l "Bummer."
+                ch_l "Well let me know if you change your mind."
+                call LauraFace("sadside",2,Mouth="lipbite",Brows="angry")
+                if P_Harem:
+                        ch_l "Wonder if [P_Harem[0]]'s busy. . ."
+                        call GirlLikesGirl("Laura",P_Harem[0],500,25,1)
+                else:
+                        ch_l "Wonder if Kitty's busy. . ."
+                        call GirlLikesGirl("Laura","Kitty",500,25,1)
+    else:          
+            call Statup("Laura", "Love", 90, 10)
+            call Statup("Laura", "Obed", 90, 5)
+            call Statup("Laura", "Inbt", 90, 15)
+            call LauraFace("sly",1,Mouth="smile")
+            if Taboo:
+                ch_l "Wanna take this party someplace else?"                    
+                menu:
+                    extend ""
+                    "Yeah":
+                            ch_l "Sure, let's go."
+                            if bg_current == "bg player":
+                                    $ bg_current = "bg laura"
+                            else:
+                                    $ bg_current = "bg player"
+                            $ L_Loc = bg_current
+                            call CleartheRoom("Laura")
+                            call Set_The_Scene         
+                            $ Taboo = 0                      
+                            
+                    "No, let's do it here.":
+                            call Statup("Laura", "Obed", 80, 5)
+                            call Statup("Laura", "Inbt", 90, 15)
+                            ch_l "Kinky."
+                    
+            $ Situation = "Laura"
+            call L_SexPrep              #she offers sex
+            call Laura_SexMenu
+                
+            #end "if no relationship"
+    return
+    
+# end Laura_Sexfriend//////////////////////////////////////////////////////////
+
+
+# start Laura_Fuckbuddy//////////////////////////////////////////////////////////
+
+label Laura_Fuckbuddy:   #Laura_Update   
+    $ L_DailyActions.append("relationship")    
+    $ L_Lust = 80
+    # Conditions, in your room, laura not there. 
+    "You hear a knock on the door, and go to answer it."
+    #change laura's outfit to default
+    call Shift_Focus("Laura")    
+    call Set_The_Scene(0)    
+    $ L_Outfit = "mission"
+    $ L_OutfitDay = "mission"
+    call LauraOutfit
+    $ L_Loc = bg_current
+    call Display_Laura
+    call Taboo_Level
+    $ Trigger = "masturbation"
+    $ Trigger3 = "fondle pussy"
+    call LauraFace("sly",2,Mouth="lipbite")
+    "Laura is standing in the doorway, with her hand down her pants."
+    "You can tell she's been masturbating furiously, her scent is overpowering."
+    $ Trigger = 0
+    $ Trigger3 = 0
+    $ Laura_Arms = 1
+    "She looks you up and down hungrily, and pulls her hand out of her pants."
+    "She reaches up to caress your face, smearing her juices along it."
+    ch_l "Mine."    
+    $ L_Petnames.append("fuck buddy")  
+    $ L_Event[10] += 1
+    
+    $Situation = "Laura"
+    call L_SexPrep              #she offers sex
+    call Laura_SexMenu
+    return
+# end Laura_Fuckbuddy//////////////////////////////////////////////////////////
+
+# start Laura_Daddy//////////////////////////////////////////////////////////
+
+#Not updated
+
+label Laura_Daddy:       #Laura_Update   
+    $ L_DailyActions.append("relationship")
+    call Shift_Focus("Laura")
+    call Set_The_Scene
+    ch_l ". . ."
+    if "dating" in L_Traits:
+        ch_l "So we've been dating a while yeah?"  
+    else:    
+        ch_l "This thing we've got, pretty fun, right?" 
+    if L_Love > L_Obed and L_Love > L_Inbt:
+        ch_l "and you've been really kind to me. . ."
+    elif L_Obed > L_Inbt:
+        ch_l "and you've been a good influence. . ."
+    else:
+        ch_l "like, really fun. . ."        
+    ch_l "So I've been thinking, would you want to be called. . ."
+    ch_l "\"daddy?\""  
+    menu:
+        extend ""
+        "Ok, go right ahead?":            
+            call LauraFace("smile") 
+            call Statup("Laura", "Love", 90, 20)          
+            call Statup("Laura", "Obed", 60, 10)            
+            call Statup("Laura", "Inbt", 80, 30) 
+            ch_l "Cool."            
+        "What do you mean by that?": 
+            call LauraFace("bemused") 
+            ch_l "I don't know, I've had some shitty father figures. . ."
+            ch_l "I just. . ."
+            if L_Love > L_Obed and L_Love > L_Inbt:
+                ch_l "I think you could do better. . ."
+            elif L_Obed > L_Inbt:
+                ch_l "you've really been assertive. . ."
+            else:
+                ch_l "wouldn't it be kinky?"      
+        
+            menu:
+                extend ""
+                "Sounds interesting, fine by me.":     
+                        call LauraFace("smile") 
+                        call Statup("Laura", "Love", 90, 15)          
+                        call Statup("Laura", "Obed", 60, 20)            
+                        call Statup("Laura", "Inbt", 80, 25) 
+                        ch_l "Great!"   
+                        call LauraFace("sly",2) 
+                        ch_l " . . . daddy."  
+                        call LauraFace("sly",1) 
+                        $ L_Petname = "daddy"
+                "Could you not, please?":             
+                        call Statup("Laura", "Love", 90, 5)
+                        call Statup("Laura", "Obed", 80, 40)            
+                        call Statup("Laura", "Inbt", 80, 20)  
+                        call LauraFace("sad") 
+                        ch_l "   . . .   "
+                        ch_l "Well, ok."
+                "You've got some real daddy issues, uh?":    
+                        call Statup("Laura", "Love", 90, -15)          
+                        call Statup("Laura", "Obed", 80, 45)            
+                        call Statup("Laura", "Inbt", 70, 5)  
+                        call LauraFace("angry") 
+                        ch_l "Yes. . . I said that." 
+        "You've got some real daddy issues, uh?":    
+                call Statup("Laura", "Love", 90, -15)          
+                call Statup("Laura", "Obed", 80, 45)            
+                call Statup("Laura", "Inbt", 70, 5)  
+                call LauraFace("angry") 
+                ch_l ". . . Probably."
+                ch_l "Never mind."
+    $ L_Petnames.append("daddy")
+    return
+
+# end Laura_Daddy//////////////////////////////////////////////////////////
+
+
+
+
 label Gwentro:
         if Taboo > 5 or R_Loc == bg_current or K_Loc == bg_current or E_Loc == bg_current:
             #returns if other girls are present, this is a one on one thing. 
@@ -2238,6 +2493,9 @@ label Laura_Dressup:
     call Shift_Focus("Laura")
     $ L_Loc = bg_current
     call Set_The_Scene(0)
+     
+    $ L_Outfit = "mission"
+    call LauraOutfit
     show Laura_Sprite at SpriteLoc(L_SpriteLoc) with vpunch
 #    call Display_Laura
     call CleartheRoom("Laura")
@@ -2284,7 +2542,9 @@ label Laura_Dressup:
         
     call Shift_Focus("Kitty")
     $ K_Loc = bg_current
-    call Set_The_Scene(0)
+    call Set_The_Scene(0)    
+    $ K_Outfit = K_OutfitDay
+    call KittyOutfit
     call Display_Kitty
     call CleartheRoom("Kitty")
     
@@ -2419,6 +2679,8 @@ label Laura_Dressup3:
     "You remember Kitty talking about getting Laura some new clothes. She must've gotten Laura to try them on."
     "You can't help but feel curious..."
     
+    $ K_Outfit = K_OutfitDay
+    call KittyOutfit
     call AnyOutfit("Laura","nude")
     $ L_Chest = "wolvie top"
     $ L_Panties = "wolvie panties"

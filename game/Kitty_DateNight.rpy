@@ -264,12 +264,6 @@ label Kitty_Date_Prep:
         $ Options = ["pink outfit", "red outfit"]
         $ Options.append("custom1") if K_Custom[0] == 2 else Options
         $ Options.append("custom2") if K_Custom2[0] == 2 else Options
-        $ Options.append("custom4") if K_Custom4[0] == 2 else Options
-        $ Options.append("custom5") if K_Custom5[0] == 2 else Options
-        $ Options.append("custom6") if K_Custom6[0] == 2 else Options
-        $ Options.append("custom7") if K_Custom7[0] == 2 else Options
-        $ Options.append("custom8") if K_Custom8[0] == 2 else Options
-        $ Options.append("custom9") if K_Custom9[0] == 2 else Options
         $ Options.append("custom3") if K_Custom3[0] == 2 else Options
         $ renpy.random.shuffle(Options) 
         $ K_Outfit = Options[0]

@@ -321,6 +321,53 @@ label E_FB_Prep: #Animation set-up
         
     $ Tempmod = 0  
     call E_Breasts_Launch("fondle breasts")
+    
+    if Situation == "Emma":                                                                  
+            #Emma auto-starts    
+            $ Situation = 0
+            if (E_Over or E_Chest) and not E_Uptop:
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Emma", 1250, TabM = 1) or (E_SeenChest and ApprovalCheck("Emma", 500) and not Taboo):
+                        $ E_Uptop = 1
+                        $ Line = E_Over if E_Over else E_Chest
+                        "With a devilish grin, Emma pulls her [Line] up over her breasts."
+                        call Emma_First_Topless(1)
+                        $ Line = 0
+                        "She then grabs your arm and mashes your hand against her breast, clearly intending you to get to work."
+                else:
+                    "Emma grabs your arm and mashes your hand against her covered breast, clearly intending you to get to work."
+            else:
+                "Emma grabs your arm and mashes your hand against her breast, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    call Statup("Emma", "Inbt", 50, 2)
+                    "You start to fondle it."
+                "Praise her.":       
+                    call EmmaFace("sexy", 1)                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    ch_p "I like the initiative, [E_Pet]."
+                    call Emma_Namecheck
+                    "You start to fondle it."
+                    call Statup("Emma", "Love", 85, 1)
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your hand back."
+                    call EmmaFace("surprised")       
+                    call Statup("Emma", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma pulls back."
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 1)
+                    call Statup("Emma", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Emma",1,"refused","refused")  
+                    return          
+            #end auto
+            
     if not E_FondleB:        
         if E_Forced:
             call Statup("Emma", "Love", 90, -20)
@@ -472,7 +519,7 @@ label E_FB_Cycle: #Repeating strokes
                                 call E_Pos_Reset
                                 return    
                             call Statup("Emma", "Lust", 200, 5) 
-                            if 100 > E_Lust >= 70 and E_OCount < 2:             
+                            if 100 > E_Lust >= 70 and E_OCount < 2 and E_SEXP >= 20:             
                                 $ E_RecentActions.append("unsatisfied")                      
                                 $ E_DailyActions.append("unsatisfied") 
                             
@@ -546,7 +593,9 @@ label E_FB_Cycle: #Repeating strokes
                                     $ E_DailyActions.append("angry")   
                                     jump E_FB_After
         #End Count check
-           
+        
+        call Escalation("Emma","E") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_e "It's getting late. . ."  
         elif Round == 5:
@@ -554,7 +603,8 @@ label E_FB_Cycle: #Repeating strokes
             
         if E_Lust >= 50 and not E_Uptop and (E_Chest or E_Over):
                 $ E_Uptop = 1
-                "Emma sighs and tugs her breasts free of her clothes."            
+                "Emma sighs and tugs her breasts free of her clothes."      
+                call Emma_First_Topless            
     
     #Round = 0 loop breaks
     call EmmaFace("bemused", 0)
@@ -777,6 +827,52 @@ label E_SB_Prep:                                                                
     
     $ Tempmod = 0      
     call E_Breasts_Launch("suck breasts")
+    
+    if Situation == "Emma":                                                        
+            #Emma auto-starts    
+            $ Situation = 0
+            if (E_Over or E_Chest) and not E_Uptop:
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Emma", 1250, TabM = 1) or (E_SeenChest and ApprovalCheck("Emma", 500) and not Taboo):
+                        $ E_Uptop = 1
+                        $ Line = E_Over if E_Over else E_Chest
+                        "With a devilish grin, Emma pulls her [Line] up over her breasts."
+                        call Emma_First_Topless(1)
+                        $ Line = 0
+                        "She then grabs your head and crams your face into her chest, clearly intending you to get to work."
+                else:
+                    "Emma grabs your head and crams your face into her chest, clearly intending you to get to work."
+            else:
+                "Emma grabs your head and crams your face into her chest, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    call Statup("Emma", "Inbt", 50, 2)
+                    "You start to run your tongue along her nipple."
+                "Praise her.":       
+                    call EmmaFace("sexy", 1)                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    ch_p "Mmm, I like this, [E_Pet]."
+                    call Emma_Namecheck
+                    "You start to fondle it."
+                    call Statup("Emma", "Love", 85, 1)
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your head back."
+                    call EmmaFace("surprised")       
+                    call Statup("Emma", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma pulls away."
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 1)
+                    call Statup("Emma", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Emma",1,"refused","refused")  
+                    return          
+            #end auto
     if not E_SuckB:        
         if E_Forced:
             call Statup("Emma", "Love", 90, -25)
@@ -1005,7 +1101,8 @@ label E_SB_Cycle: #Repeating strokes
     
         if E_Lust >= 50 and not E_Uptop and (E_Chest or E_Over):
                 $ E_Uptop = 1
-                "Emma sighs and tugs her breasts free of her clothes."   
+                "Emma sighs and tugs her breasts free of her clothes."    
+                call Emma_First_Topless    
                 
     #Round = 0 loop breaks
     call EmmaFace("bemused", 0)
@@ -1389,7 +1486,7 @@ label E_FT_Cycle:                                                               
                                 call E_Pos_Reset
                                 return    
                             call Statup("Emma", "Lust", 200, 5) 
-                            if 100 > E_Lust >= 70 and E_OCount < 2:             
+                            if 100 > E_Lust >= 70 and E_OCount < 2 and E_SEXP >= 20:             
                                 $ E_RecentActions.append("unsatisfied")                      
                                 $ E_DailyActions.append("unsatisfied") 
                             
@@ -1696,6 +1793,70 @@ label E_FP_Prep: #Animation set-up
     $ Tempmod = 0
     
     call E_Pussy_Launch("fondle pussy")
+    
+    if Situation == "Emma":                                                        
+            #Emma auto-starts    
+            $ Situation = 0
+            if (E_Legs and not E_Upskirt) or (E_Panties and not E_PantiesDown):
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Emma", 1250, TabM = 1) or (E_SeenPussy and ApprovalCheck("Emma", 500) and not Taboo):
+                        $ E_Upskirt = 1
+                        $ E_PantiesDown = 1
+                        $ Line = 0
+                        if E_Legs == "skirt":
+                            $ Line = "Emma hikes up her skirt"
+                        elif PantsNum("Emma") >= 5:
+                            $ Line = "Emma pulls down her " + E_Legs
+                        else:
+                            $ Line = 0                            
+                        if E_Panties:
+                            if Line:
+                                #wearing pants
+                                "[Line] and pulls her [E_Panties] out of the way."
+                                "She then grabs your arm and then strokes your hand across her crotch, clearly intending you to get to work."
+                            else:
+                                #no pants
+                                "She pulls her [E_Panties] out of the way, and then strokes your hand across her crotch."
+                                "She clearly intends for you to get to work." 
+                        else:
+                            #pants but no panties
+                            "[Line], and then strokes your hand across her crotch."
+                            "She clearly intends for you to get to work."                     
+                        call Emma_First_Bottomless(1)
+                else:
+                    "Emma grabs your arm and strokes your hand across her crotch, clearly intending you to get to work."
+            else:
+                "Emma grabs your arm and strokes your hand across her crotch, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    call Statup("Emma", "Inbt", 50, 2)
+                    "You start to run your fingers along her pussy."
+                "Praise her.":       
+                    call EmmaFace("sexy", 1)                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    ch_p "I like the initiative, [E_Pet]."
+                    call Emma_Namecheck
+                    "You start to run your fingers along her pussy."
+                    call Statup("Emma", "Love", 85, 1)
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your hand back."
+                    call EmmaFace("surprised")       
+                    call Statup("Emma", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma pulls back."
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 1)
+                    call Statup("Emma", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Emma",1,"refused","refused")  
+                    return          
+            #end auto
+            
     if not E_FondleP:        
         if E_Forced:
             call Statup("Emma", "Love", 90, -50)
@@ -2266,6 +2427,70 @@ label E_LP_Prep: #Animation set-up
             
     $ Tempmod = 0      
     call E_Pussy_Launch("lick pussy")
+    
+    if Situation == "Emma":                                                       
+            #Emma auto-starts    
+            $ Situation = 0
+            if (E_Legs and not E_Upskirt) or (E_Panties and not E_PantiesDown):
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Emma", 1250, TabM = 1) or (E_SeenPussy and ApprovalCheck("Emma", 500) and not Taboo):
+                        $ E_Upskirt = 1
+                        $ E_PantiesDown = 1
+                        $ Line = 0
+                        if E_Legs == "skirt":
+                            $ Line = "Emma hikes up her skirt"
+                        elif PantsNum("Emma") >= 5:
+                            $ Line = "Emma pulls down her " + E_Legs
+                        else:
+                            $ Line = 0                            
+                        if E_Panties:
+                            if Line:
+                                #wearing pants
+                                "[Line] and pulls her [E_Panties] out of the way."
+                                "She then grabs your head and pulls it to her crotch, clearly intending you to get to work."
+                            else:
+                                #no pants
+                                "She pulls her [E_Panties] out of the way, and then shoves your face into her crotch."
+                                "She clearly intends for you to get to work." 
+                        else:
+                            #pants but no panties
+                            "[Line], and then shoves your face into her crotch."
+                            "She clearly intends for you to get to work."                     
+                        call Emma_First_Bottomless(1)
+                else:
+                    "Emma grabs your head and pulls it to her crotch, clearly intending you to get to work."
+            else:
+                "Emma grabs your head and pulls it to her crotch, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    call Statup("Emma", "Inbt", 50, 2)
+                    "You start licking."
+                "Praise her.":       
+                    call EmmaFace("sexy", 1)                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    ch_p "Mmm, I like this idea, [E_Pet]."
+                    call Emma_Namecheck
+                    "You start licking."
+                    call Statup("Emma", "Love", 85, 1)
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your head away."
+                    call EmmaFace("surprised")       
+                    call Statup("Emma", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma pulls back."
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 1)
+                    call Statup("Emma", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Emma",1,"refused","refused")  
+                    return          
+            #end auto
+            
     if not E_LickP:        
         if E_Forced:
             call Statup("Emma", "Love", 90, -30)
@@ -2504,6 +2729,8 @@ label E_LP_Cycle: #Repeating strokes
                                     jump E_LP_After
         #End Count check
            
+        call Escalation("Emma","E") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_e "It's getting late. . ."  
         elif Round == 5:
@@ -2906,7 +3133,7 @@ label E_FA_Cycle: #Repeating strokes
                                 call E_Pos_Reset
                                 return    
                             call Statup("Emma", "Lust", 200, 5) 
-                            if 100 > E_Lust >= 70 and E_OCount < 2:             
+                            if 100 > E_Lust >= 70 and E_OCount < 2 and E_SEXP >= 20:             
                                 $ E_RecentActions.append("unsatisfied")                      
                                 $ E_DailyActions.append("unsatisfied") 
                             
@@ -2980,6 +3207,8 @@ label E_FA_Cycle: #Repeating strokes
                                     $ E_DailyActions.append("angry")   
                                     jump E_FA_After
         #End Count check
+        
+        call Escalation("Emma","E") #sees if she wants to escalate things
         
         if Round == 10:
             ch_e "It's getting late. . ."  
@@ -3219,6 +3448,70 @@ label E_IA_Prep: #Animation set-up
             
     $ Tempmod = 0      
     call E_Pussy_Launch("insert ass")
+    
+    if Situation == "Emma":                                                         
+            #Emma auto-starts    
+            $ Situation = 0
+            if (E_Legs and not E_Upskirt) or (E_Panties and not E_PantiesDown):
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Emma", 1250, TabM = 1) or (E_SeenPussy and ApprovalCheck("Emma", 500) and not Taboo):
+                        $ E_Upskirt = 1
+                        $ E_PantiesDown = 1
+                        $ Line = 0
+                        if E_Legs == "skirt":
+                            $ Line = "Emma hikes up her skirt"
+                        elif PantsNum("Emma") >= 5:
+                            $ Line = "Emma pulls down her " + E_Legs
+                        else:
+                            $ Line = 0                            
+                        if E_Panties:
+                            if Line:
+                                #wearing pants
+                                "[Line] and pulls her [E_Panties] out of the way."
+                                "She then grabs your arm and presses your hand against her asshole, clearly intending you to get to work."
+                            else:
+                                #no pants
+                                "She pulls her [E_Panties] out of the way, and then presses your hand against her asshole."
+                                "She clearly intends for you to get to work." 
+                        else:
+                            #pants but no panties
+                            "[Line], and then presses your hand against her asshole."
+                            "She clearly intends for you to get to work."                     
+                        call Emma_First_Bottomless(1)
+                else:
+                    "Emma grabs your arm and presses your hand against her asshole, clearly intending you to get to work."
+            else:
+                "Emma grabs your arm and presses your hand against her asshole, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    call Statup("Emma", "Inbt", 50, 2)
+                    "You press your finger into it."
+                "Praise her.":       
+                    call EmmaFace("sexy", 1)                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    ch_p "Dirty girl, [E_Pet]."
+                    call Emma_Namecheck
+                    "You press your finger into it."
+                    call Statup("Emma", "Love", 85, 1)
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your hand back."
+                    call EmmaFace("surprised")       
+                    call Statup("Emma", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma pulls back."
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 1)
+                    call Statup("Emma", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Emma",1,"refused","refused")  
+                    return          
+            #end auto
+            
     if not E_InsertA:        
         if E_Forced:
             call Statup("Emma", "Love", 90, -50)
@@ -3456,6 +3749,8 @@ label E_IA_Cycle: #Repeating strokes
                                     jump E_IA_After
         #End Count check
            
+        call Escalation("Emma","E") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_e "It's getting late. . ."  
         elif Round == 5:
@@ -3947,6 +4242,8 @@ label E_LA_Cycle: #Repeating strokes
                                     jump E_LA_After
         #End Count check
            
+        call Escalation("Emma","E") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_e "It's getting late. . ."  
         elif Round == 5:

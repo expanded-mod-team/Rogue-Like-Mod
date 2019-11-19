@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -344,16 +344,6 @@ class Drag(renpy.display.core.Displayable, renpy.python.RevertableObject):
 
         if self.drag_group is not None:
             self.drag_group.raise_children([ self ])
-
-    def bottom(self):
-        """
-        :doc: drag_drop method
-
-        Lowers this displayable to the bottom of its drag_group.
-        """
-
-        if self.drag_group is not None:
-            self.drag_group.lower_children([ self ])
 
     def visit(self):
         return [ self.child ]
@@ -761,20 +751,6 @@ class DragGroup(renpy.display.layout.MultiBox):
 
         self.children = self._list_type(children)
         self.offsets = self._list_type(offsets)
-
-    def lower_children(self, l):
-        """
-        Lowers the children in `l` to the bottom of this drag group, with
-        the one at the bottom being the lowest.
-        """
-
-        self.children.reverse()
-        self.offsets.reverse()
-
-        self.raise_children(l)
-
-        self.children.reverse()
-        self.offsets.reverse()
 
     def get_best_drop(self, joined):
         """

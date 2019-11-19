@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -31,7 +31,6 @@ import zipfile
 import cStringIO
 import threading
 import time
-import io
 
 
 # This is an entry in the image cache.
@@ -577,35 +576,6 @@ class Image(ImageBase):
                     return im.predict_files()
 
             return [ self.filename ]
-
-
-class Data(ImageBase):
-    """
-    :doc: im_im
-
-    This image manipulator loads an image from binary data.
-
-    `data`
-        A string of bytes, giving the compressed image data in a standard
-        file format.
-
-    `filename`
-        A "filename" associated with the image. This is used to provide a
-        hint to Ren'Py about the format of `data`. (It's not actually
-        loaded from disk.)
-    """
-
-    def __init__(self, data, filename, **properties):
-        super(Data, self).__init__(data, filename, **properties)
-        self.data = data
-        self.filename = filename
-
-    def __unicode__(self):
-        return u"im.Data(%r)" % self.filename
-
-    def load(self):
-        f = io.BytesIO(self.data)
-        return renpy.display.pgrender.load_image(f, self.filename)
 
 
 class ZipFileImage(ImageBase):

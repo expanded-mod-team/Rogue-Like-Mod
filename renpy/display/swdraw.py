@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -917,9 +917,6 @@ class SWDraw(object):
         """
 
         return self.window
-
-    def can_block(self):
-        return True
 
     def should_redraw(self, needs_redraw, first_pass):
         """

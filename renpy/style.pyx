@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -592,8 +592,7 @@ cdef class StyleCore:
             for pdict in reversed(s.properties):
 
                 propnames = list(pdict)
-                propnames.sort(key=lambda pn : priority.get(pn, 100))
-                propnames.reverse()
+                propnames.sort(key=lambda pn : -priority.get(pn, -100))
 
                 for propname in propnames:
                     prop_affects = affects.get(propname, [ ])
@@ -639,7 +638,7 @@ cdef class StyleCore:
 # This will be replaced when renpy.styledata.import_style_functions is called.
 Style = StyleCore
 
-from renpy.styledata.stylesets import all_properties, prefix_priority, prefix_alts, property_priority
+from renpy.styledata.stylesets import all_properties, prefix_priority, prefix_alts
 
 # The set of all prefixed properties we know about.
 prefixed_all_properties = {
@@ -689,7 +688,6 @@ cpdef build_style(StyleCore s):
 
         for d in s.properties:
             for k, v in d.items():
-
                 pfw = property_functions.get(k, None)
 
                 if pfw is None:
@@ -751,7 +749,7 @@ def init_inspect():
 
     for prefixname, pri in prefix_priority.items():
         for propname, proplist in all_properties.items():
-            priority[prefixname + propname] = pri + property_priority.get(propname, 0)
+            priority[prefixname + propname] = pri
             affects[prefixname + propname] = [ a + i for a in prefix_alts[prefixname] for i in proplist ]
 
 

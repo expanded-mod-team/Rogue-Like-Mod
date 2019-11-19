@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+﻿# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -20,7 +20,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 init -1100 python in gui:
-    from store import config, layout, _preferences, Frame, Null, persistent, Action, DictEquality
+    from store import config, layout, _preferences, Frame, Null
 
     config.translate_clean_stores.append("gui")
 
@@ -58,134 +58,6 @@ init -1100 python in gui:
 
         from store import build
         build.include_old_themes = False
-
-        if persistent._gui_preference is None:
-            persistent._gui_preference = { }
-
-        if persistent._gui_preference_default is None:
-            persistent._gui_preference_default = { }
-
-    def rebuild():
-        """
-        :doc: gui
-
-        Rebuilds the GUI.
-
-        Note: This is a very slow function.
-        """
-
-        renpy.ast.redefine([ "store.gui" ])
-
-        for i in config.translate_clean_stores:
-            renpy.python.clean_store_backup.backup_one("store." + i)
-
-        # Do the same sort of reset we'd do when changing language, without
-        # actually changing the language.
-        renpy.change_language(_preferences.language, force=True)
-
-    not_set = object()
-
-    def preference(name, default=not_set):
-        """
-        :doc: gui_preference
-
-        This function returns the value of the gui preference with
-        `name`.
-
-        `default`
-            If given, this value becomes the default value of the gui
-            preference. The default value should be given the first time
-            the preference is used.
-        """
-
-
-        prefs = persistent._gui_preference
-        defaults = persistent._gui_preference_default
-
-        if default is not not_set:
-            if (name not in defaults) or (defaults[name] != default):
-                prefs[name] = default
-                defaults[name] = default
-
-        return prefs[name]
-
-
-    class SetPreference(Action, DictEquality):
-        """
-        :doc: gui_preference
-
-        This Action sets the gui preference with `name` to `value`.
-
-        `rebuild`
-            If true, the default, :func:`gui.rebuild` is called to make
-            the changes take effect. This should generally be true, except
-            in the case of multiple gui.SetPreference actions, in which case
-            it should be False in all but the last one.
-
-        This is a very slow action, and probably not suitable for use
-        when a button is hovered.
-        """
-
-        def __init__(self, name, value, rebuild=True):
-            self.name = name
-            self.value = value
-            self.rebuild = rebuild
-
-        def __call__(self):
-            prefs = persistent._gui_preference
-
-            prefs[self.name] = self.value
-            rebuild()
-
-        def get_selected(self):
-            prefs = persistent._gui_preference
-            return prefs.get(self.name, not_set) == self.value
-
-
-    class TogglePreference(Action, DictEquality):
-        """
-        :doc: gui_preference
-
-        This Action toggles the gui preference with `name` between
-        value `a` and value `b`. It is selected if the value is equal
-        to `a`.
-
-        `rebuild`
-            If true, the default, :func:`gui.rebuild` is called to make
-            the changes take effect. This should generally be true, except
-            in the case of multiple gui.SetPreference actions, in which case
-            it should be False in all but the last one.
-
-        This is a very slow action, and probably not suitable for use
-        when a button is hovered.
-        """
-
-        def __init__(self, name, a, b, rebuild=True):
-            self.name = name
-            self.a = a
-            self.b = b
-            self.rebuild = rebuild
-
-        def __call__(self):
-            prefs = persistent._gui_preference
-
-            if prefs[self.name] == self.a:
-                prefs[self.name] = self.b
-            else:
-                prefs[self.name] = self.a
-
-            rebuild()
-
-        def get_selected(self):
-            prefs = persistent._gui_preference
-            return prefs.get(self.name, not_set) == self.a
-
-
-
-    renpy.pure("gui.preference")
-    renpy.pure("gui.SetPreference")
-    renpy.pure("gui.TogglePreference")
-
 
     def button_properties(kind):
         """

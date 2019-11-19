@@ -43,54 +43,7 @@ label E_Sex_P:
              
         
     $ Approval = ApprovalCheck("Emma", 1400, TabM = 5) # 135, 150, 165, Taboo -200(335)
-    
-    if Situation == "Emma":                                                                  #Emma auto-starts   
-                if Approval > 2:                                                      # fix, add emma auto stuff here
-                    call Emma_Sex_Launch("L")   
-                    if E_Legs == "skirt":
-                        "Emma pushes you down and climbs on top of you, sliding her skirt up as she does so."
-                        $ E_Upskirt = 1
-                    elif PantsNum("Emma") >= 5:
-                        "Emma pushes you down and climbs on top of you, sliding her [E_Legs] off as she does so." 
-                        $ E_Legs = 0
-                    else:
-                        "Emma pushes you down and climbs on top of you."
-                    $ E_SeenPanties = 1
-                    "She slides the tip along her pussy and seems to want you to insert it."
-                    menu:
-                        "What do you do?"
-                        "Nothing.":                    
-                            call Statup("Emma", "Inbt", 80, 3) 
-                            call Statup("Emma", "Inbt", 50, 2)
-                            "Emma slides it in."
-                        "Praise her.":       
-                            call EmmaFace("sexy", 1)                    
-                            call Statup("Emma", "Inbt", 80, 3) 
-                            ch_p "Oh yeah, [E_Pet], let's do this."
-                            call Emma_Namecheck
-                            "Emma slides it in."
-                            call Statup("Emma", "Love", 85, 1)
-                            call Statup("Emma", "Obed", 90, 1)
-                            call Statup("Emma", "Obed", 50, 2)
-                        "Ask her to stop.":
-                            call EmmaFace("surprised")       
-                            call Statup("Emma", "Inbt", 70, 1) 
-                            ch_p "Let's not do that right now, [E_Pet]."
-                            call Emma_Namecheck
-                            "Emma pulls back."
-                            call EmmaOutfit
-                            call Statup("Emma", "Obed", 90, 1)
-                            call Statup("Emma", "Obed", 50, 1)
-                            call Statup("Emma", "Obed", 30, 2)
-                            return            
-                    jump E_SexPrep
-                    # End high approval
-                else:                
-                    $ Tempmod = 0                               # fix, add emma auto stuff here
-                    $ Trigger2 = 0
-                return   
-    #End Emma's lead
-    
+        
     if Situation == "auto":   
                 call Emma_Sex_Launch("L")   
                 if E_Legs == "skirt":
@@ -353,10 +306,53 @@ label E_Sex_P:
     return
 
 label E_SexPrep:
-    call Seen_First_Peen("Emma",Partner)
+    call Seen_First_Peen("Emma",Partner,React=Situation)
     call Emma_Sex_Launch("hotdog")
-    
-    if Situation != "auto":
+            
+    if Situation == "Emma":                                                                 
+            #Emma auto-starts   
+            $ Situation = 0
+            if E_Legs == "skirt":
+                "Emma pushes you back and climbs on top of you, sliding her skirt up as she does so."
+                $ E_Upskirt = 1                
+            elif PantsNum("Emma") >= 5:
+                "Emma pushes you down and climbs on top of you, sliding her [E_Legs] down as she does so." 
+                $ E_Upskirt = 1
+            else:
+                "Emma pushes you back and climbs on top of you."
+            $ E_SeenPanties = 1
+            "She slides the tip along her pussy and seems to want you to insert it."
+            menu:
+                "What do you do?"
+                "Go with it.":                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    call Statup("Emma", "Inbt", 50, 2)
+                    "Emma slides it in."
+                "Praise her.":       
+                    call EmmaFace("sexy", 1)                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    ch_p "Oh yeah, [E_Pet], let's do this."
+                    call Emma_Namecheck
+                    "Emma slides it in."
+                    call Statup("Emma", "Love", 85, 1)
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call EmmaFace("surprised")       
+                    call Statup("Emma", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma pulls back."
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 1)
+                    call Statup("Emma", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Emma",1,"refused","refused")  
+                    return      
+            $ E_PantiesDown = 1  
+            call Emma_First_Bottomless(1)
+            
+    elif Situation != "auto":
         call Emma_Bottoms_Off       
         
         
@@ -669,6 +665,8 @@ label E_Sex_Cycle: #Repeating strokes
                                     jump E_SexAfter
         #End Count check
    
+        call Escalation("Emma","E") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_e "You might want to think about your endgame here. . ."  
         elif Round == 5:
@@ -775,54 +773,6 @@ label E_Sex_A:
         $ Tempmod -= 10 if "no anal" in E_RecentActions else 0  
             
     $ Approval = ApprovalCheck("Emma", 1550, TabM = 5) # 155, 170, 185, Taboo -200(355)
-    
-    if Situation == "Emma":                                                                  
-            #Emma auto-starts   
-            if Approval > 2:                                                      
-                # fix, add emma auto stuff here
-                call Emma_Sex_Launch("L")   
-                if E_Legs == "skirt":
-                    "Emma pushes you down and climbs on top of you, sliding her skirt up as she does so."
-                    $ E_Upskirt = 1
-                elif PantsNum("Emma") >= 5:
-                    "Emma pushes you down and climbs on top of you, sliding her [E_Legs] off as she does so." 
-                    $ E_Legs = 0
-                else:
-                    "Emma pushes you down and climbs on top of you."
-                $ E_SeenPanties = 1
-                "She slides the tip up to her back door, and presses against it."
-                menu:
-                    "What do you do?"
-                    "Nothing.":                    
-                        call Statup("Emma", "Inbt", 80, 3) 
-                        call Statup("Emma", "Inbt", 50, 2)
-                        "Emma slides it in."
-                    "Praise her.":       
-                        call EmmaFace("sexy", 1)                    
-                        call Statup("Emma", "Inbt", 80, 3) 
-                        ch_p "Ooo, dirty girl, [E_Pet], let's do this."
-                        call Emma_Namecheck
-                        "Emma slides it in."
-                        call Statup("Emma", "Love", 85, 1)
-                        call Statup("Emma", "Obed", 90, 1)
-                        call Statup("Emma", "Obed", 50, 2)
-                    "Ask her to stop.":
-                        call EmmaFace("surprised")       
-                        call Statup("Emma", "Inbt", 70, 1) 
-                        ch_p "Let's not do that right now, [E_Pet]."
-                        call Emma_Namecheck
-                        "Emma pulls back."
-                        call EmmaOutfit
-                        call Statup("Emma", "Obed", 90, 1)
-                        call Statup("Emma", "Obed", 50, 1)
-                        call Statup("Emma", "Obed", 30, 2)                    
-                        return            
-                jump E_AnalPrep
-            else:                
-                $ Tempmod = 0                               # fix, add emma auto stuff here
-                $ Trigger2 = 0
-            return  
-            #end if Emma initiates
     
     if Situation == "auto":   
             call Emma_Sex_Launch("L")   
@@ -1102,10 +1052,53 @@ label E_Sex_A:
     return
 
 label E_AnalPrep:    
-    call Seen_First_Peen("Emma",Partner)
+    call Seen_First_Peen("Emma",Partner,React=Situation)
     call Emma_Sex_Launch("hotdog")
-    
-    if Situation != "auto":
+             
+    if Situation == "Emma":                                                                 
+            #Emma auto-starts   
+            $ Situation = 0
+            if E_Legs == "skirt":
+                "Emma pushes you back and climbs on top of you, sliding her skirt up as she does so."
+                $ E_Upskirt = 1           
+            elif PantsNum("Emma") >= 5:
+                "Emma pushes you down and climbs on top of you, sliding her [E_Legs] down as she does so." 
+                $ E_Upskirt = 1
+            else:
+                "Emma pushes you back and climbs on top of you."
+            $ E_SeenPanties = 1
+            "She slides the tip against her ass and seems to want you to insert it."
+            menu:
+                "What do you do?"
+                "Go with it.":                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    call Statup("Emma", "Inbt", 50, 2)
+                    "Emma slides it in."
+                "Praise her.":       
+                    call EmmaFace("sexy", 1)                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    ch_p "Oh yeah, [E_Pet], let's do this."
+                    call Emma_Namecheck
+                    "Emma slides it in."
+                    call Statup("Emma", "Love", 85, 1)
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call EmmaFace("surprised")       
+                    call Statup("Emma", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma pulls back."
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 1)
+                    call Statup("Emma", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Emma",1,"refused","refused")  
+                    return      
+            $ E_PantiesDown = 1  
+            call Emma_First_Bottomless(1)
+            
+    elif Situation != "auto":
         call Emma_Bottoms_Off    
         if (E_Panties and not E_PantiesDown) or (E_Legs and not E_Upskirt) or HoseNum("Emma") >= 6: #If she refuses to take off her pants but agreed to anal
             ch_e "I suppose we can't do much with all this on."
@@ -1526,41 +1519,6 @@ label E_Sex_H:
         
     $ Approval = ApprovalCheck("Emma", 1000, TabM = 3) # 100, 115, 130, Taboo -120(220)
     
-    if Situation == "Emma":                                                                  
-            #Emma auto-starts   
-            if Approval > 2:                                                      # fix, add emma auto stuff here
-                call Emma_Sex_Launch("L") 
-                "Emma pushes you down and climbs on top of you, rubbing it against her mound."
-                menu:
-                    "What do you do?"
-                    "Nothing.":                     
-                        call Statup("Emma", "Inbt", 50, 3)
-                        "Emma starts to grind against you."
-                    "Praise her.":       
-                        call EmmaFace("sexy", 1)                    
-                        call Statup("Emma", "Inbt", 80, 2) 
-                        ch_p "Hmmm, that's good, [E_Pet]."
-                        call Emma_Namecheck
-                        "Emma starts to grind against you."
-                        call Statup("Emma", "Love", 85, 1)
-                        call Statup("Emma", "Obed", 60, 2)
-                    "Ask her to stop.":
-                        call EmmaFace("surprised")       
-                        call Statup("Emma", "Inbt", 70, 1) 
-                        ch_p "Let's not do that right now, [E_Pet]."
-                        call Emma_Namecheck
-                        "Emma pulls back."
-                        call EmmaOutfit
-                        call Statup("Emma", "Obed", 80, 1)
-                        call Statup("Emma", "Obed", 30, 2)                    
-                        return            
-                jump E_HotdogPrep
-            else:                
-                $ Tempmod = 0                               # fix, add emma auto stuff here
-                $ Trigger2 = 0
-            return            
-            #end Emma initates
-    
     if Situation == "auto":   
             call Emma_Sex_Launch("L")   
             "You roll back, pulling Emma on top of you, and press your cock against her."    
@@ -1802,10 +1760,43 @@ label E_Sex_H:
     return
 
 label E_HotdogPrep:  
-    call Seen_First_Peen("Emma",Partner)
+    call Seen_First_Peen("Emma",Partner,React=Situation)
     call Emma_Sex_Launch("hotdog")
     
-    if Situation != "auto":
+         
+    if Situation == "Emma":                                                                 
+            #Emma auto-starts   
+            $ Situation = 0
+            "Emma pushes you back and climbs on top of you, sliding back and forth along your shaft."
+            menu:
+                "What do you do?"
+                "Go with it.":                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    call Statup("Emma", "Inbt", 50, 2)
+                    "Emma starts to grind against you."
+                "Praise her.":       
+                    call EmmaFace("sexy", 1)                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    ch_p "Oh yeah, [E_Pet], let's do this."
+                    call Emma_Namecheck
+                    "Emma starts to grind against you."
+                    call Statup("Emma", "Love", 85, 1)
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call EmmaFace("surprised")       
+                    call Statup("Emma", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma pulls back."
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 1)
+                    call Statup("Emma", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Emma",1,"refused","refused")  
+                    return      
+            
+    elif Situation != "auto":
 #        call Emma_Bottoms_Off    
         
         if Taboo: # Emma gets started. . .
@@ -2083,6 +2074,8 @@ label E_Hotdog_Cycle: #Repeating strokes
                                     jump E_HotdogAfter
         #End Count check
    
+        call Escalation("Emma","E") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_e "You might want to think about your endgame here. . ."  
         elif Round == 5:

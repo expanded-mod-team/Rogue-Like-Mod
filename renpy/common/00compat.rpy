@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+﻿# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -149,11 +149,6 @@ init -1900 python:
             config.keep_show_layer_state = False
             config.atl_multiple_events = False
 
-        if version <= (6, 99, 13):
-            config.fast_unhandled_event = False
-            config.gc_thresholds = (700, 10, 10)
-            config.idle_gc_count = 10000
-            config.scrollbar_child_size = False
 
     # The version of Ren'Py this script is intended for, or
     # None if it's intended for the current version.

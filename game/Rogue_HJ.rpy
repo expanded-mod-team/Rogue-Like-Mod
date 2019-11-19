@@ -33,47 +33,7 @@ label R_Handjob:
         $ Tempmod -= 10 if "no hand" in R_RecentActions else 0    
         
     $ Approval = ApprovalCheck("Rogue", 1100, TabM = 3) # 110, 125, 140, Taboo -120(230)
-    
-    if Situation == "Rogue":                                                                  #Rogue auto-starts   
-        if Approval > 2:                                                      # fix, add rogue auto stuff here
-            if Trigger2 == "jackin":
-                "Rogue brushes your hand aside and starts stroking your cock."
-            else:
-                "Rogue gives you a mischevious smile, and starts to fondle your cock."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Rogue", "Inbt", 70, 3) 
-                    call Statup("Rogue", "Inbt", 30, 2)                     
-                    "Rogue continues her actions."
-                "Praise her.":       
-                    call RogueFace("sexy", 1)                    
-                    call Statup("Rogue", "Inbt", 70, 3) 
-                    ch_p "Oooh, that's good, [R_Pet]."
-                    call Rogue_Namecheck
-                    "Rogue continues her actions."
-                    call Statup("Rogue", "Love", 80, 1)
-                    call Statup("Rogue", "Obed", 90, 1)
-                    call Statup("Rogue", "Obed", 50, 2)
-                "Ask her to stop.":
-                    call RogueFace("surprised")       
-                    call Statup("Rogue", "Inbt", 70, 1) 
-                    ch_p "Let's not do that for now, [R_Pet]."
-                    call Rogue_Namecheck
-                    "Rogue puts it down."
-                    call Statup("Rogue", "Obed", 90, 1)
-                    call Statup("Rogue", "Obed", 50, 1)
-                    call Statup("Rogue", "Obed", 30, 2)
-                    return            
-            if Trigger:
-                $ Trigger3 = "hand"
-                return
-            jump RHJ_Prep
-        else:                
-            $ Tempmod = 0                               # fix, add rogue auto stuff here
-            $ Trigger2 = 0
-            return            
-    
+           
     if not R_Hand and "no hand" not in R_RecentActions:        
         call RogueFace("surprised", 1)
         $ R_Mouth = "kiss"
@@ -265,6 +225,7 @@ label R_Handjob:
     
 
 label RHJ_Prep:
+label R_HJ_Prep:
     if Trigger2 == "hand": 
         return
     
@@ -280,8 +241,44 @@ label RHJ_Prep:
         $ R_Eyes = "sexy"
         $ R_Mouth = "smile"
     
-    call Seen_First_Peen("Rogue",Partner)
+    call Seen_First_Peen("Rogue",Partner,React=Situation)
     call Rogue_HJ_Launch("L")
+    
+    if Situation == "Rogue":                                                          
+            #Rogue auto-starts  
+            $ Situation = 0 
+            if Trigger2 == "jackin":
+                "Rogue brushes your hand aside and starts stroking your cock."
+            else:
+                "Rogue gives you a mischevious smile, and starts to fondle your cock."
+            menu:
+                "What do you do?"
+                "Nothing.":                    
+                    call Statup("Rogue", "Inbt", 70, 3) 
+                    call Statup("Rogue", "Inbt", 30, 2)                     
+                    "Rogue continues her actions."
+                "Praise her.":       
+                    call RogueFace("sexy", 1)                    
+                    call Statup("Rogue", "Inbt", 70, 3) 
+                    ch_p "Oooh, that's good, [R_Pet]."
+                    call Rogue_Namecheck
+                    "Rogue continues her actions."
+                    call Statup("Rogue", "Love", 80, 1)
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call RogueFace("surprised")       
+                    call Statup("Rogue", "Inbt", 70, 1) 
+                    ch_p "Let's not do that for now, [R_Pet]."
+                    call Rogue_Namecheck
+                    "Rogue puts it down."
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 1)
+                    call Statup("Rogue", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Rogue",1,"refused","refused")  
+                    return   
+            
     if not R_Hand:        
         if R_Forced:
             call Statup("Rogue", "Love", 90, -20)
@@ -437,7 +434,7 @@ label RHJ_Cycle: #Repeating strokes
                                 call Rogue_HJ_Reset
                                 return    
                             call Statup("Rogue", "Lust", 200, 5) 
-                            if 100 > R_Lust >= 70 and R_OCount < 2:             
+                            if 100 > R_Lust >= 70 and R_OCount < 2 and R_SEXP >= 20:             
                                 $ R_RecentActions.append("unsatisfied")                      
                                 $ R_DailyActions.append("unsatisfied") 
                             
@@ -516,6 +513,8 @@ label RHJ_Cycle: #Repeating strokes
                                     jump RHJ_After
         #End Count check
            
+        call Escalation("Rogue","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_r "You might want to wrap this up, it's getting late."  
         elif Round == 5:
@@ -608,42 +607,7 @@ label R_Titjob:
         $ Tempmod -= 10 if "no titjob" in R_RecentActions else 0    
         
     $ Approval = ApprovalCheck("Rogue", 1200, TabM = 5) # 120, 135, 150, Taboo -200(320)
-    
-    if Situation == "Rogue":                                                                  #Rogue auto-starts   
-        if Approval > 2:                                                      # fix, add rogue auto stuff here
-            call Rogue_TJ_Launch("L")            
-            "Rogue slides down and sandwiches your dick between her tits."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Rogue", "Inbt", 80, 3) 
-                    call Statup("Rogue", "Inbt", 40, 2)                     
-                    "Rogue starts to slide them up and down."
-                "Praise her.":       
-                    call RogueFace("sexy", 1)                    
-                    call Statup("Rogue", "Inbt", 80, 3) 
-                    ch_p "Oh, that sounds like a good idea, [R_Pet]."
-                    call Rogue_Namecheck
-                    "Rogue continues her actions."
-                    call Statup("Rogue", "Love", 85, 1)
-                    call Statup("Rogue", "Obed", 90, 1)
-                    call Statup("Rogue", "Obed", 50, 2)
-                "Ask her to stop.":     
-                    call RogueFace("confused")  
-                    call Statup("Rogue", "Inbt", 70, 1) 
-                    ch_p "Let's not do that for now, [R_Pet]."
-                    call Rogue_Namecheck
-                    "Rogue lets it drop out from between her breasts."
-                    call Statup("Rogue", "Obed", 90, 1)
-                    call Statup("Rogue", "Obed", 50, 3)
-                    call Rogue_TJ_Reset  
-                    return            
-            jump RTJ_Cycle
-        else:                
-            $ Tempmod = 0                               # fix, add rogue auto stuff here
-            $ Trigger2 = 0
-            return            
-    
+           
     if not R_Tit and "no titjob" not in R_RecentActions:        
         call RogueFace("surprised", 1)
         $ R_Mouth = "kiss"
@@ -878,6 +842,7 @@ label R_Titjob:
     return
     
 label RTJ_Prep:
+label R_TJ_Prep:
       
     if Taboo:
         $ R_Inbt += int(Taboo/10)  
@@ -892,8 +857,40 @@ label RTJ_Prep:
         $ R_Eyes = "sexy"
         $ R_Mouth = "smile"
     
-    call Seen_First_Peen("Rogue",Partner)
+    call Seen_First_Peen("Rogue",Partner,React=Situation)
     call Rogue_TJ_Launch("L")    
+        
+    if Situation == "Rogue":                                                               
+            #Rogue auto-starts   
+            $ Situation = 0          
+            "Rogue slides down and sandwiches your dick between her tits."
+            menu:
+                "What do you do?"
+                "Nothing.":                    
+                    call Statup("Rogue", "Inbt", 80, 3) 
+                    call Statup("Rogue", "Inbt", 40, 2)                     
+                    "Rogue starts to slide them up and down."
+                "Praise her.":       
+                    call RogueFace("sexy", 1)                    
+                    call Statup("Rogue", "Inbt", 80, 3) 
+                    ch_p "Oh, that sounds like a good idea, [R_Pet]."
+                    call Rogue_Namecheck
+                    "Rogue continues her actions."
+                    call Statup("Rogue", "Love", 85, 1)
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 2)
+                "Ask her to stop.":     
+                    call RogueFace("confused")  
+                    call Statup("Rogue", "Inbt", 70, 1) 
+                    ch_p "Let's not do that for now, [R_Pet]."
+                    call Rogue_Namecheck
+                    "Rogue lets it drop out from between her breasts."
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 3)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Rogue",1,"refused","refused")  
+                    return 
+            
     if not R_Tit:        
         if R_Forced:
             call Statup("Rogue", "Love", 90, -25)
@@ -1050,7 +1047,7 @@ label RTJ_Cycle: #Repeating strokes
                                 call Rogue_TJ_Reset
                                 return    
                             call Statup("Rogue", "Lust", 200, 5) 
-                            if 100 > R_Lust >= 70 and R_OCount < 2:             
+                            if 100 > R_Lust >= 70 and R_OCount < 2 and R_SEXP >= 20:             
                                 $ R_RecentActions.append("unsatisfied")                      
                                 $ R_DailyActions.append("unsatisfied") 
                             
@@ -1129,6 +1126,8 @@ label RTJ_Cycle: #Repeating strokes
                                     jump RTJ_After
         #End Count check
            
+        call Escalation("Rogue","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_r "You might want to wrap this up, it's getting late."  
         elif Round == 5:
@@ -1210,39 +1209,6 @@ label R_Blowjob:
         $ Tempmod -= 10 if "no blow" in R_RecentActions else 0    
     
     $ Approval = ApprovalCheck("Rogue", 1300, TabM = 4) # 130, 145, 160, Taboo -160(290)
-    
-    if Situation == "Rogue":                                                                  #Rogue auto-starts   
-        if Approval > 2:                                                      # fix, add rogue auto stuff here
-            "Rogue slides down and gives your cock a little lick."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Rogue", "Inbt", 80, 3) 
-                    call Statup("Rogue", "Inbt", 40, 2)                     
-                    "Rogue continues licking at it."
-                "Praise her.":       
-                    call RogueFace("sexy", 1)                    
-                    call Statup("Rogue", "Inbt", 80, 3) 
-                    ch_p "Hmmm, keep doing that, [R_Pet]."
-                    call Rogue_Namecheck
-                    "Rogue continues her actions."
-                    call Statup("Rogue", "Love", 85, 1)
-                    call Statup("Rogue", "Obed", 90, 1)
-                    call Statup("Rogue", "Obed", 50, 2)
-                "Ask her to stop.":     
-                    call RogueFace("surprised")  
-                    call Statup("Rogue", "Inbt", 70, 1) 
-                    ch_p "Let's not do that for now, [R_Pet]."
-                    call Rogue_Namecheck
-                    "Rogue puts it down."
-                    call Statup("Rogue", "Obed", 90, 1)
-                    call Statup("Rogue", "Obed", 50, 3)
-                    return            
-            jump RBJ_Prep
-        else:                
-            $ Tempmod = 0                               # fix, add rogue auto stuff here
-            $ Trigger2 = 0
-            return            
     
     if not R_Blow and "no blow" not in R_RecentActions:        
         call RogueFace("surprised", 1)
@@ -1460,7 +1426,8 @@ label R_Blowjob:
     return
     
 
-label RBJ_Prep:   
+label RBJ_Prep:  
+label R_BJ_Prep:   
     if Taboo:
         $ R_Inbt += int(Taboo/10)  
         $ R_Lust += int(Taboo/5)
@@ -1473,8 +1440,40 @@ label RBJ_Prep:
         $ R_Eyes = "sexy"
         $ R_Mouth = "smile"
     
-    call Seen_First_Peen("Rogue",Partner)
+    call Seen_First_Peen("Rogue",Partner,React=Situation)
     call Rogue_BJ_Launch("L")
+        
+    if Situation == "Rogue":                                                                  
+            #Rogue auto-starts   
+            $ Situation = 0      
+            "Rogue slides down and gives your cock a little lick."
+            menu:
+                "What do you do?"
+                "Nothing.":                    
+                    call Statup("Rogue", "Inbt", 80, 3) 
+                    call Statup("Rogue", "Inbt", 40, 2)                     
+                    "Rogue continues licking at it."
+                "Praise her.":       
+                    call RogueFace("sexy", 1)                    
+                    call Statup("Rogue", "Inbt", 80, 3) 
+                    ch_p "Hmmm, keep doing that, [R_Pet]."
+                    call Rogue_Namecheck
+                    "Rogue continues her actions."
+                    call Statup("Rogue", "Love", 85, 1)
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 2)
+                "Ask her to stop.":     
+                    call RogueFace("surprised")  
+                    call Statup("Rogue", "Inbt", 70, 1) 
+                    ch_p "Let's not do that for now, [R_Pet]."
+                    call Rogue_Namecheck
+                    "Rogue puts it down."
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 3)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Rogue",1,"refused","refused")  
+                    return  
+    
     if not R_Blow:        
         if R_Forced:
             call Statup("Rogue", "Love", 90, -70)
@@ -1669,7 +1668,7 @@ label RBJ_Cycle: #Repeating strokes
                                 call Rogue_BJ_Reset
                                 return    
                             call Statup("Rogue", "Lust", 200, 5) 
-                            if 100 > R_Lust >= 70 and R_OCount < 2:             
+                            if 100 > R_Lust >= 70 and R_OCount < 2 and R_SEXP >= 20:             
                                 $ R_RecentActions.append("unsatisfied")                      
                                 $ R_DailyActions.append("unsatisfied") 
                             
@@ -1758,6 +1757,8 @@ label RBJ_Cycle: #Repeating strokes
                                     jump RBJ_After
         #End Count check
            
+        call Escalation("Rogue","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_r "You might want to wrap this up, it's getting late."  
         elif Round == 5:
@@ -1950,7 +1951,7 @@ label R_Dildo_Pussy:
                                 if Situation:
                                     $ renpy.pop_call()
                                 if renpy.showing("Rogue_Doggy"):
-                                    call Rogue_Sex_Reset  
+                                    call Rogue_Doggy_Reset  
                                 $ R_RecentActions.append("angry")
                                 $ R_DailyActions.append("angry")                          
                             else:
@@ -2565,7 +2566,7 @@ label R_Dildo_Ass:
                             if Situation:
                                 $ renpy.pop_call()
                             if renpy.showing("Rogue_Doggy"):
-                                call Rogue_Sex_Reset  
+                                call Rogue_Doggy_Reset  
                             $ R_RecentActions.append("angry")
                             $ R_DailyActions.append("angry")                         
                         else:
@@ -3329,6 +3330,7 @@ label R_Footjob:
     
 
 label RFJ_Prep:
+label R_FJ_Prep:
     if Trigger2 == "foot": 
         return
     
@@ -3344,7 +3346,7 @@ label RFJ_Prep:
         $ R_Eyes = "sexy"
         $ R_Mouth = "smile"
     
-    call Seen_First_Peen("Rogue",Partner)
+    call Seen_First_Peen("Rogue",Partner,React=Situation)
     
     if not R_Foot:        
         if R_Forced:
@@ -3481,13 +3483,13 @@ label RFJ_Cycle:
                                                    
                         "Back to Sex Menu" if MultiAction: 
                                     ch_p "Let's try something else."
-                                    call Rogue_Sex_Reset
+                                    call Rogue_Doggy_Reset
                                     $ Situation = "shift"
                                     $ Line = 0
                                     jump RFJ_After
                         "End Scene" if not MultiAction: 
                                     ch_p "Let's stop for now."
-                                    call Rogue_Sex_Reset
+                                    call Rogue_Doggy_Reset
                                     $ Line = 0
                                     jump RFJ_After
         #End menu (if Line)
@@ -3507,7 +3509,7 @@ label RFJ_Cycle:
                             #If you can cum:                                                 
                             call PR_Cumming
                             if "angry" in R_RecentActions:  
-                                call Rogue_Sex_Reset
+                                call Rogue_Doggy_Reset
                                 return    
                             call Statup("Rogue", "Lust", 200, 5) 
                             if 100 > R_Lust >= 70 and R_OCount < 2:             
@@ -3568,7 +3570,7 @@ label RFJ_Cycle:
                                 jump RFJ_Cycle
                         "Let's try something else." if MultiAction: 
                                 $ Line = 0
-                                call Rogue_Sex_Reset
+                                call Rogue_Doggy_Reset
                                 $ Situation = "shift"
                                 jump RFJ_After
                         "No, get back down there.":
@@ -3593,6 +3595,8 @@ label RFJ_Cycle:
                     ch_r "Can we be done with this now? I'm getting sore."         
         #End Count check
                    
+        call Escalation("Rogue","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_r "You might want to wrap this up, it's getting late."  
         elif Round == 5:
@@ -3638,7 +3642,7 @@ label RFJ_After:
     if Situation == "shift":
         ch_r "Mmm, so what else did you have in mind?"
     else:
-        call Rogue_Sex_Reset    
+        call Rogue_Doggy_Reset    
     call Checkout
     return
 
@@ -3663,10 +3667,12 @@ label R_Les_Interupted:
                 jump R_Les_After
         call DrainWord("Rogue","unseen",1,0) #She sees you, so remove unseens
         call DrainWord(Partner,"unseen",1,0) #She sees you, so remove unseens
-        call RogueFace("surprised", 2)
+        call RogueFace("surprised", 2) 
+        call AnyFace(Partner,"surprised",2) 
         "Suddenly, Rogue jerks up from what she was doing with a start, and gives [Partner] a nudge."
         ch_r "Um, [Playername], how long have you been watchin?"
-        call RogueFace("surprised", 1)
+        call RogueFace("perplexed", 1) 
+        call AnyFace(Partner,"perplexed",1) 
         $ R_Action -= 1 if R_Action > 0 else 0
         call Checkout(1)
         $ Line = 0
@@ -3740,7 +3746,7 @@ label R_Les_Interupted:
             return
         $ Situation = "interrupted"
     
-label R_LesScene(Bonus = 0): #Repeating strokes
+label R_LesScene(Bonus = 0): 
     $ Round -= 5 if Round > 5 else (Round-1)
     call Shift_Focus("Rogue")
     if R_LesWatch:
@@ -3772,52 +3778,30 @@ label R_LesScene(Bonus = 0): #Repeating strokes
         
     if K_Loc == bg_current:
             #if it's Kitty. . .
-            $ K_RecentActions.append("noticed Rogue")
-            $ R_RecentActions.append("noticed Kitty")
             $ Partner = "Kitty"  
-            if R_LikeKitty >= 900:
-                    $ Bonus += 150
-            elif R_LikeKitty >= 800 or "poly Kitty" in R_Traits:
-                    $ Bonus += 100
-            elif R_LikeKitty >= 700:
-                    $ Bonus += 50
-            elif R_LikeKitty <= 200:
-                    $ Bonus -= 200
-            elif R_LikeKitty <= 500:
-                    $ Bonus -= 100
-            call DrainWord("Kitty","unseen",1,0) #She sees you, so remove unseens
     elif E_Loc == bg_current:
             #if it's Emma. . .
-            $ E_RecentActions.append("noticed Rogue")
-            $ R_RecentActions.append("noticed Emma")
             $ Partner = "Emma"  
-            if R_LikeEmma >= 900:
-                    $ Bonus += 150
-            elif R_LikeEmma >= 800 or "poly Emma" in R_Traits:
-                    $ Bonus += 100
-            elif R_LikeEmma >= 700:
-                    $ Bonus += 50
-            elif R_LikeEmma <= 200:
-                    $ Bonus -= 200
-            elif R_LikeEmma <= 500:
-                    $ Bonus -= 100
-            call DrainWord("Emma","unseen",1,0) #She sees you, so remove unseens
     elif L_Loc == bg_current:
             #if it's Laura. . .
-            $ L_RecentActions.append("noticed Rogue")
-            $ R_RecentActions.append("noticed Laura")
-            $ Partner = "Laura"  
-            if R_LikeLaura >= 900:
-                    $ Bonus += 150
-            elif R_LikeLaura >= 800 or "poly Laura" in R_Traits:
-                    $ Bonus += 100
-            elif R_LikeLaura >= 700:
-                    $ Bonus += 50
-            elif R_LikeLaura <= 200:
-                    $ Bonus -= 200
-            elif R_LikeLaura <= 500:
-                    $ Bonus -= 100
-            call DrainWord("Laura","unseen",1,0) #She sees you, so remove unseens
+            $ Partner = "Laura" 
+            
+    $ Line = GirlLikeCheck("Rogue",Partner)      
+    if Line >= 900:
+            $ Bonus += 150
+    elif Line >= 800 or "poly "+Partner in R_Traits:
+            $ Bonus += 100
+    elif Line >= 700:
+            $ Bonus += 50
+    elif Line <= 200:
+            $ Bonus -= 200
+    elif Line <= 500:
+            $ Bonus -= 100
+    call DrainWord(Partner,"unseen",1,0) #She sees you, so remove unseens    
+    $ Line = 0
+    
+    call AnyWord("Rogue",1,"noticed "+Partner,"noticed "+Partner) #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,1,"noticed Rogue","noticed Rogue") #ie $ R_RecentActions.append("noticed Laura") 
             
     if bg_current in ("bg player", "bg rogue", "bg kitty", "bg emma"):
         $ Taboo == 0
@@ -3964,14 +3948,17 @@ label R_LesScene(Bonus = 0): #Repeating strokes
                     call RogueFace("sexy", 1)
                     call Statup("Rogue", "Love", 90, 1)
                     call Statup("Rogue", "Inbt", 50, 3) 
-                    $ Line = renpy.random.choice(["Well. . . ok.",                 
-                        "I don't mind getting cozy with her. . .",
-                        "I've kind of needed this anyways. . .",
-                        "Sure!", 
-                        "I guess I could. . . give it a go.",
-                        "Heh, ok, ok."]) 
-                    ch_r "[Line]"
-                    $ Line = 0
+                    if Situation == "interrupted":
+                            ch_r "Well I could do some more. . ."
+                    else:
+                            $ Line = renpy.random.choice(["Well. . . ok.",                 
+                                "I don't mind getting cozy with her. . .",
+                                "I've kind of needed this anyways. . .",
+                                "Sure!", 
+                                "I guess I could. . . give it a go.",
+                                "Heh, ok, ok."]) 
+                            ch_r "[Line]"
+                            $ Line = 0
                 call Statup("Rogue", "Obed", 20, 1)
                 call Statup("Rogue", "Obed", 60, 1)
                 call Statup("Rogue", "Inbt", 70, 2) 
@@ -4108,24 +4095,15 @@ label R_Les_Partner:
 label R_Les_Prep:    
     #sets the scene up   
     
-    if K_Loc == bg_current:
-            if "noticed Rogue" not in K_RecentActions:
-                    $ K_RecentActions.append("noticed Rogue")  
-            if "noticed Kitty" not in R_RecentActions:
-                    $ R_RecentActions.append("noticed Kitty")           
+    if K_Loc == bg_current:      
             $ Partner = "Kitty"  
-    elif E_Loc == bg_current:
-            if "noticed Rogue" not in E_RecentActions:
-                    $ E_RecentActions.append("noticed Rogue")  
-            if "noticed Emma" not in R_RecentActions:
-                    $ R_RecentActions.append("noticed Emma")           
+    elif E_Loc == bg_current:       
             $ Partner = "Emma"  
-    elif L_Loc == bg_current:
-            if "noticed Rogue" not in L_RecentActions:
-                    $ L_RecentActions.append("noticed Rogue")  
-            if "noticed Laura" not in R_RecentActions:
-                    $ R_RecentActions.append("noticed Laura")           
+    elif L_Loc == bg_current: 
             $ Partner = "Laura" 
+            
+    call AnyWord("Rogue",1,"noticed "+Partner,"noticed "+Partner) #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,1,"noticed Rogue","noticed Rogue") #ie $ R_RecentActions.append("noticed Laura") 
             
     if "unseen" in R_RecentActions:
             pass
@@ -4162,8 +4140,9 @@ label R_Les_Prep:
     if Taboo:
         call DrainWord("Rogue","tabno")
     call DrainWord("Rogue","no lesbian")
-    $ R_RecentActions.append("lesbian")                      
-    $ R_DailyActions.append("lesbian") 
+    
+    call AnyWord("Rogue",0,"lesbian","lesbian") #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,0,"lesbian","lesbian") #ie $ R_RecentActions.append("noticed Laura") 
     
 label R_Les_Cycle: #Repeating strokes
     while Round >=0:  
@@ -4355,52 +4334,10 @@ label R_Les_After:
                     ch_r "I have to say, I really enjoyed that one. . ." 
     
     if not Situation:
-            ch_r "That was nice. . ."
-            if K_Loc == bg_current:
-                if "les rogue" not in K_History:
-                        if R_LikeKitty >= 600:
-                                ch_r "You. . . really know what you're doing down there. . ."
-                        else:
-                                ch_r "That. . . wasn't awful. . ."
-                        if K_LikeRogue >= 600:
-                                ch_k "Yeah, that was really hot. . ."
-                        else:
-                                ch_k "I guess. . ."
-                        $ R_History.append("les kitty")   
-                        $ K_History.append("les rogue")  
-                else:
-                    #second time
-                    ch_k "Mmmm yeah that was good. . ."
-            elif E_Loc == bg_current:
-                if "les rogue" not in E_History:
-                        if R_LikeEmma >= 600:
-                                ch_r "You. . . really know what you're doing down there. . ."
-                        else:
-                                ch_r "That. . . wasn't awful. . ."
-                        if E_LikeRogue >= 600:
-                                ch_e "Practice, dear. . ."
-                        else:
-                                ch_e "You could certainly do with more practice. . ."
-                        $ R_History.append("les emma")   
-                        $ E_History.append("les rogue")  
-                else:
-                    #second time
-                    ch_e "Certainly. . ."
-            elif L_Loc == bg_current:
-                if "les rogue" not in L_History:
-                        if R_LikeLaura >= 600:
-                                ch_r "You. . . really know what you're doing down there. . ."
-                        else:
-                                ch_r "That. . . wasn't awful. . ."
-                        if L_LikeRogue >= 600:
-                                ch_l "I can read a map."
-                        else:
-                                ch_l "Uh-huh."
-                        $ R_History.append("les laura")   
-                        $ L_History.append("les rogue") 
-                else:
-                    #second time
-                    ch_l "Yup. . ."
+            call Post_Les_Dialog("Rogue")
+                    
+    call AnyWord("Rogue",1,0,0,0,"les "+Partner) #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,1,0,0,0,"les Rogue") #ie $ R_RecentActions.append("noticed Laura") 
      
     $ Tempmod = 0  
 #    if Situation == "shift":
@@ -4670,7 +4607,7 @@ label R_Les_Response(Girl="Kitty", Step=1, B=0, B2=0, Tempmod=0, Result=0, Appro
 label R_Les_FirstKiss:
     # called when there is a first kiss situation between two girls
     if Partner == "Kitty":
-            if "les kitty" in R_History:
+            if "les Kitty" in R_History:
                 #if they've been together before              
                 $ Line = "experienced"
             elif R_Les and K_Les:   
@@ -4683,7 +4620,7 @@ label R_Les_FirstKiss:
                 #Kitty's had experience                
                 $ Line = "first partner"
     elif Partner == "Emma":
-            if "les emma" in R_History:
+            if "les Emma" in R_History:
                 #if they've been together before              
                 $ Line = "experienced"
             elif R_Les and E_Les:   
@@ -4696,7 +4633,7 @@ label R_Les_FirstKiss:
                 #Emma's had experience                
                 $ Line = "first partner"
     elif Partner == "Laura":
-            if "les laura" in R_History:
+            if "les Laura" in R_History:
                 #if they've been together before              
                 $ Line = "experienced"
             elif R_Les and L_Les:   

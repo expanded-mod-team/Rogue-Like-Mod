@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -742,7 +742,7 @@ class OneLinePythonParser(Parser):
     def parse(self, loc, l, parent):
 
         loc = l.get_location()
-        source = l.require(l.rest_statement)
+        source = l.require(l.rest)
 
         l.expect_eol()
         l.expect_noblock("one-line python")

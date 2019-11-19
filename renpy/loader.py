@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -586,9 +586,6 @@ def loadable(name):
 
     name = name.lstrip('/')
 
-    if (renpy.config.loadable_callback is not None) and renpy.config.loadable_callback(name):
-        return True
-
     for p in get_prefixes():
         if loadable_core(p + name):
             return True
@@ -791,8 +788,6 @@ def add_auto(fn, force=False):
     Adds fn as a file we watch for changes. If it's mtime changes or the file
     starts/stops existing, we trigger a reload.
     """
-
-    fn = fn.replace("\\", "/")
 
     if not renpy.autoreload:
         return

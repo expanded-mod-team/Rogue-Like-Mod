@@ -33,47 +33,7 @@ label L_Handjob:
         $ Tempmod -= 10 if "no hand" in L_RecentActions else 0    
         
     $ Approval = ApprovalCheck("Laura", 1100, TabM = 3) # 110, 125, 140, Taboo -120(230)
-    
-    if Situation == "Laura":                                                                  #Laura auto-starts   
-        if Approval > 2:                                                      # fix, add laura auto stuff here
-            if Trigger2 == "jackin":
-                "Laura brushes your hand aside and starts stroking your cock."
-            else:
-                "Laura gives you a mischevious smile, and starts to fondle your cock."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Laura", "Inbt", 70, 3) 
-                    call Statup("Laura", "Inbt", 30, 2)                     
-                    "Laura continues her actions."
-                "Praise her.":       
-                    call LauraFace("sexy", 1)                    
-                    call Statup("Laura", "Inbt", 70, 3) 
-                    ch_p "Oooh, that's good, [L_Pet]."
-                    call Laura_Namecheck
-                    "Laura continues her actions."
-                    call Statup("Laura", "Love", 80, 1)
-                    call Statup("Laura", "Obed", 90, 1)
-                    call Statup("Laura", "Obed", 50, 2)
-                "Ask her to stop.":
-                    call LauraFace("surprised")       
-                    call Statup("Laura", "Inbt", 70, 1) 
-                    ch_p "Let's not do that for now, [L_Pet]."
-                    call Laura_Namecheck
-                    "Laura puts it down."
-                    call Statup("Laura", "Obed", 90, 1)
-                    call Statup("Laura", "Obed", 50, 1)
-                    call Statup("Laura", "Obed", 30, 2)
-                    return            
-            if Trigger:
-                $ Trigger3 = "hand"
-                return
-            jump L_HJ_Prep
-        else:                
-            $ Tempmod = 0                               # fix, add laura auto stuff here
-            $ Trigger2 = 0
-            return            
-    
+         
     if not L_Hand and "no hand" not in L_RecentActions:        
         call LauraFace("confused", 2)
         ch_l "Handjob, huh. . ."
@@ -275,8 +235,44 @@ label L_HJ_Prep:
         $ L_Eyes = "sexy"
         $ L_Mouth = "smile"
     
-    call Seen_First_Peen("Laura",Partner)
+    call Seen_First_Peen("Laura",Partner,React=Situation)
     call Laura_HJ_Launch("L")
+    
+    if Situation == "Laura":                                                          
+            #Laura auto-starts  
+            $ Situation = 0 
+            if Trigger2 == "jackin":
+                "Laura brushes your hand aside and starts stroking your cock."
+            else:
+                "Laura gives you a mischevious smile, and starts to fondle your cock."
+            menu:
+                "What do you do?"
+                "Nothing.":                    
+                    call Statup("Laura", "Inbt", 70, 3) 
+                    call Statup("Laura", "Inbt", 30, 2)                     
+                    "Laura continues her actions."
+                "Praise her.":       
+                    call LauraFace("sexy", 1)                    
+                    call Statup("Laura", "Inbt", 70, 3) 
+                    ch_p "Oooh, that's good, [L_Pet]."
+                    call Laura_Namecheck
+                    "Laura continues her actions."
+                    call Statup("Laura", "Love", 80, 1)
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call LauraFace("surprised")       
+                    call Statup("Laura", "Inbt", 70, 1) 
+                    ch_p "Let's not do that for now, [L_Pet]."
+                    call Laura_Namecheck
+                    "Laura puts it down."
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 1)
+                    call Statup("Laura", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Laura",1,"refused","refused")  
+                    return   
+                    
     if not L_Hand:        
         if L_Forced:
             call Statup("Laura", "Love", 90, -20)
@@ -432,7 +428,7 @@ label L_HJ_Cycle:
                                 call Laura_HJ_Reset
                                 return    
                             call Statup("Laura", "Lust", 200, 5) 
-                            if 100 > L_Lust >= 70 and L_OCount < 2:             
+                            if 100 > L_Lust >= 70 and L_OCount < 2 and L_SEXP >= 20:             
                                 $ L_RecentActions.append("unsatisfied")                      
                                 $ L_DailyActions.append("unsatisfied") 
                             
@@ -509,6 +505,8 @@ label L_HJ_Cycle:
                     ch_l "This working for you?"         
         #End Count check
                    
+        call Escalation("Laura","L") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_l "It's getting late, we should wrap this up."   
         elif Round == 5:
@@ -600,47 +598,12 @@ label L_Titjob:
         $ Tempmod -= 5 
         $ Tempmod -= 10 if "no titjob" in L_RecentActions else 0    
         
-    $ Approval = ApprovalCheck("Laura", 1200, TabM = 5) # 120, 135, 150, Taboo -200(320)
-    
-    if Situation == "Laura":                                                                  #Laura auto-starts   
-        if Approval > 2:                                                      # fix, add laura auto stuff here
-            call Laura_TJ_Launch("L")            
-            "Laura slides down and presses your dick against her chest."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Laura", "Inbt", 80, 3) 
-                    call Statup("Laura", "Inbt", 40, 2)                     
-                    "Laura starts to slide up and down against it."
-                "Praise her.":       
-                    call LauraFace("sexy", 1)                    
-                    call Statup("Laura", "Inbt", 80, 3) 
-                    ch_p "Oh, that sounds like a good idea, [L_Pet]."
-                    call Laura_Namecheck
-                    "Laura continues her actions."
-                    call Statup("Laura", "Love", 85, 1)
-                    call Statup("Laura", "Obed", 90, 1)
-                    call Statup("Laura", "Obed", 50, 2)
-                "Ask her to stop.":     
-                    call LauraFace("confused")  
-                    call Statup("Laura", "Inbt", 70, 1) 
-                    ch_p "Let's not do that for now, [L_Pet]."
-                    call Laura_Namecheck
-                    "Laura lets it drop."
-                    call Statup("Laura", "Obed", 90, 1)
-                    call Statup("Laura", "Obed", 50, 3)
-                    call Laura_TJ_Reset  
-                    return            
-            jump L_TJ_Cycle
-        else:                
-            $ Tempmod = 0                               # fix, add laura auto stuff here
-            $ Trigger2 = 0
-            return            
+    $ Approval = ApprovalCheck("Laura", 1200, TabM = 4) # 120, 135, 150, Taboo -200(320)
     
     if not L_Tit and "no titjob" not in L_RecentActions:        
         call LauraFace("surprised", 1)
         $ L_Mouth = "kiss"
-        ch_l "You want to rub your cock against my. . . breasts?"  
+        ch_l "You want a titjob, huh?"  
             
     if not L_Tit and Approval:                                                 #First time dialog    
         if L_Forced: 
@@ -651,41 +614,41 @@ label L_Titjob:
             call LauraFace("sexy")
             $ L_Brows = "sad"
             $ L_Mouth = "smile" 
-            ch_l "It's nice that you even thought about it."            
+            ch_l "Well, maybe you deserve it."            
         elif L_Obed >= L_Inbt:
             call LauraFace("normal")
-            ch_l "I mean. . ."              
+            ch_l "If you'd like that. . ."              
         elif L_Addict >= 50:
             call LauraFace("manic", 1)
             ch_l "Hmmmm. . . ."     
         else: # Uninhibited 
             call LauraFace("sad")
             $ L_Mouth = "smile"             
-            ch_l "Hadn't really considered that."      
+            ch_l "Sounds fun. . ."      
     elif Approval:                                                                       #Second time+ dialog
         if L_Forced: 
             call LauraFace("sad")
             call Statup("Laura", "Love", 70, -3, 1)
             call Statup("Laura", "Love", 20, -2, 1)
-            ch_l "This isn't going to become a habit, will it?"
+            ch_l "You're kinda pushing it."
         elif not Taboo and "tabno" in L_DailyActions:        
-            ch_l "Ok, I guess this is private enough. . ."   
+            ch_l "Ok, I guess this is secluded enough. . ."   
         elif "titjob" in L_RecentActions:
             call LauraFace("sexy", 1)
-            ch_l "Mmm, again?"
+            ch_l "Huh, again?"
             jump L_TJ_Prep
         elif "titjob" in L_DailyActions:
             call LauraFace("sexy", 1)
-            $ Line = renpy.random.choice(["Back again so soon?",   
-                "You're going to make me sore.", 
-                "Didn't get enough earlier?",
-                "My tits are still kinda sore from earlier."]) 
+            $ Line = renpy.random.choice(["Back for more?",   
+                "You're really working these puppies.", 
+                "Didn't get enough earlier?",  
+                "You're really working these puppies."]) 
             ch_l "[Line]"
         elif L_Tit < 3:        
             call LauraFace("sexy", 1)
             $ L_Brows = "confused"
             $ L_Mouth = "kiss"
-            ch_l "So you'd like another titjob?"        
+            ch_l "Another titjob??"        
         else:       
             call LauraFace("sexy", 1)
             $ Laura_Arms = 2
@@ -693,8 +656,8 @@ label L_Titjob:
                 "So you'd like another titjob?",                  
                 "So you'd like another titjob?",                               
                 "So you'd like another titjob?",                              
-                "A little. . . puffpuff?", 
-                "A little soft embrace?"]) 
+                "Another titjob?", 
+                "A little [points at her chest]?"]) 
             ch_l "[Line]"
         $ Line = 0
             
@@ -735,10 +698,11 @@ label L_Titjob:
             ch_l "This is just way too exposed!"     
         elif not L_Tit:
             call LauraFace("bemused")
-            ch_l "I'm not really up for that, [L_Petname]. . ."
+            ch_l "I'm not really into that, [L_Petname]. . ."
         else:
             call LauraFace("bemused")
-            ch_l "Not, right now [L_Petname]. . ."
+            ch_l "Not right now [L_Petname]. . ."
+            
         menu:
             extend ""
             "Sorry, never mind." if "no titjob" in L_DailyActions:
@@ -778,9 +742,9 @@ label L_Titjob:
                         call Statup("Laura", "Inbt", 80, 1) 
                         call Statup("Laura", "Inbt", 60, 3) 
                         call LauraFace("confused", 1)
-                        ch_l "Could I[L_like]. . . blow you instead?"
+                        ch_l "I could maybe blow you?"
                         menu:
-                            ch_l "What do you say [[blowjob]?"
+                            ch_l "How about that [[blowjob]?"
                             "Ok, get down there.":
                                 call Statup("Laura", "Love", 80, 2)  
                                 call Statup("Laura", "Inbt", 60, 1)                                
@@ -792,7 +756,7 @@ label L_Titjob:
                         call Statup("Laura", "Inbt", 80, 1) 
                         call Statup("Laura", "Inbt", 60, 3) 
                         call LauraFace("confused", 1)
-                        ch_l "Maybe you'd[L_like]settle for a handy?"
+                        ch_l "I could give you a handy?"
                         menu:
                             ch_l "What do you say?"
                             "Sure, that's fine.":
@@ -830,12 +794,12 @@ label L_Titjob:
     #She refused all offers.   
     if "no titjob" in L_DailyActions:
         call LauraFace("angry", 1)
-        ch_l "Look, I already told you no thanks, [L_Petname]."   
+        ch_l "Look, I already told you no."   
         $ L_RecentActions.append("angry")
         $ L_DailyActions.append("angry")   
     elif L_Forced:
         call LauraFace("angry", 1)
-        ch_l "No, that's just weird."
+        ch_l "No, try something else."
         call Statup("Laura", "Lust", 200, 5)      
         if L_Love > 300:
                 call Statup("Laura", "Love", 70, -2)
@@ -845,15 +809,15 @@ label L_Titjob:
     elif Taboo:                             # she refuses and this is too public a place for her
         call LauraFace("angry", 1)          
         $ L_DailyActions.append("tabno") 
-        ch_l "You really expect me to do that here? You realize how. . . exposed that would be?"
+        ch_l "You really expect me to do that here? This isn't exactly \"covert.\""
         call Statup("Laura", "Lust", 200, 5)  
         call Statup("Laura", "Obed", 50, -3)  
     elif L_Tit:
         call LauraFace("sad") 
-        ch_l "I think I'll let you know when I want you touching these again."       
+        ch_l "You'll know when it's time for that."       
     else:
         call LauraFace("normal", 1)
-        ch_l "How about let's not, [L_Petname]."
+        ch_l "Nah."
     $ L_RecentActions.append("no titjob")                      
     $ L_DailyActions.append("no titjob") 
     $ Tempmod = 0    
@@ -874,8 +838,40 @@ label L_TJ_Prep:
         $ L_Eyes = "sexy"
         $ L_Mouth = "smile"
         
-    call Seen_First_Peen("Laura",Partner)
+    call Seen_First_Peen("Laura",Partner,React=Situation)
     call Laura_TJ_Launch("L")    
+            
+    if Situation == "Laura":                                                               
+            #Laura auto-starts   
+            $ Situation = 0         
+            "Laura slides down and sandwiches your dick between her tits."
+            menu:
+                "What do you do?"
+                "Nothing.":                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    call Statup("Laura", "Inbt", 40, 2)                     
+                    "Laura starts to slide them up and down."
+                "Praise her.":       
+                    call LauraFace("sexy", 1)                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    ch_p "Oh, that sounds like a good idea, [L_Pet]."
+                    call Laura_Namecheck
+                    "Laura continues her actions."
+                    call Statup("Laura", "Love", 85, 1)
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 2)
+                "Ask her to stop.":     
+                    call LauraFace("confused")  
+                    call Statup("Laura", "Inbt", 70, 1) 
+                    ch_p "Let's not do that for now, [L_Pet]."
+                    call Laura_Namecheck
+                    "Laura lets it drop out from between her breasts."
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 3)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Laura",1,"refused","refused")  
+                    return 
+                    
     if not L_Tit:        
         if L_Forced:
             call Statup("Laura", "Love", 90, -25)
@@ -909,27 +905,23 @@ label L_TJ_Cycle: #Repeating strokes
                         "Keep going. . .":
                                     pass
                            
-                        "Start moving? . ." if Speed == 0:
-                                    $ Speed = 1
+                        "Start moving? . ." if Speed == 0:   
+                                    call Speed_Shift(1)
                             
-                        "Speed up. . ." if  Speed == 1:                    
-                                    $ Speed = 2
+                        "Speed up. . ." if  Speed == 1:      
+                                    call Speed_Shift(2)
                                     "You ask her to up the pace a bit."
                         "Speed up. . . (locked)" if Speed >= 2:
                                     pass
                             
-                        "Stop moving" if Speed == 1 or Speed == 3:                                          
-                                    $ Speed = 0
-                        "Slow Down. . ." if Speed == 2:                    
-                                    $ Speed = 1
+                        "Stop moving" if Speed != 0:     
+                                    call Speed_Shift(0)
+                        "Slow Down. . ." if Speed == 2:     
+                                    call Speed_Shift(1)
                                     "You ask her to slow it down a bit."
                         "Slow Down. . . (locked)" if not Speed:                
                                     pass
                                     
-                        "Lick it" if Speed != 3:
-                                    $ Speed = 3
-                        "Lick it (locked)" if Speed == 3:
-                                    pass
                                     
                         "Focus to last longer [[not unlocked]. (locked)" if "focus" not in P_Traits:
                                     pass
@@ -1039,7 +1031,7 @@ label L_TJ_Cycle: #Repeating strokes
                                 call Laura_TJ_Reset
                                 return    
                             call Statup("Laura", "Lust", 200, 5) 
-                            if 100 > L_Lust >= 70 and L_OCount < 2:             
+                            if 100 > L_Lust >= 70 and L_OCount < 2 and L_SEXP >= 20:             
                                 $ L_RecentActions.append("unsatisfied")                      
                                 $ L_DailyActions.append("unsatisfied") 
                             
@@ -1071,7 +1063,9 @@ label L_TJ_Cycle: #Repeating strokes
                                         jump L_TJ_After    
         if Partner:
                 #Checks if partner could orgasm
-                call Partner_Cumming("Laura")            
+                call Partner_Cumming("Laura")        
+        if Speed >= 4:            
+                call Speed_Shift(0) #resets speed after orgasm
         #End orgasm
         
         $ P_Focus -= 10 if P_FocusX and P_Focus > 50 else 0
@@ -1080,11 +1074,11 @@ label L_TJ_Cycle: #Repeating strokes
                 pass
         elif Cnt == (5 + L_Tit):
                 $ L_Brows = "confused"
-                ch_l "Are you getting close here? I'm getting as little sore."        
+                ch_l "Are you getting close here? I'm getting bored."        
         if Cnt == (10 + L_Tit):
                 $ L_Brows = "angry"        
                 menu:
-                    ch_l "I'm getting rug-burn here [L_Petname]. Can we do something else?"
+                    ch_l "Seriously, can we do something else?"
                     "How about a BJ?" if L_Action and MultiAction:
                         $ Situation = "shift"
                         call L_TJ_After
@@ -1119,6 +1113,8 @@ label L_TJ_Cycle: #Repeating strokes
                             jump L_TJ_After
             #End Count check
                
+        call Escalation("Laura","L") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_l "It's kinda time to get moving."   
         elif Round == 5:
@@ -1146,12 +1142,12 @@ label L_TJ_After:
         $ L_SEXP += 12
         if L_Love >= 500:
             $ L_Mouth = "smile"
-            ch_l "That was kinda fun."
+            ch_l "That was fun."
         elif P_Focus <= 20:
             $ L_Mouth = "sad"
             ch_l "Well I hope you got something out of that."        
     elif L_Tit == 5:
-            ch_l "Huh, I guess these are good for something."   
+            ch_l "You seem to enjoy that."   
             
     $ Tempmod = 0    
     
@@ -1163,6 +1159,8 @@ label L_TJ_After:
     return
 
 ## end L_Titjob //////////////////////////////////////////////////////////////////////
+
+
 
 # L_Blowjob //////////////////////////////////////////////////////////////////////
 
@@ -1200,39 +1198,6 @@ label L_Blowjob:
         $ Tempmod -= 10 if "no blow" in L_RecentActions else 0    
     
     $ Approval = ApprovalCheck("Laura", 1300, TabM = 4) # 130, 145, 160, Taboo -160(290)
-    
-    if Situation == "Laura":                                                                  #Laura auto-starts   
-        if Approval > 2:                                                      # fix, add laura auto stuff here
-            "Laura slides down and gives your cock a little lick."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Laura", "Inbt", 80, 3) 
-                    call Statup("Laura", "Inbt", 40, 2)                     
-                    "Laura continues licking at it."
-                "Praise her.":       
-                    call LauraFace("sexy", 1)                    
-                    call Statup("Laura", "Inbt", 80, 3) 
-                    ch_p "Hmmm, keep doing that, [L_Pet]."
-                    call Laura_Namecheck
-                    "Laura continues her actions."
-                    call Statup("Laura", "Love", 85, 1)
-                    call Statup("Laura", "Obed", 90, 1)
-                    call Statup("Laura", "Obed", 50, 2)
-                "Ask her to stop.":     
-                    call LauraFace("surprised")  
-                    call Statup("Laura", "Inbt", 70, 1) 
-                    ch_p "Let's not do that for now, [L_Pet]."
-                    call Laura_Namecheck
-                    "Laura puts it down."
-                    call Statup("Laura", "Obed", 90, 1)
-                    call Statup("Laura", "Obed", 50, 3)
-                    return            
-            jump L_BJ_Prep
-        else:                
-            $ Tempmod = 0                               # fix, add laura auto stuff here
-            $ Trigger2 = 0
-            return            
     
     if not L_Blow and "no blow" not in L_RecentActions:        
         call LauraFace("surprised", 2)
@@ -1472,8 +1437,38 @@ label L_BJ_Prep:
         $ L_Eyes = "sexy"
         $ L_Mouth = "smile"
     
-    call Seen_First_Peen("Laura",Partner)
-    call Laura_BJ_Launch("L")
+    call Seen_First_Peen("Laura",Partner,React=Situation)
+    call Laura_BJ_Launch("L")    
+    if Situation == "Laura":                                                                  
+            #Laura auto-starts   
+            $ Situation = 0      
+            "Laura slides down and gives your cock a little lick."
+            menu:
+                "What do you do?"
+                "Nothing.":                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    call Statup("Laura", "Inbt", 40, 2)                     
+                    "Laura continues licking at it."
+                "Praise her.":       
+                    call LauraFace("sexy", 1)                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    ch_p "Hmmm, keep doing that, [L_Pet]."
+                    call Laura_Namecheck
+                    "Laura continues her actions."
+                    call Statup("Laura", "Love", 85, 1)
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 2)
+                "Ask her to stop.":     
+                    call LauraFace("surprised")  
+                    call Statup("Laura", "Inbt", 70, 1) 
+                    ch_p "Let's not do that for now, [L_Pet]."
+                    call Laura_Namecheck
+                    "Laura puts it down."
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 3)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Laura",1,"refused","refused")  
+                    return  
     if not L_Blow:        
         if L_Forced:
             call Statup("Laura", "Love", 90, -70)
@@ -1667,7 +1662,7 @@ label L_BJ_Cycle: #Repeating strokes
                                 call Laura_BJ_Reset
                                 return    
                             call Statup("Laura", "Lust", 200, 5) 
-                            if 100 > L_Lust >= 70 and L_OCount < 2:             
+                            if 100 > L_Lust >= 70 and L_OCount < 2 and L_SEXP >= 20:             
                                 $ L_RecentActions.append("unsatisfied")                      
                                 $ L_DailyActions.append("unsatisfied") 
                             
@@ -1745,6 +1740,8 @@ label L_BJ_Cycle: #Repeating strokes
                     $ L_Brows = "confused"
                     ch_l "Are you getting close here? I'm bored."  
         #End Count check
+        
+        call Escalation("Laura","L") #sees if she wants to escalate things
         
         if Round == 10:
             ch_l "It's getting late, we should wrap this up."   
@@ -1872,6 +1869,7 @@ label L_Dildo_Pussy:
                     else:
                         "Laura grabs her dildo, rubbing is suggestively against her crotch."
                     $ L_SeenPanties = 1
+                    call Laura_First_Bottomless(1)
                     "She slides the tip along her pussy and seems to want you to insert it."
                     menu:
                         "What do you do?"
@@ -2488,6 +2486,7 @@ label L_Dildo_Ass:
                 else:
                     "Laura grabs her dildo, rubbing is suggestively against her ass."
                 $ L_SeenPanties = 1
+                call Laura_First_Bottomless(1)
                 "She slides the tip against her asshole, and seems to want you to insert it."
                 menu:
                     "What do you do?"
@@ -2591,7 +2590,7 @@ label L_Dildo_Ass:
     
     if not L_Loose and ("dildo anal" in L_RecentActions or "anal" in L_RecentActions or "dildo anal" in L_DailyActions or "anal" in L_DailyActions):
             call LauraFace("bemused", 1)
-            ch_l "I'm still[L_like]sore from earlier. . ."
+            ch_l "I'm still sore from earlier. . ."
             
     if not L_DildoA and Approval:                                                 
             #First time dialog        
@@ -2603,7 +2602,7 @@ label L_Dildo_Ass:
                 call LauraFace("sexy")
                 $ L_Brows = "sad"
                 $ L_Mouth = "smile" 
-                ch_l "I[L_like]haven't actually used one of these, back there before. . ."            
+                ch_l "I haven't actually used one of these, back there before. . ."            
             elif L_Obed >= L_Inbt:
                 call LauraFace("normal")
                 ch_l "If that's what you want, [L_Petname]. . ."            
@@ -3098,7 +3097,7 @@ label L_Footjob:
     
     if Situation == "Laura":                                                                  #Laura auto-starts   
         if Approval > 2:                                                      # fix, add laura auto stuff here
-            "Laura leans back  and starts rubbing your cock between her feet."
+            "Laura leans back  and starts rubbing your cock with her foot."
             menu:
                 "What do you do?"
                 "Nothing.":                    
@@ -3135,7 +3134,7 @@ label L_Footjob:
     
     if not L_Foot and "no foot" not in L_RecentActions:        
         call LauraFace("confused", 2)
-        ch_l "Huh, so you'd like me to touch your cock with my feet?"
+        ch_l "Standard footjob?"
         $ L_Blush = 1
             
     if not L_Foot and Approval:                                                 #First time dialog        
@@ -3163,21 +3162,20 @@ label L_Footjob:
             call LauraFace("sad")
             call Statup("Laura", "Love", 70, -3, 1)
             call Statup("Laura", "Love", 20, -2, 1)
-            ch_l "That's all?" 
+            ch_l "That's it?" 
         elif not Taboo and "tabno" in L_DailyActions:        
-            ch_l "Um, I guess this is secluded enough. . ."    
-        elif "foot" in L_RecentActions:
-            call LauraFace("sexy", 1)
-            ch_l "I'm getting foot cramps. . ."
-            jump L_FJ_Prep
+            ch_l "Um, I guess this is secure enough. . ."    
         elif "foot" in L_DailyActions:
             call LauraFace("sexy", 1)
-            $ Line = renpy.random.choice(["Another one?",   
-                "You're going to give me calluses.", 
-                "Didn't get enough earlier?",
-                "My feet are kinda sore from earlier.",
-                "My feet are kinda sore from earlier."]) 
-            ch_l "[Line]"
+            ch_l "More of that, huh. . ."
+            jump L_FJ_Prep
+#        elif "foot" in L_DailyActions:
+#            call LauraFace("sexy", 1)
+#            $ Line = renpy.random.choice(["Another one?",   
+#                "Didn't get enough earlier?",
+#                "My feet are kinda sore from earlier.",
+#                "My feet are kinda sore from earlier."]) 
+#            ch_l "[Line]"
         elif L_Foot < 3:        
             call LauraFace("sexy", 1)
             $ L_Brows = "confused"
@@ -3187,7 +3185,7 @@ label L_Footjob:
             call LauraFace("sexy", 1)
             $ Laura_Arms = 2
             $ Line = renpy.random.choice(["You want me to use my feet?",                 
-                "So you'd like another foot sesh?",                 
+                "So you'd like another footjob?",                 
                 "A little. . . [she rubs her foot along your leg]?", 
                 "A little TLC?"]) 
             ch_l "[Line]"
@@ -3198,16 +3196,16 @@ label L_Footjob:
             call LauraFace("sad")
             call Statup("Laura", "Obed", 90, 1)
             call Statup("Laura", "Inbt", 60, 1)
-            ch_l "Ok, fine." 
+            ch_l "Ok, sure." 
         elif "no foot" in L_DailyActions:               
-            ch_l "OK, geeze!"   
+            ch_l "Fine."   
         else:
             call LauraFace("sexy", 1)
             call Statup("Laura", "Love", 90, 1)
             call Statup("Laura", "Inbt", 50, 3) 
             $ Line = renpy.random.choice(["Sure, I guess.",                 
-                "Ooooookay.",                 
-                "Cool, lemme see it.", 
+                "OK.",                 
+                "Fine, lemme see it.", 
                 "I guess I could. . .",
                 "Ok. . . [She gestures for you to come over].",
                 "Heh, ok, ok."]) 
@@ -3221,16 +3219,16 @@ label L_Footjob:
     else:                                                                               #She's not into it, but maybe. . .            
         call LauraFace("angry")
         if "no foot" in L_RecentActions:  
-            ch_l "You don't[L_like]listen do you, [L_Petname]."
+            ch_l "You should listen better, [L_Petname]."
         elif Taboo and "tabno" in L_DailyActions and "no foot" in L_DailyActions: 
-            ch_l "I said not in public!"  
+            ch_l "I said not in public."  
         elif "no foot" in L_DailyActions:       
             ch_l "I told you \"no,\" [L_Petname]."
         elif Taboo and "tabno" in L_DailyActions:  
             ch_l "I said not in public!"     
         elif not L_Foot:
             call LauraFace("bemused")
-            ch_l "I don't know, [L_Petname]. . ."
+            ch_l "Eh, [L_Petname]. . ."
         else:
             call LauraFace("bemused")
             ch_l "Not now, ok?"
@@ -3238,7 +3236,7 @@ label L_Footjob:
             extend ""
             "Sorry, never mind." if "no foot" in L_DailyActions:
                 call LauraFace("bemused")
-                ch_l "Yeah."              
+                ch_l "Sure, no problem."              
                 return
             "Maybe later?" if "no foot" not in L_DailyActions:
                 call LauraFace("sexy")  
@@ -3260,11 +3258,11 @@ label L_Footjob:
                     call Statup("Laura", "Inbt", 70, 3) 
                     call Statup("Laura", "Inbt", 40, 2) 
                     $ Line = renpy.random.choice(["Sure, I guess.",                 
-                            "Ooooookay.",                 
-                            "Cool, lemme see it.", 
-                            "I guess I could. . .",
-                            "Ok. . . [She gestures for you to come over].",
-                            "Heh, ok, ok."]) 
+                        "OK.",                 
+                        "Fine, lemme see it.", 
+                        "I guess I could. . .",
+                        "Ok. . . [She gestures for you to come over].",
+                        "Heh, ok, ok."]) 
                     ch_l "[Line]"
                     $ Line = 0                   
                     jump L_FJ_Prep
@@ -3277,7 +3275,7 @@ label L_Footjob:
                     call LauraFace("sad")
                     call Statup("Laura", "Love", 70, -5, 1)
                     call Statup("Laura", "Love", 200, -2)                 
-                    ch_l "Ok, fine."  
+                    ch_l "Fine."  
                     call Statup("Laura", "Obed", 50, 4)
                     call Statup("Laura", "Inbt", 80, 1) 
                     call Statup("Laura", "Inbt", 60, 3)  
@@ -3297,7 +3295,7 @@ label L_Footjob:
         $ L_DailyActions.append("angry")   
     elif L_Forced:
         call LauraFace("angry", 1)
-        ch_l "I don't even want to step on it."
+        ch_l "You understand that I have claws down there too. . ."
         call Statup("Laura", "Lust", 200, 5)    
         if L_Love > 300:
                 call Statup("Laura", "Love", 70, -2)
@@ -3307,15 +3305,15 @@ label L_Footjob:
     elif Taboo:                             # she refuses and this is too public a place for her
         call LauraFace("angry", 1)          
         $ L_DailyActions.append("tabno") 
-        ch_l "Not here, not anywhere near here."
+        ch_l "This is too exposed."
         call Statup("Laura", "Lust", 200, 5)  
         call Statup("Laura", "Obed", 50, -3)   
     elif L_Foot:
         call LauraFace("sad") 
-        ch_l "I'm not feeling it today. . ."       
+        ch_l "Not right now."       
     else:
         call LauraFace("normal", 1)
-        ch_l "I don't know about using my feet for. . . that."  
+        ch_l "I'd rather not."  
     $ L_RecentActions.append("no foot")                      
     $ L_DailyActions.append("no foot") 
     $ Tempmod = 0    
@@ -3377,7 +3375,7 @@ label L_FJ_Cycle:
                                     $ Speed = 1
                             
                         "Speed up. . ." if Speed < 2:                    
-                                    $ Speed = 2
+                                    $ Speed += 1
                                     "You ask her to up the pace a bit."
                         "Speed up. . . (locked)" if Speed >= 2:
                                     pass
@@ -3424,13 +3422,13 @@ label L_FJ_Cycle:
                                                                     else:
                                                                         ch_l "Maybe we could finish this up for now?"
                                                                         
-#                                                        "How about a titjob?":
-#                                                                    if L_Action and MultiAction:
-#                                                                        $ Situation = "shift"
-#                                                                        call L_FJ_After
-#                                                                        call L_Titjob
-#                                                                    else:
-#                                                                        ch_l "Maybe we could finish this up for now?"
+                                                        "How about a titjob?":
+                                                                    if L_Action and MultiAction:
+                                                                        $ Situation = "shift"
+                                                                        call L_FJ_After
+                                                                        call L_Titjob
+                                                                    else:
+                                                                        ch_l "Maybe we could finish this up for now?"
                                                                 
                                                         
                                                         
@@ -3545,7 +3543,7 @@ label L_FJ_Cycle:
         if Cnt == 20:
                     $ L_Brows = "angry"        
                     menu:
-                        ch_l "Ouch, foot cramp, can we[L_like]take a break?"
+                        ch_l "Hmm, this is getting a bit boring."
                         "How about a BJ?" if L_Action and MultiAction:
                                 $ Situation = "shift"
                                 call L_FJ_After
@@ -3574,8 +3572,8 @@ label L_FJ_Cycle:
                                     "She grumbles but gets back to work."
                                 else:
                                     call LauraFace("angry", 1)   
-                                    "She scowls at you, drops you cock and pulls back."
-                                    ch_l "Hey, I've got better things to do if you're[L_like]going to be a dick about it."                                               
+                                    "She scowls at you and pulls back."
+                                    ch_l "Not interested."                                               
                                     call Statup("Laura", "Love", 50, -3, 1)
                                     call Statup("Laura", "Love", 80, -4, 1)
                                     call Statup("Laura", "Obed", 30, -1, 1)                    
@@ -3585,9 +3583,11 @@ label L_FJ_Cycle:
                                     jump L_FJ_After
         elif Cnt == 10 and L_SEXP <= 100 and not ApprovalCheck("Laura", 1200, "LO"):
                     $ L_Brows = "confused"
-                    ch_l "Can we[L_Like]be done with this now? I'm getting sore."         
+                    ch_l "Ok, seriously, let's try something different."         
         #End Count check
-                   
+                  
+        call Escalation("Laura","L") #sees if she wants to escalate things
+         
         if Round == 10:
             ch_l "It's getting late, we should wrap this up."   
         elif Round == 5:
@@ -3614,19 +3614,19 @@ label L_FJ_After:
             pass  
     elif L_Foot >= 10:
             call LauraFace("smile", 1)
-            ch_l "I guess I've gotten pretty smooth at the \"Laurapedi.\""
+            ch_l "I think I'm finally back into practice on this."
             $ Achievements.append("Laurapedi")
             $ L_SEXP += 5          
     elif L_Foot == 1:            
             $ L_SEXP += 10
             if L_Love >= 500:
                 $ L_Mouth = "smile"
-                ch_l "I could feel you down there. . ."
+                ch_l "Did you like that? . ."
             elif P_Focus <= 20:
                 $ L_Mouth = "sad"
-                ch_l "Did that work out for you?"
+                ch_l "Did that do it for you?"
     elif L_Foot == 5:
-                ch_l "Let me know any time you need me to \"foot you up.\""                  
+                ch_l "I'm getting used to this. . ."                  
      
     $ Tempmod = 0  
     if Situation == "shift":
@@ -3658,9 +3658,11 @@ label L_Les_Interupted:
                 jump L_Les_After
         call DrainWord("Laura","unseen",1,0) #She sees you, so remove unseens
         call DrainWord(Partner,"unseen",1,0) #She sees you, so remove unseens
-        call LauraFace("surprised", 1)
+        call LauraFace("surprised", 1) 
+        call AnyFace(Partner,"surprised",2) 
         "Suddenly, Laura jerks up from what she was doing with a start, and gives [Partner] a nudge."
-        call LauraFace("bemused", 0)
+        call LauraFace("bemused", 0) 
+        call AnyFace(Partner,"perplexed",1) 
         ch_l "Oh! Hey [Playername], how long have you been there?"
         $ L_Action -= 1 if L_Action > 0 else 0
         call Checkout(1)
@@ -3767,52 +3769,30 @@ label L_LesScene(Bonus = 0): #Repeating strokes
         
     if R_Loc == bg_current:
             #if it's Rogue. . .
-            $ R_RecentActions.append("noticed Laura")
-            $ L_RecentActions.append("noticed Rogue")
             $ Partner = "Rogue"  
-            if L_LikeRogue >= 900:
-                    $ Bonus += 150
-            elif L_LikeRogue >= 800 or "poly Rogue" in L_Traits:
-                    $ Bonus += 100
-            elif L_LikeRogue >= 700:
-                    $ Bonus += 50
-            elif L_LikeRogue <= 200:
-                    $ Bonus -= 200
-            elif L_LikeRogue <= 500:
-                    $ Bonus -= 100
-            call DrainWord("Rogue","unseen",1,0) #She sees you, so remove unseens
     elif E_Loc == bg_current:
             #if it's Emma. . .
-            $ E_RecentActions.append("noticed Laura")
-            $ L_RecentActions.append("noticed Emma")
             $ Partner = "Emma"  
-            if L_LikeEmma >= 900:
-                    $ Bonus += 150
-            elif L_LikeEmma >= 800 or "poly Emma" in L_Traits:
-                    $ Bonus += 100
-            elif L_LikeEmma >= 700:
-                    $ Bonus += 50
-            elif L_LikeEmma <= 200:
-                    $ Bonus -= 200
-            elif L_LikeEmma <= 500:
-                    $ Bonus -= 100
-            call DrainWord("Emma","unseen",1,0) #She sees you, so remove unseens
     elif K_Loc == bg_current:
             #if it's Kitty. . .
-            $ K_RecentActions.append("noticed Laura")
-            $ L_RecentActions.append("noticed Kitty")
             $ Partner = "Kitty"  
-            if L_LikeKitty >= 900:
-                    $ Bonus += 150
-            elif L_LikeKitty >= 800 or "poly Kitty" in L_Traits:
-                    $ Bonus += 100
-            elif L_LikeKitty >= 700:
-                    $ Bonus += 50
-            elif L_LikeKitty <= 200:
-                    $ Bonus -= 200
-            elif L_LikeKitty <= 500:
-                    $ Bonus -= 100
-            call DrainWord("Kitty","unseen",1,0) #She sees you, so remove unseens
+           
+    $ Line = GirlLikeCheck("Laura",Partner)      
+    if Line >= 900:
+            $ Bonus += 150
+    elif Line >= 800 or "poly "+Partner in L_Traits:
+            $ Bonus += 100
+    elif Line >= 700:
+            $ Bonus += 50
+    elif Line <= 200:
+            $ Bonus -= 200
+    elif Line <= 500:
+            $ Bonus -= 100
+    call DrainWord(Partner,"unseen",1,0) #She sees you, so remove unseens    
+    $ Line = 0
+    
+    call AnyWord("Laura",1,"noticed "+Partner,"noticed "+Partner) #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,1,"noticed Laura","noticed Laura") #ie $ R_RecentActions.append("noticed Laura") 
             
     if bg_current in ("bg player", "bg laura", "bg rogue", "bg emma"):
         $ Taboo == 0
@@ -3959,14 +3939,17 @@ label L_LesScene(Bonus = 0): #Repeating strokes
                     call LauraFace("sexy", 1)
                     call Statup("Laura", "Love", 90, 1)
                     call Statup("Laura", "Inbt", 50, 3) 
-                    $ Line = renpy.random.choice(["Well. . . ok.",                 
-                        "I don't mind getting with her. . .",
-                        "I kinda needed to blow off some steam. . .",
-                        "Sure.", 
-                        "I guess. . .",
-                        "Heh, ok, fine."]) 
-                    ch_l "[Line]"
-                    $ Line = 0
+                    if Situation == "interrupted":
+                            ch_l "Well I could get back in there. . ."
+                    else:
+                            $ Line = renpy.random.choice(["Well. . . ok.",                 
+                                "I don't mind getting with her. . .",
+                                "I kinda needed to blow off some steam. . .",
+                                "Sure.", 
+                                "I guess. . .",
+                                "Heh, ok, fine."]) 
+                            ch_l "[Line]"
+                            $ Line = 0
                 call Statup("Laura", "Obed", 20, 1)
                 call Statup("Laura", "Obed", 60, 1)
                 call Statup("Laura", "Inbt", 70, 2) 
@@ -4102,24 +4085,34 @@ label L_Les_Partner:
 label L_Les_Prep:    
     #sets the scene up   
     
-    if R_Loc == bg_current:
-            if "noticed Laura" not in R_RecentActions:
-                    $ R_RecentActions.append("noticed Laura")  
-            if "noticed Rogue" not in L_RecentActions:
-                    $ L_RecentActions.append("noticed Rogue")           
+#    if R_Loc == bg_current:
+#            if "noticed Laura" not in R_RecentActions:
+#                    $ R_RecentActions.append("noticed Laura")  
+#            if "noticed Rogue" not in L_RecentActions:
+#                    $ L_RecentActions.append("noticed Rogue")           
+#            $ Partner = "Rogue"  
+#    elif E_Loc == bg_current:
+#            if "noticed Laura" not in E_RecentActions:
+#                    $ E_RecentActions.append("noticed Laura")  
+#            if "noticed Emma" not in L_RecentActions:
+#                    $ L_RecentActions.append("noticed Emma")           
+#            $ Partner = "Emma"  
+#    elif K_Loc == bg_current:
+#            if "noticed Laura" not in K_RecentActions:
+#                    $ K_RecentActions.append("noticed Laura")  
+#            if "noticed Kitty" not in L_RecentActions:
+#                    $ L_RecentActions.append("noticed Kitty")           
+#            $ Partner = "Kitty" 
+            
+    if R_Loc == bg_current:         
             $ Partner = "Rogue"  
-    elif E_Loc == bg_current:
-            if "noticed Laura" not in E_RecentActions:
-                    $ E_RecentActions.append("noticed Laura")  
-            if "noticed Emma" not in L_RecentActions:
-                    $ L_RecentActions.append("noticed Emma")           
+    elif E_Loc == bg_current:          
             $ Partner = "Emma"  
-    elif K_Loc == bg_current:
-            if "noticed Laura" not in K_RecentActions:
-                    $ K_RecentActions.append("noticed Laura")  
-            if "noticed Kitty" not in L_RecentActions:
-                    $ L_RecentActions.append("noticed Kitty")           
+    elif K_Loc == bg_current:        
             $ Partner = "Kitty" 
+            
+    call AnyWord("Laura",1,"noticed "+Partner,"noticed "+Partner) #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,1,"noticed Laura","noticed Laura") #ie $ R_RecentActions.append("noticed Laura") 
             
     if "unseen" not in L_RecentActions:
             #if she knows you're there. . .
@@ -4148,8 +4141,8 @@ label L_Les_Prep:
     if Taboo:
         call DrainWord("Laura","tabno")
     call DrainWord("Laura","no lesbian")
-    $ L_RecentActions.append("lesbian")                      
-    $ L_DailyActions.append("lesbian") 
+    call AnyWord("Laura",0,"lesbian","lesbian") #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,0,"lesbian","lesbian") #ie $ R_RecentActions.append("noticed Laura") 
     
 label L_Les_Cycle: #Repeating strokes
     while Round >=0:  
@@ -4342,55 +4335,11 @@ label L_Les_After:
                     ch_l "I enjoyed the audience. . ." 
     
     if not Situation:
-            ch_l "That was fun. . ."
-            if R_Loc == bg_current:
-                if "les laura" not in R_History:
-                        if L_LikeRogue >= 600:
-                                ch_l "You've got game there."
-                        else:
-                                ch_l "That was pretty good. . ."
-                        if R_LikeLaura >= 600:
-                                ch_r "Um, yeah, you too. . ."
-                        else:
-                                ch_r "I guess. . ."
-                        $ L_History.append("les rogue")   
-                        $ R_History.append("les laura")  
-                else:
-                    #second time
-                    ch_r "Mmmm yeah. . ."
-            elif E_Loc == bg_current:
-                if "les laura" not in E_History:
-                        if L_LikeEmma >= 600:
-                                ch_l "I liked that thing with the mouth work."
-                        else:
-                                ch_l "You seem to know your way around. . ."
-                        if E_LikeLaura >= 600:
-                                ch_e "Practice, dear. . ."
-                        else:
-                                ch_e "It would be better if you'd had more practice, dear."
-                        $ L_History.append("les emma")   
-                        $ E_History.append("les laura")  
-                else:
-                    #second time
-                    ch_e "Certainly. . ."
-            elif K_Loc == bg_current:
-                if "les laura" not in K_History:
-                        if L_LikeKitty >= 600:
-                                ch_l "Really cute work there."
-                        else:
-                                ch_l "That was ok. . ."
-                        if K_LikeLaura >= 600:
-                                ch_k "Yeah, that was really hot. . ."
-                        else:
-                                ch_k "I guess. . ."
-                        $ L_History.append("les kitty")   
-                        $ K_History.append("les laura")  
-                else:
-                    #second time
-                    ch_k "Mmmm yeah that was good. . ."
-                    
-                        
-     
+            call Post_Les_Dialog("Laura")
+            
+    call AnyWord("Laura",1,0,0,0,"les "+Partner) #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,1,0,0,0,"les Laura") #ie $ R_RecentActions.append("noticed Laura") 
+    
     $ Tempmod = 0  
 #    if Situation == "shift":
 #        ch_l "Mmm, so what else did you have in mind?"
@@ -4532,7 +4481,7 @@ label L_Les_Response(Girl="Rogue", Step=1, B=0, B2=0, Tempmod=0, Result=0, Appro
                         $ B -= 200
                 elif L_LikeKitty <= 500:
                         $ B -= 100
-                        
+                
         $ Approval = ApprovalCheck("Laura", 1300, TabM = 2, Bonus = B) # 1300, 1450, 1600, Taboo -800
         
         if Step == 1:
@@ -4659,7 +4608,7 @@ label L_Les_Response(Girl="Rogue", Step=1, B=0, B2=0, Tempmod=0, Result=0, Appro
 label L_Les_FirstKiss:
     # called when there is a first kiss situation between two girls
     if Partner == "Rogue":
-            if "les rogue" in L_History:
+            if "les Rogue" in L_History:
                 #if they've been together before              
                 $ Line = "experienced"
             elif L_Les and R_Les:   
@@ -4672,7 +4621,7 @@ label L_Les_FirstKiss:
                 #Rogue's had experience                
                 $ Line = "first partner"
     elif Partner == "Emma":
-            if "les emma" in L_History:
+            if "les Emma" in L_History:
                 #if they've been together before              
                 $ Line = "experienced"
             elif L_Les and E_Les:   
@@ -4685,7 +4634,7 @@ label L_Les_FirstKiss:
                 #Emma's had experience                
                 $ Line = "first partner"
     elif Partner == "Kitty":
-            if "les kitty" in L_History:
+            if "les Kitty" in L_History:
                 #if they've been together before              
                 $ Line = "experienced"
             elif L_Les and K_Les:   

@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -41,10 +41,10 @@ except ImportError:
     vc_version = 0
 
 # The tuple giving the version number.
-version_tuple = (6, 99, 14, vc_version)
+version_tuple = (6, 99, 13, vc_version)
 
 # The name of this version.
-version_name = "A funny thing happened."
+version_name = "We came in peace."
 
 # A string giving the version number only (7.0.1.123).
 version_only = ".".join(str(i) for i in version_tuple)
@@ -188,7 +188,6 @@ name_blacklist = {
     "renpy.loader.auto_lock",
     "renpy.display.screen.cprof",
     "renpy.audio.audio.lock",
-    "renpy.audio.audio.periodic_condition",
     }
 
 
@@ -320,12 +319,6 @@ def update_path(package):
     libexec = os.path.dirname(encodings.__path__[0])
     package.__path__.append(os.path.join(libexec, *name))
 
-# Replaced below.
-
-
-def plog(level, even, *args):
-    return
-
 
 def import_all():
 
@@ -367,14 +360,9 @@ def import_all():
     import renpy.persistent
     import renpy.scriptedit
     import renpy.parser
-    import renpy.performance
-    import renpy.pydict
     import renpy.python
     import renpy.script
     import renpy.statements
-
-    global plog
-    plog = renpy.performance.log
 
     import renpy.styledata  # @UnresolvedImport
     update_path(renpy.styledata)

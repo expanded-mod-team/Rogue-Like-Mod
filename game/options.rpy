@@ -28,7 +28,7 @@ init -1 python hide:
     # These control the name and version of the game, that are reported
     # with tracebacks and other debugging logs.
     config.name = "Rogue-Like"
-    config.version = "0.983f"
+    config.version = "0.984e"
 
     #########################################
     # Themes
@@ -71,7 +71,7 @@ init -1 python hide:
         ## The background of the main menu. This can be a color
         ## beginning with '#', or an image filename. The latter
         ## should take up the full height and width of the screen.
-        mm_root = "Background",
+        mm_root = "images/titleimage.jpg",
 
         ## The background of the game menu. This can be a color
         ## beginning with '#', or an image filename. The latter
@@ -337,7 +337,7 @@ init python:
     ## The name that's used for directories and archive files. For example, if
     ## this is 'mygame-1.0', the windows distribution will be in the
     ## directory 'mygame-1.0-win', in the 'mygame-1.0-win.zip' file.
-    build.directory_name = "Rogue-Like-0.983f"
+    build.directory_name = "Rogue-Like-0.984e"
 
     ## The name that's uses for executables - the program that users will run
     ## to start the game. For example, if this is 'mygame', then on Windows,

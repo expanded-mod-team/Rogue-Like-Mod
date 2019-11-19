@@ -302,6 +302,7 @@ label K_Fondle_Breasts:
     return 
             
    
+label K_FB_Prep: #Animation set-up 
 label KFB_Prep: #Animation set-up 
     if Trigger == "kiss you": 
         $ Trigger = "fondle breasts" 
@@ -318,6 +319,53 @@ label KFB_Prep: #Animation set-up
         
     $ Tempmod = 0  
     call K_Breasts_Launch("fondle breasts")
+    
+    if Situation == "Kitty":                                                                  
+            #Kitty auto-starts    
+            $ Situation = 0
+            if (K_Over or K_Chest) and not K_Uptop:
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Kitty", 1250, TabM = 1) or (K_SeenChest and ApprovalCheck("Kitty", 500) and not Taboo):
+                        $ K_Uptop = 1
+                        $ Line = K_Over if K_Over else K_Chest
+                        "With a cheshire grin, Kitty pulls her [Line] up over her breasts."
+                        call Kitty_First_Topless(1)
+                        $ Line = 0
+                        "She then grabs your arm and mashes your hand against her breast, clearly intending you to get to work."
+                else:
+                    "Kitty grabs your arm and mashes your hand against her covered breast, clearly intending you to get to work."
+            else:
+                "Kitty grabs your arm and mashes your hand against her breast, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    call Statup("Kitty", "Inbt", 50, 2)
+                    "You start to fondle it."
+                "Praise her.":       
+                    call KittyFace("sexy", 1)                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    ch_p "I like the initiative, [K_Pet]."
+                    call Kitty_Namecheck
+                    "You start to fondle it."
+                    call Statup("Kitty", "Love", 85, 1)
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your hand back."
+                    call KittyFace("surprised")       
+                    call Statup("Kitty", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty pulls back."
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 1)
+                    call Statup("Kitty", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Kitty",1,"refused","refused")  
+                    return          
+            #end auto
+
     if not K_FondleB:        
         if K_Forced:
             call Statup("Kitty", "Love", 90, -20)
@@ -469,7 +517,7 @@ label KFB_Cycle: #Repeating strokes
                                 call K_Pos_Reset
                                 return    
                             call Statup("Kitty", "Lust", 200, 5) 
-                            if 100 > K_Lust >= 70 and K_OCount < 2:             
+                            if 100 > K_Lust >= 70 and K_OCount < 2 and K_SEXP >= 20:             
                                 $ K_RecentActions.append("unsatisfied")                      
                                 $ K_DailyActions.append("unsatisfied") 
                             
@@ -544,6 +592,8 @@ label KFB_Cycle: #Repeating strokes
                                     jump KFB_After
         #End Count check
            
+        call Escalation("Kitty","K") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_k "It's[K_like]getting kinda late."  
         elif Round == 5:
@@ -551,7 +601,8 @@ label KFB_Cycle: #Repeating strokes
             
         if K_Lust >= 50 and not K_Uptop and (K_Chest or K_Over):
                 $ K_Uptop = 1
-                "Kitty laughs and pulls her top open."       
+                "Kitty laughs and pulls her top open."      
+                call Kitty_First_Topless         
     
     #Round = 0 loop breaks
     call KittyFace("bemused", 0)
@@ -759,6 +810,7 @@ label K_Suck_Breasts:
     return
          
 
+label K_SB_Prep: #Animation set-up 
 label KSB_Prep:                                                                 #Animation set-up 
             
     if Trigger2 == "suck breasts":
@@ -772,6 +824,52 @@ label KSB_Prep:                                                                 
     
     $ Tempmod = 0      
     call K_Breasts_Launch("suck breasts")
+        
+    if Situation == "Kitty":                                                        
+            #Kitty auto-starts    
+            $ Situation = 0
+            if (K_Over or K_Chest) and not K_Uptop:
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Kitty", 1250, TabM = 1) or (K_SeenChest and ApprovalCheck("Kitty", 500) and not Taboo):
+                        $ K_Uptop = 1
+                        $ Line = K_Over if K_Over else K_Chest
+                        "With a cheshire grin, Kitty pulls her [Line] up over her breasts."
+                        call Kitty_First_Topless(1)
+                        $ Line = 0
+                        "She then grabs your head and crams your face into her chest, clearly intending you to get to work."
+                else:
+                    "Kitty grabs your head and crams your face into her chest, clearly intending you to get to work."
+            else:
+                "Kitty grabs your head and crams your face into her chest, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    call Statup("Kitty", "Inbt", 50, 2)
+                    "You start to run your tongue along her nipple."
+                "Praise her.":       
+                    call KittyFace("sexy", 1)                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    ch_p "Mmm, I like this, [K_Pet]."
+                    call Kitty_Namecheck
+                    "You start to fondle it."
+                    call Statup("Kitty", "Love", 85, 1)
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your head back."
+                    call KittyFace("surprised")       
+                    call Statup("Kitty", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty pulls away."
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 1)
+                    call Statup("Kitty", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Kitty",1,"refused","refused")  
+                    return          
+            #end auto
     if not K_SuckB:        
         if K_Forced:
             call Statup("Kitty", "Love", 90, -25)
@@ -993,6 +1091,8 @@ label KSB_Cycle: #Repeating strokes
                                     jump KSB_After
         #End Count check
            
+        call Escalation("Kitty","K") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_k "It's[K_like]getting kinda late."  
         elif Round == 5:
@@ -1000,7 +1100,8 @@ label KSB_Cycle: #Repeating strokes
             
         if K_Lust >= 50 and not K_Uptop and (K_Chest or K_Over):
                 $ K_Uptop = 1
-                "Kitty laughs and pulls her top open."   
+                "Kitty laughs and pulls her top open."     
+                call Kitty_First_Topless    
                       
     #Round = 0 loop breaks
     call KittyFace("bemused", 0)
@@ -1205,6 +1306,7 @@ label K_Fondle_Thighs:
     $ Tempmod = 0    
     return
     
+label K_FT_Prep: #Animation set-up 
 label KFT_Prep:                                                                 #Animation set-up 
     if Trigger == "kiss you": 
         $ Trigger = "fondle thighs" 
@@ -1379,7 +1481,7 @@ label KFT_Cycle:                                                                
                                 call K_Pos_Reset
                                 return    
                             call Statup("Kitty", "Lust", 200, 5) 
-                            if 100 > K_Lust >= 70 and K_OCount < 2:             
+                            if 100 > K_Lust >= 70 and K_OCount < 2 and K_SEXP >= 20:             
                                 $ K_RecentActions.append("unsatisfied")                      
                                 $ K_DailyActions.append("unsatisfied") 
                             
@@ -1452,6 +1554,8 @@ label KFT_Cycle:                                                                
                                     jump KFT_After
         #End Count check
            
+        call Escalation("Kitty","K") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_k "It's[K_like]getting kinda late."  
         elif Round == 5:
@@ -1667,7 +1771,8 @@ label K_Fondle_Pussy:
     $ K_DailyActions.append("no fondle pussy") 
     $ Tempmod = 0    
     return
-                    
+        
+label K_FP_Prep: #Animation set-up             
 label KFP_Prep: #Animation set-up 
     if Trigger2 == "fondle pussy":
         return
@@ -1680,6 +1785,70 @@ label KFP_Prep: #Animation set-up
     $ Tempmod = 0
     
     call K_Pussy_Launch("fondle pussy")
+    
+    if Situation == "Kitty":                                                        
+            #Kitty auto-starts    
+            $ Situation = 0
+            if (K_Legs and not K_Upskirt) or (K_Panties and not K_PantiesDown):
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Kitty", 1250, TabM = 1) or (K_SeenPussy and ApprovalCheck("Kitty", 500) and not Taboo):
+                        $ K_Upskirt = 1
+                        $ K_PantiesDown = 1
+                        $ Line = 0
+                        if K_Legs == "skirt":
+                            $ Line = "Kitty hikes up her skirt"
+                        elif PantsNum("Kitty") >= 5:
+                            $ Line = "Kitty pulls down her " + K_Legs
+                        else:
+                            $ Line = 0                            
+                        if K_Panties:
+                            if Line:
+                                #wearing pants
+                                "[Line] and pulls her [K_Panties] out of the way."
+                                "She then grabs your arm and then presses your hand against her crotch, clearly intending you to get to work."
+                            else:
+                                #no pants
+                                "She pulls her [K_Panties] out of the way, and then presses your hand against her crotch."
+                                "She clearly intends for you to get to work." 
+                        else:
+                            #pants but no panties
+                            "[Line], and then presses your hand against her crotch."
+                            "She clearly intends for you to get to work."                     
+                        call Kitty_First_Bottomless(1)
+                else:
+                    "Kitty grabs your arm and presses your hand against her crotch, clearly intending you to get to work."
+            else:
+                "Kitty grabs your arm and presses your hand against her crotch, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    call Statup("Kitty", "Inbt", 50, 2)
+                    "You start to run your fingers along her pussy."
+                "Praise her.":       
+                    call KittyFace("sexy", 1)                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    ch_p "I like the initiative, [K_Pet]."
+                    call Kitty_Namecheck
+                    "You start to run your fingers along her pussy."
+                    call Statup("Kitty", "Love", 85, 1)
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your hand back."
+                    call KittyFace("surprised")       
+                    call Statup("Kitty", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty pulls back."
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 1)
+                    call Statup("Kitty", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Kitty",1,"refused","refused")  
+                    return          
+            #end auto
+            
     if not K_FondleP:        
         if K_Forced:
             call Statup("Kitty", "Love", 90, -50)
@@ -1929,6 +2098,8 @@ label KFP_Cycle: #Repeating strokes
                                     jump KFP_After
         #End Count check
            
+        call Escalation("Kitty","K") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_k "It's[K_like]getting kinda late."  
         elif Round == 5:
@@ -2017,7 +2188,8 @@ label K_Insert_Pussy:
         $ K_Blush = 1
     return
     
-                
+          
+label K_IP_Prep: #Animation set-up       
 label KIP_Prep: #Animation set-up     
     if not K_InsertP:
         $ K_InsertP = 1
@@ -2232,7 +2404,8 @@ label K_Lick_Pussy:
     $ K_DailyActions.append("no lick pussy") 
     $ Tempmod = 0    
     return
-    
+        
+label K_LP_Prep: #Animation set-up 
 label KLP_Prep: #Animation set-up  
     if Trigger2 == "lick pussy": #fix pull down pants now an option, make it work
         return
@@ -2247,6 +2420,70 @@ label KLP_Prep: #Animation set-up
             
     $ Tempmod = 0      
     call K_Pussy_Launch("lick pussy")
+    
+    if Situation == "Kitty":                                                       
+            #Kitty auto-starts    
+            $ Situation = 0
+            if (K_Legs and not K_Upskirt) or (K_Panties and not K_PantiesDown):
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Kitty", 1250, TabM = 1) or (K_SeenPussy and ApprovalCheck("Kitty", 500) and not Taboo):
+                        $ K_Upskirt = 1
+                        $ K_PantiesDown = 1
+                        $ Line = 0
+                        if K_Legs == "skirt":
+                            $ Line = "Kitty hikes up her skirt"
+                        elif PantsNum("Kitty") >= 5:
+                            $ Line = "Kitty pulls down her " + K_Legs
+                        else:
+                            $ Line = 0                            
+                        if K_Panties:
+                            if Line:
+                                #wearing pants
+                                "[Line] and pulls her [K_Panties] out of the way."
+                                "She then grabs your head and pulls it to her crotch, clearly intending you to get to work."
+                            else:
+                                #no pants
+                                "She pulls her [K_Panties] out of the way, and then shoves your face into her crotch."
+                                "She clearly intends for you to get to work." 
+                        else:
+                            #pants but no panties
+                            "[Line], and then shoves your face into her crotch."
+                            "She clearly intends for you to get to work."                     
+                        call Kitty_First_Bottomless(1)
+                else:
+                    "Kitty grabs your head and pulls it to her crotch, clearly intending you to get to work."
+            else:
+                "Kitty grabs your head and pulls it to her crotch, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    call Statup("Kitty", "Inbt", 50, 2)
+                    "You start licking."
+                "Praise her.":       
+                    call KittyFace("sexy", 1)                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    ch_p "Mmm, I like this idea, [K_Pet]."
+                    call Kitty_Namecheck
+                    "You start licking."
+                    call Statup("Kitty", "Love", 85, 1)
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your head away."
+                    call KittyFace("surprised")       
+                    call Statup("Kitty", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty pulls back."
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 1)
+                    call Statup("Kitty", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Kitty",1,"refused","refused")  
+                    return          
+            #end auto
+            
     if not K_LickP:        
         if K_Forced:
             call Statup("Kitty", "Love", 90, -30)
@@ -2486,6 +2723,8 @@ label KLP_Cycle: #Repeating strokes
                                     jump KLP_After
         #End Count check
            
+        call Escalation("Kitty","K") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_k "It's[K_like]getting kinda late."  
         elif Round == 5:
@@ -2707,6 +2946,7 @@ label K_Fondle_Ass:
 ch_k "Sorry, I don't even know how I got here. . ."
 return
 
+label K_FA_Prep: #Animation set-up 
 label KFA_Prep: #Animation set-up  
     if Trigger2 == "fondle ass":
         return
@@ -2882,7 +3122,7 @@ label KFA_Cycle: #Repeating strokes
                                 call K_Pos_Reset
                                 return    
                             call Statup("Kitty", "Lust", 200, 5) 
-                            if 100 > K_Lust >= 70 and K_OCount < 2:             
+                            if 100 > K_Lust >= 70 and K_OCount < 2 and K_SEXP >= 20:             
                                 $ K_RecentActions.append("unsatisfied")                      
                                 $ K_DailyActions.append("unsatisfied") 
                             
@@ -2956,6 +3196,8 @@ label KFA_Cycle: #Repeating strokes
                                     $ K_DailyActions.append("angry")   
                                     jump KFA_After
         #End Count check
+        
+        call Escalation("Kitty","K") #sees if she wants to escalate things
         
         if Round == 10:
             ch_k "It's[K_like]getting kinda late."  
@@ -3183,7 +3425,8 @@ label K_Insert_Ass:
     $ Tempmod = 0    
     return
     
-        
+       
+label K_IA_Prep: #Animation set-up  
 label KIA_Prep: #Animation set-up 
     if Trigger2 == "insert ass":
         return
@@ -3196,6 +3439,70 @@ label KIA_Prep: #Animation set-up
             
     $ Tempmod = 0      
     call K_Pussy_Launch("insert ass")
+    
+    if Situation == "Kitty":                                                         
+            #Kitty auto-starts    
+            $ Situation = 0
+            if (K_Legs and not K_Upskirt) or (K_Panties and not K_PantiesDown):
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Kitty", 1250, TabM = 1) or (K_SeenPussy and ApprovalCheck("Kitty", 500) and not Taboo):
+                        $ K_Upskirt = 1
+                        $ K_PantiesDown = 1
+                        $ Line = 0
+                        if K_Legs == "skirt":
+                            $ Line = "Kitty hikes up her skirt"
+                        elif PantsNum("Kitty") >= 5:
+                            $ Line = "Kitty pulls down her " + K_Legs
+                        else:
+                            $ Line = 0                            
+                        if K_Panties:
+                            if Line:
+                                #wearing pants
+                                "[Line] and pulls her [K_Panties] out of the way."
+                                "She then grabs your arm and presses your hand against her asshole, clearly intending you to get to work."
+                            else:
+                                #no pants
+                                "She pulls her [K_Panties] out of the way, and then presses your hand against her asshole."
+                                "She clearly intends for you to get to work." 
+                        else:
+                            #pants but no panties
+                            "[Line], and then presses your hand against her asshole."
+                            "She clearly intends for you to get to work."                     
+                        call Kitty_First_Bottomless(1)
+                else:
+                    "Kitty grabs your arm and presses your hand against her asshole, clearly intending you to get to work."
+            else:
+                "Kitty grabs your arm and presses your hand against her asshole, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    call Statup("Kitty", "Inbt", 50, 2)
+                    "You press your finger into it."
+                "Praise her.":       
+                    call KittyFace("sexy", 1)                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    ch_p "Dirty girl, [K_Pet]."
+                    call Kitty_Namecheck
+                    "You press your finger into it."
+                    call Statup("Kitty", "Love", 85, 1)
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your hand back."
+                    call KittyFace("surprised")       
+                    call Statup("Kitty", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty pulls back."
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 1)
+                    call Statup("Kitty", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Kitty",1,"refused","refused")  
+                    return          
+            #end auto
+            
     if not K_InsertA:        
         if K_Forced:
             call Statup("Kitty", "Love", 90, -50)
@@ -3433,6 +3740,8 @@ label KIA_Cycle: #Repeating strokes
                                     jump KIA_After
         #End Count check
            
+        call Escalation("Kitty","K") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_k "It's[K_like]getting kinda late."  
         elif Round == 5:
@@ -3663,6 +3972,7 @@ label K_Lick_Ass:
     $ Tempmod = 0    
     return
         
+label K_LA_Prep: #Animation set-up 
 label KLA_Prep: #Animation set-up  
     if Trigger2 == "lick ass":
         return
@@ -3923,6 +4233,8 @@ label KLA_Cycle: #Repeating strokes
                                     jump KLA_After
         #End Count check
            
+        call Escalation("Kitty","K") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_k "It's[K_like]getting kinda late."  
         elif Round == 5:

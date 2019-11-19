@@ -1,5 +1,5 @@
 #cython: profile=False
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -50,39 +50,6 @@ live_renders = [ ]
 # A copy of renpy.display.interface.frame_time, for speed reasons.
 cdef double frame_time
 frame_time = 0
-
-
-def adjust_render_cache_times(old_time, new_time):
-    """
-    This adjusts the render cache such that if a render starts at
-    old_time, it really started at new_time.
-    """
-
-    for id_d, renders in render_cache.iteritems():
-
-        # Check to see if we have a render with st_base = old_time. If so,
-        # we need to rebase it.
-        for k in renders:
-            if k[2] == old_time:
-                break
-        else:
-            continue
-
-        new_renders = { }
-
-        for k, v in renders.iteritems():
-            w, h, st_base, at_base = k
-
-            if st_base == old_time:
-                st_base = new_time
-
-            if at_base == old_time:
-                at_base = new_time
-
-            new_renders[(w, h, st_base, at_base)] = v
-
-        render_cache[id_d] = new_renders
-
 
 def free_memory():
     """
@@ -220,8 +187,6 @@ cpdef render(d, object widtho, object heighto, double st, double at):
     else:
         wh = orig_wh
 
-    renpy.plog(2, "start render {!r}", d)
-
     try:
         rendering += 1
         old_st = render_st
@@ -240,17 +205,13 @@ cpdef render(d, object widtho, object heighto, double st, double at):
     rv.render_of.append(d)
 
     if d._clipping:
-        renpy.plog(4, "before clipping")
         rv = rv.subsurface((0, 0, rv.width, rv.height), focus=True)
         rv.render_of.append(d)
-        renpy.plog(4, "after clipping")
 
     render_cache_d[wh] = rv
 
     if wh is not orig_wh:
         render_cache_d[orig_wh] = rv
-
-    renpy.plog(2, "end render {!r}", d)
 
     return rv
 
@@ -464,15 +425,9 @@ def render_screen(root, width, height):
     global invalidated
     global frame_time
 
-    interact_time = renpy.display.interface.interact_time
     frame_time = renpy.display.interface.frame_time
 
-    if interact_time is None:
-        st = 0
-    else:
-        st = frame_time  - interact_time
-
-    rv = render(root, width, height, st, st)
+    rv = render(root, width, height, 0, 0)
     screen_render = rv
 
     invalidated = False
@@ -509,9 +464,6 @@ def mark_sweep():
                 worklist.append(j)
 
         i += 1
-
-    if screen_render is not None:
-        screen_render.mark = True
 
     for r in live_renders:
         if not r.mark:
@@ -826,6 +778,7 @@ cdef class Render:
 
         reverse = self.reverse
 
+
         # This code doesn't work. We need to do the clipping in the screen
         # space, or it's too easy to get overlaps or lines. (At some point,
         # we should optimize things and only clip when necessary.)
@@ -894,7 +847,6 @@ cdef class Render:
         # making an actual subsurface.
 
         for child, cx, cy, cfocus, cmain in self.children:
-
 
             childw, childh = child.get_size()
             xo, cx, cw = compute_subline(cx, childw, x, w)

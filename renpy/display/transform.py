@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -550,7 +550,8 @@ class Transform(Container):
     def __init__(self,
                  child=None,
                  function=None,
-                 style="default",
+
+                 style='transform',
                  focus=None,
                  default=False,
                  _args=None,
@@ -740,15 +741,6 @@ class Transform(Container):
 
         return rv
 
-    def _handles_event(self, event):
-        if self.function is not None:
-            return True
-
-        if self.child and self.child._handles_event(event):
-            return True
-
-        return False
-
     def _hide(self, st, at, kind):
 
         if not self.child:
@@ -822,8 +814,6 @@ class Transform(Container):
         """
         This updates the state to that at self.st, self.at.
         """
-
-        # NOTE: This function is duplicated (more or less) in ATLTransform.
 
         self.hide_response = True
         self.replaced_response = True
@@ -1007,25 +997,9 @@ class ATLTransform(renpy.atl.ATLTransformBase, Transform):
 
     def __init__(self, atl, child=None, context={}, parameters=None, **properties):
         renpy.atl.ATLTransformBase.__init__(self, atl, context, parameters)
-        Transform.__init__(self, child=child, **properties)
+        Transform.__init__(self, child=child, function=self.execute, **properties)
 
         self.raw_child = self.child
-
-    def update_state(self):
-        """
-        This updates the state to that at self.st, self.at.
-        """
-
-        self.hide_response = True
-        self.replaced_response = True
-
-        fr = self.execute(self, self.st, self.at)
-
-        # Order a redraw, if necessary.
-        if fr is not None:
-            renpy.display.render.redraw(self, fr)
-
-        self.active = True
 
     def __repr__(self):
         return "<ATL Transform {:x} {!r}>".format(id(self), self.atl.loc)

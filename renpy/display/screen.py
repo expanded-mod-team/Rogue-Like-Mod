@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -435,20 +435,11 @@ class ScreenDisplayable(renpy.display.layout.Container):
 
         return rv
 
-    def _handles_event(self, event):
-        if self.child is None:
-            return
-
-        return self.child._handles_event(event)
-
     def _hide(self, st, at, kind):
 
         if self.phase == HIDE:
             hid = self
         else:
-
-            if (self.child is not None) and (not self.child._handles_event(kind)):
-                return None
 
             updated_screens.discard(self)
             self.update()
@@ -457,9 +448,6 @@ class ScreenDisplayable(renpy.display.layout.Container):
                 return None
 
             if self.child is None:
-                return None
-
-            if not self.child._handles_event(kind):
                 return None
 
             if self.screen.ast is not None:
@@ -480,7 +468,7 @@ class ScreenDisplayable(renpy.display.layout.Container):
             return None
 
         renpy.ui.detached()
-        hid.child = renpy.ui.default_fixed(focus="_screen_" + "_".join(self.screen_name))
+        hid.child = renpy.ui.fixed(focus="_screen_" + "_".join(self.screen_name))
         hid.children = [ hid.child ]
         renpy.ui.close()
 
@@ -582,7 +570,7 @@ class ScreenDisplayable(renpy.display.layout.Container):
         try:
 
             renpy.ui.detached()
-            self.child = renpy.ui.default_fixed(focus="_screen_" + "_".join(self.screen_name))
+            self.child = renpy.ui.fixed(focus="_screen_" + "_".join(self.screen_name))
             self.children = [ self.child ]
 
             self.scope["_scope"] = self.scope
@@ -594,8 +582,6 @@ class ScreenDisplayable(renpy.display.layout.Container):
             renpy.ui.close()
 
         finally:
-            del self.scope["_scope"]
-
             renpy.ui.screen = old_ui_screen
             pop_current_screen()
 
@@ -968,9 +954,7 @@ def get_screen(name, layer=None):
         if sd is not None:
             return sd
 
-    for tag in name:
-
-        sd = sl.get_displayable_by_name(layer, (tag, ))
+        sd = sl.get_displayable_by_name(layer, name)
         if sd is not None:
             return sd
 
@@ -1053,7 +1037,7 @@ def show_screen(_screen_name, *_args, **kwargs):
 
     d = ScreenDisplayable(screen, _tag, _layer, _widget_properties, scope)
 
-    old_d = get_screen(_tag, _layer)
+    old_d = get_screen(name, _layer)
 
     if old_d and old_d.cache:
         d.cache = old_d.cache
@@ -1134,9 +1118,6 @@ def predict_screen(_screen_name, *_args, **kwargs):
             print("While predicting screen", _screen_name)
             traceback.print_exc()
 
-    finally:
-        del scope["_scope"]
-
     renpy.ui.reset()
 
 
@@ -1187,10 +1168,7 @@ def use_screen(_screen_name, *_args, **kwargs):
     scope["_scope"] = scope
     scope["_name"] = (_name, name)
 
-    try:
-        screen.function(**scope)
-    finally:
-        del scope["_scope"]
+    screen.function(**scope)
 
     _current_screen.old_transfers = old_transfers
 
@@ -1302,20 +1280,3 @@ def show_overlay_screens(suppress_overlay):
         for i in renpy.config.overlay_screens:
             if get_screen(i) is not None:
                 hide_screen(i)
-
-
-def per_frame():
-    """
-    Called from interact once per frame to invalidate screens we want to
-    update once per frame.
-    """
-
-    for i in renpy.config.per_frame_screens:
-        s = get_screen(i)
-
-        if s is None:
-            continue
-
-        updated_screens.discard(s)
-        renpy.display.render.invalidate(s)
-        s.update()

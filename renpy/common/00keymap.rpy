@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+﻿# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -88,8 +88,6 @@ init -1600 python:
         viewport_wheeldown = [ 'mousedown_5' ],
         viewport_drag_start = [ 'mousedown_1' ],
         viewport_drag_end = [ 'mouseup_1' ],
-        viewport_pageup = [  'K_PAGEUP', 'repeat_K_PAGEUP' ],
-        viewport_pagedown = [  'K_PAGEDOWN', 'repeat_K_PAGEDOWN' ],
 
         # These keys control skipping.
         skip = [ 'K_LCTRL', 'K_RCTRL' ],
@@ -126,7 +124,6 @@ init -1600 python:
         viewport_down = [ 'mousedown_5' ],
 
         # Profile commands.
-        performance = [ 'K_F3' ],
         profile_once = [ 'K_F8' ],
         memory_profile = [ 'K_F7' ],
 
@@ -372,7 +369,6 @@ init -1100 python:
         debug_voicing = Preference("debug voicing", "toggle"),
         progress_screen = _progress_screen,
         director = director.Start(),
-        performance = ToggleScreen("_performance"),
         )
 
     config.underlay = [ _default_keymap ]

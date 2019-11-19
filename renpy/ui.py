@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -620,7 +620,6 @@ text = Wrapper(renpy.text.text.Text, style="text", replaces=True)
 hbox = Wrapper(renpy.display.layout.MultiBox, layout="horizontal", style="hbox", many=True)
 vbox = Wrapper(renpy.display.layout.MultiBox, layout="vertical", style="vbox", many=True)
 fixed = Wrapper(renpy.display.layout.MultiBox, layout="fixed", style="fixed", many=True)
-default_fixed = Wrapper(renpy.display.layout.MultiBox, layout="fixed", many=True)
 grid = Wrapper(renpy.display.layout.Grid, style="grid", many=True)
 side = Wrapper(renpy.display.layout.Side, style="side", many=True)
 
@@ -1072,8 +1071,6 @@ transform = Wrapper(renpy.display.motion.Transform, one=True, style='transform')
 _viewport = Wrapper(renpy.display.viewport.Viewport, one=True, replaces=True, style='viewport')
 _vpgrid = Wrapper(renpy.display.viewport.VPGrid, many=True, replaces=True, style='vpgrid')
 
-VIEWPORT_SIZE = 32767
-
 
 def viewport_common(vpfunc, _spacing_to_side, scrollbars=None, **properties):
 
@@ -1112,10 +1109,6 @@ def viewport_common(vpfunc, _spacing_to_side, scrollbars=None, **properties):
     vscrollbar_properties.setdefault("alt", alt + " vertical scrollbar")
 
     if scrollbars == "vertical":
-
-        if renpy.config.scrollbar_child_size:
-            viewport_properties.setdefault("child_size", (None, VIEWPORT_SIZE))
-
         side("c r", **side_properties)
 
         rv = vpfunc(**viewport_properties)
@@ -1129,10 +1122,6 @@ def viewport_common(vpfunc, _spacing_to_side, scrollbars=None, **properties):
         return rv
 
     elif scrollbars == "horizontal":
-
-        if renpy.config.scrollbar_child_size:
-            viewport_properties.setdefault("child_size", (VIEWPORT_SIZE, None))
-
         side("c b", **side_properties)
 
         rv = vpfunc(**viewport_properties)
@@ -1146,9 +1135,6 @@ def viewport_common(vpfunc, _spacing_to_side, scrollbars=None, **properties):
         return rv
 
     else:
-
-        if renpy.config.scrollbar_child_size:
-            viewport_properties.setdefault("child_size", (VIEWPORT_SIZE, VIEWPORT_SIZE))
 
         side("c r b", **side_properties)
 

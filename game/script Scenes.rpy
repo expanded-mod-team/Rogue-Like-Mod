@@ -138,7 +138,7 @@ label Sleepover(Lead=0,Sleep=0,Room=0,Line = 0):
                             $ Line = "Are you staying over tonight?"
                     else:
                             $ Line = "I'm staying over, right?"
-                    call AnyLine(Party[0],Line)
+                    ch_n "[Line]"
                 
             elif Sleep < 3 and ApprovalCheck(Party[0], 1100, "LI"):                        
                     #You haven't slept over much, but she wants you to
@@ -999,22 +999,8 @@ label Sleepover_Morning:
 # start Event Morning Wood /////////////////////////////////////////////////////
 
 label Sleepover_MorningWood:
-        # this label is called from the Kitty_SexAct("morningwood"), 
-        # which was called from Kitty_Sleepover, which was called from a Location.
-        
-#        if len(Party) >= 2 and ApprovalCheck(Party[1], 1200):        
-#            #second girl's lines
-#            if Party[1] == "Rogue":                        
-#                    if R_Blow 
-#                    ch_r "Mmm, yeah, 'Morning [R_Petname]."  
-#            elif Party[1] == "Kitty":
-#                    ch_k "Yeah, G'morning . . ."
-#            elif Party[1] == "Emma":
-#                    ch_e "Hrmph. . ."
-#                    ch_e "Oh. Not so loud, you two."
-#            elif Party[1] == "Laura":
-#                    ch_l "Yeah, 'Morning."
-                    
+        # this label is called from Morningwood_Check, which was called form Sleepover_Morning
+                            
         call Shift_Focus(Party[0])
         $ P_Focus = 30
         ch_u "\"Slurp, slurp, slurp.\""
@@ -1097,7 +1083,6 @@ label Sleepover_MorningWood:
                 call Statup(0, "Focus", 80, 10)
                 call Statup(Party[0], "Lust", 80, 5)
                 menu:
-                    extend ""
                     "Stay Quiet":
                         if Count >2:  
                             if Trigger4 == "blow":
@@ -1115,6 +1100,7 @@ label Sleepover_MorningWood:
                         call AnyLine(Party[0],Line)    
                         if Trigger4 == "blow":
                             call AnyLine(Party[1],Line) 
+                        ". . ."
                     "Um. . . [X_Psychic], what're you doing?":
                         $ Line = "question"
                         $ Count = 1
@@ -1214,7 +1200,6 @@ label Sleepover_MorningWood:
                                 
         #start second question phase
         menu:
-            extend ""
             "So, um, you want to get back to it?":
                     if Line != "no":
                         #assuming you weren't rude
@@ -1410,11 +1395,11 @@ label Sleepover_MorningWood:
                         
                 
                 if Line == "no":     
-                        if bg_current == "bg player":               
-                            call AnyLine(Party[0],"I'm out of here.")  
-                            call AnyLine(Partner,"Yeah, me too.")  
+                        if bg_current == "bg player":      
+                            call AnyLine(Partner,"I'm out of here.")           
+                            ch_n "Yeah, me too."
                         else:
-                            call AnyLine(Party[0],"Oh, get out of here already.")  
+                            ch_n "Oh, get out of here already." 
                         
                         call AnyOutfit(Party[0],6) #sets to OutfitDay
                         call AnyOutfit(Partner,6) #sets to OutfitDay
@@ -3764,7 +3749,7 @@ label Girls_Caught(Girl=0,TotalCaught=0,Shame=0,Count=0,T_Pet=0):
                             ch_p "Oh, yeah, I guess I haven't mentioned that. . ."
                             call RogueFace("bemused") 
                     #End "Plan Omega"
-            if Line == "Kappa":
+            elif Line == "Kappa":
                     if "Xavier's photo" in P_Inventory and ApprovalCheck("Kitty", 1500, TabM=1, Loc="No"):                   
                             jump Xavier_Plan #Plan_Kappa
                     elif ApprovalCheck("Kitty", 1000, TabM=1, Loc="No"):
@@ -3813,7 +3798,7 @@ label Girls_Caught(Girl=0,TotalCaught=0,Shame=0,Count=0,T_Pet=0):
                             call EmmaFace("bemused") 
                     #End "Plan Psi"
             elif Line == "Chi":        
-                    if L_Lvl >= 5 and ApprovalCheck("Laura", 1500, TabM=1, Loc="No") and ApprovalCheck("Laura", 750, "I"):                   
+                    if L_Lvl >= 2 and ApprovalCheck("Laura", 1500, TabM=1, Loc="No") and ApprovalCheck("Laura", 750, "I"):                   
                             jump Xavier_Plan #Plan_Chi
                     elif ApprovalCheck("Laura", 1000, TabM=1, Loc="No"):
                             call LauraFace("angry",Eyes="side") 
@@ -4312,8 +4297,8 @@ label Self_Cleanup(Girl=0,TempSpunk=0):
                     $ R_Eyes = "sexy"
             elif Cnt >=3:
                     ch_r "That was a real mess you left me to clean up."
-            elif Choice == "eat" and R_Swallow >= 5:
-                    ch_r "That was delcious."
+            if Choice == "eat" and R_Swallow >= 5:
+                    ch_r "That was delicious."
     elif Girl == "Kitty":
             $ K_Wet = 0        
             $ del K_Spunk[:]   
@@ -4323,7 +4308,7 @@ label Self_Cleanup(Girl=0,TempSpunk=0):
                     $ K_Eyes = "sexy"
             elif Cnt >=3:
                     ch_k "Well that was a fine mess you got me into."
-            elif Choice == "eat" and K_Swallow >= 5:
+            if Choice == "eat" and K_Swallow >= 5:
                     ch_k "Yum."
     elif Girl == "Emma":
             $ E_Wet = 0        
@@ -4334,7 +4319,7 @@ label Self_Cleanup(Girl=0,TempSpunk=0):
                     $ E_Eyes = "sexy"
             elif Cnt >=3:
                     ch_e "Well that was a lot of work."
-            elif Choice == "eat" and E_Swallow >= 5:
+            if Choice == "eat" and E_Swallow >= 5:
                     ch_e "Mmmm, now I'm hungry for more."
     elif Girl == "Laura":
             $ L_Wet = 0        
@@ -4345,7 +4330,7 @@ label Self_Cleanup(Girl=0,TempSpunk=0):
                     $ L_Eyes = "sexy"
             elif Cnt >=3:
                     ch_l "You made a real mess there."
-            elif Choice == "eat" and L_Swallow >= 5:
+            if Choice == "eat" and L_Swallow >= 5:
                     ch_l "Mmmm, got any more?"
     
     return    
@@ -4420,7 +4405,8 @@ label Partner_Cleanup_Check(Girl=0,B=0):
                             $ Choice = "random"                                                                             
         else:           # She just agrees. . .
                             call RogueFace("bemused") 
-                            $ Choice = "partner wipe"  
+                            if not Choice:
+                                    $ Choice = "partner wipe"  
                             call GirlLikesGirl(Girl,Partner,900,3,1)
                             call Partner_CGLine(1) #"I'd better get to work, I guess."
         #end Partner wipe off partner check
@@ -5272,6 +5258,543 @@ label Girl_Caught_Changing(Girl=0):
             return
 #End Girl Caught Changing
 
+
+label Girl_Caught_Mastubating(Girl=0):
+    #called by room entry dialog if the girl was masturbating
+    if not Girl:
+        return
+    "As you approach her room, you hear soft moans from inside, and notice that the door is slightly ajar."
+    menu:
+        extend ""
+        "Knock politely":
+            $ Line = "knock"
+        "Peek inside":
+            call Set_The_Scene
+            call AnyFace(Girl,"kiss",1,Eyes = "closed") 
+            $ Trigger = "masturbation"
+            $ Trigger3 = "fondle pussy"
+            "You see [Girl], eyes closed and stroking herself vigorously."
+            menu:
+                extend ""
+                "Enter Quietly":
+                        $ Line = "enter"
+                "Pull back and knock":                        
+                        $ Line = "knock"
+                "Leave quietly":
+                        $ Line = "leave"
+        "Enter quietly":
+                $ Line = "enter"
+        "Leave quietly":
+                $ Line = "leave"
+    
+    if Line == "leave":      
+            call Statup(Girl, "Lust", 80, 20)
+            "You leave [Girl] to her business and slip out."
+            $ renpy.pop_call()  
+            jump Campus_Map 
+    elif Line == "knock":
+            "You hear some soft moans, followed by some shuffling around as items tumble to the ground."
+            "After several seconds and some more shuffling of clothing, [Girl] comes to the door."
+            call AnyFace(Girl,"confused",1,Eyes = "surprised",Mouth = "smile") 
+            $ Trigger = 0
+            $ Trigger3 = 0
+            call Set_The_Scene            
+            if Girl == "Rogue":
+                    ch_r "Sorry about that [L_Petname], I was. . . working out."
+            elif Girl == "Kitty":
+                    ch_k "Oh, hey, [K_Petname], I was. . . never mind."
+            elif Girl == "Emma":
+                    ch_e "Well, I suppose you could tell I was a bit. . . occupied."
+            elif Girl == "Laura":                
+                    ch_l "Um, hey [L_Petname], just working off some stress."
+            $ Tempmod += 10
+    elif Line == "enter":
+            if Girl == "Rogue":
+                    call Rogue_Caught_Masturbating
+            elif Girl == "Kitty":
+                    call Kitty_Caught_Masturbating
+            elif Girl == "Emma":
+                    call Emma_Caught_Masturbating
+            elif Girl == "Laura":
+                    call Laura_Caught_Masturbating
+    return
+    
+#start girls caught lesing / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+        
+label Girls_Caught_Lesing(Girl=0,Girl2=0):
+    #called by room entry dialog if the girls were lesing
+    if Girl != "Rogue" and "Rogue" not in Party and R_Loc == bg_current and "les" in R_RecentActions:
+            $ Girl2 = "Rogue"
+    elif Girl != "Kitty" and "Kitty" not in Party and K_Loc == bg_current and "les" in K_RecentActions:
+            $ Girl2 = "Kitty"
+    elif Girl != "Emma" and "Emma" not in Party and E_Loc == bg_current and "les" in E_RecentActions:
+            $ Girl2 = "Emma"
+    elif Girl != "Laura" and "Laura" not in Party and L_Loc == bg_current and "les" in L_RecentActions:
+            $ Girl2 = "Laura"
+            
+    #this bit is hopefully not necessary. . .
+    elif Girl != "Rogue" and "Rogue" not in Party and "les" in R_RecentActions:
+            $ Girl2 = "Rogue"
+    elif Girl != "Kitty" and "Kitty" not in Party and "les" in K_RecentActions:
+            $ Girl2 = "Kitty"
+    elif Girl != "Emma" and "Emma" not in Party and "les" in E_RecentActions:
+            $ Girl2 = "Emma"
+    elif Girl != "Laura" and "Laura" not in Party and "les" in L_RecentActions:
+            $ Girl2 = "Laura"
+    
+    if not Girl or not Girl2:
+        return 1
+        
+    call DrainWord(Girl,"les",1,0) #removes general "les" tag from recent actions
+    call DrainWord(Girl2,"les",1,0) #removes general "les" tag from recent actions
+    
+    call AnyWord(Girl,0,"lesbian","lesbian")  #adds "lesbian" tag to recent and daily actions 
+    call AnyWord(Girl2,0,"lesbian","lesbian")  #adds "lesbian" tag to recent and daily actions    
+    call AnyWord(Girl,1,0,0,0,"les "+Girl2)  #adds "les Rogue" tag to recent actions
+    call AnyWord(Girl2,1,0,0,0,"les "+Girl)  #adds "les Kitty" tag to recent actions 
+    
+    "As you approach her room, you hear soft moans from inside, and notice that the door is slightly ajar."
+    menu:
+        extend ""
+        "Knock politely":
+            $ Line = "knock"
+        "Peek inside":
+            call Set_The_Scene
+            call AnyFace(Girl,"kiss",1,Eyes = "closed") 
+            call AnyFace(Girl2,"kiss",1,Eyes = "closed") 
+            $ Trigger = "lesbian"
+            $ Trigger3 = "fondle pussy"
+            $ Trigger4 = "fondle pussy"
+            "You see [Girl] and [Girl2], eyes closed and stroking each other vigorously."
+            menu:
+                extend ""
+                "Enter Quietly":
+                        $ Line = "enter"
+                "Pull back and knock":                        
+                        $ Line = "knock"
+                "Leave quietly":
+                        $ Line = "leave"
+        "Enter quietly":
+                $ Line = "enter"
+        "Leave quietly":
+                $ Line = "leave"
+    
+    if Line == "leave":      
+            "You leave the girls to their business and slip out."
+            if "Rogue" in (Girl,Girl2):
+                        $ R_Thirst -= 30 
+                        $ R_Lust = 20 
+            if "Kitty" in (Girl,Girl2):
+                        $ K_Thirst -= 30 
+                        $ K_Lust = 20 
+            if "Emma" in (Girl,Girl2):
+                        $ E_Thirst -= 30 
+                        $ E_Lust = 20 
+            if "Laura" in (Girl,Girl2):
+                        $ L_Thirst -= 30 
+                        $ L_Lust = 20 
+            $ renpy.pop_call()  
+            jump Campus_Map 
+    elif Line == "knock":
+            "You hear some soft moans, followed by some shuffling around as items tumble to the ground."
+            "After several seconds and some more shuffling of clothing, [Girl] comes to the door."
+            call AnyFace(Girl,"confused",2,Eyes = "surprised",Mouth = "smile") 
+            call AnyFace(Girl2,"confused",2,Eyes = "surprised",Mouth = "smile") 
+            $ Trigger = 0
+            $ Trigger3 = 0
+            $ Trigger4 = 0
+            $ Trigger5 = 0
+            call Set_The_Scene            
+            if Girl == "Rogue":
+                    ch_r "Sorry about that [R_Petname], we were, um. . . working out."
+            elif Girl == "Kitty":
+                    ch_k "Oh, hey, [K_Petname], hi, we were. . . never mind."
+            elif Girl == "Emma":
+                    ch_e "Well, I hope you have a good reason for interrupting us."
+                    ch_e "I was. . . teaching her a few things. . ."
+            elif Girl == "Laura":                
+                    ch_l "Um, hey [L_Petname], we were a bit busy."            
+            call AnyFace(Girl,"smile",1) 
+            call AnyFace(Girl2,"smile",1) 
+            $ Tempmod += 10
+    elif Line == "enter":
+            call Set_The_Scene(Quiet=1)
+            call AnyFace(Girl,"kiss",1,Eyes = "closed") 
+            call AnyFace(Girl2,"kiss",1,Eyes = "closed") 
+            $ Trigger = "lesbian"
+            $ Trigger3 = "fondle pussy"
+            $ Trigger4 = "fondle pussy"
+            call AnyWord(Girl,1,"unseen","unseen") 
+            call AnyWord(Girl2,1,"unseen","unseen")
+            $ Partner = Girl2
+            if Girl == "Rogue":
+                    call Rogue_SexAct("lesbian")
+            elif Girl == "Kitty":  
+                    call Kitty_SexAct("lesbian")
+            elif Girl == "Emma":
+                    call Emma_SexAct("lesbian")
+            elif Girl == "Laura":
+                    call Laura_SexAct("lesbian")
+    return
+    
+#end girls caught lesing / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+
+
+label Post_Les_Dialog(Girl=0):
+    # called from X_Les_After if they have dialog for each other. 
+    
+    if Girl == "Rogue":
+            ch_r "That was nice. . ."
+    elif Girl == "Kitty":
+            ch_k "That was fun. . ."
+    elif Girl == "Emma":
+            ch_e "That was enjoyable. . ."
+    elif Girl == "Laura":
+            ch_l "That was fun. . ."
+            
+    if  CheckWord(Girl,"History","les "+Partner):
+            #if this wasn't the first time. . .
+            if Partner == "Rogue":
+                    ch_r "Mmmm yeah. . ."
+            elif Partner == "Kitty":
+                    ch_k "Mmmm yeah that was good. . ."
+            elif Partner == "Emma":
+                    ch_e "Certainly. . ."
+            elif Partner == "Laura":
+                    ch_l "Yup. . ."
+    else:
+            # If this is the first time they've done this. . .
+            # "les Kitty" not in R_History. . .
+            if GirlLikeCheck(Girl,Partner) >= 600:
+                    #if the Lead girl likes the Partner. . .
+                    if Girl == "Rogue":
+                            ch_r "You. . . really know what you're doing down there. . ."
+                    elif Girl == "Kitty":
+                            ch_k "You're really good at that!"
+                    elif Girl == "Emma":
+                            ch_e "You were delightful dear!"
+                    elif Girl == "Laura":
+                            ch_l "I liked that thing with the mouth work."
+            else:
+                    #if the Lead girl doesn't like the Partner. . .
+                    if Girl == "Rogue":
+                            ch_r "That. . . wasn't awful. . ."
+                    elif Girl == "Kitty":
+                            ch_k "That was. . . interesting. . ."
+                    elif Girl == "Emma":
+                            ch_e "At least you could keep up. . ."
+                    elif Girl == "Laura":
+                            ch_l "That was ok. . ."
+                    
+            #second girl response. . .        
+            if GirlLikeCheck(Partner,Girl) >= 600:
+                    #if the Partner girl likes the Lead. . .
+                    if Partner == "Rogue":
+                            ch_r "Um, yeah, you too. . ."
+                    elif Partner == "Kitty":
+                            ch_k "Yeah, that was really hot. . ."
+                    elif Partner == "Emma":
+                            ch_e "Practice, dear. . ."
+                    elif Partner == "Laura":
+                            ch_l "I can read a map."
+            else:
+                    #if the Partner girl doesn't like the Lead. . .
+                    if Partner == "Rogue":
+                            ch_r "I guess. . ."
+                    elif Partner == "Kitty":
+                            ch_k "I guess. . ."
+                    elif Partner == "Emma":
+                            ch_e "You could certainly do with more practice. . ."
+                    elif Partner == "Laura":
+                            ch_l "Uh-huh."
+    return
+    
+    
+    
+label Girl_Caught_Shower(Girl=0):  
+        if not Girl:
+                return
+        call Shift_Focus(Girl)
+        
+        call AnyWord(Girl,1,"showered","showered",0,0)
+        call Remove_Girl("All")
+        
+        call AnyOutfit(Girl,"nude")
+        call AnyFace(Girl,"smile",1) 
+        
+        if Girl == "Rogue":
+                $ R_Loc = "bg showerroom"              
+                $ R_Water = 1
+                $ R_Wet = 2
+        elif Girl == "Kitty":
+                $ K_Loc = "bg showerroom"              
+                $ K_Water = 1
+                $ K_Wet = 2
+        elif Girl == "Emma":
+                $ E_Loc = "bg showerroom"              
+                $ E_Water = 1   
+                $ E_Wet = 2        
+        elif Girl == "Laura":
+                $ L_Loc = "bg showerroom"                
+                $ L_Water = 1
+                $ L_Wet = 2
+                        
+        if CheckWord(Girl,"Daily","gonnafap"):                    
+                "As you approach the showers, you hear some shallow moans from inside."
+        else:
+                "As you approach the showers, you hear some humming noises from inside." 
+        menu:
+                "What do you do?"
+                "Enter":     
+                    pass              
+                "Knock":
+                    $ Line = "knock"
+                "Come back later": 
+                    call Remove_Girl(Girl)
+                    call AnyOutfit(Girl,6)
+                    call DrainWord(Girl,"gonnafap",0,1) #removes "gonnafap" tag from daily                    
+                    $ R_Lust = 25
+                    $ R_Thirst -= int(R_Thirst/2) if R_Thirst >= 50 else int(R_Thirst/4) 
+                    return 1
+                
+        if Line == "knock":                                                                                         
+                #You knock
+                "You knock on the door. You hear some shuffling inside"    
+                call AnyOutfit(Girl,7,TempOver="towel")  
+                if CheckWord(Girl,"Daily","gonnafap"):                                    
+                        #Girl caught fapping
+                        "You hear a sharp shuffling sound and the water gets cut off."
+                        "After several seconds and some more shuffling, [Girl] comes to the door."
+                        call AnyFace(Girl,"perplexed",2,Mouth="normal") 
+                        call Set_The_Scene(Dress=0)
+                        if Girl == "Rogue": 
+                                ch_r "Sorry about that [R_Petname], I was. . . just wrapping up my shower."
+                        elif Girl == "Kitty":
+                                ch_k "Oh, hey, [K_Petname]. I was just. . . showering. Yeah."
+                        elif Girl == "Emma": 
+                                ch_e "Oh, hello [E_Petname]. I was. . . taking care of some personal business."
+                        elif Girl == "Laura": 
+                                ch_l "Oh, hey [L_Petname]. I was just. . . working off some stress."
+                        call Statup(Girl, "Lust", 90, 5)
+                        $ Tempmod += 10
+                else:                                                                                                   
+                        #Laura caught showering
+                        "You hear the rustling of a towel and some knocking around, but after a few seconds [Girl] comes to the door."
+                        call Set_The_Scene(Dress=0)
+                        if Girl == "Rogue": 
+                                ch_r "Sorry about that [R_Petname], I was just wrapping up my shower."
+                        elif Girl == "Kitty":
+                                ch_k "Oh, hey, [K_Petname]. I was just[K_like]showering."
+                        elif Girl == "Emma": 
+                                ch_e "Oh, hello [E_Petname]. I was just finishing my shower."
+                        elif Girl == "Laura": 
+                                ch_l "Oh, hey [L_Petname]. I was just finishing up."
+                #end "knocked"
+        else:                                                                                                       
+            #You don't knock   
+            if CheckWord(Girl,"Daily","gonnafap"):  
+                    #Caught masturbating in the shower. 
+                    call DrainWord(Girl,"gonnafap",0,1) #removes "gonnafap" tag from daily 
+                    call AnyFace(Girl,"sexy",Eyes="closed")       
+                    call AnyWord(Girl,1,"unseen","unseen",0,0) 
+                    call Set_The_Scene(Dress=0)
+                    $ Count = 0     
+                    $ Trigger = "masturbation"
+                    $ Trigger3 = "fondle pussy"   
+                    "You see [Girl] under the shower, feeling herself up."
+                    call expression Girl + "_SexAct" pass ("masturbate") #call Laura_SexAct("masturbate")   
+                    jump Shower_Room
+                
+            elif D20 >= 15:                                                                                         
+                    #She's just showering and naked
+                    call Set_The_Scene(Dress=0)                
+                    call AnyFace(Girl,"surprised", 1)
+                    "As you enter the showers, you see [Girl] washing up."        
+                    if not ApprovalCheck(Girl, 1200) or not SeenCheck(Girl):
+                            call AnyFace(Girl,5,Brows="angry") #just updates brows 
+                            call AnyOutfit(Girl,7,TempOver="towel")  
+                            "She grabs a towel and covers up."             
+                            call AnyFace(Girl,"angry", 1)
+                            call Statup(Girl, "Love", 80, -5) 
+                    else:
+                            if ExhibitionistCheck(Girl):
+                                call Statup(Girl, "Lust", 90, (2*D20)) 
+                            else:
+                                call Statup(Girl, "Lust", 80, D20)         
+                            call AnyFace(Girl,5,Brows="confused") #just updates brows        
+                    
+                    call expression Girl + "_First_Bottomless" pass (1)
+                    call expression Girl + "_First_Topless" pass (1)
+                    call Statup(Girl, "Inbt", 70, 3)
+                    if Girl == "Rogue": 
+                            ch_r "Hey! Learn to knock maybe?!"
+                    elif Girl == "Kitty":
+                            ch_k "Did you[K_like]get a good look?"
+                    elif Girl == "Emma": 
+                            ch_e "Hello. Haven't you learned to knock before entering?"
+                    elif Girl == "Laura": 
+                            ch_l "Um, hey? Don't knock much?"
+                    menu:
+                            extend ""                            
+                            "Sorry, I should have knocked.":  
+                                    call Statup(Girl, "Love", 50, 2)
+                                    call Statup(Girl, "Love", 80, 4)
+                            "And miss the view?":
+                                    call Statup(Girl, "Obed", 50, 2)
+                                    call Statup(Girl, "Obed", 80, 2)
+                                    call Statup(Girl, "Inbt", 60, 1)
+                            "Why, would it have made a difference?": 
+                                if not ApprovalCheck(Girl, 500,"I"):
+                                    call Statup(Girl, "Love", 50, -3)
+                                    call Statup(Girl, "Obed", 50, 2)
+                                call Statup(Girl, "Obed", 80, 2)
+                                call Statup(Girl, "Inbt", 60, 2)
+                            "It's not as if you're leaving that much to the imagination. . ." if Girl == "Emma": 
+                                call Statup("Emma", "Obed", 50, 2)
+                                call Statup("Emma", "Obed", 80, 2)
+                                call Statup("Emma", "Inbt", 60, 2)
+                    #end caught showering naked
+                
+            else:                                                                                   
+                    #She's done showering and in a towel
+                    call AnyOutfit(Girl,7,TempOver="towel")  
+                    call Set_The_Scene(Dress=0)
+                    "As you enter the showers, you see Laura putting on a towel."        
+                    if not ApprovalCheck(Girl, 1100) and not SeenCheck(Girl):          
+                            call AnyFace(Girl,"angry",Brows="confused")
+                            call Statup(Girl, "Love", 80, -5)
+                    else:
+                            call AnyFace(Girl,"sexy",Brows="confused")
+                    call Statup(Girl, "Inbt", 50, 3)
+                    if Girl == "Rogue": 
+                            ch_r "Well hello there, [R_Petname]. Hoping to see something more?"
+                    elif Girl == "Kitty":
+                            ch_k "Oh, hey. Were you hoping I'd be naaaaaked?"
+                    elif Girl == "Emma": 
+                            ch_e "Oh, hello, [E_Petname]. Sorry you didn't get here sooner?"
+                    elif Girl == "Laura": 
+                            ch_l "Oh, hey [L_Petname]. Trying to slip in unnoticed?"
+                    menu:
+                            extend ""
+                            "Sorry, I should have knocked.":   
+                                    call Statup(Girl, "Love", 50, 2)
+                                    call Statup(Girl, "Love", 80, 2)   
+                            "Well, to be honest. . .":
+                                    call Statup(Girl, "Love", 50, -2)
+                                    call Statup(Girl, "Obed", 50, 2)
+                                    call Statup(Girl, "Obed", 80, 2)
+                                    call Statup(Girl, "Inbt", 60, 1)
+                            "I still like the view. . ." if Girl != "Emma": 
+                                if ApprovalCheck(Girl, 500,"I"):
+                                    call Statup(Girl, "Love", 80, 1)
+                                else:
+                                    call Statup(Girl, "Love", 50, -1)
+                                    call Statup(Girl, "Obed", 50, 2)
+                                call Statup(Girl, "Obed", 80, 2)
+                                call Statup(Girl, "Inbt", 60, 3)
+                            "It's not as if you're leaving that much to the imagination. . ." if Girl == "Emma": 
+                                call Statup("Emma", "Obed", 50, 2)
+                                call Statup("Emma", "Obed", 80, 2)
+                                call Statup("Emma", "Inbt", 60, 2)
+                    #end caught in towel
+                        
+            call AnyFace(Girl,"sexy")          
+            if not ApprovalCheck(Girl, 750) and SeenCheck(Girl) <= 3:
+                    if Girl == "Rogue": 
+                            ch_r "Well, it happens, just be careful next time."
+                    elif Girl == "Kitty":
+                            ch_k "Well, it's not like I totally mind. . ." 
+                    elif Girl == "Emma": 
+                            ch_e "Hmm. Yes, a likely excuse."
+                    elif Girl == "Laura":   
+                            ch_l "Well, just keep an eye on your own bits."
+                            ch_l "Wouldn't want them going missing."
+            elif not ApprovalCheck(Girl, 1300):                 
+                    if Girl == "Rogue": 
+                            ch_r "Well, it happens, just be careful next time."
+                    elif Girl == "Kitty":
+                            ch_k "Well too bad." 
+                    elif Girl == "Emma": 
+                            ch_e "Hmm. Yes, a likely excuse."
+                    elif Girl == "Laura":   
+                            ch_l "Uh-huh."
+            else:                
+                
+                    if Girl == "Rogue": 
+                            ch_r "You could have just asked, [R_Petname]."   
+                    elif Girl == "Kitty":
+                            ch_k "Well, it's not like it's totally off the table. . ." 
+                    elif Girl == "Emma": 
+                            ch_e "Well, it's not that I mind. . ."
+                    elif Girl == "Laura":   
+                            ch_l "Nah, I don't mind much. . ."
+                            
+                    if OverNum(Girl) == 3: 
+                        #if she's wearing a towel. . .       
+                        call AnyOutfit(Girl,7) #removes towel  
+                        pause 0.5               
+                        call AnyOutfit(Girl,7,TempOver="towel")  
+                        "She flashes you real quick."    
+                        call AnyOutfit(Girl,7,TempOver="towel")  
+                        call expression Girl + "_First_Bottomless" pass (1)
+                        call expression Girl + "_First_Topless" pass (1) #same as "call Rogue_First_Topless(1)"
+                        
+                        if Girl == "Laura":   
+                                ch_l "Heh!" 
+                                                          
+            #end didn't knock
+        
+        if Girl == "Rogue": 
+                ch_r "Well, I should probably get going. . ." 
+        elif Girl == "Kitty":
+                ch_k "I'm done here, see you later?" 
+        elif Girl == "Emma": 
+                ch_e "I should probably be leaving. . ."
+        elif Girl == "Laura":                    
+                ch_l "I should get going. . ." 
+        menu:
+            extend ""
+            "Sure, see you later then.":
+                    call Remove_Girl(Girl)
+            "Actually, could you stick around a minute?":
+                if ApprovalCheck(Girl, 900):
+                    if Girl == "Rogue":        
+                            ch_r "Sure, what's up?"
+                    elif Girl == "Kitty":        
+                            ch_k "Yeah?"
+                    elif Girl == "Emma": 
+                            ch_e "Very well, what did you need?"
+                    elif Girl == "Laura": 
+                            $ L_Loc = "bg showerroom"            
+                            ch_l "Huh? Ok, what's up?"
+                else:
+                    
+                    if Girl == "Rogue": 
+                            ch_r "Um, actually, I'm not really comfortable being so. . . exposed?"
+                            ch_r "I'll just see you around later."
+                    elif Girl == "Kitty":
+                            ch_k "I'm[K_like]totally exposed here?"
+                            ch_k "I'm just going to head out."
+                    elif Girl == "Emma": 
+                            ch_e "I really shouldn't be \"hanging out\" in such a state."
+                            ch_e "We can talk later."
+                    elif Girl == "Laura": 
+                            ch_l "I probably shouldn't hang out like this."
+                            ch_l "We'll talk later."
+                    call Remove_Girl(Girl)  
+        
+        if Line == "leaving":
+                call AnyOutfit(Girl,6)
+                call AnyOutfit(Girl,6)
+        $ Line = 0
+        return 0
+# End Girl Caught Shower / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+
+
+
 #start girls sunbathing / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 label Pool_Sunbathe(Girl=0,Chest=0,Panties=0,Over=0,Legs=0,Line=0,Type=0,Mod=0):
     # This gets called with a character name, and checks 
@@ -5307,8 +5830,6 @@ label Pool_Sunbathe(Girl=0,Chest=0,Panties=0,Over=0,Legs=0,Line=0,Type=0,Mod=0):
             #if she's already nude. . .
             call AnyFace(Girl,"sly")
             call AnyLine(Girl,"Little late for that.")
-            if Girl == "Kitty" or Girl == "Rogue":
-                call Mod_Tan(Girl,5)
             return            
     if CheckWord(Girl,"Recent","no tan"):
             call AnyFace(Girl,"angry")
@@ -5376,8 +5897,6 @@ label Pool_Sunbathe(Girl=0,Chest=0,Panties=0,Over=0,Legs=0,Line=0,Type=0,Mod=0):
             elif Girl == "Laura":
                 ch_l "Yup."
             call AnyWord(Girl,1,"tan","tan") #adds the "tan" trait to recent and daily actions
-            if Girl == "Kitty" or Girl == "Rogue":
-                call Mod_Tan(Girl,5)
             return
         
         
@@ -5420,21 +5939,19 @@ label Pool_Sunbathe(Girl=0,Chest=0,Panties=0,Over=0,Legs=0,Line=0,Type=0,Mod=0):
                                 $ Mod = 200    
                                                                 
                     "never mind.":
-                            if Girl == "Kitty" or Girl == "Rogue":
-                                call Mod_Tan(Girl,5)
                             return
             # end menu
                                         
             if Type == "no panties":
                     $ Mod = 200    
                     call AnyFace(Girl,"bemused",1)
-                    call AnyLine(Girl,"I don't have bottoms on under this. . .")  
+                    ch_n "I don't have bottoms on under this. . ."
             elif Type == "no bra":
                     call AnyFace(Girl,"bemused",1)
-                    call AnyLine(Girl,"I don't have a top on under this. . .")              
+                    ch_n "I don't have a top on under this. . ."             
             
             if SeenCheck(Girl,1):
-                    $ Mod += 100
+                    $ Mod -= 100
                     
             # This is the primary check to see whether she's into it.
             if ExhibitionistCheck(Girl):
@@ -5693,8 +6210,6 @@ label Pool_Sunbathe(Girl=0,Chest=0,Panties=0,Over=0,Legs=0,Line=0,Type=0,Mod=0):
             if ClothingCheck(Girl):
                 "Anything else?" #loops back to menu
             else:
-                if Girl == "Kitty" or Girl == "Rogue":
-                    call Mod_Tan(Girl,5)
                 return                
     return
 
@@ -5778,10 +6293,10 @@ label Pool_Skinnydip(Girl=0,Line=0,Type=0,Mod=0):
             if ExhibitionistCheck(Girl):
                     #if she's an exhibitionist
                     $ Line = "sure"
-            elif ApprovalCheck(Girl, 700+Mod, "I"):
+            elif ApprovalCheck(Girl, 700-Mod, "I"):
                     #if she's generally slutty
                     $ Line = "sure"
-            elif ApprovalCheck(Girl, 1200+Mod):
+            elif ApprovalCheck(Girl, 1200-Mod):
                     # if she really likes you.
                     $ Line = "sure"
             elif ApprovalCheck(Girl, 800):
@@ -5964,280 +6479,91 @@ label Pool_Skinnydip(Girl=0,Line=0,Type=0,Mod=0):
 #End girls skinnydip / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
 
-label Girl_Caught_Shower(Girl=0):  
-        if not Girl:
+# Start Pool Topless / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+label Pool_Topless(Girl=Ch_Focus):    
+        #the girl is swimming, but ends up topless temporarily
+        if Zero_Loc(Girl) != bg_current:
+                    #if the lead girl isn't in the room for some reason. . .
+                    $ Options = ["Rogue","Kitty","Emma","Laura"]
+                    $ renpy.random.shuffle(Options)
+                    while Options:
+                        if Zero_Loc(Options[0]):
+                                #if she's in the room                           
+                                call Shift_Focus(Options[0])
+                                $ del Options[:] 
+                        else:
+                                $ Options.remove(Options[0])
+        $ Girl = Ch_Focus
+        if (ChestNum(Girl) <= 1 and OverNum(Girl) <= 1) or Zero_Loc(Ch_Focus) != bg_current:
+                #if *no* girls are present, ditch or no point, already topless
+                $ D20 = renpy.random.randint(1, 14)
                 return
-        call Shift_Focus(Girl)
-        
-        call AnyWord(Girl,1,"showered","showered",0,0)
-        call Remove_Girl("All")
-        
-        call AnyOutfit(Girl,"nude")
-        call AnyFace(Girl,"smile",1) 
-        
-        if Girl == "Rogue":
-                $ R_Loc = "bg showerroom"              
-                $ R_Water = 1
-                $ R_Wet = 2
-        elif Girl == "Kitty":
-                $ K_Loc = "bg showerroom"              
-                $ K_Water = 1
-                $ K_Wet = 2
-        elif Girl == "Emma":
-                $ E_Loc = "bg showerroom"              
-                $ E_Water = 1   
-                $ E_Wet = 2        
-        elif Girl == "Laura":
-                $ L_Loc = "bg showerroom"                
-                $ L_Water = 1
-                $ L_Wet = 2
-                
-        if (D20 >= 18 and ApprovalCheck(Girl,70,"X")) or (D20 >= 15 and ApprovalCheck(Girl,80,"X")):
-            "As you approach the showers, you hear some shallow moans from inside."
+        call AllReset(Girl)
+        "[Girl] dives into the pool"         
+        call ShowPool #displays pool graphics
+        call AnyOutfit(Girl,12) #sets uptop
+        menu:
+            "It appears she's had a wardrobe malfunction."
+            "Hey, [Girl]. . .":
+                    ch_p "Looks like you might be missing something there. . ."                
+                    call AnyFace(Girl,"confused")         
+                    ch_n ". . ."
+                    call AnyFace(Girl,"surprised",2,Eyes="down")
+                    call Statup(Girl, "Love", 80, 3)
+                    call Statup(Girl, "Love", 90, 1)
+                    call Statup(Girl, "Obed", 60, 2)
+                    call Statup(Girl, "Inbt", 50, -2)
+                    call Statup(Girl, "Lust", 50, 2)
+                    $ Count = 100
+            "Say nothing":
+                    call AnyFace(Girl,"surprised",2,Eyes="down") 
+                    "After a few moments, [Girl] seems to notice that her top rode up."
+                    if ApprovalCheck(Girl, 1200):
+                            $ Count = 0
+                    else:
+                            $ Count = -100
+                        
+        if ApprovalCheck(Girl, 800-Count,"I") or ApprovalCheck(Girl, 1600-Count):
+                call AnyFace(Girl,"sly")   
+                call AnyOutfit(Girl,8) #loses top
+                call Statup(Girl, "Obed", 60, 2)
+                call Statup(Girl, "Inbt", 50, 4)
+                call Statup(Girl, "Inbt", 90, 2)
+                call Statup(Girl, "Lust", 50, 5)
+                "She smiles and tosses her top over her head."       
+                call expression Girl + "_First_Topless"
+        elif ApprovalCheck(Girl, 500-Count,"I") or ApprovalCheck(Girl, 1200-Count):
+                call AnyFace(Girl,"sly",1)   
+                call Statup(Girl, "Obed", 60, 2)
+                call Statup(Girl, "Inbt", 50, 3)
+                call Statup(Girl, "Inbt", 80, 2)
+                call Statup(Girl, "Lust", 50, 3)
+                "She smiles, and leaves the top how it is."
+                call expression Girl + "_First_Topless"
         else:
-            "As you approach the showers, you hear some humming noises from inside." 
-        menu:
-                "What do you do?"
-                "Enter":     
-                    pass              
-                "Knock":
-                    $ Line = "knock"
-                "Come back later": 
-                    call Remove_Girl(Girl)
-                    call AnyOutfit(Girl,6)
-                    return 1
-                
-        if Line == "knock":                                                                                         
-                #You knock
-                "You knock on the door. You hear some shuffling inside"    
-                call AnyOutfit(Girl,7,TempOver="towel")  
-                if (D20 >= 18 and ApprovalCheck(Girl,70,"X")) or (D20 >= 15 and ApprovalCheck(Girl,80,"X")):                                    
-                        #Girl caught fapping
-                        "You hear a sharp shuffling sound and the water gets cut off."
-                        "After several seconds and some more shuffling, [Girl] comes to the door."
-                        call AnyFace(Girl,"perplexed",2,Mouth="normal") 
-                        call Set_The_Scene(Dress=0)
-                        if Girl == "Rogue": 
-                                ch_r "Sorry about that [R_Petname], I was. . . just wrapping up my shower."
-                        elif Girl == "Kitty":
-                                ch_k "Oh, hey, [K_Petname]. I was just. . . showering. Yeah."
-                        elif Girl == "Emma": 
-                                ch_e "Oh, hello [E_Petname]. I was. . . taking care of some personal business."
-                        elif Girl == "Laura": 
-                                ch_l "Oh, hey [L_Petname]. I was just. . . working off some stress."
-                        call Statup(Girl, "Lust", 90, 5)
-                        $ Tempmod += 10
-                else:                                                                                                   
-                        #Laura caught showering
-                        "You hear the rustling of a towel and some knocking around, but after a few seconds [Girl] comes to the door."
-                        call Set_The_Scene(Dress=0)
-                        if Girl == "Rogue": 
-                                ch_r "Sorry about that [R_Petname], I was just wrapping up my shower."
-                        elif Girl == "Kitty":
-                                ch_k "Oh, hey, [K_Petname]. I was just[K_like]showering."
-                        elif Girl == "Emma": 
-                                ch_e "Oh, hello [E_Petname]. I was just finishing my shower."
-                        elif Girl == "Laura": 
-                                ch_l "Oh, hey [L_Petname]. I was just finishing up."
-                #end "knocked"
-        else:                                                                                                       
-            #You don't knock   
-            if (D20 >= 18 and ApprovalCheck(Girl,70,"X")) or (D20 >= 15 and ApprovalCheck(Girl,80,"X")):  
-                    #Caught masturbating in the shower. 
-                    call AnyFace(Girl,"sexy",Eyes="closed")       
-                    call AnyWord(Girl,1,"unseen","unseen",0,0) 
-                    call Set_The_Scene(Dress=0)
-                    $ Count = 0     
-                    $ Trigger = "masturbation"
-                    $ Trigger3 = "fondle pussy"   
-                    "You see [Girl] under the shower, feeling herself up."
-                    call expression Girl + "_SexAct" pass ("masturbate") #call Laura_SexAct("masturbate")   
-                    jump Shower_Room
-                
-            elif D20 >= 15:                                                                                         
-                    #She's just showering and naked
-                    call Set_The_Scene(Dress=0)                
-                    call AnyFace(Girl,"surprised", 1)
-                    "As you enter the showers, you see [Girl] washing up."        
-                    if not ApprovalCheck(Girl, 1200) or not SeenCheck(Girl):
-                            call AnyFace(Girl,5,Brows="angry") #just updates brows 
-                            call AnyOutfit(Girl,7,TempOver="towel")  
-                            "She grabs a towel and covers up."             
-                            call AnyFace(Girl,"angry", 1)
-                            call Statup(Girl, "Love", 80, -5) 
-                    else:
-                            if ExhibitionistCheck(Girl):
-                                call Statup(Girl, "Lust", 90, (2*D20)) 
-                            else:
-                                call Statup(Girl, "Lust", 80, D20)         
-                            call AnyFace(Girl,5,Brows="confused") #just updates brows        
-                    
-                    call expression Girl + "_First_Bottomless" pass (1)
-                    call expression Girl + "_First_Topless" pass (1)
-                    call Statup(Girl, "Inbt", 70, 3)
-                    if Girl == "Rogue": 
-                            ch_r "Hey! Learn to knock maybe?!"
-                    elif Girl == "Kitty":
-                            ch_k "Did you[K_like]get a good look?"
-                    elif Girl == "Emma": 
-                            ch_e "Hello. Haven't you learned to knock before entering?"
-                    elif Girl == "Laura": 
-                            ch_l "Um, hey? Don't knock much?"
-                    menu:
-                            extend ""                            
-                            "Sorry, I should have knocked.":  
-                                    call Statup(Girl, "Love", 50, 2)
-                                    call Statup(Girl, "Love", 80, 4)
-                            "And miss the view?":
-                                    call Statup(Girl, "Obed", 50, 2)
-                                    call Statup(Girl, "Obed", 80, 2)
-                                    call Statup(Girl, "Inbt", 60, 1)
-                            "Why, would it have made a difference?": 
-                                if not ApprovalCheck(Girl, 500,"I"):
-                                    call Statup(Girl, "Love", 50, -3)
-                                    call Statup(Girl, "Obed", 50, 2)
-                                call Statup(Girl, "Obed", 80, 2)
-                                call Statup(Girl, "Inbt", 60, 2)
-                            "It's not as if you're leaving that much to the imagination. . ." if Girl == "Emma": 
-                                call Statup("Emma", "Obed", 50, 2)
-                                call Statup("Emma", "Obed", 80, 2)
-                                call Statup("Emma", "Inbt", 60, 2)
-                    #end caught showering naked
-                
-            else:                                                                                   
-                    #She's done showering and in a towel
-                    call AnyOutfit(Girl,7,TempOver="towel")  
-                    call Set_The_Scene(Dress=0)
-                    "As you enter the showers, you see Laura putting on a towel."        
-                    if not ApprovalCheck(Girl, 1100) and not SeenCheck(Girl):          
-                            call AnyFace(Girl,"angry",Brows="confused")
-                            call Statup(Girl, "Love", 80, -5)
-                    else:
-                            call AnyFace(Girl,"sexy",Brows="confused")
-                    call Statup(Girl, "Inbt", 50, 3)
-                    if Girl == "Rogue": 
-                            ch_r "Well hello there, [R_Petname]. Hoping to see something more?"
-                    elif Girl == "Kitty":
-                            ch_k "Oh, hey. Were you hoping I'd be naaaaaked?"
-                    elif Girl == "Emma": 
-                            ch_e "Oh, hello, [E_Petname]. Sorry you didn't get here sooner?"
-                    elif Girl == "Laura": 
-                            ch_l "Oh, hey [L_Petname]. Trying to slip in unnoticed?"
-                    menu:
-                            extend ""
-                            "Sorry, I should have knocked.":   
-                                    call Statup(Girl, "Love", 50, 2)
-                                    call Statup(Girl, "Love", 80, 2)   
-                            "Well, to be honest. . .":
-                                    call Statup(Girl, "Love", 50, -2)
-                                    call Statup(Girl, "Obed", 50, 2)
-                                    call Statup(Girl, "Obed", 80, 2)
-                                    call Statup(Girl, "Inbt", 60, 1)
-                            "I still like the view. . ." if Girl != "Emma": 
-                                if ApprovalCheck(Girl, 500,"I"):
-                                    call Statup(Girl, "Love", 80, 1)
-                                else:
-                                    call Statup(Girl, "Love", 50, -1)
-                                    call Statup(Girl, "Obed", 50, 2)
-                                call Statup(Girl, "Obed", 80, 2)
-                                call Statup(Girl, "Inbt", 60, 3)
-                            "It's not as if you're leaving that much to the imagination. . ." if Girl == "Emma": 
-                                call Statup("Emma", "Obed", 50, 2)
-                                call Statup("Emma", "Obed", 80, 2)
-                                call Statup("Emma", "Inbt", 60, 2)
-                    #end caught in towel
-                        
-            call AnyFace(Girl,"sexy")          
-            if not ApprovalCheck(Girl, 750) and SeenCheck(Girl) <= 3:
-                    if Girl == "Rogue": 
-                            ch_r "Well, it happens, just be careful next time."
-                    elif Girl == "Kitty":
-                            ch_k "Well, it's not like I totally mind. . ." 
-                    elif Girl == "Emma": 
-                            ch_e "Hmm. Yes, a likely excuse."
-                    elif Girl == "Laura":   
-                            ch_l "Well, just keep an eye on your own bits."
-                            ch_l "Wouldn't want them going missing."
-            elif not ApprovalCheck(Girl, 1300):                 
-                    if Girl == "Rogue": 
-                            ch_r "Well, it happens, just be careful next time."
-                    elif Girl == "Kitty":
-                            ch_k "Well too bad." 
-                    elif Girl == "Emma": 
-                            ch_e "Hmm. Yes, a likely excuse."
-                    elif Girl == "Laura":   
-                            ch_l "Uh-huh."
-            else:                
-                
-                    if Girl == "Rogue": 
-                            ch_r "You could have just asked, [R_Petname]."   
-                    elif Girl == "Kitty":
-                            ch_k "Well, it's not like it's totally off the table. . ." 
-                    elif Girl == "Emma": 
-                            ch_e "Well, it's not that I mind. . ."
-                    elif Girl == "Laura":   
-                            ch_l "Nah, I don't mind much. . ."
-                            
-                    if OverNum(Girl) == 3: 
-                        #if she's wearing a towel. . .       
-                        call AnyOutfit(Girl,7) #removes towel  
-                        pause 0.5               
-                        call AnyOutfit(Girl,7,TempOver="towel")  
-                        "She flashes you real quick."    
-                        call AnyOutfit(Girl,7,TempOver="towel")  
-                        call expression Girl + "_First_Bottomless" pass (1)
-                        call expression Girl + "_First_Topless" pass (1) #same as "call Rogue_First_Topless(1)"
-                        
-                        if Girl == "Laura":   
-                                ch_l "Heh!" 
-                                                          
-            #end didn't knock
-        
-        if Girl == "Rogue": 
-                ch_r "Well, I should probably get going. . ." 
-        elif Girl == "Kitty":
-                ch_k "I'm done here, see you later?" 
-        elif Girl == "Emma": 
-                ch_e "I should probably be leaving. . ."
-        elif Girl == "Laura":                    
-                ch_l "I should get going. . ." 
-        menu:
-            extend ""
-            "Sure, see you later then.":
-                    call Remove_Girl(Girl)
-            "Actually, could you stick around a minute?":
-                if ApprovalCheck(Girl, 900):
-                    if Girl == "Rogue":        
-                            ch_r "Sure, what's up?"
-                    elif Girl == "Kitty":        
-                            ch_k "Yeah?"
-                    elif Girl == "Emma": 
-                            ch_e "Very well, what did you need?"
-                    elif Girl == "Laura": 
-                            $ L_Loc = "bg showerroom"            
-                            ch_l "Huh? Ok, what's up?"
+                if ApprovalCheck(Girl, 800-Count):
+                        #she's ok with it
+                        call Statup(Girl, "Obed", 60, 2)
+                        call Statup(Girl, "Inbt", 70, 2)
+                        call Statup(Girl, "Lust", 50, 1)
+                        call AnyFace(Girl,"bemused",2) 
                 else:
+                        #she's mad
+                        call Statup(Girl, "Love", 70, -2)
+                        call Statup(Girl, "Inbt", 50, 1)
+                        call AnyFace(Girl,"angry",2) 
+                call expression Girl + "_First_Topless" pass (1)
+                call AnyOutfit(Girl,12,TempUptop=0) #resets uptop
+                "She tugs her top back into place."
+                if Count <= 0:
+                        call Statup(Girl, "Love", 70, -5)
+                        call Statup(Girl, "Obed", 60, -2)
+                        call Statup(Girl, "Inbt", 60, 2)
+                        ch_n "You could have told me."
                     
-                    if Girl == "Rogue": 
-                            ch_r "Um, actually, I'm not really comfortable being so. . . exposed?"
-                            ch_r "I'll just see you around later."
-                    elif Girl == "Kitty":
-                            ch_k "I'm[K_like]totally exposed here?"
-                            ch_k "I'm just going to head out."
-                    elif Girl == "Emma": 
-                            ch_e "I really shouldn't be \"hanging out\" in such a state."
-                            ch_e "We can talk later."
-                    elif Girl == "Laura": 
-                            ch_l "I probably shouldn't hang out like this."
-                            ch_l "We'll talk later."
-                    call Remove_Girl(Girl)  
-        
-        if Line == "leaving":
-                call AnyOutfit(Girl,6)
-                call AnyOutfit(Girl,6)
-        $ Line = 0
-        return 0
-# End Girl Caught Shower / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+        $ Count = 0
+        return
+# End Pool Topless / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
 
 # Start Love You Girl / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /   
@@ -6417,5 +6743,2200 @@ label Love_You(Girl=0):
     
  
 # End Love You Girl / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /   
+
+
+# Start Hold Hands / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /   
+label Hold_Hands(Girl=0):
+        # Called whenever you say "Hold Hands" in the flirt menu
+        if Girl == "Rogue" and R_Arms:
+            menu:
+                "Gloves or no Gloves?"
+                "Gloves":
+                    pass
+                "No Gloves":
+                    ch_p "Hey, could you lose the gloves for a second?"
+                    ch_r "Ok, [R_Petname]. . ."
+                    $ R_Arms = 0
+        "You reach down and grab [Girl]'s hand in yours."        
+        if ApprovalCheck(Girl, 800,"L"):
+                call AnyFace(Girl,"smile",1,Eyes="closed")  
+                "She squeezes your hand back and leans her shoulder against yours."  
+                $ Count = 10
+        elif ApprovalCheck(Girl, 1200):
+                call AnyFace(Girl,"bemused",1,Brows="confused")   
+                "She gives your hand a light squeeze in return."    
+                $ Count = 4
+        elif ApprovalCheck(Girl, 800):
+                call AnyFace(Girl,"bemused",2,Brows="confused")  
+                "She stiffens a bit, but leaves her hand in yours." 
+                call AnyFace(Girl,"bemused",1,Eyes="down")   
+                $ Count = 2   
+        else:
+                #not cool with it
+                call AnyFace(Girl,"angry",1)   
+                call Statup(Girl, "Love", 40, -1)
+                call Statup(Girl, "Love", 60, -1)
+                call Statup(Girl, "Obed", 60, 2)
+                call Statup(Girl, "Obed", 80, 1)
+                call Statup(Girl, "Inbt", 50, 1)   
+                if Girl == "Rogue" and not R_Arms:
+                    call Statup(Girl, "Obed", 60, 2)
+                    call Statup(Girl, "Lust", 30, 5)                    
+                    $ R_Addict -= 2            
+                    $ R_Addictionrate += 1 if R_Addictionrate < 5 else 0 
+                    $ R_Arms = "gloved"
+                    "She slaps your hand away, putting her gloves back on."
+                else:
+                    "She slaps your hand away."
+                ch_n "Don't get too familiar."
+                return
+                
+        if Girl == "Rogue" and not R_Arms:
+                $ R_Addictionrate += 1 if R_Addictionrate < 5 else 0 
+                
+        while Count:
+            $ Round -= 5
+            if ApprovalCheck(Girl, 800,"L"):
+                if Count >= 8:
+                    call Statup(Girl, "Love", 90, 2)
+                    call Statup(Girl, "Obed", 70, 2)
+                    call Statup(Girl, "Lust", 30, 2)
+            elif ApprovalCheck(Girl, 1200):
+                if Count >= 3:
+                    call Statup(Girl, "Love", 80, 3)
+                    call Statup(Girl, "Obed", 70, 2)
+                    call Statup(Girl, "Lust", 30, 1)
+            elif ApprovalCheck(Girl, 800):
+                    call Statup(Girl, "Love", 70, 2)
+                    call Statup(Girl, "Obed", 50, 2)
+            if Girl == "Rogue" and not R_Arms:
+                    call Statup(Girl, "Lust", 50, 3)
+                    $ R_Addict -= 2    
+                    $ Count += 1 if Count <= 1 else 0 #she keeps it up
+                    if R_Lust >= 30:                        
+                        call AnyFace(Girl,"sly",2)   
+                            
+            menu:
+                "Keep holding hands.":
+                        pass                        
+                "Stop holding hands.":
+                        $ Count = 0
+                        call AnyFace(Girl,"bemused",1)   
+                        return
+            $ Count -= 1            
+            $ Count = 0 if Round <= 10 else Count
+            
+        #loop breaks. . .
+        
+        call AnyWord(Girl,1,"holdhands","holdhands") #adds the "holdhands" trait to recent and daily actions
+        
+        if not ApprovalCheck(Girl, 800,"L") and not ApprovalCheck(Girl, 1200):
+                # she's a little creeped out
+                call AnyFace(Girl,"sadside",1,Brows="confused")   
+                call Statup(Girl, "Love", 60, -2)
+                call Statup(Girl, "Obed", 60, -2)
+                call Statup(Girl, "Inbt", 50, 3)
+                call Statup(Girl, "Lust", 60, -5)   
+        else:
+                call AnyFace(Girl,"smile",1)  
+        ch_n "Ok, that's enough of that. . ."
+        return
+  
+# End Hold Hands / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /        
+
+# Start break-up dialog / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+label Breakup(Girl=0,Repeats=0,Other=0,Anger = 0): 
+        # call Breakup("Rogue") from Chat
+        # Repeats is number of times you've broken up, Other is a potential other woman, Anger is a meter that ends things at 4+
+        
+        call AnyWord(Girl,1,"breakup talk","breakup talk",0,0)
+        if Girl == "Rogue":
+                $ Repeats = R_Break[1]
+        elif Girl == "Kitty":
+                $ Repeats = K_Break[1]
+        elif Girl == "Emma":
+                $ Repeats = E_Break[1]
+        elif Girl == "Laura":
+                $ Repeats = L_Break[1]
+                
+        if Repeats > 3:       
+                call AnyFace(Girl,"angry")
+                call Statup(Girl, "Love", 50, -5, 1)
+                call Statup(Girl, "Love", 80, -10, 1)
+                call Statup(Girl, "Obed", 30, -5, 1)
+                call Statup(Girl, "Obed", 50, -10, 1)
+                call Statup(Girl, "Inbt", 50, 3)
+                call Statup(Girl, "Inbt", 80, 1)
+                call AnyLine(Girl,"This is getting old.")       
+                $ Anger -= 1
+        elif Repeats:
+                call AnyFace(Girl,"surprised")
+                call Statup(Girl, "Love", 50, -5, 1)
+                call Statup(Girl, "Obed", 30, -5, 1)
+                call Statup(Girl, "Inbt", 80, 1) 
+                call AnyLine(Girl,"What, again?")
+                call AnyFace(Girl,"angry")
+                $ Anger += 1
+        else:
+                call AnyFace(Girl,"surprised")  
+                call AnyLine(Girl,"What?! Why?")
+        
+        $ Line = 0
+        menu:
+            "It's not you, it's me.":  
+                    call Statup(Girl, "Love", 200, -5)
+                    call Statup(Girl, "Obed", 80, -5)
+                    call Statup(Girl, "Inbt", 50, 3) 
+                    call Statup(Girl, "Inbt", 70, 1) 
+                    call AnyFace(Girl,"confused")
+                
+            "I just think we need a break.":
+                    call Statup(Girl, "Love", 200, -5)
+                    call AnyFace(Girl,"sad")
+                
+            "I've found someone else.":      
+                    $ Anger += 1
+                    call Statup(Girl, "Love", 200, -10)
+                    call Statup(Girl, "Obed", 50, 3)
+                    call Statup(Girl, "Obed", 80, 3)
+                    call Statup(Girl, "Inbt", 50, -5)  
+                    call AnyFace(Girl,"angry")
+                    call AnyLine(Girl,"Who is it?")
+                    menu:
+                        ch_n "Who is it?"
+                        "Rogue" if Girl != "Rogue":           
+                                $ Other = "Rogue"
+                        "Kitty" if Girl != "Kitty" and "met" in K_History:           
+                                $ Other = "Kitty"
+                        "Emma" if Girl != "Emma" and "met" in E_History:           
+                                $ Other = "Emma"
+                        "Laura" if Girl != "Laura" and "met" in L_History:           
+                                $ Other = "Laura"
+                        "I won't say.":
+                                call Statup(Girl, "Love", 200, -5)                                        
+                                if Girl != "Rogue":   
+                                        $ Other = "Rogue"
+                                if Girl != "Kitty" and "met" in K_History:  
+                                        if not Other or K_SEXP > R_SEXP:
+                                            $ Other = "Kitty"
+                                if Girl != "Emma" and "met" in E_History:     
+                                        if not Other or (E_SEXP > K_SEXP and E_SEXP > R_SEXP):      
+                                            $ Other = "Emma"
+                                if Girl != "Laura" and "met" in L_History: 
+                                        if not Other or (L_SEXP > E_SEXP and L_SEXP > K_SEXP and L_SEXP > R_SEXP):           
+                                            $ Other = "Laura"
+                                if not Other:
+                                        ch_n "Well it's got to be someone. . ."
+                                else:    
+                                        call AnyLine(Girl,"It's "+Other+", isn't it.")
+                        "I was kidding.":  
+                                call Statup(Girl, "Love", 200, -5)
+                                call Statup(Girl, "Obed", 50, 3)  
+                                call AnyFace(Girl,"angry")
+                                if Girl == "Rogue":
+                                        ch_r "That was a pretty rude way to deflect there." 
+                                elif Girl == "Kitty":
+                                        ch_k "I'll[K_like]kid you!"
+                                elif Girl == "Emma":
+                                        ch_e "Oh, you do *not* want to \"kid\" me about that."
+                                elif Girl == "Laura":
+                                        ch_l ". . ." 
+                                call AnyFace(Girl,"normal")
+                                $ Anger += 1
+                                    
+            "I'm just done with you.":  
+                    call AnyFace(Girl,"angry")
+                    call Statup(Girl, "Love", 50, 3)
+                    call Statup(Girl, "Love", 200, -15)
+                    call Statup(Girl, "Obed", 50, 5)
+                    call Statup(Girl, "Obed", 80, 5)
+                    call Statup(Girl, "Obed", 200,5)
+                    call Statup(Girl, "Inbt", 50, -5)                
+                    $ Anger += 1
+        #end first question
+        
+        if not Other: 
+                #"denial":
+                call AnyFace(Girl,"sad")
+                if ApprovalCheck(Girl, 900, "O"):
+                        #high obedience
+                        call AnyLine(Girl,"If that's really what you want. . .")
+                elif ApprovalCheck(Girl, 900, "L"):
+                        #high love
+                        call AnyLine(Girl,"But I love you so much!")
+                elif ApprovalCheck(Girl, 900, "I"):
+                        #super casual
+                        call AnyLine(Girl,"If that's how you feel. . .")
+                elif ApprovalCheck(Girl, 1500):
+                        #general mix
+                        call AnyLine(Girl,"But we mean so much to each other!")
+                else: 
+                        #doesn't care too much
+                        call AnyLine(Girl,"Are you sure this is what you want?")
+                $ Line = "bargaining"
+                
+        else:
+            #if there's another girl. . .
+            #GirlLikeCheck("Rogue","Kitty") if Rogue is the girl talking and Kitty is the "other girl"
+            $ Cnt = int((GirlLikeCheck(Girl,Other) - 500)/2) 
+                        
+            if GirlLikeCheck(Girl,Other) >= 800: 
+                    call Statup(Girl, "Lust", 70, 5)
+                    call Statup(Girl, "Obed", 50, 5)
+                    call Statup(Girl, "Obed", 200, 5)
+                    call Statup(Girl, "Inbt", 50, 1)
+                    call Statup(Girl, "Inbt", 200, 5) 
+                    call AnyFace(Girl,5,2) #blush2
+                    call AnyLine(Girl,"Well, you have good tastes, at least.")
+                    call AnyFace(Girl,5,1) #blush1
+            elif GirlLikeCheck(Girl,Other) >= 600:
+                    call Statup(Girl, "Love", 50, -5, 1)
+                    call Statup(Girl, "Love", 80, -10, 1)
+                    call Statup(Girl, "Obed", 50, 5)
+                    call Statup(Girl, "Obed", 200, 3)
+                    if Other == "Emma":                            
+                            call AnyLine(Girl,"With our teacher?!")
+                    elif Girl == "Emma":
+                            ch_e "And I always did like her in class. . ."
+                    elif Girl == "Laura":
+                            ch_l "I do kinda like her." 
+                    else:
+                            call AnyLine(Girl,"With one of my friends?!")
+                    call AnyFace(Girl,"normal")
+                    $ Anger += 1
+            elif GirlLikeCheck(Girl,Other) >= 400:
+                    call Statup(Girl, "Love", 50, -3, 1)
+                    call Statup(Girl, "Love", 80, -5, 1)
+                    call Statup(Girl, "Obed", 80, 5)
+                    call Statup(Girl, "Inbt", 50, 1)
+                    call Statup(Girl, "Inbt", 80, 3) 
+                    call AnyLine(Girl,"You know you can do better.")
+            else: #GirlLikeCheck(Girl,Other) < 400
+                    call Statup(Girl, "Love", 50, -5, 1)
+                    call Statup(Girl, "Obed", 80, 3)
+                    call Statup(Girl, "Inbt", 50, 2)
+                    call Statup(Girl, "Inbt", 80, 5) 
+                    call AnyFace(Girl,"angry")
+                    call AnyLine(Girl,"With that skank?!")
+                    $ Anger += 2
+                
+            if ApprovalCheck(Girl, 2000, Bonus = Cnt):
+                    call Statup(Girl, "Lust", 70, 5)
+                    call AnyFace(Girl,"sexy")
+                    call AnyLine(Girl,"Why not both of us?")
+                    $ Line = "threeway"
+            else:
+                    call AnyFace(Girl,"sad")
+                    call AnyLine(Girl,"You would rather be with her than with me?")
+                    menu:
+                        ch_n "You would rather be with her than with me?"
+                        "Yes, I would.":    
+                                call Statup(Girl, "Love", 50, -3, 1)
+                                call Statup(Girl, "Love", 80, -5, 1)
+                                call Statup(Girl, "Obed", 30, 1)
+                                call Statup(Girl, "Obed", 50, 1)                   
+                                $ Anger += 1
+                                if Girl == "Rogue":
+                                        ch_r "Well then I don't think I can help you." 
+                                elif Girl == "Kitty":
+                                        ch_k "!!!"
+                                elif Girl == "Emma":
+                                        ch_e "I suppose you've made your choice then."
+                                elif Girl == "Laura":
+                                        ch_l "Your loss." 
+                                $ Line = "bargaining"
+                            
+                        "I'd rather be with both of you.":      
+                                $ Line = "threeway"
+                            
+                        "No, I'm sorry, never mind that.": 
+                                call Statup(Girl, "Love", 50, -3, 1)
+                                call Statup(Girl, "Obed", 80, -5)
+                                call AnyLine(Girl,"Not doing yourself any favors there. . .")
+                                $ Line = "bargaining"
+        #end "if there's another" or not
+        
+        if Line == "threeway" and Anger < 4: 
+                call AnyLine(Girl,"Date us both at once? What does she think about that?")
+                menu Breakup_Threeway_Offer:
+                        ch_n "Date us both at once? What does she think about that?"
+                        "She said it would be ok with her." if CheckWord(Other,"Traits","poly "+ Girl) or Girl+"Yes" in P_Traits: 
+                                #"poly Rogue" in K_Traits, or "KittyYes" in P_Traits
+                                if ApprovalCheck(Girl, 1800, Bonus = Cnt):
+                                        call AnyFace(Girl,"smile", 1)
+                                        call Statup(Girl, "Lust", 70, 5)     
+                                        call Statup(Girl, "Obed", 50, 5)
+                                        call Statup(Girl, "Obed", 80, 3)  
+                                        call Statup(Girl, "Inbt", 50, 3)
+                                        call Statup(Girl, "Inbt", 80, 1)
+                                        if GirlLikeCheck(Girl,Other) < 400:
+                                                call AnyFace(Girl,"angry") 
+                                                if Girl == "Rogue":
+                                                        ch_r "I can't stand that bitch, but for you I'll put up with her." 
+                                                elif Girl == "Kitty":
+                                                        ch_k "That bitch! Fine, I'll put up with her."
+                                                elif Girl == "Emma":
+                                                        ch_e "I suppose I can be the better woman here. . ."
+                                                        ch_e "Not that it's hard to accomplish."
+                                                elif Girl == "Laura":
+                                                        ch_l "I can keep my claws in. . . for you."   
+                                        elif GirlLikeCheck(Girl,Other) >= 700:
+                                                call AnyFace(Girl,"sexy")   
+                                                call AnyLine(Girl,"I have to say I've kind of been thinking about it myself.")                     
+                                        elif ApprovalCheck(Girl,0,"L",Check=1) >= ApprovalCheck(Girl,0,"O",Check=1):
+                                                #R_Love >= R_Obed:
+                                                call AnyFace(Girl,"sad")
+                                                call AnyLine(Girl,"Just so long as we can be together, I can share.") 
+                                        else:
+                                                #Inbt highest
+                                                call AnyLine(Girl,"If she's in, I am.")  
+                                                
+                                        call AnyWord(Girl,1,0,0,"poly "+Other,0) #adds "poly Other" to traits                                    
+                                else:      
+                                        $ Anger += 2
+                                        call Statup(Girl, "Love", 50, -10, 1)
+                                        call Statup(Girl, "Love", 80, -15, 1)
+                                        call Statup(Girl, "Obed", 50, 3)
+                                        call Statup(Girl, "Obed", 80, 3) 
+                                        call Statup(Girl, "Inbt", 50, 5)
+                                        call Statup(Girl, "Inbt", 80, 3)
+                                        call AnyFace(Girl,"angry", 1)
+                                        call AnyLine(Girl,"Well maybe she did, but I don't want to share." )
+                                        $ Line = "bargaining"
+                        #End "she said it'd be ok.
+                            
+                        "I have no idea.": #if not K_Break[0]:
+                                $ Line = "ask " + Other #"ask Kitty"
+                    
+                        "She's not into it.": #if K_Break[0]:
+                                if GirlLikeCheck(Girl,Other) >= 700:
+                                        call Statup(Girl, "Love", 200, -5)
+                                elif GirlLikeCheck(Girl,Other) <= 400:
+                                        call Statup(Girl, "Love", 90, 5)
+                                call AnyLine(Girl,"Well then why even bring it up?")
+                                
+                                        
+                        "Well, even if she doesn't agree. . .": 
+                                $ Line = "ask " + Other #"ask Kitty"  
+                                if GirlLikeCheck(Girl,Other) >= 700:
+                                        call AnyFace(Girl,"angry")
+                                        call Statup(Girl, "Love", 200, -5)
+                                elif GirlLikeCheck(Girl,Other) <= 400:
+                                        call Statup(Girl, "Love", 90, 5)
+                
+                if Line == "ask " + Other and GirlLikeCheck(Girl,Other) >= 700:
+                                #if previous responses had her wanting to ask the other girl about it
+                                call AnyLine(Girl,"You want me to ask her for you?")
+                                menu:                         
+                                    ch_n "You want me to ask her for you?"
+                                    "Yes, that'd be a good idea.":
+                                            call Statup(Girl, "Love", 90, 5)
+                                            call Statup(Girl, "Obed", 70, 1)
+                                            call Statup(Girl, "Inbt", 80, 5)
+                                            call AnyFace(Girl,"sexy")   
+                                            call AnyLine(Girl,"I guess I could.")
+                                            call AnyWord(Girl,1,0,0,"ask "+Other,0) #adds "ask Other" to traits
+                                            call AnyWord(Girl,1,0,0,"poly "+Other,0) #adds "poly Other" to traits     
+                                    "No, let's just keep it under cover.":   
+                                            call Statup(Girl, "Love", 50, -5, 1)
+                                            call Statup(Girl, "Love", 80, -5, 1)
+                                            call Statup(Girl, "Obed", 80, 5)
+                                            call Statup(Girl, "Inbt", 50, 3)   
+                                            call AnyLine(Girl,"I don't know. . .")
+                        
+                if Line != "bargaining" and not CheckWord(Girl,"Traits","poly "+ Other): 
+                        #if the answer is not "bargaining," but also the girl has not agreed yet. . .
+                        #"poly Kitty" not in R_Traits:    
+                        if not CheckWord(Girl,"Traits","ask "+ Other) and not ApprovalCheck(Girl, 1800, Bonus = -(int((GirlLikeCheck(Girl,Other) - 600)/2))): 
+                                #"ask Kitty" not in R_Traits
+                                #checks if Girl likes you more than Other
+                                call Statup(Girl, "Love", 50, -5, 1)
+                                call Statup(Girl, "Obed", 80, -10, 1)
+                                call Statup(Girl, "Inbt", 50, 5)
+                                call AnyFace(Girl,"angry", 1)
+                                if not ApprovalCheck(Girl, 1800):         
+                                        call AnyLine(Girl,"Maybe I don't like you that much either.")  
+                                else:
+                                        call Statup(Girl, "Love", 80, -10, 1)
+                                        call Statup(Girl, "Obed", 50, -5, 1)
+                                        if Girl == "Emma":
+                                                ch_e "I'd rather not be dallying with a student's boyfriend. . ."
+                                        elif Other == "Emma":                            
+                                                call AnyLine(Girl,"I don't want to get caught with the teacher's boyfriend!")
+                                        else:
+                                                call AnyLine(Girl,"I'm not really cool with that, "+Other+"'s a friend of mine." ) 
+                                $ Anger += 1
+                                $ Line = "bargaining"                                 
+                        else:   
+                                #if she agrees to polygamy        
+                                call Statup(Girl, "Obed", 30, 5)
+                                call Statup(Girl, "Obed", 50, 3)
+                                call Statup(Girl, "Inbt", 50, 5)
+                                call Statup(Girl, "Inbt", 80, 1)
+                                call AnyFace(Girl,"sad")           
+                                if GirlLikeCheck(Girl,Other) < 400:
+                                        call AnyFace(Girl,"angry")
+                                        if Girl == "Rogue":
+                                                ch_r "I can't stand that bitch, but for you I'll put up with her." 
+                                        elif Girl == "Kitty":
+                                                ch_k "That bitch! Fine, I'll put up with her."
+                                        elif Girl == "Emma":
+                                                ch_e "I suppose I can be the better woman here. . ."
+                                                ch_e "Not that it's hard to accomplish."
+                                        elif Girl == "Laura":
+                                                ch_l "I can keep my claws in. . . for you."   
+                                elif GirlLikeCheck(Girl,Other) >= 700:
+                                        call AnyFace(Girl,"sexy")   
+                                        call AnyLine(Girl,"I have to say I've kind of been thinking about it myself.")                     
+                                elif ApprovalCheck(Girl,0,"L",Check=1) >= ApprovalCheck(Girl,0,"O",Check=1):
+                                        #R_Love >= R_Obed:
+                                        call AnyFace(Girl,"sad")
+                                        call AnyLine(Girl,"Just so long as we can be together, I can share.") 
+                                else:
+                                        #Inbt highest
+                                        call AnyLine(Girl,"If she's in, I am.")                                                  
+                                call AnyWord(Girl,1,0,0,"poly "+Other,0) #adds "poly Other" to traits   
+                                if CheckWord(Girl,"Traits","ask "+ Other):
+                                        #"ask Kitty" in R_Traits:
+                                        call AnyLine(Girl,"I'll talk to "+Other+" about it.")
+                                else:
+                                        call AnyFace(Girl,"sad")                                        
+                                        call AnyWord(Girl,1,0,0,"downlow",0) #adds "downlow" to traits 
+                                        if Girl == "Rogue":
+                                                ch_r "I guess we can keep this on the downlow, for now at least." 
+                                        elif Girl == "Kitty":
+                                                ch_k "Oooh, our little secret. . ."
+                                        elif Girl == "Emma":
+                                                ch_e "I suppose I can be discreet."
+                                        elif Girl == "Laura":
+                                                ch_l "I can keep a secret."  
+                                    
+                                        if GirlLikeCheck(Girl,Other) >= 800:
+                                            call AnyLine(Girl, "Please talk to "+Other+" about sharing you openly though.")
+                                        elif GirlLikeCheck(Girl,Other) >= 500:
+                                            call AnyLine(Girl,"I really don't like going behind "+Other+"'s back though.")
+                                        else:
+                                            call AnyLine(Girl,"Might be fun, sneaking around behind her back.")
+                #End Threeway
+        
+        if Line == "bargaining" and Anger < 4: 
+                call AnyFace(Girl,"sad")
+                call AnyLine(Girl,"You're sure there's no way I could convince you to stay?")
+                menu Breakup_Bargaining:            
+                    ch_n "You're sure there's no way I could convince you to stay?"
+                    "Sorry, I've changed my mind.":
+                            call Statup(Girl, "Obed", 80, 5)
+                            if ApprovalCheck(Girl, 1500):   
+                                    $ Line = "makeup"
+                                    call Statup(Girl, "Love", 80, 5)
+                                    if Girl == "Rogue":
+                                            ch_r "That's wonderful!"
+                                    elif Girl == "Kitty":
+                                            ch_k "Ok!"
+                                    elif Girl == "Emma":
+                                            ch_e "I can accept that as an apology. . ."
+                                    elif Girl == "Laura":
+                                            ch_l "Huh? Ok. . ."  
+                            else:
+                                    $ Line = "breakup"
+                                    call Statup(Girl, "Love", 90, -5)
+                                    call Statup(Girl, "Obed", 80, -5)
+                                    call Statup(Girl, "Inbt", 80, 10)
+                                    if Girl == "Rogue":
+                                            ch_r "You know what? Save it. We're done."
+                                    elif Girl == "Kitty":
+                                            ch_k "Too little, too late. . ."
+                                    elif Girl == "Emma":
+                                            ch_e "I'm afraid it's too late for apologies."
+                                    elif Girl == "Laura":
+                                            ch_l "Uh-huh. Too late for that."  
+                    "My mind's made up.":
+                            call Statup(Girl, "Obed", 80, 5)
+                            $ Line = "breakup"
+                    "Well, you could do something for me. . .[[sex menu]":                           
+                            call AnyWord(Girl,1,"bargainsex",0,0,0) #adds "bargainsex" to recent                            
+                            call Statup(Girl, "Obed", 80, 3)
+                            $ Tempmod = 50
+                            $ MultiAction = 0
+                            call expression Girl + "_SexMenu" #call Rogue_SexMenu 
+                            $ MultiAction = 1
+                            menu:
+                                "Ok, I guess we can give it another shot.":
+                                        call Statup(Girl, "Love", 80, 3)
+                                        call Statup(Girl, "Obed", 80, 5)
+                                        $ Line = "makeup"
+                                        call AnyFace(Girl,"smile")
+                                
+                                "That was nice, but we're still over.":
+                                        call AnyFace(Girl,"angry")
+                                        call Statup(Girl, "Love", 50, -5, 1)
+                                        call Statup(Girl, "Love", 80, -10, 1)
+                                        call Statup(Girl, "Obed", 50, 15)
+                                        call Statup(Girl, "Obed", 80, 10)
+                                        $ Line = "breakup"                              
+                                        $ Anger += 4
+                                        
+                    "Maybe if we brought someone else into this relationship?" if not Other and not CheckWord(Girl,"Recent","bargainthreeway"): 
+                            # if you haven't just tried this
+                            call AnyWord(Girl,1,"bargainthreeway",0,0,0) #adds "bargainthreeway" to recent
+                            call AnyLine(Girl,"Who?")
+                            menu:
+                                ch_n "Who?"
+                                "Rogue?" if Girl != "Rogue":
+                                        $ Other = "Rogue"
+                                "Kitty?" if Girl != "Kitty" and "met" in K_History:
+                                        $ Other = "Kitty"
+                                "Emma?" if Girl != "Emma" and "met" in E_History:
+                                        $ Other = "Emma"
+                                "Laura?" if Girl != "Laura" and "met" in L_History:
+                                        $ Other = "Laura"
+                                        
+                                "Up to you?":
+                                        call AnyFace(Girl,"confused")
+                                        #picks her favorite girl. . .
+                                        if Girl != "Rogue":
+                                                $ Other = "Rogue"
+                                        if Girl != "Kitty":
+                                                if Other == "Rogue":
+                                                    if GirlLikeCheck(Girl,"Kitty") > GirlLikeCheck(Girl,"Rogue"):
+                                                        $ Other = "Kitty"
+                                                else:
+                                                    $ Other = "Kitty"                                    
+                                        if Girl != "Emma":
+                                                if Other == "Rogue":
+                                                    if GirlLikeCheck(Girl,"Emma") > GirlLikeCheck(Girl,"Rogue"):
+                                                        $ Other = "Emma"
+                                                elif Other == "Kitty":
+                                                    if GirlLikeCheck(Girl,"Emma") > GirlLikeCheck(Girl,"Kitty"):
+                                                        $ Other = "Emma"
+                                                else:
+                                                    $ Other = "Emma"                             
+                                        if Girl != "Laura":
+                                                if Other == "Rogue":
+                                                    if GirlLikeCheck(Girl,"Laura") > GirlLikeCheck(Girl,"Rogue"):
+                                                        $ Other = "Laura"
+                                                elif Other == "Kitty":
+                                                    if GirlLikeCheck(Girl,"Laura") > GirlLikeCheck(Girl,"Kitty"):
+                                                        $ Other = "Laura"
+                                                elif Other == "Emma":
+                                                    if GirlLikeCheck(Girl,"Laura") > GirlLikeCheck(Girl,"Emma"):
+                                                        $ Other = "Laura"
+                                                else:
+                                                    $ Other = "Laura" 
+                                        call AnyLine(Girl,Other+"?")
+                                        
+                                "Never mind, silly question.":                            
+                                        call Statup(Girl, "Love", 200, -10)
+                                        call Statup(Girl, "Obed", 50, -10, 1)
+                                        $ Anger += 1
+                                        call AnyFace(Girl,"angry")
+                                        jump Breakup_Bargaining
+                                                     
+                            if Other:
+                                    call AnyFace(Girl,"confused")
+                                    jump Breakup_Threeway_Offer 
+                               
+                if Anger < 3 and Line != "breakup" and Line != "makeup":
+                        #if no decision and she's not pissed yet, loop   
+                        jump Breakup_Bargaining
+        # End Bargaining
+        
+        
+                
+        if Line == "breakup" or Anger >= 4:
+                if Anger >= 4:
+                        #if she's pissed
+                        call AnyFace(Girl,"angry")
+                        call Statup(Girl, "Love", 60, -10, 1)
+                        call Statup(Girl, "Obed", 50, -5)
+                        call Statup(Girl, "Inbt", 70, 5)
+                        if Girl == "Rogue":
+                                ch_r "Well fuck you then!"
+                        elif Girl == "Kitty":
+                                ch_k "Jerk!!"
+                        elif Girl == "Emma":
+                                ch_e "Scum."
+                        elif Girl == "Laura":
+                                ch_l "You're gonna want to back up a few steps." 
+                else:
+                        #if she's just sad
+                        call Statup(Girl, "Inbt", 70, 5)
+                        call AnyFace(Girl,"sad")
+                        
+                        if ApprovalCheck(Girl,0,"L",Check=1) >= ApprovalCheck(Girl,0,"O",Check=1):
+                                #R_Love >= R_Obed:
+                                if Girl == "Rogue":
+                                        ch_r "I'll really miss you."
+                                elif Girl == "Kitty":
+                                        ch_k "I was[K_like]totally all-in on this!"
+                                elif Girl == "Emma":
+                                        ch_e "I'll be devastated."
+                                        ch_e "For at least five minutes."
+                                elif Girl == "Laura":
+                                        ch_l ". . ." 
+                                call AnyWord(Girl,1,0,0,"ex",0) #adds "ex" to traits
+                        elif ApprovalCheck(Girl,0,"O",Check=1) >= ApprovalCheck(Girl,0,"I",Check=1):
+                                #R_Obed >= R_Inbt:
+                                call Statup(Girl, "Obed", 200, -10)
+                                if Girl == "Rogue":
+                                        ch_r "You're abandoning me."
+                                elif Girl == "Kitty":
+                                        ch_k "I'm[K_like]not sure what to do next."
+                                elif Girl == "Emma":
+                                        ch_e "I suppose I'll have to make do."
+                                elif Girl == "Laura":
+                                        ch_l "I'll need some new options." 
+                                call AnyWord(Girl,1,0,0,"ex",0) #adds "ex" to traits
+                        else:
+                                #inbt highest
+                                if Girl == "Rogue":
+                                        ch_r "Now who'll I fuck?" 
+                                elif Girl == "Kitty":
+                                        ch_k "I guess I'll[K_like]have to find someone else to bang?"
+                                elif Girl == "Emma":
+                                        ch_e "I suppose I'll have other options."
+                                elif Girl == "Laura":
+                                        ch_l "Ok, later." 
+                                #does not add "ex" to traits because she doesn't care that much
+            
+                call DrainWord(Girl,"dating",0,0,1) #removes "dating" from traits
+                if Girl in P_Harem:
+                        $ P_Harem.remove(Girl)
+                
+                if Girl == "Rogue":
+                        $ R_Break[0] = 5 + R_Break[1] + R_Cheated
+                        $ R_Break[1] += 1
+                elif Girl == "Kitty":
+                        $ K_Break[0] = 5 + K_Break[1] + K_Cheated
+                        $ K_Break[1] += 1
+                elif Girl == "Emma":
+                        $ E_Break[0] = 5 + E_Break[1] + E_Cheated
+                        $ E_Break[1] += 1
+                elif Girl == "Laura":
+                        $ L_Break[0] = 5 + L_Break[1] + L_Cheated
+                        $ L_Break[1] += 1
+        #end "if you break up"
+                
+            
+        else: #Stay together.
+                call AnyFace(Girl,"smile")       
+                call AnyLine(Girl,"I'm glad we could work things out. . .")         
+                if ApprovalCheck(Girl,0,"L",Check=1) >= ApprovalCheck(Girl,0,"O",Check=1):
+                        #R_Love >= R_Obed:
+                        call Statup(Girl, "Love", 200, 3)
+                        if Girl == "Rogue":
+                                ch_r "I'd really miss you."
+                        elif Girl == "Kitty":
+                                ch_k "I'd[K_like]totes miss you!"
+                        elif Girl == "Emma":
+                                ch_e "I'm in too deep, [E_Petname]."
+                        elif Girl == "Laura":
+                                ch_l "I. . . care about you."
+                elif ApprovalCheck(Girl,0,"O",Check=1) >= ApprovalCheck(Girl,0,"I",Check=1):
+                        #R_Obed >= R_Inbt:
+                        if Girl == "Rogue":
+                                ch_r "I need you with me."
+                        elif Girl == "Kitty":
+                                ch_k "I'm[K_like]totally all-in on this."
+                        elif Girl == "Emma":
+                                ch_e "I don't think I could do without you."
+                        elif Girl == "Laura":
+                                ch_l "I need you too much."
+                else:
+                        #inbt highest, still a break-up, but friendly
+                        if Girl == "Rogue":
+                                ch_r "We have fun together. Let's keep it at that." 
+                        elif Girl == "Kitty":
+                                ch_k "You[K_like]really dodged a bullet on that one."
+                        elif Girl == "Emma":
+                                ch_e "It's too much trouble finding another toy."
+                        elif Girl == "Laura":
+                                ch_l "Ok, fine."
+                                            
+        $ Line = 0
+        
+        return
+        #End Break-up
+        
+        
+# End Break-up/ / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+# Start checks for cheating and sharing / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+label CheatCheck(Counter=4,Counter2=4,Roster=["Player","Rogue","Kitty","Emma","Laura"]):
+        # This checks whether any girl saw you with any other girl today. 
+        # Called by EventCalls
+        # If you're in the room with that girl, it launches the cheated scene, otherwise, it has her ask you about it later. 
+        # Roster[Counter] is the first girl, Roster[Counter2] is the second girl
+        # loops through girl 2 options until finished, then next girl 1 option, until done        
+        
+        # add an aspect to account for hooking up with multiple girls that have not yet been accounted for. . .
+        
+        $ Counter = 4 #len(Roster)-1   
+        while Counter:
+                $ Counter2 = 4 #len(Roster)-1 #resets Counter 2
+                while Counter2:
+                    if "meet girl" in P_DailyActions:
+                                        #skips if you already have an appointment 
+                                        $ Counter = 1
+                                        $ Counter2 = 1                                    
+                    elif CheckWord(Roster[Counter],"Traits","dating") or Roster[Counter] in P_Harem:
+                            #if "dating" in R_Traits or "Rogue" in P_Harem: 
+                            if CheckWord(Roster[Counter],"Traits","saw with "+Roster[Counter2]):
+                                        #if "saw with Kitty" in R_Traits:      
+                                        if Roster[Counter] in P_Harem and Roster[Counter2] in P_Harem:                
+                                                #if both girls were in the harem, this shouldn't happen 
+                                                call DrainWord(Roster[Counter],"saw with "+Roster[Counter2],0,0,1)      #removes "saw with Kitty" from traits  
+                                        elif bg_current in  ("bg player","bg rogue","bg kitty","bg emma","bg laura"):
+                                                call Cheated(Roster[Counter],Roster[Counter2])  
+                                                $ renpy.pop_call()
+                                                return
+                                        else:
+                                                call AskedMeet(Roster[Counter],"angry")    
+                                                $ Counter = 1
+                                                $ Counter2 = 1             
+                    $ Counter2 -= 1
+                $ Counter -= 1
+        return
+
+
+label ShareCheck(Counter=4,Counter2=4,Roster=["Player","Rogue","Kitty","Emma","Laura"]):
+        # This checks whether one of the girls is supposed to ask the other about joining the harem
+        # Called by EventCalls
+        # Roster[Counter] is the first girl, Roster[Counter2] is the second girl
+        # loops through girl 2 options until finished, then next girl 1 option, until done        
+        
+        # add an aspect to account for hooking up with multiple girls that have not yet been accounted for. . .
+        
+        $ Counter = 4 #len(Roster)-1   
+        while Counter:
+                $ Counter2 = 4 #len(Roster)-1 #resets Counter 2
+                while Counter2:
+                    if "meet girl" in P_DailyActions:
+                                        #skips if you already have an appointment 
+                                        $ Counter = 1
+                                        $ Counter2 = 1                                    
+                    elif CheckWord(Roster[Counter],"Traits","dating") or Roster[Counter] in P_Harem:
+                            #if "dating" in R_Traits or "Rogue" in P_Harem: 
+                            if CheckWord(Roster[Counter],"Traits","ask "+Roster[Counter2]):
+                                        #if "ask Kitty" in R_Traits:      
+                                        if Roster[Counter] in P_Harem and Roster[Counter2] in P_Harem:                
+                                                #if both girls were in the harem, this shouldn't happen 
+                                                call DrainWord(Roster[Counter],"ask "+Roster[Counter2],0,0,1)      #removes "ask Kitty" from traits  
+                                        else:
+                                                call Share(Roster[Counter],Roster[Counter2]) 
+                                                return      
+                    $ Counter2 -= 1
+                $ Counter -= 1
+        return
+
+label Share(Girl=0,Other=0,Breakup=0,Dated=0): 
+        # This checks when one girl asks another to share you.
+        # it is called by Sharecheck 
+        if Other == "Rogue":
+                $ Breakup = R_Break[0]
+                $ Dated = R_Event[5]
+        elif Other == "Kitty":
+                $ Breakup = K_Break[0]
+                $ Dated = K_Event[5]
+        elif Other == "Emma":
+                $ Breakup = E_Break[0]
+                $ Dated = E_Event[5]
+        elif Other == "Laura":
+                $ Breakup = L_Break[0]
+                $ Dated = L_Event[5]
+                
+        call DrainWord(Girl,"ask "+Other,0,0,1) #removes "ask Kitty" from R_Traits 
+                
+        if Breakup:
+                #if the girl was only recently broken up with. . .
+                "[Girl] sends you a text."                
+                call Statup(Other, "Love", 90, -10) 
+                call Statup(Other, "Obed", 80, 10)
+                call Statup(Other, "Inbt", 80, 5)   
+                
+                if Other == "Rogue":
+                        call AnyLine(Girl,"She said to \"stop bother'in her?\"") 
+                elif Other == "Kitty":
+                        call AnyLine(Girl,"She said to \"give it a rest?\"") 
+                elif Other == "Emma":
+                        call AnyLine(Girl,"She said \"when hell freezes over?\"") 
+                elif Other == "Laura":
+                        call AnyLine(Girl,"She said to \"fuck off?\"") 
+                call AnyLine(Girl,"I guess we can see if she comes around on the idea.") 
+                
+        else:                                 
+                if GirlLikeCheck(Other,Girl) >= 800 or ApprovalCheck(Other, 1800) or (ApprovalCheck(Other, 1500) and GirlLikeCheck(Other,Girl) >= 500):
+                        # if she likes the other girl a lot, or likes you a lot, or sort of likes you both. . .                     
+                        call AnyWord(Other,1,0,0,"poly "+Girl,0) #adds "dating" to K_Traits
+                        #call AnyWord(Other,1,0,0,"dating?",0) #adds "dating" to K_Traits      
+                                
+                        call Statup(Other, "Obed", 80, 10)
+                        call Statup(Other, "Inbt", 80, 15)  
+                        
+                        if Dated:
+                                # if you've already done her BF event before. . .
+                                $ P_Harem.append(Other)             
+                                call AnyWord(Girl,1,0,0,"dating",0)     #adds "dating" to traits                   
+                        elif bg_current in ("bg rogue","bg kitty","bg emma","bg laura"):     
+                                #if you're in a character room, launch their boyfriend speech
+                                if Other+"Yes" not in P_Traits: 
+                                        $ P_Traits.append(Other+"Yes")
+                                call expression Other + "_BF" #call Rogue_BF 
+                                $ renpy.pop_call() #skips return to ShareCheck
+                                $ renpy.pop_call() #skips return to EventCalls
+                        else:
+                                # if not in a character room, ask later
+                                if Other+"Yes" not in P_Traits: 
+                                        $ P_Traits.append(Other+"Yes")
+                                call AskedMeet(Other,"bemused")  
+                else:                    
+                        #If Kitty refuses to share you
+                        "[Girl] sends you a text."        
+                        call AnyLine(Girl,"I talked to "+Other+" about sharing you, and she said she wasn't into that sort of thing,") 
+                        if not ApprovalCheck(Other, 2000):
+                                call Statup(Other, "Love", 200, -15)
+                                call Statup(Other, "Obed", 50, -5)
+                                call Statup(Other, "Inbt", 50, 5)
+                                call AnyLine(Girl,"She's just not into you like that.") 
+                        else:
+                                call Statup(Other, "Love", 200, -5)
+                                call AnyLine(Girl,"She doesn't really like me that much. . .") 
+                                
+                        #means that she won't be available to ask again for another 7 days                        
+                        if Other == "Rogue":
+                                $ R_Break[0] = 7
+                        elif Other == "Kitty":
+                                $ K_Break[0] = 7
+                        elif Other == "Emma":
+                                $ E_Break[0] = 7
+                        elif Other == "Laura":
+                                $ L_Break[0] = 7
+                        
+        return
+        
+# Start Cheated on the girl / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+label Cheated(Girl=0,Other=0, Resolution = 0, Cheated=0, B = 0):  
+        # Called by EventCalls->CheatCheck if you got caught cheating
+        #Resolution is Resolution count, you want this over 2 at least. B is the bonus modifier
+        call AnyWord(Girl,1,0,"relationship",0,0)
+        call Shift_Focus(Girl)
+        
+        call AnyFace(Girl,"angry") 
+        if Girl == "Rogue":
+                if R_Loc != bg_current and Girl not in Party:
+                        "Suddenly, Rogue shows up and says she needs to talk to you." 
+                $ R_Loc = bg_current
+                $ Cheated = R_Cheated
+        elif Girl == "Kitty":
+                if K_Loc != bg_current and Girl not in Party:
+                        "Suddenly, Kitty shows up and says she needs to talk to you."
+                $ K_Loc = bg_current
+                $ Cheated = K_Cheated
+        elif Girl == "Emma":
+                if E_Loc != bg_current and Girl not in Party:
+                        "Suddenly, Emma shows up and says she needs to talk to you."
+                $ E_Loc = bg_current
+                $ Cheated = E_Cheated
+        elif Girl == "Laura":
+                if L_Loc != bg_current and Girl not in Party:
+                        "Suddenly, Laura shows up and says she needs to talk to you."
+                $ L_Loc = bg_current
+                $ Cheated = L_Cheated
+        
+        call DrainWord(Girl,"asked meet",0,1) #removes "asked meet" from daily                
+        if "meet girl" in P_DailyActions:
+                $ P_DailyActions.remove("meet girl")
+        
+        call Set_The_Scene
+        call CleartheRoom(Girl)
+        call Taboo_Level
+        
+        if GirlLikeCheck(Girl,Other) >= 900:
+                $ Resolution += 2
+        elif GirlLikeCheck(Girl,Other) >= 800:
+                $ Resolution += 1
+        $ B = int((GirlLikeCheck(Girl,Other) - 500)/2)    
+       
+        $ Resolution -= Cheated if Cheated <= 3 else 3 #Adds to Resolution 3 or less based on cheating
+                
+        if Cheated:
+                call Statup(Girl, "Love", 200, -50) 
+                call Statup(Girl, "Obed", 80, -20)
+                call Statup(Girl, "Inbt", 50, -50)    
+                if Girl == "Rogue":
+                        ch_r "Why're you screw'in around on me again?"
+                elif Girl == "Kitty":
+                        ch_k "Again with this?!"
+                elif Girl == "Emma":
+                        ch_e "I noticed you're back to jumping anything that moves. . ."
+                elif Girl == "Laura":
+                        ch_l "You were screwing someone else again." 
+        else:
+                call Statup(Girl, "Love", 200, -100) 
+                call Statup(Girl, "Obed", 80, -30)
+                call Statup(Girl, "Inbt", 50, -20) 
+                if Girl == "Rogue":
+                        ch_r "What the hell was that about earlier?"  
+                elif Girl == "Kitty":
+                        ch_k "Hello?! What was that?"
+                elif Girl == "Emma":
+                        ch_e "Do you mind explaining what I saw earlier?"
+                elif Girl == "Laura":
+                        ch_l "You were with someone else earlier." 
+            
+        menu:
+                extend ""
+                "I'm sorry.":
+                        call Statup(Girl, "Love", 90, 30) 
+                        call Statup(Girl, "Obed", 80, -10)
+                        $ Line = "sorry"     
+                        $ Resolution += 1
+                    
+                "What do you mean?":
+                        call Statup(Girl, "Love", 200, -10) 
+                        call Statup(Girl, "Obed", 80, 15)
+                        call Statup(Girl, "Inbt", 80, 5)   
+                        
+                        call AnyLine(Girl,"I mean you screwing around with "+Other+"!")  
+                        
+                        menu:
+                                ch_n "I mean you screwing around with [Other]!"
+                                "Oh! I'm sorry!":         
+                                    call Statup(Girl, "Love", 90, 20) 
+                                    call Statup(Girl, "Obed", 80, -10)           
+                                    $ Line = "sorry"
+                                "Oh, that. Yeah.":
+                                    call Statup(Girl, "Love", 200, -20) 
+                                    call Statup(Girl, "Obed", 80, 10)  
+                                    $ Line = "yeah"
+                                    $ Resolution -= 1
+                            
+                "You mean with [Other]?":
+                        call Statup(Girl, "Love", 200, -15) 
+                        call Statup(Girl, "Obed", 80, 20)
+                        call Statup(Girl, "Inbt", 80, 10)  
+                        call AnyLine(Girl,"Yes, \"I mean with "+Other+".\"")                      
+                        
+                        if Girl == "Rogue":
+                                $ Line = "Y'all were screwing around behind my back!"
+                        elif Girl == "Kitty":
+                                $ Line = "Why were you all over her like that?!"
+                        elif Girl == "Emma":
+                                $ Line = "Or didn't you notice who you were fucking?"
+                        elif Girl == "Laura":                                
+                                $ Line = "I can smell her on you." 
+                        
+                        if Cheated:
+                            $ Line = Line+" Again!"
+                            
+                        menu: 
+                                ch_n "[Line]"
+                                "Oh! I'm sorry!":
+                                    call Statup(Girl, "Love", 90, 15) 
+                                    call Statup(Girl, "Obed", 80, -10)                            
+                                    $ Line = "sorry"
+                                "Oh, yeah.":
+                                    call Statup(Girl, "Love", 200, -20) 
+                                    call Statup(Girl, "Obed", 80, 10)  
+                                    $ Line = "yeah"
+                                    $ Resolution -= 2
+                
+        if Line == "sorry":  
+                    call AnyFace(Girl,"sadside")
+                    if Girl == "Rogue":
+                            ch_r "Well 'course you are, but that don't make it right."
+                            ch_r "Screwing around with [Other] like that. . ."   
+                    elif Girl == "Kitty":
+                            ch_k "Don't you tell me you're sorry, I'll tell you when you're sorry!"
+                    elif Girl == "Emma":
+                            ch_e "Very sorry indeed. . ."
+                    elif Girl == "Laura":
+                            ch_l "You will be."                             
+                    call AnyFace(Girl,"sad")
+        else:                         
+                    call AnyFace(Girl,"confused")
+                    if Girl == "Rogue":
+                            ch_r "Oh? So what do you have to say for yourself?"
+                    elif Girl == "Kitty":
+                            ch_k "Yeah? Yeah?! What does that even mean?!"
+                    elif Girl == "Emma":
+                            ch_e "I'm not sure you understand what trouble you're in here. . ."
+                    elif Girl == "Laura":
+                            ch_l "So did you have an explanation, or. . ."        
+                    call AnyFace(Girl,"angry")
+        
+        menu:
+                extend ""
+                "I really hurt you, and I'm sorry.":
+                        call Statup(Girl, "Love", 90, 25) 
+                        call Statup(Girl, "Obed", 80, -5)
+                        call AnyLine(Girl,"Well at least you're owning up to it.")
+                        $ Resolution += 2
+                    
+                "We were just messing around, nothing serious.":
+                        call Statup(Girl, "Love", 200, -25) 
+                        call Statup(Girl, "Obed", 80, 30)
+                        call Statup(Girl, "Inbt", 80, 10)  
+                        if Girl == "Rogue":
+                                ch_r "\"Nothing serious?\" You did {i}not{/i} just tell me that."
+                        elif Girl == "Kitty":
+                                ch_k "I'll \"nothing serious\" you!"
+                        elif Girl == "Emma":
+                                ch_e "I'll be the judge of what is or is not \"serious.\""
+                        elif Girl == "Laura":
+                                if ApprovalCheck(Girl, 1500):
+                                        ch_l "Ok, that's fair." 
+                                else:
+                                        ch_l "Do you want to try that one again?"   
+                                
+                        if not ApprovalCheck(Girl, 700, "O", Bonus = (B/3)):
+                            $ Resolution -= 2
+                    
+                "I think she's really cute.":
+                    if B >= 100 or ApprovalCheck(Girl, 500, "I", Bonus = (B/3)):  
+                            # if Like trait is 700 or more. . .
+                            call AnyFace(Girl,"confused",Eyes="side")
+                            if Other == "Kitty":
+                                    call AnyLine(Girl,"Well. . . yeah, she is cute, but so what?")  
+                            else:
+                                    call AnyLine(Girl,"Well. . . yeah, she is hot, but so what?")                  
+                            call Statup(Girl, "Lust", 90, 5)
+                            $ Line = "threeway"  
+                    else:
+                            call Statup(Girl, "Love", 200, -20) 
+                            call Statup(Girl, "Obed", 80, 30)
+                            if Girl == "Rogue":
+                                    ch_r "Well that don't mean shit, [Playername], you're with me!"
+                            elif Girl == "Kitty":
+                                    ch_k "What does that have to do with anything?!"
+                            elif Girl == "Emma":
+                                    ch_e "But here I am. [[gestures to encompass her body]"
+                            elif Girl == "Laura":
+                                    ch_l "That doesn't make her fair game."   
+                            $ Resolution -= 2
+                    
+                "Don't you like her?":
+                    call Statup(Girl, "Obed", 80, 30)
+                    if B >= 100 or ApprovalCheck(Girl,500,"I"):        
+                            # if Like trait is 700 or more. . .    
+                            call AnyFace(Girl,"confused",Eyes="side")
+                            call Statup(Girl, "Inbt", 90, 25)                  
+                            call Statup(Girl, "Lust", 90, 5)
+                            if Girl == "Rogue":
+                                    ch_r "I mean, sorta. Not like that really though. . ." 
+                            elif Girl == "Kitty":
+                                    ch_k "What, like. . . \"like\" like? Um. . ."
+                            elif Girl == "Emma":
+                                    ch_e "She is attractive, yes, but I don't think that's relevant."
+                            elif Girl == "Laura":
+                                    ch_l "Yeah, but I like you too."    
+                            $ Line = "threeway" 
+                    elif B >= 50:    
+                            # if Like trait is 600 or more. . .  
+                            call AnyFace(Girl,"confused")
+                            call Statup(Girl, "Love", 200, -10)
+                            if Girl == "Emma":
+                                    ch_e "She's a good student, but that doesn't mean I'm interested in sharing."
+                            else:
+                                    call AnyLine(Girl,"We're friends, but so what?")    
+                    else:
+                            call Statup(Girl, "Love", 200, -20) 
+                            if Girl == "Rogue":
+                                    ch_r "Whether I like her or not, don't give you rights to hook up with her."
+                            elif Girl == "Kitty":
+                                    ch_k "What does that have to do with anything?!"
+                            elif Girl == "Emma":
+                                    ch_e "That's entirely irrelevant!"
+                            elif Girl == "Laura":
+                                    ch_l "Not enough to share."   
+                            $ Resolution -= 1
+                  
+        menu:
+                "I won't do it again.":
+                    if Cheated:        
+                            call Statup(Girl, "Love", 90, 5)  
+                            call AnyLine(Girl,"Like the last time you told me that, you mean?")                    
+                            $ Resolution -= 1
+                    else:
+                            call Statup(Girl, "Love", 90, 20) 
+                            call AnyFace(Girl,"angry")
+                            $ Resolution += 2 if Resolution < 3 else 0
+                            call AnyLine(Girl,"I'll hold you to that.")
+                    $ Line = 0
+                        
+                "I can't make any promises, she's pretty hot.":
+                            call AnyFace(Girl,"angry")
+                            call Statup(Girl, "Love", 200, -40) 
+                            call Statup(Girl, "Obed", 90, 40)
+                            call Statup(Girl, "Inbt", 90, 10)  
+                            call AnyLine(Girl,"Then I don't know what you tell you, I think we're through.")
+                            $ Resolution -= 2
+                            $ Line = 0
+                    
+                "Have you considered maybe letting her join us?":
+                        call AnyFace(Girl,"confused",Mouth="smile")
+                        if ApprovalCheck(Girl, 2200, Bonus = B) or ApprovalCheck(Girl, 950, "L", Bonus = (B/3)):
+                                call Statup(Girl, "Inbt", 90, 30)                  
+                                call Statup(Girl, "Lust", 89, 10)
+                                $ Resolution += 2
+                        elif ApprovalCheck(Girl, 1500, Bonus = B) or GirlLikeCheck(Girl,Other) >= 700:
+                                call Statup(Girl, "Inbt", 90, 10)                  
+                                call Statup(Girl, "Lust", 90, 5)
+                        else:
+                                $ Resolution -= 3
+                                call Statup(Girl, "Love", 200, -25) 
+                                call Statup(Girl, "Inbt", 90, 10) 
+                            
+                        call Statup(Girl, "Obed", 90, 40) 
+                        if Girl == "Rogue":
+                                ch_r "I don't know what to do with that, you talk'in a three-way?"
+                        elif Girl == "Kitty":
+                                ch_k "What, like a threeway?"
+                        elif Girl == "Emma":
+                                ch_e "I'm not sure how to process that."
+                                ch_e "Are you suggesting a threeway?"
+                        elif Girl == "Laura":
+                                ch_l "You wanna fuck both of us?"   
+                        $ Line = "threeway"
+        
+        if Resolution >= 5 and Line == "threeway": #she agrees to a threeway
+                        if Cheated:
+                                call Statup(Girl, "Love", 90, 25) 
+                                call Statup(Girl, "Obed", 90, 30)
+                                call Statup(Girl, "Inbt", 90, 60)   
+                        else:
+                                call Statup(Girl, "Love", 90, 50) 
+                                call Statup(Girl, "Obed", 90, 40)
+                                call Statup(Girl, "Inbt", 90, 40)
+                        if Girl == "Rogue":
+                                ch_r "So I catch you fool'in around on me, and you want to make it official?"
+                        elif Girl == "Kitty":
+                                ch_k "So you cheat on me, and then ask for a threeway?"
+                        elif Girl == "Emma":
+                                ch_e "Bold move. Boldness should be rewarded. . ."
+                        elif Girl == "Laura":
+                                ch_l "Cheat on me, and then Ask for a threeway?"
+                                ch_l "Risky gamble there."   
+                        call AnyLine(Girl,"Maybe I could live with that, I'll talk to "+Other+".")
+                                
+                        $ Line = "poly"
+                            
+        elif Resolution >= 5: #she suggests a threeway
+                        if Cheated:
+                                call Statup(Girl, "Love", 90, 20) 
+                                call Statup(Girl, "Obed", 90, 10)
+                                call Statup(Girl, "Inbt", 90, 100)   
+                        else:
+                                call Statup(Girl, "Love", 90, 40) 
+                                call Statup(Girl, "Obed", 90, 10)
+                                call Statup(Girl, "Inbt", 90, 60) 
+                        if Girl == "Rogue":
+                                ch_r "You're just a regular polecat in heat. I guess I can't tame you."
+                                ch_r "Not alone, at least."
+                        elif Girl == "Kitty":
+                                ch_k "What a mess. I guess maybe I could share though. . ."
+                        elif Girl == "Emma":
+                                ch_e "Bold move. Boldness should be rewarded. . ."
+                        elif Girl == "Laura":
+                                ch_l "You're a piece of work, but maybe I could share . . ."
+                                
+                        if Girl == "Emma":
+                                call AnyLine(Girl,"Perhaps "+Other+" and I could work something out.")
+                        else:
+                                call AnyLine(Girl,"Maybe me and "+Other+" can work something out.")
+                        $ Line = "poly"
+                            
+        elif Resolution >= 2: #she agrees to forgive you   
+                    if Line == "threeway":
+                            #you've asked for a threeway, btu she knocked it down
+                            call Statup(Girl, "Obed", 80, 10)       
+                            if Girl == "Rogue":
+                                    ch_r "Don't try to play cards ya just don't have."
+                            elif Girl == "Kitty":
+                                    ch_k "Way to read the room. . ."
+                            elif Girl == "Emma":
+                                    ch_e "I appreciate the initiative, if not the common sense. . ."
+                            elif Girl == "Laura":
+                                    ch_l "Like that'll happen . . ."
+                    call AnyFace(Girl,"sadside")
+                    if Cheated:     
+                            call Statup(Girl, "Obed", 80, 15)       
+                            if Girl == "Rogue":
+                                    ch_r "I've given you a chance to do right by me, and you keep screwing it up."
+                                    ch_r "I don't know how many more chances I can give you here."
+                            elif Girl == "Kitty":
+                                    ch_k "Too many times, [K_Petname]. . ."
+                            elif Girl == "Emma":
+                                    ch_e "At some point I'll have to stop putting up with you. . ."
+                            elif Girl == "Laura":
+                                    ch_l "This is getting tired . . ."
+                    else:
+                            call Statup(Girl, "Obed", 80, 30) 
+                            if Girl == "Rogue":
+                                    ch_r "You betrayed my trust, [R_Petname]."
+                                    ch_r "Don't let it happen again." 
+                            elif Girl == "Kitty":
+                                    ch_k "You hurt me here, [K_Petname]. . ."
+                                    ch_k "Don't hurt me like this again."
+                            elif Girl == "Emma":
+                                    ch_e "I'll let you off with a warning this time, but don't let it happen again."
+                            elif Girl == "Laura":
+                                    ch_l "I'll let you off this time, but don't push it."
+                        
+        else: 
+                    #she doesn't agree to forgive you
+                    call AnyFace(Girl,"angry")
+                    if Line == "threeway":
+                        call Statup(Girl, "Obed", 80, 10)       
+                        if Girl == "Rogue":
+                                ch_r "I can't even believe you would suggest a fucking {i}threeway!{/i}"
+                        elif Girl == "Kitty":
+                                ch_k "Seriously? A threeway?!"
+                        elif Girl == "Emma":
+                                ch_e "Bold move. Sometimes boldness will get you hurt. . ."
+                        elif Girl == "Laura":
+                                ch_l "A threeway?"
+                    if Cheated:         
+                        call Statup(Girl, "Obed", 90, -50)
+                        call Statup(Girl, "Inbt", 90, 20)  
+                        if Girl == "Rogue":
+                                ch_r "You done this too many times for me to keep let'in you back."
+                                ch_r "Sorry, [R_Petname], this is the end."
+                        elif Girl == "Kitty":
+                                ch_k "You aren't even that cute. . ."
+                                ch_k "We're over."
+                        elif Girl == "Emma":
+                                ch_e "I don't think I'm in the mode for these games."
+                                ch_e "We're done." 
+                        elif Girl == "Laura":
+                                ch_l "I hoped I could trust you, but you blew it again. . ."
+                    else:
+                        call Statup(Girl, "Obed", 90, -50)
+                        call Statup(Girl, "Inbt", 90, 10)  
+                        if Girl == "Rogue":
+                                ch_r "I just don't think I can trust you anymore, [R_Petname]."
+                                ch_r "This is it for us." 
+                        elif Girl == "Kitty":
+                                ch_k "You hurt me. I just can't even."
+                        elif Girl == "Emma":
+                                ch_e "You've lost my trust. We're done here."
+                        elif Girl == "Laura":
+                                ch_l "I can't trust you. I'm through."
+                        
+                    call AnyWord(Girl,1,0,0,"ex",0) #adds "ex" to traits
+                    call DrainWord(Girl,"dating",0,0,1) #removes "dating" from traits
+                    if Girl in P_Harem:
+                            $ P_Harem.remove(Girl)
+                    call AnyWord(Girl,1,0,"angry",0,0)                    
+                  
+#        call DrainWord(Girl,"saw with " + Other,0,0,1)      #removes "saw with Kitty" from traits    
+        
+        call DrainWord(Girl,"saw with Rogue",0,0,1)      #removes "saw with Rogue" from traits    
+        call DrainWord(Girl,"saw with Kitty",0,0,1)      #removes "saw with Kitty" from traits   
+        call DrainWord(Girl,"saw with Emma",0,0,1)      #removes "saw with Emma" from traits   
+        call DrainWord(Girl,"saw with Laura",0,0,1)      #removes "saw with Laura" from traits   
+        
+        if Line == "poly":       
+                call AnyWord(Girl,1,0,0,"poly "+Other,0)    #adds "poly Kitty" to traits
+                call AnyWord(Girl,1,0,0,"ask "+Other,0)     #adds "ask Kitty" to traits
+        else:
+                call GirlLikesGirl(Girl,Other,1000,-50,1)   #$ R_LikeKitty -= 50
+                    
+        if Girl == "Rogue":
+                if "ex" in R_Traits:
+                    $ R_Break[0] = 5 + R_Break[1] + R_Cheated
+                $ R_Cheated += 1
+        elif Girl == "Kitty":
+                if "ex" in R_Traits:
+                    $ K_Break[0] = 5 + K_Break[1] + K_Cheated
+                $ K_Cheated += 1
+        elif Girl == "Emma":
+                if "ex" in R_Traits:
+                    $ E_Break[0] = 5 + E_Break[1] + E_Cheated
+                $ E_Cheated += 1
+        elif Girl == "Laura":
+                if "ex" in R_Traits:
+                    $ L_Break[0] = 5 + L_Break[1] + L_Cheated
+                $ L_Cheated += 1
+        
+        #aftermath
+        menu:
+                "I'm glad we could work this out." if CheckWord(Girl,"Traits","dating") or Girl in P_Harem:
+                        call AnyFace(Girl,"sad") 
+                        if Resolution >= 3:            
+                                call Statup(Girl, "Love", 90, 10) 
+                                call Statup(Girl, "Obed", 90, 5) 
+                                if Girl == "Rogue":
+                                        ch_r "I am too, [R_Petname]."
+                                elif Girl == "Kitty":
+                                        ch_k "Me too, [K_Petname]. . ."
+                        else:
+                                call Statup(Girl, "Love", 90, 5) 
+                                if Girl == "Rogue":
+                                        ch_r "Yeah, we'll see, [R_Petname]."
+                                elif Girl == "Kitty":
+                                        ch_k "Sure, [K_Petname]. . ."
+                        if Girl == "Emma":
+                                ch_e "Yes, delightful."
+                        elif Girl == "Laura":
+                                ch_l "Yeah, sure."
+                        
+                "Want to fool around a bit?" if (CheckWord(Girl,"Traits","dating") or Girl in P_Harem) and not Taboo:
+                        if ApprovalCheck(Girl,0,"OI",Check=1) >= (1.5 * ApprovalCheck(Girl,0,"L",Check=1)) or ApprovalCheck(Girl,70,"X"): 
+                            #(Obed + Inbt) >= (1.5 * Love) or Lust >= 70
+                            call AnyFace(Girl,"sly",Eyes="side")
+                            call Statup(Girl, "Love", 90, 20) 
+                            call Statup(Girl, "Obed", 90, 10)
+                            call Statup(Girl, "Inbt", 90, 10)
+                            call AnyLine(Girl,"Sure, whatever.")
+                            call expression Girl + "_SexMenu" #call Rogue_SexMenu 
+                        else:        
+                            call AnyFace(Girl,"sad")             
+                            call Statup(Girl, "Love", 90, -10) 
+                            call Statup(Girl, "Obed", 90, -10)
+                            if Girl == "Rogue":
+                                    ch_r "It's still too raw, [R_Petname]."
+                            elif Girl == "Kitty":
+                                    ch_k "Don't even, [K_Petname]. . ."
+                            elif Girl == "Emma":
+                                    ch_e "Oh, this is rich."
+                            elif Girl == "Laura":
+                                    ch_l "Yeah, not now."
+                        
+                "I'm sorry it didn't work out." if not CheckWord(Girl,"Traits","dating") and Girl not in P_Harem: 
+                            call AnyFace(Girl,"sad") 
+                            call Statup(Girl, "Love", 90, 10) 
+                            if Girl == "Rogue":
+                                    ch_r "I am too, [R_Petname]."
+                            elif Girl == "Kitty":
+                                    ch_k "Yeah, me too, [K_Petname]. . ."
+                            elif Girl == "Emma":
+                                    ch_e "Yes, you;ll get over it. . . eventually."
+                            elif Girl == "Laura":
+                                    ch_l "Yeah."
+                        
+                "Want to have some break-up sex?" if (not CheckWord(Girl,"Traits","dating") and Girl not in P_Harem) and not Taboo:
+                        if ApprovalCheck(Girl,0,"OI",Check=1) >= (1.5 * ApprovalCheck(Girl,0,"L",Check=1)) or ApprovalCheck(Girl,70,"X"): 
+                            #(Obed + Inbt) >= (1.5 * Love) or Lust >= 70
+                            call AnyFace(Girl,"angry",Eyes="side")
+                            call Statup(Girl, "Obed", 90, 10)
+                            call Statup(Girl, "Inbt", 90, 10)
+                            call AnyLine(Girl,"Sure, whatever.")
+                            call DrainWord(Girl,"angry",0,1)
+                            call expression Girl + "_SexMenu" #call Rogue_SexMenu 
+                            call AnyWord(Girl,1,0,"angry",0,0) #adds "angry" to daily
+                        else:
+                            call AnyFace(Girl,"angry")
+                            call Statup(Girl, "Love", 90, -20) 
+                            call Statup(Girl, "Obed", 90, -10)
+                            if Girl == "Rogue":
+                                    ch_r "You have got to be kidding me."
+                            elif Girl == "Kitty":
+                                    ch_k "Don't even, [K_Petname]. . ."
+                            elif Girl == "Emma":
+                                    ch_e "Oh, this is rich."
+                            elif Girl == "Laura":
+                                    ch_l "Yeah, not now."
+                        
+                "Let me know if you change your mind." if not CheckWord(Girl,"Traits","dating") and Girl not in P_Harem:
+                            call AnyFace(Girl,"angry",Eyes="side")
+                            call Statup(Girl, "Love", 90, -5) 
+                            call Statup(Girl, "Obed", 90, 10)
+                            if Girl == "Rogue":
+                                    ch_r "Yeah, I'll get right on that."
+                            elif Girl == "Kitty":
+                                    ch_k "Oh, sure, right."
+                            elif Girl == "Emma":
+                                    ch_e "Oh, I'm sure you'll be the first I tell."
+                            elif Girl == "Laura":
+                                    ch_l "Uh-huh."
+                    
+                "Ok, see you later then.":
+                            call AnyFace(Girl,"confused")
+        
+        if Girl == "Rogue":
+                ch_r "I need some time alone, [R_Petname]. I'll see you later."
+        elif Girl == "Kitty":
+                ch_k "I need some \"me\" time, I'll see you around."
+        elif Girl == "Emma":
+                ch_e "Now, I need to be alone for a bit."
+        elif Girl == "Laura":
+                ch_l "Ok, well, bye."                  
+                
+        $ Round -= 10 if Round > 10 else Round
+        
+        if bg_current in ("bg rogue","bg kitty","bg emma","bg laura"):
+                #remove Rogue from the scene (or the player)
+                $ bg_current = "bg player"
+#                $ renpy.pop_call() #removes call to Events
+                $ renpy.pop_call() #removes call to Asked
+                $ renpy.pop_call() #removes call to Cheated
+                jump Player_Room
+        else:
+                call Remove_Girl(Girl)
+        return
+
+# end Cheated on the Girl / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+
+
+# Start No Fapping / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /    
+
+label NoFap(Girl=0,TabStore=Taboo,Cnt=0):
+        # called when you ask them not to fap from the romance menu
+        # call NoFap(Girl)
+        
+        $ Taboo = 0
+        ch_p "About when you masturbate on your own time. . ." 
+        
+        if CheckWord(Girl,"Daily","askedfap"):
+                #if it's not the first time you've asked today. . .
+                if CheckWord(Girl,"Traits","nofap"):
+                        ch_n "I understand already."
+                else:
+                        ch_n "Stop bothering me with this."
+            
+        elif CheckWord(Girl,"History","askedfap"):
+                #if it's not the first time you asked. . .
+                if not ApprovalCheck(Girl, 800):
+                        #rude response
+                        call AnyFace(Girl,"angry",2,Eyes="surprised")  
+                        call Statup(Girl, "Love", 80, -1) 
+                        call Statup(Girl, "Obed", 50, 1)
+                        call Statup(Girl, "Obed", 80, 1)
+                        call Statup(Girl, "Inbt", 30, -1)
+                        call Statup(Girl, "Inbt", 30, 3, 1)
+                        if Girl == "Rogue":
+                                ch_r "I really don't want to go over this again. . ."
+                        elif Girl == "Kitty":
+                                ch_k "This isn't really appropriate. . . "
+                        elif Girl == "Emma":
+                                ch_e "I'd rather not discuss this again. . ."
+                        elif Girl == "Laura":                
+                                ch_l "Hmm, I don't want to have this conversation again."  
+                        call AnyFace(Girl,"angry",1)             
+                else:
+                        #neutral response
+                        call Statup(Girl, "Obed", 60, 2)
+                        call Statup(Girl, "Obed", 90, 1)
+                        call Statup(Girl, "Inbt", 60, 1)
+                        call Statup(Girl, "Lust", 50, 1)
+                        call AnyFace(Girl,"confused",1)  
+                        if Girl == "Emma":
+                                ch_e "Oh? This again?"
+                        elif Girl == "Laura":                
+                                ch_l "Yeah?"       
+                        else: #Rogue, Kitty
+                                call AnyFace(Girl,"confused",2)  
+                                ch_n "Um, yeah, what about it?"  
+                                
+        else:            
+                #if this is the first time you've asked her. . .
+                if not ApprovalCheck(Girl, 800):
+                        #rude response
+                        call AnyFace(Girl,"angry",2,Eyes="surprised")  
+                        call Statup(Girl, "Love", 90, -5) 
+                        call Statup(Girl, "Obed", 50, 3)
+                        call Statup(Girl, "Obed", 80, 1)
+                        call Statup(Girl, "Inbt", 30, -1)
+                        call Statup(Girl, "Inbt", 30, 3, 1)
+                        if Girl == "Rogue":
+                                ch_r "Don't go talk'in about a girl's personal time like that."
+                        elif Girl == "Kitty":
+                                ch_k "I, um. . . "
+                                extend "hey! That's not any of your business!"
+                        elif Girl == "Emma":
+                                ch_e "What I do in the privacy of my own class-"
+                                ch_e "Never mind."
+                        elif Girl == "Laura":                
+                                ch_l "Hmm, I don't want to have this conversation."  
+                        call AnyFace(Girl,"angry",1) 
+                elif not ApprovalCheck(Girl, 500, "I"): # or R_SEXP <= 30?
+                        #shy response        
+                        call Statup(Girl, "Love", 90, -5) 
+                        call Statup(Girl, "Obed", 50, 3)
+                        call Statup(Girl, "Obed", 80, 1)
+                        call Statup(Girl, "Inbt", 30, -1)
+                        call Statup(Girl, "Inbt", 30, 3, 1)
+                        call Statup(Girl, "Lust", 50, 3)
+                        if Girl == "Rogue":
+                                call AnyFace(Girl,"surprised",2) 
+                                ch_r "I. .  um. . I don't really do that. . ."
+                        elif Girl == "Kitty":
+                                call AnyFace(Girl,"surprised",2) 
+                                ch_k "Oh, um, that's not really something I. . ."
+                        elif Girl == "Emma":
+                                call AnyFace(Girl,"confused",1) 
+                                ch_e "I'm not sure why what I do in private is your business. . ."
+                        elif Girl == "Laura":    
+                                call AnyFace(Girl,"surprised",2)             
+                                ch_l "Um. . . yeah?"            
+                elif ApprovalCheck(Girl, 500, "O"):
+                        #submissive response 
+                        call Statup(Girl, "Obed", 90, 5)
+                        call Statup(Girl, "Inbt", 50, 2)
+                        call Statup(Girl, "Inbt", 80, 1)
+                        call Statup(Girl, "Lust", 50, 5)
+                        call AnyFace(Girl,"confused",1)  
+                        if Girl == "Emma":
+                                ch_e "What of it?"
+                        else: #Rogue, Kitty, Laura
+                                ch_n "What about it?"        
+                else:
+                        #neutral response
+                        call Statup(Girl, "Obed", 90, 4)
+                        call Statup(Girl, "Inbt", 90, 3)
+                        call Statup(Girl, "Lust", 50, 3)
+                        call AnyFace(Girl,"confused",1)  
+                        if Girl == "Emma":
+                                ch_e "Oh? What about it?"
+                        elif Girl == "Laura":                
+                                ch_l "Yeah?"       
+                        else: #Rogue, Kitty
+                                call AnyFace(Girl,"confused",2)  
+                                ch_n "Um, yeah, what about it?"  
+        #end intro check. . .
+        
+        menu:
+            extend ""
+            "I'd rather you not do that." if not CheckWord(Girl,"Traits","nofap"):
+                    if not CheckWord(Girl,"Daily","askedfap"):
+                            call Statup(Girl, "Obed", 200, 2)
+                            call Statup(Girl, "Inbt", 90, 1)
+                    if ApprovalCheck(Girl, 1400, "LO"):
+                            #loving response
+                            if not CheckWord(Girl,"History","askedfap"):
+                                    call Statup(Girl, "Love", 90, 4) 
+                                    call Statup(Girl, "Obed", 200, 5)
+                                    call Statup(Girl, "Inbt", 90, 3)
+                            call AnyFace(Girl,"bemused",2) 
+                            if Girl == "Rogue":
+                                    ch_r "Well, only because it seems to matter to you. . ."
+                            elif Girl == "Kitty":
+                                    ch_k "You really care about something like that?"
+                                    ch_k "Ok, fine."
+                            elif Girl == "Emma":
+                                    ch_e "[E_Petname], the idea of it really bothers you?"
+                                    ch_e "Fine, I can make do. . ."
+                            elif Girl == "Laura":                
+                                    ch_l "So, that'd really bother you? . ."
+                                    ch_l "I guess I could stop. . ."
+                            call AnyFace(Girl,"bemused",1) 
+                    elif ApprovalCheck(Girl, 1600) and not ApprovalCheck(Girl, 500, "I"):
+                            #shy response
+                            if not CheckWord(Girl,"History","askedfap"):
+                                    call Statup(Girl, "Obed", 200, 5)
+                                    call Statup(Girl, "Inbt", 90, 5)
+                                    call Statup(Girl, "Lust", 50, 5)
+                            call AnyFace(Girl,"bemused",2,Eyes="side") 
+                            if Girl == "Rogue":
+                                    ch_r "Not that I was, but. . . sure."
+                            elif Girl == "Kitty":
+                                    ch_k "I don't. . . right, I don't."
+                            elif Girl == "Emma":
+                                    ch_e "I suppose if it matters to you. . ."
+                            elif Girl == "Laura":                
+                                    ch_l "I guess if it matters to you. . ." 
+                            call AnyFace(Girl,"bemused",1)   
+                    elif ApprovalCheck(Girl, 700, "O"):
+                            #submissive response
+                            if not CheckWord(Girl,"History","askedfap"):
+                                    call Statup(Girl, "Love", 90, 3) 
+                                    call Statup(Girl, "Obed", 200, 4)
+                                    call Statup(Girl, "Inbt", 90, 5)
+                                    call Statup(Girl, "Lust", 70, 5)
+                            call AnyFace(Girl,"sly",1) 
+                            if Girl == "Rogue":
+                                    ch_r "Yes, [R_Petname]."
+                            elif Girl == "Kitty":
+                                    ch_k "Yes, [K_Petname]."
+                            elif Girl == "Emma":
+                                    ch_e "Yes, [E_Petname]."
+                            elif Girl == "Laura":                
+                                    ch_l "Yes, [L_Petname]." 
+                    elif not ApprovalCheck(Girl, 800):
+                            #rude response
+                            if not CheckWord(Girl,"History","askedfap"):
+                                    call Statup(Girl, "Love", 90, -5) 
+                                    call Statup(Girl, "Obed", 90, -3)
+                                    call Statup(Girl, "Inbt", 90, 3)
+                            call AnyFace(Girl,"angry",2) 
+                            if Girl == "Kitty":
+                                    ch_k "I- this whole conversation is inappropriate!"
+                            elif Girl == "Emma":
+                                    ch_e "I really don't care what \"you'd rather.\""
+                            else: #Rogue, Laura
+                                    ch_n "I'd rather you stay out my business."
+                            call AnyFace(Girl,"angry",1) 
+                            $ Cnt = 1
+                    else:
+                            #no
+                            if not CheckWord(Girl,"History","askedfap"):
+                                    call Statup(Girl, "Love", 90, -1) 
+                                    call Statup(Girl, "Obed", 70, 2)
+                                    call Statup(Girl, "Inbt", 60, 2)
+                            call AnyFace(Girl,"sly",1) 
+                            if Girl == "Rogue":
+                                    ch_r "'Fraid not, [R_Petname]."
+                            elif Girl == "Kitty":
+                                    ch_k "Sorry, no. I try to keep busy."
+                            elif Girl == "Emma":
+                                    ch_e "No, I think I shall. . . often."
+                            elif Girl == "Laura":                
+                                    ch_l "Sorry, [L_Petname], I've got needs."   
+                            $ Cnt = 1
+                    if not Cnt:
+                            call AnyWord(Girl,1,0,0,"nofap")  #adds "nofap" tag to traits 
+            # end "ask nicely"
+                            
+            "Don't do that without permission." if not CheckWord(Girl,"Traits","nofap"):
+                    if not CheckWord(Girl,"Daily","askedfap"):
+                            call Statup(Girl, "Obed", 200, 3)
+                    if ApprovalCheck(Girl, 600, "O"):
+                            #submissive response
+                            if not CheckWord(Girl,"History","askedfap"):
+                                    call Statup(Girl, "Love", 90, 3) 
+                                    call Statup(Girl, "Obed", 80, 3)
+                                    call Statup(Girl, "Obed", 200, 4)
+                                    call Statup(Girl, "Inbt", 90, 5)
+                                    call Statup(Girl, "Lust", 50, 5)
+                                    call Statup(Girl, "Lust", 70, 5)
+                            call AnyFace(Girl,"sly") 
+                            if Girl == "Rogue":
+                                    ch_r "Yes, [R_Petname]."
+                            elif Girl == "Kitty":
+                                    ch_k "Yes, [K_Petname]."
+                            elif Girl == "Emma":
+                                    ch_e "Yes, [E_Petname]."
+                            elif Girl == "Laura":                
+                                    ch_l "Yes, [L_Petname]."  
+                    elif ApprovalCheck(Girl, 1200, "LO"):
+                            #positive response
+                            if not CheckWord(Girl,"History","askedfap"):
+                                    call Statup(Girl, "Love", 90, 4) 
+                                    call Statup(Girl, "Obed", 80, 3)
+                                    call Statup(Girl, "Obed", 200, 5)
+                                    call Statup(Girl, "Inbt", 90, 3)
+                                    call Statup(Girl, "Lust", 50, 5)
+                            call AnyFace(Girl,"bemused",1) 
+                            if Girl == "Rogue":
+                                    ch_r "I guess if it means so much to you. . ."
+                            elif Girl == "Kitty":
+                                    ch_k "I guess I could do \"no fap no-\" what month even is this? . ."
+                            elif Girl == "Emma":
+                                    ch_e "Well, aren't you being dominant. . ."
+                                    ch_e "I suppose I could restrain myself. . ."
+                            elif Girl == "Laura":                
+                                    ch_l "I guess I could."   
+                    elif not ApprovalCheck(Girl, 500, "I"):
+                            #shy response
+                            if not CheckWord(Girl,"History","askedfap"):
+                                    call Statup(Girl, "Obed", 200, 5)
+                                    call Statup(Girl, "Inbt", 90, 5)
+                                    call Statup(Girl, "Lust", 50, 5)
+                            call AnyFace(Girl,"bemused",2,Eyes="side") 
+                            if Girl == "Rogue":
+                                    ch_r "It's not like I even do. . ."
+                            elif Girl == "Kitty":
+                                    ch_k "Girls don't do that. But even if I did, you're being rude."
+                            elif Girl == "Emma":
+                                    ch_e "I really don't think it's any of your business."
+                            elif Girl == "Laura":                
+                                    ch_l "Not interested."   
+                            call AnyFace(Girl,"normal",1) 
+                            $ Cnt = 1
+                    elif not ApprovalCheck(Girl, 800):
+                            #rude response
+                            if not CheckWord(Girl,"History","askedfap"):
+                                    call Statup(Girl, "Love", 70, -5) 
+                                    call Statup(Girl, "Love", 90, -5) 
+                                    call Statup(Girl, "Obed", 60, -3)
+                                    call Statup(Girl, "Obed", 90, -3)
+                                    call Statup(Girl, "Inbt", 90, 3)
+                            call AnyFace(Girl,"angry",2) 
+                            if Girl == "Rogue":
+                                    ch_r "Fuck you I won't."
+                            elif Girl == "Kitty":
+                                    ch_k "I- this whole conversation is inappropriate!"
+                            elif Girl == "Emma":
+                                    ch_e "I really don't think it's any of your business."
+                            elif Girl == "Laura":                
+                                    ch_l "Don't tell me what to do."   
+                            call AnyFace(Girl,"angry",1) 
+                            $ Cnt = 1
+                    else:
+                            #no
+                            if not CheckWord(Girl,"History","askedfap"):
+                                    call Statup(Girl, "Love", 90, -2) 
+                                    call Statup(Girl, "Obed", 70, -2)
+                                    call Statup(Girl, "Inbt", 60, 2)
+                            call AnyFace(Girl,"bemused",2) 
+                            if Girl == "Rogue":
+                                    ch_r "'Fraid not, [R_Petname]."
+                            elif Girl == "Kitty":
+                                    ch_k "Sorry, no. I try to keep busy."
+                            elif Girl == "Emma":
+                                    ch_e "No, I think I shall. . . often."
+                            elif Girl == "Laura":                
+                                    ch_l "Sorry, [L_Petname], I've got needs."   
+                            call AnyFace(Girl,"bemused",1) 
+                            $ Cnt = 1
+                    if not Cnt:
+                            call AnyWord(Girl,1,0,0,"nofap")  #adds "nofap" tag to traits 
+            # end "obedience order"
+            
+            "You can do that if you need to." if CheckWord(Girl,"Traits","nofap"):
+                    if not CheckWord(Girl,"Daily","askedfap"):
+                            call Statup(Girl, "Love", 90, 1) 
+                            call Statup(Girl, "Obed", 90, 1)
+                            call Statup(Girl, "Inbt", 90, 1)
+                    if not ApprovalCheck(Girl, 500, "I"):
+                            #shy response
+                            if not CheckWord(Girl,"History","okfap"):
+                                    call Statup(Girl, "Love", 60, 1) 
+                                    call Statup(Girl, "Love", 90, 5) 
+                                    call Statup(Girl, "Obed", 60, 3)
+                                    call Statup(Girl, "Inbt", 70, 5)
+                                    call Statup(Girl, "Lust", 90, 10)
+                            call AnyFace(Girl,"confused",2) 
+                            if Girl == "Rogue":
+                                    ch_r "Right! Not that I ever do that anyway, of course. . ."
+                            elif Girl == "Kitty":
+                                    ch_k "Oh? Um, thanks?"
+                            elif Girl == "Emma":
+                                    ch_e "I'm glad that I have your permission. . ."
+                            elif Girl == "Laura":                
+                                    ch_l "Good to know."   
+                            call AnyFace(Girl,"smile",1) 
+                    elif ApprovalCheck(Girl, 750, "O"):
+                            #submissive response
+                            if not CheckWord(Girl,"History","okfap"):
+                                    call Statup(Girl, "Love", 90, 20) 
+                                    call Statup(Girl, "Obed", 200, 5)
+                                    call Statup(Girl, "Obed", 90, 10)
+                                    call Statup(Girl, "Inbt", 90, 10)
+                                    call Statup(Girl, "Lust", 90, 10)
+                            call AnyFace(Girl,"sly",1) 
+                            if Girl == "Rogue":
+                                    ch_r "Ok, [R_Petname]."
+                            elif Girl == "Kitty":
+                                    ch_k "Ok, [K_Petname]."
+                            elif Girl == "Emma":
+                                    ch_e "Yes, [E_Petname]."
+                            elif Girl == "Laura":                
+                                    ch_l "Ok, [L_Petname]."
+                    else:
+                            #positive response
+                            if not CheckWord(Girl,"History","okfap"):
+                                    call Statup(Girl, "Love", 90, 5) 
+                                    call Statup(Girl, "Obed", 60, 3)
+                                    call Statup(Girl, "Inbt", 70, 3)
+                                    call Statup(Girl, "Lust", 50, 5)
+                            call AnyFace(Girl,"surprised",2) 
+                            if Girl == "Rogue":
+                                    ch_r "Great! I mean, that's cool."
+                            elif Girl == "Kitty":
+                                    ch_k "Nice! I'll, um, yeah."
+                            elif Girl == "Emma":
+                                    ch_e "Oh, what a relief. . ."
+                            elif Girl == "Laura":                
+                                    ch_l "Finally."    
+                            call AnyFace(Girl,"smile",1) 
+                    call DrainWord(Girl,"nofap",0,0,1) #removes "nofap" tag from traits
+                    call AnyWord(Girl,1,0,0,0,"okfap")  #adds "okfap" tag to History 
+                    
+                    #fix add a potential for the girl to run out now. . .
+            #end "return permission"
+            
+            "Nevermind":
+                    if not ApprovalCheck(Girl, 500, "I"):
+                            #shy response
+                            if not CheckWord(Girl,"History","askedfap"):
+                                    call Statup(Girl, "Love", 80, 10) 
+                                    call Statup(Girl, "Inbt", 50, 5)
+                            call AnyFace(Girl,"bemused",1) 
+                            if Girl == "Emma":
+                                    ch_e "Back to more appropriate topics, I hope?"
+                            elif Girl == "Laura":                
+                                    ch_l "Glad we're off this one. . ."  
+                            else: #Rogue, Kitty
+                                    call AnyFace(Girl,"surprised",2) 
+                                    ch_n "Right! What were we even talking about?"
+                                    call AnyFace(Girl,"smile",1) 
+                    elif ApprovalCheck(Girl, 500, "O"):
+                            #submissive response
+                            if not CheckWord(Girl,"History","askedfap"):
+                                    call Statup(Girl, "Obed", 60, 5)
+                                    call Statup(Girl, "Inbt", 80, 5)
+                                    call Statup(Girl, "Lust", 50, 5)
+                            call AnyFace(Girl,"sly",1) 
+                            if Girl == "Emma":
+                                    ch_e "Very well. . ."
+                            else:#Rogue, Kitty, Laura
+                                    ch_n "Ok."
+                    elif not ApprovalCheck(Girl, 800):
+                            #rude response
+                            if not CheckWord(Girl,"History","askedfap"):
+                                    call Statup(Girl, "Love", 80, 5) 
+                                    call Statup(Girl, "Obed", 50, 5)
+                            call AnyFace(Girl,"angry",2,Eyes="side") 
+                            if Girl == "Rogue":
+                                    ch_r "Damned straight, \"never mind.\""
+                            elif Girl == "Emma":
+                                    ch_e "I should hope so . . ."
+                            else: #Kitty, Laura
+                                    ch_n "Damned right, \"never mind.\"" 
+                            call AnyFace(Girl,"angry",1) 
+                    else:
+                            #neutral response
+                            if not CheckWord(Girl,"History","askedfap"):
+                                    call Statup(Girl, "Obed", 50, 3)
+                                    call Statup(Girl, "Inbt", 50, 2)
+                            call AnyFace(Girl,"sly",1) 
+                            if Girl == "Emma":
+                                    ch_e "Very well. . ."
+                            else:#Rogue, Kitty, Laura
+                                    ch_n "Ok." 
+            #end "nevermind"
+            
+        call AnyWord(Girl,1,0,"askedfap",0,"askedfap")  #adds "askedfap" tag to Daily and History 
+        $ Taboo = TabStore    
+        return
+       
+# End No Fapping / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /  
+
+
+
+# Start Call to Fap / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /  
+label CalltoFap(Girl=0,Fap=0):
+        #called from EventCalls
+        #The girl calls you for permission to fap, 1 is "yes," 2 is "i'll watch," 3 is "i'll visit."
+        
+        if not CheckWord(Girl,"Traits","nofap"):
+                #if she's allowed to fap, she will
+                call DrainWord(Girl,"wannafap",0,1) #removes "wannafap" tag from daily
+                call AnyWord(Girl,1,0,"gonnafap")  #adds "gonnafap" tag to daily 
+                return           
+                
+        if Zero_Loc(Options[0]) == bg_current:
+                #if she's in the room with you, this won't come up.
+                return
+        
+        #first girl to pass the above check. . .
+        $ Options.remove(Options[0]) #remove her from the list
+        while Options:
+                #clears out remaining options, if applicable
+                if CheckWord(Options[0],"Daily","wannafap") and not CheckWord(Options[0],"Daily","nofap"):
+                        #if she's wants to fap and is allowed to, she will      
+                        call AnyWord(Options[0],1,0,"gonnafap")  #adds "gonnafap" tag to daily 
+                $ Options.remove(Options[0])
+                #any girls who are under "nofap" orders are out of luck this turn. . .
+                    
+        $ P_DailyActions.append("fapcall")
+        
+        call Shift_Focus(Girl)
+        show Cellphone at SpriteLoc(StageLeft)
+                
+        "[Girl] calls you up. . ."
+        if Girl == "Rogue":
+                ch_r "So. . . I was wondering. . ."
+                ch_r "I know you didn't want me to. . . um. . . "
+                ch_r "take care of my needs?"
+                ch_r ". . ."
+                ch_r ". . .but would you mind if I were to do that?"
+                ch_r "Right now?" 
+        elif Girl == "Kitty":               
+                ch_k "Hey, so[K_like]I know you were all like. . ."
+                ch_k "\"don't touch yourself, Kitty,\" and[K_like],"
+                ch_k "I know I agreed and all, but. . ."
+                ch_k "Would you mind if[K_like]maybe I did anyway?"
+        elif Girl == "Emma":
+                ch_e "I'm aware that we had something of an arrangement going on. . ."
+                ch_e "One relating to me. . . gratifying myself. . ."
+                ch_e "or the lack thereof. . ."
+                ch_e "And I was just curious, would you mind if we perhaps suspended that rule. . ."
+                ch_e "Just for tonight, perhaps?"
+        elif Girl == "Laura":                
+                ch_l "Hey, remember when you told me I couldn't schlick off?"
+                ch_l "I want to schlick off."
+                ch_l ". . ."
+                ch_l "That cool? or. . ."
+                        
+        menu:
+            "Sure, no problem.":
+                            call Statup(Girl, "Love", 80, 5) 
+                            call Statup(Girl, "Love", 200, 1) 
+                            call Statup(Girl, "Obed", 80, 2)
+                            call Statup(Girl, "Inbt", 80, 3)
+                            call Statup(Girl, "Lust", 50, 5)
+                            if Girl == "Rogue":
+                                    ch_r "Thanks, I really appreciate that."
+                            elif Girl == "Kitty":
+                                    ch_k "Cool!"
+                            elif Girl == "Emma":
+                                    ch_e "Oh, thank you, [E_Petname]."
+                            elif Girl == "Laura": 
+                                    ch_l "Nice."
+                            $ Fap = 1
+            "If you really have to. . .":
+                    if ApprovalCheck(Girl,0,"LO",Check=1) >= (2*ApprovalCheck(Girl,0,"I",Check=1)):
+                            #if she agrees to not do it (Love+Obed >= double Inbt)
+                            call Statup(Girl, "Love", 80, 2) 
+                            call Statup(Girl, "Obed", 60, 3)
+                            call Statup(Girl, "Obed", 80, 1)
+                            call Statup(Girl, "Lust", 80, 5)
+                            if Girl == "Rogue":
+                                    ch_r "Oh, well. . .."
+                                    ch_r "I suppose I could restrain myself. . ." 
+                                    $ R_Thirst += 10
+                            elif Girl == "Kitty":
+                                    ch_k "Well, if it really bothers you. . ."
+                                    $ K_Thirst += 10
+                            elif Girl == "Emma":
+                                    ch_e "I imagine I can find other distractions, [E_Petname]."
+                                    $ E_Thirst += 10
+                            elif Girl == "Laura": 
+                                    ch_l "Hmm. Yeah, whatever. Nevermind."
+                                    $ L_Thirst += 10
+                            
+                    else:
+                            #if she insists on doing it
+                            call Statup(Girl, "Love", 80, 3) 
+                            call Statup(Girl, "Love", 200, 1)
+                            call Statup(Girl, "Obed", 50, -4)
+                            call Statup(Girl, "Obed", 90, -1)
+                            call Statup(Girl, "Inbt", 50, 2)
+                            call Statup(Girl, "Inbt", 80, 5)
+                            call Statup(Girl, "Lust", 50, 5)
+                            if Girl == "Rogue":
+                                    ch_r "I would REALLY appreciate that."
+                                    ch_r "Thank you." 
+                            elif Girl == "Kitty":
+                                    ch_k "I kinda. . . yeah."
+                            elif Girl == "Emma":
+                                    ch_e "It would really just take the edge off of a long day."
+                            elif Girl == "Laura": 
+                                    ch_l "Yeah, I probably do."                                    
+                            $ Fap = 1
+            "No, you may not.":
+                    if ApprovalCheck(Girl,600,"O") and (ApprovalCheck(Girl,0,"O",Check=1) >= ApprovalCheck(Girl,0,"I",Check=1)):
+                            #if she agrees to not do it (Obed >= Inbt)
+                            call Statup(Girl, "Love", 50, -5) 
+                            call Statup(Girl, "Obed", 60, 5)
+                            call Statup(Girl, "Obed", 200, 2)
+                            call Statup(Girl, "Lust", 80, 5)
+                            if ApprovalCheck(Girl,800,"O"):
+                                    call Statup(Girl, "Lust", 200, 5)                                
+                            if Girl == "Rogue":
+                                    ch_r "Oh, well. . .."
+                                    ch_r "I suppose I could restrain myself. . ." 
+                                    $ R_Thirst += 10
+                            elif Girl == "Kitty":
+                                    ch_k "Well, if it really bothers you. . ."
+                                    $ K_Thirst += 10
+                            elif Girl == "Emma":
+                                    ch_e "I imagine I can find other distractions, [E_Petname]."
+                                    $ E_Thirst += 10
+                            elif Girl == "Laura": 
+                                    ch_l "Hmm. Yeah, whatever. Nevermind."
+                                    $ L_Thirst += 10
+                    elif ApprovalCheck(Girl,1000,"LO"):
+                            #she is apologetic about it
+                            call Statup(Girl, "Love", 70, -5) 
+                            call Statup(Girl, "Obed", 50, -3)
+                            call Statup(Girl, "Obed", 80, -2)
+                            call Statup(Girl, "Inbt", 50, 3)
+                            call Statup(Girl, "Inbt", 80, 2)
+                            call Statup(Girl, "Lust", 80, 5)
+                            if Girl == "Rogue":
+                                    ch_r "Well, I mean, I kind of started. . ."
+                                    $ R_Thirst += 10
+                            elif Girl == "Kitty":
+                                    ch_k "Um, sorry, but I[K_like]have to?"
+                                    $ K_Thirst += 10
+                            elif Girl == "Emma":
+                                    ch_e "I think I'll just have to do it anyway. . ."
+                                    $ E_Thirst += 10
+                            elif Girl == "Laura": 
+                                    ch_l "Um, sure, I will NOT be doing just that. . ."   
+                                    $ L_Thirst += 10                               
+                            $ Fap = 1
+                    else:
+                            #if she is mad at you
+                            call Statup(Girl, "Love", 70, -5) 
+                            call Statup(Girl, "Love", 90, -5) 
+                            call Statup(Girl, "Obed", 80, -5)
+                            call Statup(Girl, "Inbt", 50, 4)
+                            call Statup(Girl, "Inbt", 80, 3)
+                            if Girl == "Rogue":
+                                    ch_r "You know what? Screw it, and screw you!"
+                                    $ R_Thirst += 10
+                            elif Girl == "Kitty":
+                                    ch_k "Well. . . I'm doing it anyway!"
+                                    $ k_Thirst += 10
+                            elif Girl == "Emma":
+                                    ch_e "I think I can be the judge of that."
+                                    $ E_Thirst += 10
+                            elif Girl == "Laura": 
+                                    ch_l "Sure, keep thinking I care."   
+                                    $ L_Thirst += 10                               
+                            $ Fap = 1               
+            "I could come over and take care of that. . .":
+                            call Statup(Girl, "Love", 80, 4) 
+                            call Statup(Girl, "Love", 200, 1) 
+                            call Statup(Girl, "Obed", 80, 2)
+                            call Statup(Girl, "Inbt", 80, 2)
+                            call Statup(Girl, "Lust", 80, 5)
+                            if Girl == "Emma":
+                                    ch_e "I think you could at that, [E_Petname]."
+                            elif Girl == "Laura": 
+                                    ch_l "Cool."
+                            else: #Rogue, Kitty
+                                    ch_n "Oh, you would, would you. . ."
+                            $ Fap = 3
+            "Only if I can watch." if not AloneCheck(): #only works if you're alone
+                    if ApprovalCheck(Girl, 1200):
+                            #She agrees
+                            call Statup(Girl, "Love", 80, 4) 
+                            call Statup(Girl, "Obed", 60, 2)
+                            call Statup(Girl, "Obed", 80, 2)
+                            call Statup(Girl, "Inbt", 50, 2)
+                            call Statup(Girl, "Inbt", 80, 3)
+                            call Statup(Girl, "Lust", 80, 5)
+                            if Girl == "Rogue": #R_Mast
+                                    ch_r "Hmm. . . that sounds like fun. . ."
+                            elif Girl == "Kitty":
+                                    ch_k "Heh, you looking for a show? . ."
+                            elif Girl == "Emma":
+                                    ch_e "I think we could arrange that. . ."
+                            elif Girl == "Laura": 
+                                    ch_l "Yeah, I could do that, gimme a sec. . ."
+                            $ Fap = 2
+                    else:
+                            #she's not into it.
+                            call Statup(Girl, "Love", 60, -3) 
+                            call Statup(Girl, "Obed", 60, -2)
+                            call Statup(Girl, "Inbt", 80, 3)
+                            call Statup(Girl, "Lust", 50, 5)
+                            if Girl == "Rogue": #R_Mast
+                                    ch_r "I, um, I don't know about that. . ."
+                                    $ R_Thirst += 15
+                            elif Girl == "Kitty":
+                                    ch_k "Heh, heh, um, I don't think I could. . ."
+                                    $ K_Thirst += 15
+                            elif Girl == "Emma":
+                                    ch_e "I'd rather avoid putting on a show like that. . ."
+                                    $ E_Thirst += 15
+                            elif Girl == "Laura": 
+                                    ch_l "Nah, had enough of surveillance . . ."
+                                    $ L_Thirst += 15
+                                    
+        call DrainWord(Girl,"wannafap",0,1) #removes "wannafap" tag from daily        
+        hide Cellphone
+        
+        if Fap == 3:
+                #if you decide to come over. . .
+                $ del Options[:]  
+                if Girl == "Rogue":                    
+                        $ renpy.pop_call() #skips past EventCall
+                        $ renpy.pop_call() #skips past this label
+                        $ R_Loc = "bg rogue"
+                        call Taboo_Level
+                        jump Rogue_Room
+                elif Girl == "Kitty":
+                        $ renpy.pop_call() #skips past EventCall
+                        $ renpy.pop_call() #skips past this label
+                        $ K_Loc = "bg kitty"
+                        call Taboo_Level
+                        jump Kitty_Room
+                elif Girl == "Emma":
+                        $ renpy.pop_call() #skips past EventCall
+                        $ renpy.pop_call() #skips past this label
+                        $ E_Loc = "bg emma"
+                        call Taboo_Level
+                        jump Emma_Room
+                elif Girl == "Laura": 
+                        $ renpy.pop_call() #skips past EventCall
+                        $ renpy.pop_call() #skips past this label
+                        $ L_Loc = "bg laura"
+                        call Taboo_Level
+                        jump Laura_Room
+        elif Fap == 2:
+                #if you agree to watch her. . .
+                $ del Options[:]  
+                
+                if Girl == "Rogue":                    
+                        $ R_Loc = "bg rogue"
+                elif Girl == "Kitty":
+                        $ K_Loc = "bg kitty"
+                elif Girl == "Emma":
+                        if E_Loc == "bg classroom" and Time_Count >= 2:
+                            pass #if she's in class and it's a good time, stay
+                        else:
+                            $ E_Loc = "bg emma"
+                elif Girl == "Laura": 
+                        $ L_Loc = "bg laura"                
+                call Taboo_Level        
+                call PhoneSex(Girl)            
+                $ renpy.pop_call() #skips past EventCall
+        elif Fap:
+                #if you agree at some point. . .
+                call AnyWord(Girl,1,0,"gonnafap")  #adds "gonnafap" tag to daily 
+            
+        $ Options = ["empty"] #sets token entry to prevent a removal failure. . .
+        return
+
+            #add history elements
+            #add "if girl is watching, "join us." to basic sex menus          
+# End Call to Fap / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /    
     
-    
+
+
+# Start Phone Sex / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /  
+label PhoneSex(Girl=0):
+        # called by Eventcalls->CalltoFap
+        # make sure to adjust orgasm options to work when you aren't in the room.
+        
+        $ P_RecentActions.append("phonesex")
+            
+        #display the phone sex graphics
+        
+        call Shift_Focus(Girl)
+        show PhoneSex zorder 150
+                        
+        call AnyWord(Girl,1,"phonesex","phonesex",0,"phonesex")  #adds "phonesex" tag to recent and daily actions, and history 
+        $ Trigger = 1
+        if Girl == "Rogue":
+                ch_r "Ok, I think that should get the video running, right?"
+                call RM_Prep
+                ch_r "Hmm, that was a satisfying phone call. . ."
+                ch_r "I gotta go."                
+        elif Girl == "Kitty":
+                ch_k "Ok, that's got it up."
+                ch_k "[K_Like]how do I look?"
+                call KM_Prep
+                ch_k "Mmmmm. . . call any time, [K_Petname]."
+                ch_k "[K_Like]ANY time."
+        elif Girl == "Emma":
+                ch_e "Now, set it up like so. . ."
+                ch_e "There, you should have video up."
+                call EM_Prep
+                ch_e "I do enjoy these little chats. . ."
+                ch_e "I need to be going though."
+        elif Girl == "Laura": 
+                ch_l "Ok, video up. . ."
+                call LM_Prep
+                ch_l "That was fun. Call you later?"        
+        #hide the phone sex graphics
+        
+        hide PhoneSex
+                 
+        call Get_Dressed
+        call AnyOutfit(Girl,5) #resets her clothes
+        call Checkout(1)
+        $ P_RecentActions.remove("phonesex")
+        return
+#add option for girl to strip herself. . .
+# End Phone Sex / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /  

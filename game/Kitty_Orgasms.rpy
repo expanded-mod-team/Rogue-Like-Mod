@@ -1,6 +1,12 @@
 ﻿# Start You Cumming //////////////////////////////////////////////////////////////////////////////////
 
 label PK_Cumming:
+    if "phonesex" in P_RecentActions:        
+            $ P_Semen -= 1
+            $ P_Focus = 0
+            "You spray jizz across the room."
+            return 
+            
     call Shift_Focus("Kitty")
     if Trigger == "blow":
             $ Tempmod += 5
@@ -71,10 +77,7 @@ label PK_Cumming:
         "Cum on her tits":
                 jump K_TitSpunk  
                 
-#MOD MARKER cum menu choices
-        "Cum on her ass" if Trigger in ("sex","anal","hotdog") and renpy.showing("Kitty_Doggy"):
-                jump K_SpunkBack
-        "Cum on her belly" if Trigger in ("sex","anal","hotdog","foot") and renpy.showing("Kitty_SexSprite"):
+        "Cum on her belly" if Trigger == "sex" or Trigger == "anal" or Trigger == "hotdog" or Trigger == "foot":
                 jump K_SpunkBelly
             
         "Pull back":
@@ -287,7 +290,6 @@ label K_Warn_Her:                                                               
         # Else. . . not experienced or she's not a huge fan, 
         if renpy.showing("Kitty_BJ_Animation"):
             if not K_Blow:
-                $ Situation = "auto"
                 jump K_In_Mouth
             else:
                 jump K_Handy_Finish   
@@ -311,14 +313,17 @@ label K_In_Mouth:
             $ Tempmod -= 15                  
             
     $ P_Cock = "out"    
-    if Situation == "auto":
+    if Situation == "auto" or Situation == "warn":
                 $ Situation = 0                
                 if renpy.showing("Kitty_TJ_Animation"):     
                         call KittyFace("kiss")                        
                 elif not renpy.showing("Kitty_BJ_Animation"):
                         call Kitty_BJ_Launch("cum")
                 $ Speed = 6 if Speed == 4 else 5 #6 if deep throating, 5 if not
-                "You grab her head and cum in her mouth"  
+                if Situation == "warn":                   
+                    "She doesn't seem sure what to do about that, as you cum in her mouth."
+                else:
+                    "You grab her head and cum in her mouth"  
                 $ K_Eyes = "closed"                 
                 $ P_Spunk = 1    
                 if renpy.showing("Kitty_TJ_Animation"): 
@@ -847,61 +852,6 @@ label K_TitSpunk:
         jump K_Orgasm_After
         
 # Start Spunk belly  / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
-###ANON MOD CODE BLOCK START #####
-#placeholderline1 
-label K_SpunkBack: 
-        if Trigger != "foot":
-            call Kitty_Doggy_Launch("hotdog")
-        $ Speed = 0
-        if K_Addict >= 60 and ApprovalCheck("Kitty", 1000, "I", Bonus = ((K_Addict*10)- K_Obed))  and K_Swallow:
-                $ K_Eyes = "manic"
-                $ K_Blush = 1
-                call Kitty_BJ_Launch("cum")
-                if Trigger == "sex":
-                    "You pull out of her pussy with a pop, and her eyes widen in surprise. She leaps at your cock and sucks it deep, draining your fluids hungrily."
-                elif Trigger == "anal":                
-                    "You pull out of her ass with a pop, and her eyes widen in surprise. She leaps at your cock and sucks it deep, draining your fluids hungrily."
-                $ K_Mouth = "lipbite"
-                $ K_Spunk.append("mouth")
-                "When she finishes, she licks her lips."
-                call KittyFace("bemused")
-                $ K_Spunk.remove("mouth")
-                ch_r "Sorry, [K_Petname], I just couldn't let that go to waste."
-                call Statup("Kitty", "Obed", 80, -5)
-                call Statup("Kitty", "Inbt", 200, 10)
-                jump K_Swallowed
-        if Trigger != "foot":
-            $ P_Cock = "out"
-        $ K_Spunk.append("back")
-        if Trigger == "sex":
-                "You pull out of her pussy with a pop and spray all over her backside."
-        elif Trigger == "anal":
-                "You pull out of her ass with a pop and spray all over her backside."
-        else:
-                "You pick up the pace and with a grunt you spray all over her backside."
-            
-                      
-        if K_Addict >= 60 and ApprovalCheck("Kitty", 800, "I", Bonus = ((K_Addict*10)- K_Obed)) and K_Swallow: 
-                #if she's manic and has swallowed
-                $ K_Eyes = "manic"
-                $ K_Blush = 1        
-                "Kitty's eyes widen with desire, and she quickly wipes a bit off with her hand, then licks her fingers clean."
-                call KittyFace("manic", 1)
-                $ K_Spunk.append("mouth")
-                $ K_Mouth = "smile"
-                ch_r "Well, [K_Petname], I just couldn't let that go to waste."
-                $ K_Spunk.remove("mouth")
-                call Statup("Kitty", "Inbt", 50, 3)
-                jump K_Swallowed
-              
-            
-        #else . . .
-        call KittyFace("sexy", 1)
-        ch_r "Thanks for the courtesy, [K_Petname]. Such a mess though. . ." 
-#        call Kitty_Doggy_Reset
-        jump K_Orgasm_After
-###ANON MOD CODE BLOCK STOP ######
-###ANON MOD CODE BLOCK STOP ######
 label K_SpunkBelly: 
         if P_Cock != "foot":
                 call Kitty_Sex_Launch("hotdog")
@@ -1048,6 +998,7 @@ label K_Orgasm_After:
         $ P_Semen -= 1
         $ P_Focus = 0
         $ Speed = 0  
+        $ K_Thirst -= 10 if K_Thirst > 50 else 5
         menu:
                 "Want her to clean you off?"
                 "Yes":
@@ -1119,6 +1070,11 @@ label K_CleanCock:
 
 # Kitty Lusty face check ////////////////////////////////////////////////////////////////////////////////
 label KittyLust(Extreme = 0, Kissing = 0):
+    if K_Thirst >= 80:
+            $ K_Lust += 2
+    elif K_Thirst >= 50:
+            $ K_Lust += 1
+            
     if K_Lust >= 80:        
         $ K_Blush = 2
     elif K_Lust >= 40:        
@@ -1193,6 +1149,9 @@ label KittyLust(Extreme = 0, Kissing = 0):
             if Partner != "Kitty" and (Trigger == "anal" or Trigger == "dildo anal" or Trigger3 == "dildo anal"):  
                 $ K_Eyes = "closed"
                 $ K_Brows = "angry"
+    
+    if "unseen" in K_RecentActions:
+            $ K_Eyes = "closed"
                 
     return
 
@@ -1201,13 +1160,20 @@ label KittyLust(Extreme = 0, Kissing = 0):
 #  Kitty Orgasm //////////////////////////
 
 label K_Cumming(Quick=0):
+    if K_Loc != bg_current and "phonesex" not in P_RecentActions:
+            #if she's not even in the room. . .
+            $ K_Lust = 25
+            return
     $ K_Eyes = "surprised"
     $ K_Brows = "sad"
     $ K_Mouth = "sucking"
     $ K_Blush = 1
     ch_k ". . . !"
     $ Speed = 0
-    if renpy.showing("Kitty_SexSprite"):
+    if renpy.showing("Kitty_Sprite"):
+            show Kitty_Sprite
+            with vpunch
+    elif renpy.showing("Kitty_SexSprite"):
             show Kitty_SexSprite #fix, test this
             with vpunch
     elif renpy.showing("Kitty_BJ_Animation"):           #fix, make this animation work better when paused for this effect.
@@ -1219,16 +1185,14 @@ label K_Cumming(Quick=0):
     elif renpy.showing("Kitty_HJ_Animation"):
             show Kitty_HJ_Animation  
             with vpunch
-    else:
-            show Kitty_Sprite
-            with vpunch
     $ Speed = 1
     $ Line = renpy.random.choice(["Kitty is suddenly rocked with spasms, holding back a muffled scream.", 
                 "Kitty grabs on tightly as her body shakes with pleasure.", 
                 "Kitty stiffens and lets out a low moan.",
                 "Kitty's body quivers and suddenly goes still."])
-    "[Line]"
-    
+    "[Line]"    
+    $ K_Thirst = int(K_Thirst/2)
+    $ K_Thirst -= 5
     if Quick:
             call AnyFace("Kitty","sexy",2)  
             $ K_Lust = 20
@@ -1352,6 +1316,7 @@ label Kitty_Cleanup(Choice = "random",Options=[],Cnt=0,Cleaned=0,Original="Kitty
                 $ K_Wet = 0
                 return    
             $ Cnt = 1
+            $ Tempmod = 0
         
         
     if K_Addict > 80 and K_Swallow:

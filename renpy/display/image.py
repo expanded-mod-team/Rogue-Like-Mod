@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -367,12 +367,6 @@ class ImageReference(renpy.display.core.Displayable):
         rv.target = target
         return rv
 
-    def _handles_event(self, event):
-        if self.target is None:
-            return False
-
-        return self.target._handles_event(event)
-
     def _hide(self, st, at, kind):
         if self.target is None:
             self.find_target()
@@ -448,9 +442,6 @@ class DynamicImage(renpy.display.core.Displayable):
     # Have we been locked, so we never change?
     locked = False
 
-    # The name used for hashing.
-    hash_name = None
-
     def __init__(self, name, scope=None, **properties):
         super(DynamicImage, self).__init__(**properties)
 
@@ -477,14 +468,7 @@ class DynamicImage(renpy.display.core.Displayable):
         return u"DynamicImage {!r}".format(self.name)
 
     def __hash__(self):
-
-        if self.hash_name is None:
-            if isinstance(self.name, list):
-                self.hash_name = tuple(self.name)
-            else:
-                self.hash_name = self.name
-
-        return hash(self.hash_name)
+        return hash(self.name)
 
     def __eq__(self, o):
         if self is o:
@@ -578,12 +562,6 @@ class DynamicImage(renpy.display.core.Displayable):
 
         rv.locked = True
         return rv
-
-    def _handles_event(self, event):
-        if self.target is None:
-            return False
-
-        return self.target._handles_event(event)
 
     def _hide(self, st, at, kind):
         if self.target is None:
@@ -764,9 +742,7 @@ class ShownImageInfo(renpy.object.Object):
 
         # If the name matches one that exactly exists, return it.
         if (name in images) and not (wanted or remove):
-            ca = get_tag_method(tag, "_choose_attributes")
-            if ca is None:
-                return name
+            return name
 
         nametag = name[0]
 

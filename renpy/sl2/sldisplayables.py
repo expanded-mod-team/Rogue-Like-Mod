@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -300,10 +300,7 @@ def sl2viewport(context=None, **kwargs):
     renpy.ui.stack.pop()
 
     rv = d.child
-
-    if vp is not rv:
-        rv._main = vp
-
+    rv._main = vp
     rv._composite_parts = list(rv.children)
 
     return rv
@@ -325,10 +322,7 @@ def sl2vpgrid(context=None, **kwargs):
     renpy.ui.stack.pop()
 
     rv = d.child
-
-    if vp is not rv:
-        rv._main = vp
-
+    rv._main = vp
     rv._composite_parts = list(rv.children)
 
     return rv
@@ -338,7 +332,6 @@ DisplayableParser("viewport", sl2viewport, "viewport", 1, replaces=True, pass_co
 Keyword("child_size")
 Keyword("mousewheel")
 Keyword("arrowkeys")
-Keyword("pagekeys")
 Keyword("draggable")
 Keyword("edgescroll")
 Keyword("xadjustment")
@@ -364,7 +357,6 @@ Keyword("cols")
 Keyword("child_size")
 Keyword("mousewheel")
 Keyword("arrowkeys")
-Keyword("pagekeys")
 Keyword("draggable")
 Keyword("edgescroll")
 Keyword("xadjustment")

@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -183,7 +183,6 @@ class TextSegment(object):
             self.ruby_top = source.ruby_top
             self.ruby_bottom = source.ruby_bottom
             self.hinting = source.hinting
-            self.outline_color = source.outline_color
 
         else:
             self.hyperlink = 0
@@ -221,7 +220,6 @@ class TextSegment(object):
         self.black_color = style.black_color
         self.hyperlink = None
         self.kerning = layout.scale(style.kerning)
-        self.outline_color = None
 
         if style.slow_cps is True:
             self.cps = renpy.game.preferences.text_cps
@@ -259,7 +257,7 @@ class TextSegment(object):
         """
 
         if di.override_color:
-            color = self.outline_color or di.override_color
+            color = di.override_color
             black_color = None
         else:
             color = self.color
@@ -468,10 +466,7 @@ class Layout(object):
             Layout (which must be another Layout of the same text).
         """
 
-        width = min(32767, width)
-        height = min(32767, height)
-
-        if drawable_res and (not size_only) and renpy.config.drawable_resolution_text:
+        if drawable_res and renpy.config.drawable_resolution_text:
             # How much do we want to oversample the text by, compared to the
             # virtual resolution.
             self.oversample = renpy.display.draw.draw_per_virt
@@ -544,29 +539,18 @@ class Layout(object):
         # The time at which the next glyph will be displayed.
         gt = 0.0
 
+        # True if we've encountered the end segment while assigning times.
+        ended = False
+
         # 2. Breaks the text into a list of paragraphs, where each paragraph is
         # represented as a list of (Segment, text string) tuples.
         #
         # This takes information from the various styles that apply to the text,
         # and so needs to be redone when the style of the text changes.
-
-        if splits_from:
-            self.paragraphs = splits_from.paragraphs
-            self.start_segment = splits_from.start_segment
-            self.end_segment = splits_from.end_segment
-            self.has_hyperlinks = splits_from.has_hyperlinks
-            self.hyperlink_targets = splits_from.hyperlink_targets
-            self.has_ruby = splits_from.has_ruby
-        else:
-            self.paragraphs = self.segment(text.tokens, style, renders, text)
+        self.paragraphs = self.segment(text.tokens, style, renders, text)
 
         first_indent = self.scale_int(style.first_indent)
         rest_indent = self.scale_int(style.rest_indent)
-
-        # True if we've encountered the start and end segments respectively
-        # while assigning times.
-        started = self.start_segment is None
-        ended = False
 
         for p_num, p in enumerate(self.paragraphs):
 
@@ -644,9 +628,9 @@ class Layout(object):
 
             for ts, glyphs in seg_glyphs:
                 # Only assign a time if we're past the start segment.
-                if not started:
+                if self.start_segment is not None:
                     if self.start_segment is ts:
-                        started = True
+                        self.start_segment = None
                     else:
                         continue
 
@@ -1015,9 +999,6 @@ class Layout(object):
             elif tag == "color":
                 push().color = renpy.easy.color(value)
 
-            elif tag == "outlinecolor":
-                push().outline_color = renpy.easy.color(value)
-
             elif tag == "alpha":
                 ts = push()
                 if value[0] in "+-":
@@ -1261,11 +1242,7 @@ def layout_cache_clear():
     virtual_layout_cache_new = { }
 
 
-# A list of slow text that's being displayed right now.
-slow_text = [ ]
-
-
-def text_tick():
+def layout_cache_tick():
     """
     Called once per interaction, to merge the old and new layout caches.
     """
@@ -1277,9 +1254,6 @@ def text_tick():
     global virtual_layout_cache_old, virtual_layout_cache_new
     virtual_layout_cache_old = layout_cache_new
     virtual_layout_cache_new = { }
-
-    global slow_text
-    slow_text = [ ]
 
 
 VERT_REVERSE = renpy.display.render.Matrix2D(0, -1, 1, 0)
@@ -1494,9 +1468,6 @@ class Text(renpy.display.core.Displayable):
         if (self.language != renpy.game.preferences.language) and not self._uses_scope:
             self.set_text(self.text_parameter, substitute=self.substitute, update=True)
 
-        if self.style.slow_abortable:
-            slow_text.append(self)
-
     def set_ctc(self, ctc):
         self.ctc = ctc
         self.dirty = True
@@ -1706,12 +1677,8 @@ class Text(renpy.display.core.Displayable):
         """
 
         if self.slow and renpy.display.behavior.map_event(ev, "dismiss") and self.style.slow_abortable:
-
-            for i in slow_text:
-                if i.slow:
-                    i.call_slow_done(st)
-                    i.slow = False
-
+            self.call_slow_done(st)
+            self.slow = False
             raise renpy.display.core.IgnoreEvent()
 
         layout = self.get_layout()

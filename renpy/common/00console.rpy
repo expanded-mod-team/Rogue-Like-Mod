@@ -105,7 +105,7 @@ init -1500:
 init -1500 python:
 
     # If true, the console is enabled despite config.developer being False.
-    config.console = True
+    config.console = False
 
     config.console_history_size = 100
     config.console_history_lines = 1000
@@ -176,7 +176,7 @@ init -1500 python in _console:
     HistoryEntry = ConsoleHistoryEntry
 
 
-    stdio_lines = _list()
+    stdio_lines = [ ]
 
     def stdout_line(l):
         if not config.developer:
@@ -364,7 +364,7 @@ init -1500 python in _console:
             if old_entry is not None:
                 old_entry.update_lines()
 
-            stdio_lines[:] = _list()
+            stdio_lines[:] = [ ]
 
         def can_renpy(self):
             """

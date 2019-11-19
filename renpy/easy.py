@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -119,18 +119,6 @@ def dynamic_image(d, scope=None, prefix=None, search=None):
     if not isinstance(d, list):
         d = [ d ]
 
-    def find(name):
-
-        if renpy.loader.loadable(name):
-            return True
-
-        if renpy.exports.image_exists(name):
-            return True
-
-        if (len(d) == 1) and (renpy.config.missing_image_callback is not None):
-            if renpy.config.missing_image_callback(name):
-                return True
-
     for i in d:
 
         if not isinstance(i, basestring):
@@ -148,7 +136,10 @@ def dynamic_image(d, scope=None, prefix=None, search=None):
 
                 rv = renpy.substitutions.substitute(i, scope=scope, force=True, translate=False)[0]
 
-                if find(rv):
+                if renpy.loader.loadable(rv):
+                    return displayable_or_none(rv)
+
+                if renpy.exports.image_exists(rv):
                     return displayable_or_none(rv)
 
                 if search is not None:
@@ -158,7 +149,10 @@ def dynamic_image(d, scope=None, prefix=None, search=None):
 
             rv = renpy.substitutions.substitute(i, scope=scope, force=True, translate=False)[0]
 
-            if find(rv):
+            if renpy.loader.loadable(rv):
+                return displayable_or_none(rv)
+
+            if renpy.exports.image_exists(rv):
                 return displayable_or_none(rv)
 
             if search is not None:
@@ -168,7 +162,10 @@ def dynamic_image(d, scope=None, prefix=None, search=None):
 
         rv = d[-1]
 
-        if find(rv):
+        if renpy.loader.loadable(rv):
+            return displayable_or_none(rv, dynamic=False)
+
+        if renpy.exports.image_exists(rv):
             return displayable_or_none(rv, dynamic=False)
 
         return None

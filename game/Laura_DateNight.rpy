@@ -264,12 +264,6 @@ label Laura_Date_Prep:
         $ Options = ["mission", "streets"]
         $ Options.append("custom1") if L_Custom[0] == 2 else Options
         $ Options.append("custom2") if L_Custom2[0] == 2 else Options
-        $ Options.append("custom4") if L_Custom4[0] == 2 else Options
-        $ Options.append("custom5") if L_Custom5[0] == 2 else Options
-        $ Options.append("custom6") if L_Custom6[0] == 2 else Options
-        $ Options.append("custom7") if L_Custom7[0] == 2 else Options
-        $ Options.append("custom8") if L_Custom8[0] == 2 else Options
-        $ Options.append("custom9") if L_Custom9[0] == 2 else Options
         $ Options.append("custom3") if L_Custom3[0] == 2 else Options
         $ renpy.random.shuffle(Options) 
         $ L_Outfit = Options[0]
@@ -868,27 +862,15 @@ label L_Date_End:
                 "Just leave and head back to yours.":
                     call Date_Ditched
                     jump Date_Over    
-            
-            #until her room is ready. . .
-            ch_l "You know, my room's. . . a mess. Let's head for yours."
-            
-            $ bg_current = "bg player"
-            $ L_Loc = "bg player"
+                            
+            $ bg_current = "bg laura"
+            $ L_Loc = "bg laura"
             if "Rogue" in Party:
-                $ R_Loc = "bg player"
+                $ R_Loc = "bg laura"
             if "Emma" in Party:
-                $ E_Loc = "bg player"
+                $ E_Loc = "bg laura"
             if "Kitty" in Party:
-                $ K_Loc = "bg player"
-                
-#            $ bg_current = "bg laura"
-#            $ L_Loc = "bg laura"
-#            if "Rogue" in Party:
-#                $ R_Loc = "bg laura"
-#            if "Emma" in Party:
-#                $ E_Loc = "bg laura"
-#            if "Kitty" in Party:
-#                $ K_Loc = "bg laura"
+                $ K_Loc = "bg laura"
             call Set_The_Scene(Dress=0)
             call Taboo_Level    
     

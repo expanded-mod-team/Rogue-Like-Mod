@@ -156,7 +156,7 @@ label R_Stripping:
                             else:
                                 "She pulls her [Line] over her head, tossing it to the ground."  
                                 
-                            if not R_Chest:
+                            if not R_Chest or R_Uptop:
                                 if not R_SeenChest:                
                                         call Statup("Rogue", "Obed", 50, 3)  
                                         call Statup("Rogue", "Inbt", 50, 3)
@@ -1257,7 +1257,9 @@ label Rogue_ToplessorNothing:
 label Rogue_First_Topless(Silent = 0, TempLine=0):     
     if ChestNum("Rogue") > 1 or OverNum("Rogue") > 2:
         #if she's wearing substantial clothing. . .
-        return     
+        return   
+    if R_Loc != bg_current:
+            return     
     $ R_RecentActions.append("topless")                      
     $ R_DailyActions.append("topless")
     call DrainWord("Rogue","no topless")   
@@ -1801,6 +1803,8 @@ label Rogue_First_Bottomless(Silent = 0):
     if PantiesNum("Rogue") > 1 or PantsNum("Rogue") > 2 or HoseNum("Rogue") > 9:
         #if she's wearing substantial clothing. . .
         return     
+    if R_Loc != bg_current:
+            return   
     $ R_RecentActions.append("bottomless")                      
     $ R_DailyActions.append("bottomless")
     call DrainWord("Rogue","no bottomless")

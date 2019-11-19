@@ -319,6 +319,53 @@ label L_FB_Prep: #Animation set-up
         
     $ Tempmod = 0  
     call L_Breasts_Launch("fondle breasts")
+    
+    if Situation == "Laura":                                                                  
+            #Laura auto-starts    
+            $ Situation = 0
+            if (L_Over or L_Chest) and not L_Uptop:
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Laura", 1250, TabM = 1) or (L_SeenChest and ApprovalCheck("Laura", 500) and not Taboo):
+                        $ L_Uptop = 1
+                        $ Line = L_Over if L_Over else L_Chest
+                        "With a hungry grin, Laura pulls her [Line] up over her breasts."
+                        call Laura_First_Topless(1)
+                        $ Line = 0
+                        "She then grabs your arm and mashes your hand against her breast, clearly intending you to get to work."
+                else:
+                    "Laura grabs your arm and mashes your hand against her covered breast, clearly intending you to get to work."
+            else:
+                "Laura grabs your arm and mashes your hand against her breast, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    call Statup("Laura", "Inbt", 50, 2)
+                    "You start to fondle it."
+                "Praise her.":       
+                    call LauraFace("sexy", 1)                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    ch_p "I like the initiative, [L_Pet]."
+                    call Laura_Namecheck
+                    "You start to fondle it."
+                    call Statup("Laura", "Love", 85, 1)
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your hand back."
+                    call LauraFace("surprised")       
+                    call Statup("Laura", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [L_Pet]."
+                    call Laura_Namecheck
+                    "Laura pulls back."
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 1)
+                    call Statup("Laura", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Laura",1,"refused","refused")  
+                    return          
+            #end auto
+
     if not L_FondleB:        
         if L_Forced:
             call Statup("Laura", "Love", 90, -20)
@@ -491,7 +538,7 @@ label L_FB_Cycle: #Repeating strokes
                                 "You're emptied out, you should probably take a break."
                             
                             
-                            if "unsatisfied" in L_RecentActions:#And Laura is unsatisfied,  
+                            if "unsatisfied" in L_RecentActions and L_SEXP >= 20:#And Laura is unsatisfied,  
                                 "Laura still seems a bit unsatisfied with the experience."
                                 menu:
                                     "Finish her?"
@@ -545,6 +592,8 @@ label L_FB_Cycle: #Repeating strokes
                                     jump L_FB_After
         #End Count check
            
+        call Escalation("Laura","L") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_l "It's getting late, we should wrap this up."  
         elif Round == 5:
@@ -552,7 +601,8 @@ label L_FB_Cycle: #Repeating strokes
             
         if L_Lust >= 50 and not L_Uptop and (L_Chest or L_Over):
                 $ L_Uptop = 1
-                "Laura grunts and pulls her clothes aside."        
+                "Laura grunts and pulls her clothes aside."   
+                call Laura_First_Topless          
     
     #Round = 0 loop breaks
     call LauraFace("bemused", 0)
@@ -775,6 +825,53 @@ label L_SB_Prep:                                                                
     
     $ Tempmod = 0      
     call L_Breasts_Launch("suck breasts")
+        
+    if Situation == "Laura":                                                        
+            #Laura auto-starts    
+            $ Situation = 0
+            if (L_Over or L_Chest) and not L_Uptop:
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Laura", 1250, TabM = 1) or (L_SeenChest and ApprovalCheck("Laura", 500) and not Taboo):
+                        $ L_Uptop = 1
+                        $ Line = L_Over if L_Over else L_Chest
+                        "With a hungry grin, Laura pulls her [Line] up over her breasts."
+                        call Laura_First_Topless(1)
+                        $ Line = 0
+                        "She then grabs your head and crams your face into her chest, clearly intending you to get to work."
+                else:
+                    "Laura grabs your head and crams your face into her chest, clearly intending you to get to work."
+            else:
+                "Laura grabs your head and crams your face into her chest, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    call Statup("Laura", "Inbt", 50, 2)
+                    "You start to run your tongue along her nipple."
+                "Praise her.":       
+                    call LauraFace("sexy", 1)                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    ch_p "Mmm, I like this, [L_Pet]."
+                    call Laura_Namecheck
+                    "You start to fondle it."
+                    call Statup("Laura", "Love", 85, 1)
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your head back."
+                    call LauraFace("surprised")       
+                    call Statup("Laura", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [L_Pet]."
+                    call Laura_Namecheck
+                    "Laura pulls away."
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 1)
+                    call Statup("Laura", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Laura",1,"refused","refused")  
+                    return          
+            #end auto
+                  
     if not L_SuckB:        
         if L_Forced:
             call Statup("Laura", "Love", 90, -25)
@@ -996,6 +1093,8 @@ label L_SB_Cycle: #Repeating strokes
                                     jump L_SB_After
         #End Count check
            
+        call Escalation("Laura","L") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_l "It's getting late, we should wrap this up."  
         elif Round == 5:
@@ -1003,7 +1102,8 @@ label L_SB_Cycle: #Repeating strokes
     
         if L_Lust >= 50 and not L_Uptop and (L_Chest or L_Over):
                 $ L_Uptop = 1
-                "Laura grunts and pulls her clothes aside."        
+                "Laura grunts and pulls her clothes aside."     
+                call Laura_First_Topless    
     
     #Round = 0 loop breaks
     call LauraFace("bemused", 0)
@@ -1387,7 +1487,7 @@ label L_FT_Cycle:                                                               
                                 call L_Pos_Reset
                                 return    
                             call Statup("Laura", "Lust", 200, 5) 
-                            if 100 > L_Lust >= 70 and L_OCount < 2:             
+                            if 100 > L_Lust >= 70 and L_OCount < 2 and L_SEXP >= 20:             
                                 $ L_RecentActions.append("unsatisfied")                      
                                 $ L_DailyActions.append("unsatisfied") 
                             
@@ -1408,7 +1508,7 @@ label L_FT_Cycle:                                                               
                                 "You're emptied out, you should probably take a break."
                             
                             
-                            if "unsatisfied" in L_RecentActions:#And Laura is unsatisfied,  
+                            if "unsatisfied" in L_RecentActions and L_SEXP >= 20:#And Laura is unsatisfied,  
                                     "Laura still seems a bit unsatisfied with the experience."
                                     menu:
                                         "Finish her?"
@@ -1460,6 +1560,8 @@ label L_FT_Cycle:                                                               
                                     jump L_FT_After
         #End Count check
            
+        call Escalation("Laura","L") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_l "It's getting late, we should wrap this up."  
         elif Round == 5:
@@ -1694,6 +1796,70 @@ label L_FP_Prep: #Animation set-up
     $ Tempmod = 0
     
     call L_Pussy_Launch("fondle pussy")
+    
+    if Situation == "Laura":                                                        
+            #Laura auto-starts    
+            $ Situation = 0
+            if (L_Legs and not L_Upskirt) or (L_Panties and not L_PantiesDown):
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Laura", 1250, TabM = 1) or (L_SeenPussy and ApprovalCheck("Laura", 500) and not Taboo):
+                        $ L_Upskirt = 1
+                        $ L_PantiesDown = 1
+                        $ Line = 0
+                        if L_Legs == "skirt":
+                            $ Line = "Laura hikes up her skirt"
+                        elif PantsNum("Laura") >= 5:
+                            $ Line = "Laura pulls down her " + L_Legs
+                        else:
+                            $ Line = 0                            
+                        if L_Panties:
+                            if Line:
+                                #wearing pants
+                                "[Line] and pulls her [L_Panties] out of the way."
+                                "She then grabs your arm and then presses your hand against her crotch, clearly intending you to get to work."
+                            else:
+                                #no pants
+                                "She pulls her [L_Panties] out of the way, and then presses your hand against her crotch."
+                                "She clearly intends for you to get to work." 
+                        else:
+                            #pants but no panties
+                            "[Line], and then presses your hand against her crotch."
+                            "She clearly intends for you to get to work."                     
+                        call Laura_First_Bottomless(1)
+                else:
+                    "Laura grabs your arm and presses your hand against her crotch, clearly intending you to get to work."
+            else:
+                "Laura grabs your arm and presses your hand against her crotch, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    call Statup("Laura", "Inbt", 50, 2)
+                    "You start to run your fingers along her pussy."
+                "Praise her.":       
+                    call LauraFace("sexy", 1)                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    ch_p "I like the initiative, [L_Pet]."
+                    call Laura_Namecheck
+                    "You start to run your fingers along her pussy."
+                    call Statup("Laura", "Love", 85, 1)
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your hand back."
+                    call LauraFace("surprised")       
+                    call Statup("Laura", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [L_Pet]."
+                    call Laura_Namecheck
+                    "Laura pulls back."
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 1)
+                    call Statup("Laura", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Laura",1,"refused","refused")  
+                    return          
+            #end auto
+            
     if not L_FondleP:        
         if L_Forced:
             call Statup("Laura", "Love", 90, -50)
@@ -1943,6 +2109,8 @@ label L_FP_Cycle: #Repeating strokes
                                     jump L_FP_After
         #End Count check
            
+        call Escalation("Laura","L") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_l "It's getting late, we should wrap this up."  
         elif Round == 5:
@@ -2264,6 +2432,70 @@ label L_LP_Prep: #Animation set-up
             
     $ Tempmod = 0      
     call L_Pussy_Launch("lick pussy")
+    
+    if Situation == "Laura":                                                       
+            #Laura auto-starts    
+            $ Situation = 0
+            if (L_Legs and not L_Upskirt) or (L_Panties and not L_PantiesDown):
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Laura", 1250, TabM = 1) or (L_SeenPussy and ApprovalCheck("Laura", 500) and not Taboo):
+                        $ L_Upskirt = 1
+                        $ L_PantiesDown = 1
+                        $ Line = 0
+                        if L_Legs == "skirt":
+                            $ Line = "Laura hikes up her skirt"
+                        elif PantsNum("Laura") >= 5:
+                            $ Line = "Laura pulls down her " + L_Legs
+                        else:
+                            $ Line = 0                            
+                        if L_Panties:
+                            if Line:
+                                #wearing pants
+                                "[Line] and pulls her [L_Panties] out of the way."
+                                "She then grabs your head and wraps her thighs around it, clearly intending you to get to work."
+                            else:
+                                #no pants
+                                "She pulls her [L_Panties] out of the way, and then wraps her thighs around your head."
+                                "She clearly intends for you to get to work." 
+                        else:
+                            #pants but no panties
+                            "[Line], and then wraps her thighs around your head."
+                            "She clearly intends for you to get to work."                     
+                        call Laura_First_Bottomless(1)
+                else:
+                    "Laura grabs your head and wraps her thighs around it, clearly intending you to get to work."
+            else:
+                "Laura grabs your head and wraps her thighs around it, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    call Statup("Laura", "Inbt", 50, 2)
+                    "You start licking."
+                "Praise her.":       
+                    call LauraFace("sexy", 1)                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    ch_p "Mmm, I like this idea, [L_Pet]."
+                    call Laura_Namecheck
+                    "You start licking."
+                    call Statup("Laura", "Love", 85, 1)
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your head away."
+                    call LauraFace("surprised")       
+                    call Statup("Laura", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [L_Pet]."
+                    call Laura_Namecheck
+                    "Laura pulls back."
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 1)
+                    call Statup("Laura", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Laura",1,"refused","refused")  
+                    return          
+            #end auto
+            
     if not L_LickP:        
         if L_Forced:
             call Statup("Laura", "Love", 90, -30)
@@ -2502,6 +2734,8 @@ label L_LP_Cycle: #Repeating strokes
                                     jump L_LP_After
         #End Count check
            
+        call Escalation("Laura","L") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_l "It's getting late, we should wrap this up."  
         elif Round == 5:
@@ -2904,7 +3138,7 @@ label L_FA_Cycle: #Repeating strokes
                                 call L_Pos_Reset
                                 return    
                             call Statup("Laura", "Lust", 200, 5) 
-                            if 100 > L_Lust >= 70 and L_OCount < 2:             
+                            if 100 > L_Lust >= 70 and L_OCount < 2 and L_SEXP >= 20:             
                                 $ L_RecentActions.append("unsatisfied")                      
                                 $ L_DailyActions.append("unsatisfied") 
                             
@@ -2978,6 +3212,8 @@ label L_FA_Cycle: #Repeating strokes
                                     $ L_DailyActions.append("angry")   
                                     jump L_FA_After
         #End Count check
+        
+        call Escalation("Laura","L") #sees if she wants to escalate things
         
         if Round == 10:
             ch_l "It's getting late, we should wrap this up."  
@@ -3217,6 +3453,70 @@ label L_IA_Prep: #Animation set-up
             
     $ Tempmod = 0      
     call L_Pussy_Launch("insert ass")
+    
+    if Situation == "Laura":                                                         
+            #Laura auto-starts    
+            $ Situation = 0
+            if (L_Legs and not L_Upskirt) or (L_Panties and not L_PantiesDown):
+                #if she has some sort of top on. . .
+                if ApprovalCheck("Laura", 1250, TabM = 1) or (L_SeenPussy and ApprovalCheck("Laura", 500) and not Taboo):
+                        $ L_Upskirt = 1
+                        $ L_PantiesDown = 1
+                        $ Line = 0
+                        if L_Legs == "skirt":
+                            $ Line = "Laura hikes up her skirt"
+                        elif PantsNum("Laura") >= 5:
+                            $ Line = "Laura pulls down her " + L_Legs
+                        else:
+                            $ Line = 0                            
+                        if L_Panties:
+                            if Line:
+                                #wearing pants
+                                "[Line] and pulls her [L_Panties] out of the way."
+                                "She then grabs your arm and rubs your hand against her asshole, clearly intending you to get to work."
+                            else:
+                                #no pants
+                                "She pulls her [L_Panties] out of the way, and then rubs your hand against her asshole."
+                                "She clearly intends for you to get to work." 
+                        else:
+                            #pants but no panties
+                            "[Line], and then rubs your hand against her asshole."
+                            "She clearly intends for you to get to work."                     
+                        call Laura_First_Bottomless(1)
+                else:
+                    "Laura grabs your arm and rubs your hand against her asshole, clearly intending you to get to work."
+            else:
+                "Laura grabs your arm and rubs your hand against her asshole, clearly intending you to get to work."
+            menu:
+                "What do you do?"
+                "Get to work.":                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    call Statup("Laura", "Inbt", 50, 2)
+                    "You press your finger into it."
+                "Praise her.":       
+                    call LauraFace("sexy", 1)                    
+                    call Statup("Laura", "Inbt", 80, 3) 
+                    ch_p "Dirty girl, [L_Pet]."
+                    call Laura_Namecheck
+                    "You press your finger into it."
+                    call Statup("Laura", "Love", 85, 1)
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull your hand back."
+                    call LauraFace("surprised")       
+                    call Statup("Laura", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [L_Pet]."
+                    call Laura_Namecheck
+                    "Laura pulls back."
+                    call Statup("Laura", "Obed", 90, 1)
+                    call Statup("Laura", "Obed", 50, 1)
+                    call Statup("Laura", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Laura",1,"refused","refused")  
+                    return          
+            #end auto
+            
     if not L_InsertA:        
         if L_Forced:
             call Statup("Laura", "Love", 90, -50)
@@ -3454,6 +3754,8 @@ label L_IA_Cycle: #Repeating strokes
                                     jump L_IA_After
         #End Count check
            
+        call Escalation("Laura","L") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_l "It's getting late, we should wrap this up."  
         elif Round == 5:
@@ -3946,6 +4248,8 @@ label L_LA_Cycle: #Repeating strokes
                                     jump L_LA_After
         #End Count check
            
+        call Escalation("Laura","L") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_l "It's getting late, we should wrap this up."  
         elif Round == 5:

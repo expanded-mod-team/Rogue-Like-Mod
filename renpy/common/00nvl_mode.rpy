@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+﻿# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -169,8 +169,6 @@ init -1500 python:
             e.window_args = kwargs["window_args"]
             e.properties = kwargs["properties"]
 
-            e.multiple = kwargs["multiple"]
-
             dialogue.append(e)
 
         show_args = dict(kwargs)
@@ -179,9 +177,6 @@ init -1500 python:
             del show_args["who_args"]
             del show_args["what_args"]
             del show_args["window_args"]
-
-            show_args.pop("multiple", None)
-
 
         return widget_properties, dialogue, show_args
 
@@ -198,7 +193,7 @@ init -1500 python:
 
         return renpy.get_widget(screen_name, "what", config.nvl_layer)
 
-    def nvl_show_core(who=None, what=None, multiple=None):
+    def nvl_show_core(who=None, what=None):
 
          # Screen version.
         if renpy.has_screen("nvl"):
@@ -291,32 +286,20 @@ init -1500 python:
                 kind=kind,
                 **properties)
 
-        def push_nvl_list(self, who, what, multiple=None):
+        def push_nvl_list(self, who, what):
 
             kwargs = self.show_args.copy()
             kwargs["properties"] = dict(self.properties)
             kwargs["what_args"] = dict(self.what_args)
             kwargs["who_args"] = dict(self.who_args)
             kwargs["window_args"] = dict(self.window_args)
-            kwargs["multiple"] = multiple
-
-            if multiple:
-
-                def multiple_style(k):
-                    style = kwargs[k]["style"]
-                    style = "block{}_multiple{}_{}".format(multiple[0], multiple[1], style)
-                    kwargs[k]["style"] = style
-
-                multiple_style("what_args")
-                multiple_style("who_args")
-                multiple_style("window_args")
 
             store.nvl_list.append((who, what, kwargs))
 
         def pop_nvl_list(self):
             store.nvl_list.pop()
 
-        def do_add(self, who, what, multiple=None):
+        def do_add(self, who, what):
 
             if store.nvl_list is None:
                 store.nvl_list = [ ]
@@ -328,7 +311,7 @@ init -1500 python:
             while config.nvl_list_length and (len(nvl_list) + 1 > config.nvl_list_length):
                 nvl_list.pop(0)
 
-        def do_display(self, who, what, multiple=None, **display_args):
+        def do_display(self, who, what, **display_args):
 
             page = self.clear or nvl_clear_next()
 
@@ -346,32 +329,23 @@ init -1500 python:
             else:
                 checkpoint = True
 
-            self.push_nvl_list(who, what, multiple=multiple)
+            self.push_nvl_list(who, what)
 
             renpy.display_say(
                 who,
                 what,
                 nvl_show_core,
                 checkpoint=checkpoint,
-                multiple=multiple,
                 **display_args)
 
             self.pop_nvl_list()
 
-        def do_done(self, who, what, multiple=None):
+        def do_done(self, who, what):
 
-            self.push_nvl_list(who, what, multiple=multiple)
+            self.push_nvl_list(who, what)
 
-            if multiple is None:
-                start = -1
-            elif multiple[0] == multiple[1]:
-                start = -multiple[0]
-            else:
-                start = 0
-
-            for i in range(start, 0):
-                nvl_list[i][2]["what_args"]["alt"] = ""
-                nvl_list[i][2]["who_args"]["alt"] = ""
+            nvl_list[-1][2]["what_args"]["alt"] = ""
+            nvl_list[-1][2]["who_args"]["alt"] = ""
 
             if self.clear:
                 nvl_clear()

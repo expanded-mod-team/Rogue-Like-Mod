@@ -1,4 +1,4 @@
-# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -152,7 +152,6 @@ def elide_filename(fn):
     or relative to the Ren'Py directory.
     """
 
-    ofn = fn
     fn = os.path.abspath(fn)
     basedir = os.path.abspath(renpy.config.basedir)
     renpy_base = os.path.abspath(renpy.config.renpy_base)
@@ -162,7 +161,7 @@ def elide_filename(fn):
     elif fn.startswith(renpy_base):
         return os.path.relpath(fn, renpy_base).replace("\\", "/")
     else:
-        return ofn.replace("\\", "/")
+        return fn.replace("\\", "/")
 
 
 def unelide_filename(fn):
@@ -170,7 +169,7 @@ def unelide_filename(fn):
     if os.path.exists(fn1):
         return fn1
 
-    fn2 = os.path.join(renpy.config.renpy_base, fn)
+    fn2 = os.path.join(renpy.config.basedir, fn)
     if os.path.exists(fn2):
         return fn2
 
@@ -190,17 +189,6 @@ def list_logical_lines(filename, filedata=None, linenumber=1, add_lines=False):
     If `filedata` is given, it should be a unicode string giving the file
     contents. In that case, `filename` need not exist.
     """
-
-    def munge_string(m):
-        brackets = m.group(1)
-
-        if (len(brackets) & 1) == 0:
-            return m.group(0)
-
-        if "__" in m.group(2):
-            return m.group(0)
-
-        return brackets + prefix + m.group(2)
 
     global original_filename
 
@@ -343,8 +331,6 @@ def list_logical_lines(filename, filedata=None, linenumber=1, add_lines=False):
                     pos += 2
                     triplequote = True
 
-                s = [ ]
-
                 while pos < len_data:
 
                     c = data[pos]
@@ -359,39 +345,30 @@ def list_logical_lines(filename, filedata=None, linenumber=1, add_lines=False):
                     if escape:
                         escape = False
                         pos += 1
-                        s.append(c)
+                        line.append(c)
                         continue
 
                     if c == delim:
 
                         if not triplequote:
                             pos += 1
-                            s.append(c)
+                            line.append(c)
                             break
 
                         if (pos < len_data - 2) and (data[pos+1] == delim) and (data[pos+2] == delim):
                             pos += 3
-                            s.append(delim)
-                            s.append(delim)
-                            s.append(delim)
+                            line.append(delim)
+                            line.append(delim)
+                            line.append(delim)
                             break
 
                     if c == u'\\':
                         escape = True
 
-                    s.append(c)
+                    line.append(c)
                     pos += 1
 
                     continue
-
-                s = "".join(s)
-
-                if "[__" in s:
-
-                    # Munge substitutions.
-                    s = re.sub(r'(\.|\[+)__(\w+)', munge_string, s)
-
-                line.append(s)
 
                 continue
 
@@ -971,13 +948,7 @@ class Lexer(object):
 
         return rv
 
-    def expr(self, s, expr):
-        if not expr:
-            return s
-
-        return renpy.ast.PyExpr(s, self.filename, self.number)
-
-    def delimited_python(self, delim, expr=True):
+    def delimited_python(self, delim):
         """
         This matches python code up to, but not including, the non-whitespace
         delimiter characters. Returns a string containing the matched code,
@@ -992,7 +963,7 @@ class Lexer(object):
             c = self.text[self.pos]
 
             if c in delim:
-                return self.expr(self.text[start:self.pos], expr)
+                return renpy.ast.PyExpr(self.text[start:self.pos], self.filename, self.number)
 
             if c in "'\"":
                 self.python_string()
@@ -1005,18 +976,18 @@ class Lexer(object):
 
         self.error("reached end of line when expecting '%s'." % delim)
 
-    def python_expression(self, expr=True):
+    def python_expression(self):
         """
         Returns a python expression, which is arbitrary python code
         extending to a colon.
         """
 
-        pe = self.delimited_python(':', False)
+        pe = self.delimited_python(':')
 
         if not pe:
             self.error("expected python_expression")
 
-        rv = self.expr(pe.strip(), expr)  # E1101
+        rv = renpy.ast.PyExpr(pe.strip(), pe.filename, pe.linenumber)  # E1101
 
         return rv
 
@@ -1031,19 +1002,19 @@ class Lexer(object):
 
         if c == '(':
             self.pos += 1
-            self.delimited_python(')', False)
+            self.delimited_python(')')
             self.pos += 1
             return True
 
         if c == '[':
             self.pos += 1
-            self.delimited_python(']', False)
+            self.delimited_python(']')
             self.pos += 1
             return True
 
         if c == '{':
             self.pos += 1
-            self.delimited_python('}', False)
+            self.delimited_python('}')
             self.pos += 1
             return True
 
@@ -1182,15 +1153,6 @@ class Lexer(object):
         pos = self.pos
         self.pos = len(self.text)
         return renpy.ast.PyExpr(self.text[pos:].strip(), self.filename, self.number)
-
-    def rest_statement(self):
-        """
-        Like rest, but returns a string rather than a PyExpr.
-        """
-
-        pos = self.pos
-        self.pos = len(self.text)
-        return self.text[pos:].strip()
 
     def python_block(self):
         """
@@ -2057,7 +2019,7 @@ def transform_statement(l, loc):
 
 @statement("$")
 def one_line_python(l, loc):
-    python_code = l.rest_statement()
+    python_code = l.rest()
 
     if not python_code:
         l.error('expected python code')

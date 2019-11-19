@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+﻿# Copyright 2004-2017 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -397,22 +397,15 @@ init -1500 python in build:
 
         rv = { }
 
-        excludes = [ ]
-
         if not include_old_themes:
-            excludes.extend([
+            exclude_old_themes = [
                 ( "renpy/common/_compat/**", None),
                 ( "renpy/common/_roundrect/**", None),
                 ( "renpy/common/_outline/**", None),
                 ( "renpy/common/_theme**", None),
-            ])
-
-        import sys
-
-        if "_ssl" not in sys.modules:
-            excludes.extend([
-                ( "lib/**/_ssl.*", None),
-            ])
+            ]
+        else:
+            exclude_old_themes = [ ]
 
         rv["directory_name"] = directory_name
         rv["executable_name"] = executable_name
@@ -422,7 +415,7 @@ init -1500 python in build:
         rv["archives"] = archives
         rv["documentation_patterns"] = documentation_patterns
         rv["base_patterns"] = early_base_patterns + base_patterns + late_base_patterns
-        rv["renpy_patterns"] = excludes + renpy_patterns
+        rv["renpy_patterns"] = exclude_old_themes + renpy_patterns
         rv["xbit_patterns"] = xbit_patterns
         rv["version"] = version or directory_name
         rv["display_name"] = display_name or executable_name
