@@ -8940,3 +8940,540 @@ label PhoneSex(Girl=0):
         return
 #add option for girl to strip herself. . .
 # End Phone Sex / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /  
+
+
+# Start Dressing Screen / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+label Display_DressScreen(Girl=Ch_Focus,XTaboo=0):
+    #asks if you're willing to put up a protective dressing screen, XTaboo is the girl's local taboo
+    # call Display_DressScreen(Girl)
+    if renpy.showing('DressScreen'):
+        return 1
+        
+    if Girl == "Rogue":
+            $ XTaboo = R_Taboo
+    elif Girl == "Kitty":
+            $ XTaboo = K_Taboo
+    elif Girl == "Emma":
+            $ XTaboo = E_Taboo
+    elif Girl == "Laura":
+            $ XTaboo = L_Taboo
+            
+    if XTaboo:
+        return 0
+    
+    call AnyFace(Girl,"bemused",1,Eyes="side")
+    if CheckWord(Girl,"Daily","screen"):
+            pass
+    elif Girl == "Rogue":
+            ch_r "I'm not really comfortable like this."
+    elif Girl == "Kitty":
+            ch_k "I'm getting kinda exposed here."
+    elif Girl == "Emma":
+            ch_e "I'm feeling a bit exposed here. . ."
+    elif Girl == "Laura":
+            ch_l "I don't know about showing this much skin."
+    call AnyWord(Girl,1,0,"screen") #adds screen to daily
+    call AnyFace(Girl,"bemused",1)
+    menu:
+        ch_n "Mind if I get behind a dressing screen?"
+        "Go ahead":
+                show DressScreen zorder 150
+                if Girl == "Rogue":
+                        ch_r "Thanks."                   
+                elif Girl == "Kitty":
+                        ch_k "Great." 
+                elif Girl == "Emma":
+                        ch_e "Thank you." 
+                elif Girl == "Laura":
+                        ch_l "K."  
+                return 1
+        "No, don't":
+                if Girl == "Rogue":
+                        ch_r "Fine then. . ."                   
+                elif Girl == "Kitty":
+                        ch_k "Ok then. . ." 
+                elif Girl == "Emma":
+                        ch_e "Fair enough. . ." 
+                elif Girl == "Laura":
+                        ch_l "Ok. . ."  
+            
+    return 0
+# End Dressing Screen / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+    
+
+# Start Compliments / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /  
+label Compliment(Girl=0,Line0=0,Line1=0,Line2=0,Options=[],CountList=[],Line=0,D20=0):
+    #called from the flirt menu, picked three random options from the Options list
+    #player picks one, then that outcome is evaluated to determine stat outcomes. 
+    #call Compliment(Girl)
+    
+    $ Options = ["You really nailed that Danger Room exercise", #0
+                "Great job in class the other day",             #1
+                "You're looking extra beautiful today",         #2
+                "Hey there, gorgeous",                          #3
+                "I'm sorry, I got lost in your eyes",           #4
+                "You're looking really toned lately",           #5
+                "You have some really nice tits",               #6
+                "Your ass looks really great",                  #7
+                "Oh, what's that fragrance? It suits you",      #8
+                "I'm so into you"]                              #9
+    
+    $ CountList = [0,1,2,3,4,5,6,7,8,9]    
+    $ renpy.random.shuffle(CountList)
+    
+    $ Line0 = Options[CountList[0]] #let's say, this is 7
+    $ Line1 = Options[CountList[1]]
+    $ Line2 = Options[CountList[2]]
+    menu:
+            "[Line0]":
+                $ Line = CountList[0] # Line would now = 7, corresponding to the 7th entry in Options
+            "[Line1]":
+                $ Line = CountList[1]
+            "[Line2]":
+                $ Line = CountList[2]
+            "Never mind":                
+                return
+                    
+    $ D20 = renpy.random.randint(5, 20)
+    
+    #responses based on compliment <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <>
+    if Line == 0:       
+            #"You really nailed that Danger Room exercise",  #0
+            if ApprovalCheck(Girl, 1000):
+                    $ D20 += 5                      
+                    
+            call Statup(Girl, "Love", 60, 3) 
+            if Girl == "Laura":  
+                    call Statup(Girl, "Love", 40, 3)
+                    if D20 >= 10:
+                            call AnyFace(Girl,"smile") 
+                            call Statup(Girl, "Love", 80, 2) 
+                            call Statup(Girl, "Inbt", 60, 2)
+                            call Statup(Girl, "Lust", 50, 2)
+                            ch_l "I know right? I think I nailed that one."
+                            ch_l "Those tin cans never stood a chance!"
+                    else:
+                            call AnyFace(Girl,"angry",1,Eyes="side") 
+                            call Statup(Girl, "Inbt", 50, 1)
+                            ch_l "Thanks. . ."
+                            ch_l "I don't know, I think I missed one of the Sentinels."
+                            ch_l "I have to be better than this."
+                            call AnyFace(Girl,"normal",0) 
+            else:
+                    call Statup(Girl, "Obed", 60, 2)
+                    if D20 >= 15:
+                            call AnyFace(Girl,"smile") 
+                            call Statup(Girl, "Love", 60, 1) 
+                            call Statup(Girl, "Obed", 60, 2)
+                            call Statup(Girl, "Inbt", 60, 1)
+                            ch_n "Yeah, I think I really nailed that one."
+                    elif D20 >= 10:
+                            call AnyFace(Girl,"bemused",2) 
+                            call Statup(Girl, "Love", 60, 1) 
+                            call Statup(Girl, "Obed", 60, 1)
+                            ch_n "I think there's room for improvement though."
+                    else:
+                            call AnyFace(Girl,"bemused",1,Eyes="side") 
+                            call Statup(Girl, "Love", 80, 1) 
+                            ch_n "I appreciate the support, but we both know I could have done better."
+                            call AnyFace(Girl,"smile") 
+            #"You really nailed that Danger Room exercise",  #0
+    elif Line == 1:    
+            #"Great job in class the other day",             #1
+            if not ApprovalCheck(Girl, 700):
+                    $ D20 -= 5    
+                    
+            if D20 >= 10:
+                    call Statup(Girl, "Love", 70, 2) 
+                    call Statup(Girl, "Obed", 60, 1)
+                    if Girl == "Kitty":
+                            call AnyFace(Girl,"smile") 
+                            call Statup(Girl, "Love", 80, 2) 
+                            call Statup(Girl, "Inbt", 50, 1) 
+                            ch_k "Thanks, [K_Petname]!"
+                            ch_k "The numbers really spoke to me."                         
+                    elif Girl == "Emma":
+                            call AnyFace(Girl,"bemused") 
+                            call Statup(Girl, "Love", 80, 2) 
+                            ch_e "I'm glad you were paying attention, [E_Petname]."                      
+                    else:           
+                            call AnyFace(Girl,"confused") 
+                            ch_n "Thanks?"                         
+            else:             
+                    call AnyFace(Girl,"bemused") 
+                    call Statup(Girl, "Love", 60, 1) 
+                    call Statup(Girl, "Inbt",50, 1)   
+                    if Girl == "Kitty":
+                            ch_k "Yeah, I definitely gave it my all there."
+                            $ D20 += 5  
+                    elif Girl == "Emma":
+                            ch_e "I'm surprised you were paying attention."
+                    else:           
+                            ch_n "Yeah, it was ok. Got a little dull though."
+            #"Great job in class the other day",             #1
+    elif Line == 2:   
+            #"You're looking extra beautiful today",         #2
+            if not ApprovalCheck(Girl, 900):
+                    $ D20 -= 10
+            if Girl == "Kitty" or Girl == "Rogue": 
+                    $ D20 += 5    
+                    
+            call Statup(Girl, "Inbt", 50, 2) 
+            if Girl == "Laura": 
+                    call AnyFace(Girl,"confused",1) 
+                    call Statup(Girl, "Love", 80, 1, 1) 
+                    call Statup(Girl, "Obed", 60, 2)             
+                    ch_l ". . ."
+                    ch_l "Ok?"
+            elif D20 >= 10:
+                    call AnyFace(Girl,"bemused",2) 
+                    call Statup(Girl, "Love", 70, 2) 
+                    call Statup(Girl, "Love", 90, 2) 
+                    if Girl == "Rogue":
+                            ch_r "Well aren't you full'a sugar."
+                    elif Girl == "Kitty":
+                            ch_k "Aw, that's sweet of you to say."
+                    elif Girl == "Emma":
+                            ch_e "I do make an effort. . ."
+                    call AnyFace(Girl,"bemused",1) 
+            else:
+                    call AnyFace(Girl,"bemused",1) 
+                    call Statup(Girl, "Love", 50, -1)
+                    call Statup(Girl, "Love", 70, -1) 
+                    call Statup(Girl, "Obed", 50, 2)
+                    if Girl == "Rogue":
+                            ch_r "Well aren't you full'a crap. . ."
+                    elif Girl == "Kitty":
+                            ch_k "Um, ok. . ."
+                    elif Girl == "Emma":
+                            ch_e "So -just- today? . ."
+            #"You're looking extra beautiful today",         #2
+    elif Line == 3:    
+            #"Hey there, gorgeous",                          #3
+            if not ApprovalCheck(Girl, 900):
+                    $ D20 -= 10           
+            if Girl == "Kitty" or Girl == "Emma": 
+                    $ D20 += 5 
+                    
+            if Girl == "Laura":  
+                    call AnyFace(Girl,"confused",1) 
+                    call Statup(Girl, "Love", 70, 2, 1) 
+                    call Statup(Girl, "Inbt", 50, 1)            
+                    ch_l "Um. . . hi?"
+            elif D20 >= 10:
+                    call AnyFace(Girl,"smile",2) 
+                    call Statup(Girl, "Love", 60, 2) 
+                    if D20 >= 15:
+                            call Statup(Girl, "Love", 200, 1) 
+                            call Statup(Girl, "Obed", 60, 1)
+                            call Statup(Girl, "Inbt", 80, 1)
+                    if Girl == "Rogue":
+                            ch_r "\"Hey there\" yourself."
+                    elif Girl == "Kitty":
+                            ch_k "Oh, hehe, that's sweet of you. . ."
+                    elif Girl == "Emma":
+                            ch_e "Yes. . . hello to you as well."
+                    call AnyFace(Girl,"smile",1) 
+            else:
+                    call AnyFace(Girl,"bemused",1) 
+                    call Statup(Girl, "Love", 60, -1) 
+                    call Statup(Girl, "Obed", 60, 2)
+                    call Statup(Girl, "Inbt", 50, 1)
+                    if Girl == "Rogue":
+                            ch_r "\"Gorgeous\" yourself."
+                    elif Girl == "Kitty":
+                            ch_k "Riight. . ."
+                    elif Girl == "Emma":
+                            ch_e "Children these days. . ."
+            #"Hey there, gorgeous",                          #3
+    elif Line == 4:     
+            #"I'm sorry, I got lost in your eyes",           #4       
+            if ApprovalCheck(Girl, 900, "L") and Girl != "Emma":
+                    pass
+            elif not ApprovalCheck(Girl, 1000):
+                    $ D20 -= 10
+            if Girl == "Kitty" or Girl == "Rogue": 
+                    $ D20 += 10 
+                    
+            if Girl == "Laura":    
+                            call AnyFace(Girl,"confused")           
+                            ch_l "What?"     
+            elif D20 >= 10:
+                    call AnyFace(Girl,"bemused",2) 
+                    call Statup(Girl, "Love", 90, 2) 
+                    call Statup(Girl, "Obed", 50, 2)
+                    call Statup(Girl, "Inbt", 30, 1)
+                    if Girl == "Rogue":
+                            ch_r "What a charmer."
+                    elif Girl == "Kitty":
+                            call AnyFace(Girl,"bemused",2,Mouth="smile") 
+                            call Statup(Girl, "Love", 200, 1) 
+                            call Statup(Girl, "Lust", 50, 2)
+                            ch_k "Heh. . . you don't say. . ."
+                    elif Girl == "Emma":
+                            call AnyFace(Girl,"bemused",1) 
+                            ch_e "A valiant effort. . ."
+                    call AnyFace(Girl,"bemused",1) 
+            else:
+                    call AnyFace(Girl,"angry",1,Eyes="up") 
+                    call Statup(Girl, "Love", 60, 1) 
+                    call Statup(Girl, "Obed", 50, 1)
+                    if Girl == "Rogue":
+                            ch_r "Maybe stay lost."
+                    elif Girl == "Kitty":
+                            ch_k "Uh-huh. . ."
+                    elif Girl == "Emma":
+                            ch_e "Perhaps you're laying it on a bit thick there. . ."
+                    call AnyFace(Girl,"normal") 
+            #"I'm sorry, I got lost in your eyes",           #4   
+    elif Line == 5:     
+            #"You're looking really toned lately",           #5
+            if not ApprovalCheck(Girl, 1200):
+                if not ApprovalCheck(Girl, 600):
+                    $ D20 -= 12
+                else:
+                    $ D20 -= 8
+            if Girl == "Laura": 
+                    $ D20 += 8 
+                    
+            if Girl == "Laura":  
+                            call AnyFace(Girl,"bemused") 
+                            call Statup(Girl, "Love", 80, 2) 
+                            call Statup(Girl, "Love", 90, 1) 
+                            call Statup(Girl, "Inbt", 50, 2)              
+                            ch_l "Thanks? I've been trying something new."
+            elif D20 >= 10:
+                    call AnyFace(Girl,"bemused",1) 
+                    call Statup(Girl, "Love", 60, 2) 
+                    call Statup(Girl, "Obed", 60, 2)
+                    call Statup(Girl, "Inbt", 60, 2)
+                    if Girl == "Rogue":
+                            ch_r "Well. . . that's sweet of ya. . ."
+                    elif Girl == "Kitty":
+                            ch_k "Oh. . . ok, um, thank you?"
+                    elif Girl == "Emma":
+                            ch_e "Hmm, maybe a bit too lean? Perhaps I should take a break."
+            else:
+                    call AnyFace(Girl,"angry",2) 
+                    call Statup(Girl, "Love", 50, -1) 
+                    call Statup(Girl, "Love", 70, -1) 
+                    call Statup(Girl, "Obed", 50, 2)
+                    call Statup(Girl, "Inbt", 50, 1)
+                    if Girl == "Rogue":
+                            ch_r "Maybe don't concern yourself with my \"tone.\""
+                    elif Girl == "Kitty":
+                            ch_k "Are you being sarcastic?"
+                    elif Girl == "Emma":
+                            ch_e "I don't think we should be discussing my body."
+                    call AnyFace(Girl,"angry",1,Mouth="normal") 
+            #"You're looking really toned lately",           #5
+    elif Line == 6:     
+            #"You have some really nice tits",               #6
+            if ApprovalCheck(Girl, 700, "I"):
+                    pass
+            elif not ApprovalCheck(Girl, 1400): #at least -5, -10 if under 900
+                if not ApprovalCheck(Girl, 900):
+                    $ D20 -= 15
+                else:
+                    $ D20 -= 10
+            if Girl == "Emma" or Girl == "Kitty": 
+                    $ D20 += 5 
+            else:     
+                if D20 >= 10:    
+                    call AnyFace(Girl,"bemused",2) #for Rogue and Laura's
+                else:
+                    call AnyFace(Girl,"angry",2) #for Rogue and Laura's
+            if D20 >= 10:
+                    call Statup(Girl, "Love", 90, 2) 
+                    call Statup(Girl, "Love", 200, 1) 
+                    call Statup(Girl, "Obed", 80, 4)
+                    call Statup(Girl, "Inbt", 80, 3)
+                    call Statup(Girl, "Inbt", 200, 1)
+                    call Statup(Girl, "Lust", 50, 3)
+                    if Girl == "Kitty":
+                            call AnyFace(Girl,"bemused",2,Mouth="smile") 
+                            ch_k "Really? Thanks, I appreciate that. . ."                           
+                    elif Girl == "Emma":
+                            call AnyFace(Girl,"bemused",1,Mouth="smile") 
+                            ch_e "Marvelous, aren't they?"
+            else:        
+                    call Statup(Girl, "Love", 70, -1) 
+                    call Statup(Girl, "Obed", 60, 3)
+                    call Statup(Girl, "Obed", 80, 2)
+                    call Statup(Girl, "Inbt", 80, 3)
+                    if Girl == "Kitty":
+                        if D20 <= 5:
+                            call AnyFace(Girl,"angry",2) 
+                            call Statup(Girl, "Love", 60, -3) 
+                            call Statup(Girl, "Love", 90, -1) 
+                            ch_k "Asshole!"
+                        else:    
+                            call AnyFace(Girl,"sadside",2,Mouth="smile")                             
+                            ch_k "I get where you're going with that, but. . ."
+                        call AnyFace(Girl,5,1) 
+                    elif Girl == "Emma":
+                            call AnyFace(Girl,"bemused",1) 
+                            ch_e "Perhaps keep your eyes up here?"
+                            if D20 >= 5:
+                                    call AnyFace(Girl,"angry",1) 
+                                    ch_e ". . ."
+                                    call AnyFace(Girl,"bemused",1) 
+                                    call Statup(Girl, "Love", 90, 2) 
+                                    call Statup(Girl, "Lust", 70, 5)
+                                    ch_e "Higher!"            
+            if Girl == "Rogue":
+                    ch_r "Well bless your heart. I appreciate the effort."
+            elif Girl == "Laura":                
+                    ch_l "I guess so?"          
+            if Girl != "Kitty":
+                    call AnyFace(Girl,"bemused",1)
+            #"You have some really nice tits",               #6
+    elif Line == 7:   
+            #"Your ass looks really great",                  #7            
+            if ApprovalCheck(Girl, 700, "I"):
+                    pass
+            elif not ApprovalCheck(Girl, 1300):
+                if not ApprovalCheck(Girl, 900):
+                    $ D20 -= 15
+                else:
+                    $ D20 -= 10
+            if Girl == "Emma" or Girl == "Rogue": 
+                    $ D20 += 5 
+                    
+            if D20 >= 10:
+                    call AnyFace(Girl,"bemused",2) 
+                    call Statup(Girl, "Love", 80, 2) 
+                    call Statup(Girl, "Love", 90, 1) 
+                    call Statup(Girl, "Obed", 60, 1)
+                    call Statup(Girl, "Inbt", 60, 1)
+                    call Statup(Girl, "Lust", 30, 2)
+                    if Girl == "Rogue":
+                            ch_r "I don't know, my jeans have been getting a bit tight. . ."
+                    elif Girl == "Kitty":
+                            ch_k "I guess so? I mean. . ."
+                    elif Girl == "Emma":
+                            ch_e "My, you do have good taste. . ."
+                            call AnyFace(Girl,"confused",1)  
+                            ch_e "If perhaps poor manners. . ."
+                    elif Girl == "Laura":      
+                            call AnyFace(Girl,"smile",1)           
+                            ch_l "Good to know."
+                    call AnyFace(Girl,"bemused",1) 
+            else:        
+                    call AnyFace(Girl,"angry",1) 
+                    call Statup(Girl, "Love", 60, -1) 
+                    call Statup(Girl, "Love", 70, -2) 
+                    call Statup(Girl, "Obed", 60, 3)
+                    call Statup(Girl, "Inbt", 50, 2)
+                    if Girl == "Emma":
+                            ch_e "You shouldn't comment on a lady's figure."
+                    elif Girl == "Laura":    
+                            call AnyFace(Girl,"confused",1)            
+                            ch_l "Right. . ."
+                    else:
+                            ch_n "Rude."
+                    call AnyFace(Girl,"normal",1) 
+            #"Your ass looks really great",                  #7  
+    elif Line == 8:    
+            #"Oh, what's that fragrance? It suits you",      #8            
+            if ApprovalCheck(Girl, 800, "L"):
+                    pass
+            elif not ApprovalCheck(Girl, 1300):
+                    $ D20 -= 10
+            if Girl == "Emma" or Girl == "Laura": 
+                    $ D20 += 15 
+                    
+            if D20 >= 10:
+                    call AnyFace(Girl,"bemused",1,Mouth="smile") 
+                    call Statup(Girl, "Love", 90, 2) 
+                    call Statup(Girl, "Love", 200, 1) 
+                    call Statup(Girl, "Obed", 60, 2)
+                    call Statup(Girl, "Inbt", 80, 3)
+                    call Statup(Girl, "Lust", 50, 2)
+                    if Girl == "Rogue":
+                            ch_r "Oh? Thank you, I guess?"
+                    elif Girl == "Kitty":
+                            ch_k "Huh? . . I don't know, my usual shampoo, I guess. . ."
+                    elif Girl == "Emma":
+                            ch_e "Thank you, I picked it up last time I was in Grasse."
+                    elif Girl == "Laura":                
+                            ch_l "Probably blood, mostly. Ninjas."                    
+            else:        
+                    call AnyFace(Girl,"angry",2,Mouth="grimace") 
+                    call Statup(Girl, "Love", 60, -1) 
+                    call Statup(Girl, "Obed", 60, 2)
+                    call Statup(Girl, "Inbt", 50, 1)
+                    if Girl == "Rogue":
+                            ch_r "Probably best not to talk about a woman's scent."
+                    elif Girl == "Kitty":
+                            ch_k "Gross. . ."
+                    elif Girl == "Emma":
+                            ch_e "You might want to back up a bit. . ."
+                    elif Girl == "Laura":           
+                            call AnyFace(Girl,"confused",1) 
+                            call Statup(Girl, "Lust", 50, 2)     
+                            ch_l "I don't know, I'm kinda sweaty, I guess. . ."
+                    call AnyFace(Girl,"bemused",1) 
+            #"Oh, what's that fragrance? It suits you",      #8 
+    elif Line == 9:   
+            #"I'm so into you"                               #9            
+            if ApprovalCheck(Girl, 900, "L"):
+                    pass
+            elif not ApprovalCheck(Girl, 1100):
+                    $ D20 -= 10
+            if Girl == "Laura" or Girl == "Rogue": 
+                    $ D20 += 5 
+                    
+            if D20 >= 10:
+                    call AnyFace(Girl,"sly",1) 
+                    call Statup(Girl, "Love", 80, 1) 
+                    call Statup(Girl, "Love", 90, 1) 
+                    call Statup(Girl, "Obed", 70, 2)
+                    call Statup(Girl, "Inbt", 80, 3)
+                    call Statup(Girl, "Lust", 30, 5)
+                    call Statup(Girl, "Lust", 60, 5)
+                    if Girl == "Rogue":
+                            ch_r "I'm glad for that. . ."
+                    elif Girl == "Kitty":
+                            ch_k "You aren't yet. . ."
+                            ch_k "but you could be. . ."
+                    elif Girl == "Emma":
+                            ch_e "Hmm, yes. . . I can see that."
+                    elif Girl == "Laura":                
+                            ch_l "Not yet, you aren't."
+            else:                 
+                    call Statup(Girl, "Love", 60, -2) 
+                    call Statup(Girl, "Obed", 60, 1)
+                    call Statup(Girl, "Inbt", 50, 1)
+                    if Girl == "Emma":
+                            call AnyFace(Girl,"angry",1,Mouth="smirk") 
+                            ch_e "That's not really appropriate."
+                    else:              
+                            call AnyFace(Girl,"bemused",1)   
+                            ch_n "Ok. . ."
+            #"I'm so into you"                               #9   
+    
+    if D20 < 10:
+        menu:
+            "Sorry":
+                    if Girl != "Laura":      
+                        call Statup(Girl, "Love", 60, 1) 
+                        call Statup(Girl, "Love", 90, 1) 
+                        call Statup(Girl, "Obed", 40, -2)
+                        call Statup(Girl, "Obed", 70, -1)
+                        call AnyFace(Girl,"sadside") 
+                    if Girl == "Rogue":
+                            ch_r "Well, thanks for that. . ."
+                    elif Girl == "Kitty":
+                            ch_k "I guess I won't hold it against you. . ."
+                    elif Girl == "Emma":
+                            ch_e "Fine, I can accept that."
+                    elif Girl == "Laura":    
+                            call AnyFace(Girl,"normal")             
+                            ch_l "Whatever."
+                    call AnyFace(Girl,"normal") 
+            ". . .":
+                pass
+    return
+# End Compliments / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /  
+    

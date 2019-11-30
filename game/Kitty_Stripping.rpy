@@ -2036,6 +2036,7 @@ label Kitty_First_Peen(Silent = 0, Undress = 0, Second = 0, React = 0):
         call Statup("Kitty", "Inbt", 60, 20) 
         call Statup("Kitty", "Lust", 200, 5)
     
+    call KittyFace("sly",1)  
     return React
     # End Kitty shown peen
     

@@ -266,7 +266,7 @@ init python:
 
 #this function checks how many of "item" are in the player's inventory
 
-    def Inventory_Check(Item = "item", Count = 0):      
+    def Inventory_Check(Item = "item", Count = 0):      #remove, unneeded
             if Item in P_Inventory:
                 Count = P_Inventory.count(Item) 
             else:
@@ -504,7 +504,7 @@ init python:
                 LocalTempmod = Tempmod * 10
         
         TabM = 0 if TabM <= 0 else TabM #test this, makes sure TabM is positive
-                
+        
         if Check:
                 #this returns the actual value of the tested stat.
                 Check = (L + O + I + Bonus + (TmpM * LocalTempmod) - (TabM * LocalTaboo))
@@ -5492,12 +5492,14 @@ label JumperCheck(Girls=[]):
         
         if "nope" in P_RecentActions:
                 #if you refused sex. . .
-                call Remove_Girl("All")
+                while Girls:         #clears list           
+                    call Remove_Girl(Girls[0])
+                    $ Girls.remove(Girls[0])                        
                 jump Misplaced
-        else:
+        elif Girls:
                 #if you had some sort of sexual encounter, it will hop you to the appropriate sex menu
-                #test this for pop-call failures
-                call expression Girls[0] + "_SexMenu" #call Rogue_SexMenu 
+                if Zero_Loc(Girls[0]) == bg_current:
+                        call expression Girls[0] + "_SexMenu" #call Rogue_SexMenu 
         
         if bg_current == "bg player":
                 #if it jumped to your room. . .
@@ -5522,6 +5524,14 @@ label Jumped(Initial=0,Act=0):
         if not Girls:
                 return
                 
+        if Zero_Loc(Girls[0]) != bg_current and "locked" in P_Traits:
+            #if the girl is not in the room with you, and your door is locked. . .            
+            call Locked_Door(Girls[0])
+            if not Girls or Zero_Loc(Girls[0]) != bg_current:
+                    #if you refused her entry. . .
+                    $ P_RecentActions.append("nope")      
+                    return     
+                                        
         #sets their location
         if "Rogue" in Girls:
                 $ R_Loc = bg_current
@@ -5550,8 +5560,8 @@ label Jumped(Initial=0,Act=0):
                         $ Act = "leave"
         
         call Set_The_Scene
-        
-        call AnyFace(Girls[0],"sly",1)   
+                      
+        call AnyFace(Girls[0],"sly",1)     
         if Act == "leave":        
                 #if she's not supercool with public stuff. . .    
                 "Suddenly, [Girls[0]] grabs your arm with a miscevious smile, and starts to lead you back towards your room."                
@@ -5586,9 +5596,7 @@ label Jumped(Initial=0,Act=0):
                         $ L_Loc = bg_current                 
                 call Set_The_Scene(Dress=0) 
                         
-                call Taboo_Level #makes sure Taboo level is accurate
-                
-                
+                call Taboo_Level #makes sure Taboo level is accurate                
         else:                     
             if Partner:  
                     call AnyFace(Girls[1],"sly",1)                       
@@ -6983,9 +6991,9 @@ label SkipTo(Primary = 0):
 
 label Clear_Stack:
     #this empties the call stack of stray items, and is called when the player goes to his room
-    $ Count = renpy.call_stack_depth() #Count = number of items in the call stack
-    while Count > 0:
-        $ Count -= 1
+    $ StackDepth = renpy.call_stack_depth() #Count = number of items in the call stack
+    while StackDepth > 0:
+        $ StackDepth -= 1
         $ renpy.pop_call()
     jump Player_Room
     

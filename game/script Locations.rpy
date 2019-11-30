@@ -73,9 +73,9 @@ label Misplaced:
             call Misplaced_Sex 
         if "locked" in P_Traits:
                 $ P_Traits.remove("locked")
-        $ Count = renpy.call_stack_depth() #Count = number of items in the call stack
-        while Count > 0:
-            $ Count -= 1
+        $ StackDepth = renpy.call_stack_depth() #Count = number of items in the call stack
+        while StackDepth > 0:
+            $ StackDepth -= 1
             $ renpy.pop_call()
         if bg_current == "bg player":
                 jump Player_Room 
@@ -239,7 +239,7 @@ label Rogue_Room_Entry:
             call Girls_Caught_Lesing("Rogue")
             if not _return: #if nobody was there for it, drop through
                 jump Rogue_Room
-    if Round >= 10 and R_Loc == bg_current and "gonnafap" in R_DailyActions: 
+    if Round >= 10 and R_Loc == bg_current and "gonnafap" in R_DailyActions and D20 >= 10: 
                     #Rogue caught fapping  
                     call Girl_Caught_Mastubating("Rogue")
     
@@ -265,7 +265,7 @@ label Rogue_Room_Entry:
                                 if Current_Time == "Night" :    
                                         "She's asleep in bed. You slip out quietly." #fix add options here.                            
                                         jump Campus_Map   
-                        elif "gonnafap" in R_DailyActions: 
+                        elif "gonnafap" in R_DailyActions and D20 >= 10: 
                                 #Rogue caught fapping  
                                 call Girl_Caught_Mastubating("Rogue")
                         elif D20 >=15 and (Current_Time == "Night" or Current_Time == "Morning"):                          
@@ -3457,8 +3457,8 @@ label Kitty_Room_Entry:
             call Laura_Dressup3
             jump Campus
                     
-    if Round >= 10 and K_Loc == bg_current and "gonnafap" in K_DailyActions: 
-                    #Kitty caught fapping  
+    if Round >= 10 and K_Loc == bg_current and "gonnafap" in K_DailyActions and D20 >= 10: 
+                    #Kitty caught fapping ( 
                     call Girl_Caught_Mastubating("Kitty")
     
     else: #not auto-caught fapping
@@ -3483,7 +3483,7 @@ label Kitty_Room_Entry:
                                 if Current_Time == "Night" :    
                                         "She's asleep in bed. You slip out quietly." #fix add options here.                            
                                         jump Campus_Map   
-                        elif "gonnafap" in K_DailyActions: 
+                        elif "gonnafap" in K_DailyActions and D20 >= 10: 
                                 #Kitty caught fapping  
                                 call Girl_Caught_Mastubating("Kitty")
                         elif D20 >=15 and (Current_Time == "Night" or Current_Time == "Morning"):                           
@@ -3913,7 +3913,7 @@ label Emma_Room_Entry:
             if not _return:
                 jump Emma_Room
                 
-    if Round >= 10 and E_Loc == bg_current and "gonnafap" in E_DailyActions: 
+    if Round >= 10 and E_Loc == bg_current and "gonnafap" in E_DailyActions and D20 >= 10: 
                     #Emma caught fapping  
                     call Girl_Caught_Mastubating("Emma")
     
@@ -3939,7 +3939,7 @@ label Emma_Room_Entry:
                                 if Current_Time == "Night" :    
                                         "She's asleep in bed. You slip out quietly." #fix add options here.                            
                                         jump Campus_Map   
-                        elif "gonnafap" in E_DailyActions: 
+                        elif "gonnafap" in E_DailyActions and D20 >= 10: 
                                 #Emma caught fapping  
                                 call Girl_Caught_Mastubating("Emma")
                         elif D20 >=15 and (Current_Time == "Night" or Current_Time == "Morning"):                           
@@ -4294,7 +4294,7 @@ label Laura_Room_Entry:
             if not _return:
                 jump Laura_Room
                 
-    if Round >= 10 and L_Loc == bg_current and "gonnafap" in L_DailyActions: 
+    if Round >= 10 and L_Loc == bg_current and "gonnafap" in L_DailyActions and D20 >= 5: 
                     #Laura caught fapping  
                     call Girl_Caught_Mastubating("Laura") 
     else: 
@@ -4320,7 +4320,7 @@ label Laura_Room_Entry:
                                 if Current_Time == "Night" :    
                                         "She's asleep in bed. You slip out quietly." #fix add options here.                            
                                         jump Campus_Map   
-                        elif "gonnafap" in L_DailyActions: 
+                        elif "gonnafap" in L_DailyActions and D20 >= 5: 
                                 #Laura caught fapping  
                                 call Girl_Caught_Mastubating("Laura") 
                         elif D20 >=15 and (Current_Time == "Night" or Current_Time == "Morning"):                          

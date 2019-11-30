@@ -2008,6 +2008,7 @@ label Rogue_First_Peen(Silent = 0, Undress = 0, Second = 0, React = 0):
         call Statup("Rogue", "Inbt", 60, 20) 
         call Statup("Rogue", "Lust", 200, 5)
     
+    call RogueFace("sly",1)  
     return React
     # End Rogue shown peen
         

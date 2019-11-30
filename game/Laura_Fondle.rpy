@@ -310,14 +310,7 @@ label L_FB_Prep: #Animation set-up
         
     if Trigger2 == "fondle breasts": 
         return
-    
-    if not L_Forced and Situation != "auto":
-        $ Tempmod = 0
-        call Laura_Top_Off
-        if "angry" in L_RecentActions:
-            return
-        
-    $ Tempmod = 0  
+     
     call L_Breasts_Launch("fondle breasts")
     
     if Situation == "Laura":                                                                  
@@ -366,6 +359,13 @@ label L_FB_Prep: #Animation set-up
                     return          
             #end auto
 
+    if not L_Forced and Situation != "auto":
+        $ Tempmod = 0
+        call Laura_Top_Off
+        if "angry" in L_RecentActions:
+            return
+        
+    $ Tempmod = 0 
     if not L_FondleB:        
         if L_Forced:
             call Statup("Laura", "Love", 90, -20)
@@ -816,14 +816,7 @@ label L_SB_Prep:                                                                
             
     if Trigger2 == "suck breasts":
         return
-        
-    if not L_Forced and Situation != "auto":
-        $ Tempmod = 0   
-        call Laura_Top_Off
-        if "angry" in L_RecentActions:
-            return
-    
-    $ Tempmod = 0      
+             
     call L_Breasts_Launch("suck breasts")
         
     if Situation == "Laura":                                                        
@@ -871,7 +864,14 @@ label L_SB_Prep:                                                                
                     call AnyWord("Laura",1,"refused","refused")  
                     return          
             #end auto
-                  
+             
+    if not L_Forced and Situation != "auto":
+        $ Tempmod = 0   
+        call Laura_Top_Off
+        if "angry" in L_RecentActions:
+            return
+    
+    $ Tempmod = 0      
     if not L_SuckB:        
         if L_Forced:
             call Statup("Laura", "Love", 90, -25)
@@ -1787,14 +1787,7 @@ label L_Fondle_Pussy:
 label L_FP_Prep: #Animation set-up 
     if Trigger2 == "fondle pussy":
         return
-        
-    if not L_Forced and Situation != "auto":
-        $ Tempmod = 0
-        call Laura_Bottoms_Off   
-        if "angry" in L_RecentActions:
-            return 
-    $ Tempmod = 0
-    
+            
     call L_Pussy_Launch("fondle pussy")
     
     if Situation == "Laura":                                                        
@@ -1859,7 +1852,14 @@ label L_FP_Prep: #Animation set-up
                     call AnyWord("Laura",1,"refused","refused")  
                     return          
             #end auto
-            
+      
+    if not L_Forced and Situation != "auto":
+        $ Tempmod = 0
+        call Laura_Bottoms_Off   
+        if "angry" in L_RecentActions:
+            return 
+    $ Tempmod = 0
+    
     if not L_FondleP:        
         if L_Forced:
             call Statup("Laura", "Love", 90, -50)
@@ -2421,15 +2421,7 @@ label L_Lick_Pussy:
 label L_LP_Prep: #Animation set-up  
     if Trigger2 == "lick pussy": #fix pull down pants now an option, make it work
         return
-        
-    if not L_Forced and Situation != "auto":
-        $ Tempmod = 0
-        if L_Legs == "pants" and not L_Upskirt:
-            $ Tempmod = 15
-        call Laura_Bottoms_Off
-        if "angry" in L_RecentActions:
-            return  
-            
+                    
     $ Tempmod = 0      
     call L_Pussy_Launch("lick pussy")
     
@@ -2495,6 +2487,14 @@ label L_LP_Prep: #Animation set-up
                     call AnyWord("Laura",1,"refused","refused")  
                     return          
             #end auto
+            
+    if not L_Forced and Situation != "auto":
+        $ Tempmod = 0
+        if L_Legs == "pants" and not L_Upskirt:
+            $ Tempmod = 15
+        call Laura_Bottoms_Off
+        if "angry" in L_RecentActions:
+            return  
             
     if not L_LickP:        
         if L_Forced:
@@ -3444,14 +3444,7 @@ label L_Insert_Ass:
 label L_IA_Prep: #Animation set-up 
     if Trigger2 == "insert ass":
         return
-        
-    if not L_Forced and Situation != "auto":
-        $ Tempmod = 0
-        call Laura_Bottoms_Off
-        if "angry" in L_RecentActions:
-            return    
-            
-    $ Tempmod = 0      
+             
     call L_Pussy_Launch("insert ass")
     
     if Situation == "Laura":                                                         
@@ -3516,7 +3509,14 @@ label L_IA_Prep: #Animation set-up
                     call AnyWord("Laura",1,"refused","refused")  
                     return          
             #end auto
+        
+    if not L_Forced and Situation != "auto":
+        $ Tempmod = 0
+        call Laura_Bottoms_Off
+        if "angry" in L_RecentActions:
+            return    
             
+    $ Tempmod = 0     
     if not L_InsertA:        
         if L_Forced:
             call Statup("Laura", "Love", 90, -50)

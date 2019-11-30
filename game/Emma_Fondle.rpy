@@ -312,14 +312,7 @@ label E_FB_Prep: #Animation set-up
         
     if Trigger2 == "fondle breasts": 
         return
-    
-    if not E_Forced and Situation != "auto":
-        $ Tempmod = 0
-        call Emma_Top_Off
-        if "angry" in E_RecentActions:
-            return
-        
-    $ Tempmod = 0  
+            
     call E_Breasts_Launch("fondle breasts")
     
     if Situation == "Emma":                                                                  
@@ -368,6 +361,12 @@ label E_FB_Prep: #Animation set-up
                     return          
             #end auto
             
+    if not E_Forced and Situation != "auto":
+        $ Tempmod = 0
+        call Emma_Top_Off
+        if "angry" in E_RecentActions:
+            return
+    $ Tempmod = 0  
     if not E_FondleB:        
         if E_Forced:
             call Statup("Emma", "Love", 90, -20)
@@ -818,14 +817,7 @@ label E_SB_Prep:                                                                
             
     if Trigger2 == "suck breasts":
         return
-        
-    if not E_Forced and Situation != "auto":
-        $ Tempmod = 0   
-        call Emma_Top_Off
-        if "angry" in E_RecentActions:
-            return
-    
-    $ Tempmod = 0      
+             
     call E_Breasts_Launch("suck breasts")
     
     if Situation == "Emma":                                                        
@@ -873,6 +865,13 @@ label E_SB_Prep:                                                                
                     call AnyWord("Emma",1,"refused","refused")  
                     return          
             #end auto
+    if not E_Forced and Situation != "auto":
+        $ Tempmod = 0   
+        call Emma_Top_Off
+        if "angry" in E_RecentActions:
+            return
+    
+    $ Tempmod = 0 
     if not E_SuckB:        
         if E_Forced:
             call Statup("Emma", "Love", 90, -25)
@@ -1784,14 +1783,7 @@ label E_Fondle_Pussy:
 label E_FP_Prep: #Animation set-up 
     if Trigger2 == "fondle pussy":
         return
-        
-    if not E_Forced and Situation != "auto":
-        $ Tempmod = 0
-        call Emma_Bottoms_Off   
-        if "angry" in E_RecentActions:
-            return 
-    $ Tempmod = 0
-    
+            
     call E_Pussy_Launch("fondle pussy")
     
     if Situation == "Emma":                                                        
@@ -1857,6 +1849,13 @@ label E_FP_Prep: #Animation set-up
                     return          
             #end auto
             
+    if not E_Forced and Situation != "auto":
+        $ Tempmod = 0
+        call Emma_Bottoms_Off   
+        if "angry" in E_RecentActions:
+            return 
+    $ Tempmod = 0
+    
     if not E_FondleP:        
         if E_Forced:
             call Statup("Emma", "Love", 90, -50)
@@ -2416,16 +2415,7 @@ label E_Lick_Pussy:
 label E_LP_Prep: #Animation set-up  
     if Trigger2 == "lick pussy": #fix pull down pants now an option, make it work
         return
-        
-    if not E_Forced and Situation != "auto":
-        $ Tempmod = 0
-        if E_Legs == "pants":
-            $ Tempmod = 15
-        call Emma_Bottoms_Off
-        if "angry" in E_RecentActions:
-            return  
             
-    $ Tempmod = 0      
     call E_Pussy_Launch("lick pussy")
     
     if Situation == "Emma":                                                       
@@ -2491,6 +2481,15 @@ label E_LP_Prep: #Animation set-up
                     return          
             #end auto
             
+    if not E_Forced and Situation != "auto":
+        $ Tempmod = 0
+        if E_Legs == "pants":
+            $ Tempmod = 15
+        call Emma_Bottoms_Off
+        if "angry" in E_RecentActions:
+            return  
+            
+    $ Tempmod = 0  
     if not E_LickP:        
         if E_Forced:
             call Statup("Emma", "Love", 90, -30)
@@ -3439,14 +3438,7 @@ label E_Insert_Ass:
 label E_IA_Prep: #Animation set-up 
     if Trigger2 == "insert ass":
         return
-        
-    if not E_Forced and Situation != "auto":
-        $ Tempmod = 0
-        call Emma_Bottoms_Off
-        if "angry" in E_RecentActions:
-            return    
             
-    $ Tempmod = 0      
     call E_Pussy_Launch("insert ass")
     
     if Situation == "Emma":                                                         
@@ -3511,7 +3503,14 @@ label E_IA_Prep: #Animation set-up
                     call AnyWord("Emma",1,"refused","refused")  
                     return          
             #end auto
+           
+    if not E_Forced and Situation != "auto":
+        $ Tempmod = 0
+        call Emma_Bottoms_Off
+        if "angry" in E_RecentActions:
+            return    
             
+    $ Tempmod = 0   
     if not E_InsertA:        
         if E_Forced:
             call Statup("Emma", "Love", 90, -50)

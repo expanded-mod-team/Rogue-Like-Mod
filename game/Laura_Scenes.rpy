@@ -11,7 +11,8 @@ label LauraMeet(Topics=[],Loop=1):
     $ L_Loc = "bg dangerroom"  
     $ L_Love = 400        
     $ L_Obed = 0            
-    $ L_Inbt = 200  
+    $ L_Inbt = 200         
+    $ L_Lust = 10  
     call Shift_Focus("Laura")    
     $ L_SpriteLoc = StageCenter
     call Set_The_Scene(0)
@@ -229,12 +230,14 @@ label LauraMeet(Topics=[],Loop=1):
             call LauraFace("smile", 1, Brows="confused") 
             ch_l "We should. . . spar."
          
-    $ L_Loc = "bg laura"         
+    $ L_Loc = "hold"         
     call Set_The_Scene
     
     "She dashes out of the room, headed for the hanger."
     
-    $ L_History.append("met")
+    $ L_PubeC = 6
+    $ L_Todo.append("mission") 
+    
     $ bg_current = "bg dangerroom"            
     $ Round -= 10      
     call Shift_Focus("Rogue")
@@ -2500,7 +2503,9 @@ label Laura_Dressup:
 #    call Display_Laura
     call CleartheRoom("Laura")
     $ Round -= 10 if Round >= 11 else Round
+    $ L_History.remove("dress0")
     $ L_History.append("dress1")
+    $ L_History.append("met")
     "As you're heading across the square, you bump into Laura."
     call AnyFace("Laura","normal") 
     ch_l "Oh, hey."

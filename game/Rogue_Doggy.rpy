@@ -1830,9 +1830,10 @@ label R_HotdogPrep:
 label R_Hotdog_Cycle: #Repeating strokes  
     while Round >=0:  
         call Shift_Focus("Rogue")
-        call Rogue_Doggy_Launch("hotdog") 
-        call RogueLust        
-        $ P_Cock = "out"
+        call Rogue_Doggy_Launch(0) #"hotdog"
+        call RogueLust  
+        if Speed:
+                $ P_Cock = "out"
         $ Trigger = "hotdog"
         
         if  P_Focus < 100:                                                    
@@ -1931,6 +1932,9 @@ label R_Hotdog_Cycle: #Repeating strokes
                                                         jump R_Hotdog_Cycle 
                                             "Never mind":
                                                         jump R_Hotdog_Cycle 
+                                    "Just take a look at her.":                                           
+                                            $ P_Cock = 0
+                                            $ Speed = 0
                                     "Undress Rogue":
                                             call R_Undress   
                                     "Clean up Rogue (locked)" if not R_Spunk:

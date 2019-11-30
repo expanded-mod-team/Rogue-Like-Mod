@@ -1609,7 +1609,7 @@ label Laura_First_Peen(Silent = 0, Undress = 0, Second = 0, React = 0):
         else:
                 call LauraFace("sad",1) 
                 if L_SeenPeen == 1: 
-                    call LauraFace("perplexed",1 ) 
+                    call LauraFace("perplexed",1) 
                     ch_l "Your dick is out."
                     call Statup("Laura", "Obed", 50, 7)
                     call Statup("Laura", "Inbt", 60, 3)  
@@ -1654,6 +1654,7 @@ label Laura_First_Peen(Silent = 0, Undress = 0, Second = 0, React = 0):
         call Statup("Laura", "Inbt", 60, 20) 
         call Statup("Laura", "Lust", 80, 10)
     
+    call LauraFace("sly",1)                     
     return React
     # End Laura shown peen
     

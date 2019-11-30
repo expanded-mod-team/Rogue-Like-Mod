@@ -32,7 +32,8 @@ label Emma_Chat_Set(Preset=0):
                     $ renpy.pop_call() #this removes the callback to the previous settings menu
                     $ renpy.pop_call() #this removes the callback to the previous settings menu testing. . .
                     ch_p "I wanted to talk about your outfit. . ."
-                    if Taboo:
+                    call Taboo_Level
+                    if E_Taboo:
                             if "exhibitionist" in E_Traits:
                                 ch_e "Mmmmm. . ."  
                             elif ApprovalCheck("Emma", 900, TabM=4) or ApprovalCheck("Emma", 400, "I", TabM=3): 
@@ -590,9 +591,9 @@ label Emma_Settings:
     menu:
         ch_p "Let's talk about you."
         "Wardrobe":     
-                if E_Loc != "bg player" and E_Loc != "bg emma": 
-                    if Taboo:                        
+                if E_Taboo:                        
                         ch_p "I wanted to talk about your style."
+                        call Taboo_Level
                         if "exhibitionist" in E_Traits:
                             ch_e "Mmmmm. . ."  
                         elif ApprovalCheck("Emma", 900, TabM=4) or ApprovalCheck("Emma", 400, "I", TabM=3): 
@@ -601,7 +602,7 @@ label Emma_Settings:
                         else:
                             ch_e "I'd rather discuss that in private."
                             return
-                    call Emma_Clothes
+                        call Emma_Clothes
                 elif ApprovalCheck("Emma", 900, TabM=4) or ApprovalCheck("Emma", 600, "L") or ApprovalCheck("Emma", 300, "O"):
                     ch_e "What about my style?"
                     call Emma_Clothes
@@ -1675,10 +1676,11 @@ label Emma_Flirt:
     if E_Loc == bg_current:         
         $ E_Chat[5] = 1                                         #can only flirt once per cycle. 
         menu:        
-#            "Compliment her":
+            "Compliment her":
+                    call Compliment("Emma")
                 
             "Say you love her":
-                        call Love_You("Emma")
+                    call Love_You("Emma")
                 
             "Touch her cheek.":
                     call E_TouchCheek
@@ -2384,7 +2386,7 @@ return
 
 # start Emma_Gifts//////////////////////////////////////////////////////////
 label Emma_Gifts:  
-    if P_Inventory == []:
+    if not P_Inventory:
         "You don't have anything to give her."
         return
     menu:
@@ -2783,8 +2785,8 @@ label Emma_Gifts:
                 "Never mind":
                     pass
         "Exit":
-            pass
-    
+            return
+    jump Emma_Gifts
     return
 
 
@@ -3941,6 +3943,7 @@ label Emma_Clothes(Public=0,Bonus=0):
             $ Public += 2
     #This is a trait for if she's open to being sexy in public
         
+    $ Trigger = 1 # to prevent Focus swapping. . .   
     call EmmaFace
     menu:
         ch_e "You wanted to discuss my clothing choices?"   
@@ -3955,8 +3958,38 @@ label Emma_Clothes(Public=0,Bonus=0):
         "Outfits":
                     jump Emma_Clothes_Outfits    
         "Let's talk about what you wear around.":
-                    call Emma_Clothes_Schedule                     
+                    call Emma_Clothes_Schedule   
+                    
+        "Could I get a look at it?" if E_Loc != bg_current:
+                # checks to see if she'll drop the screen
+                call Emma_OutfitShame(0,2) 
+                if _return:                    
+                    show PhoneSex zorder 150
+                    ch_e "Ok, a quick shot for you. . ."
+                hide PhoneSex
+                    
+        "Could I get a look at it?" if renpy.showing('DressScreen'):
+                # checks to see if she'll drop the screen
+                call Emma_OutfitShame(0,2) 
+                if _return:
+                    hide DressScreen
+        "Would you be more comfortable behind a screen? (locked)" if E_Taboo:
+                pass
+        "Would you be more comfortable behind a screen?" if E_Loc == bg_current and not E_Taboo and not renpy.showing('DressScreen'):
+                # checks to see if she'll drop the screen
+                if ApprovalCheck("Emma", 1500) or (E_SeenChest and E_SeenPussy):
+                        ch_e "Oh, I think we can handle this."
+                else:
+                        show DressScreen zorder 150
+                        ch_e "Yes, this will be more comfortable."
+                        
         "Switch to. . .":   
+                if renpy.showing('DressScreen'):
+                        call Emma_OutfitShame(0,2) 
+                        if _return:
+                            hide DressScreen
+                        else:
+                            call EmmaOutfit 
                 $ E_TempClothes[1] = E_Arms  
                 $ E_TempClothes[2] = E_Legs 
                 $ E_TempClothes[3] = E_Over
@@ -3966,7 +3999,8 @@ label Emma_Clothes(Public=0,Bonus=0):
                 $ E_TempClothes[7] = E_Boots
                 $ E_TempClothes[8] = E_Hair
                 $ E_TempClothes[9] = E_Hose
-                $ E_TempClothes[0] = 1 
+                $ E_TempClothes[0] = 1     
+                $ Trigger = 0
                 $ E_Outfit = "temporary"
                 $ E_OutfitDay = "temporary"      
                 menu:              
@@ -3994,6 +4028,12 @@ label Emma_Clothes(Public=0,Bonus=0):
                                 call Statup("Emma", "Obed", 40, 1) 
                         $ E_RecentActions.append("wardrobe")  
                 #sets up a temporary outfit
+                if renpy.showing('DressScreen'):
+                        call Emma_OutfitShame(0,2) 
+                        if _return:
+                            hide DressScreen
+                        else:
+                            call EmmaOutfit 
                 $ E_TempClothes[1] = E_Arms  
                 $ E_TempClothes[2] = E_Legs 
                 $ E_TempClothes[3] = E_Over
@@ -4006,7 +4046,8 @@ label Emma_Clothes(Public=0,Bonus=0):
                 $ E_TempClothes[0] = 1 
                 $ E_Outfit = "temporary"
                 $ E_OutfitDay = "temporary"           
-                $ E_Chat[1] += 1                
+                $ E_Chat[1] += 1              
+                $ Trigger = 0      
                 return
                             
     jump Emma_Clothes
@@ -4113,15 +4154,21 @@ label Emma_Clothes(Public=0,Bonus=0):
                                 call Emma_Custom_Out(Cnt)
                         "Ok, back to what we were talking about. . .":
                                 $ Cnt = 0
-                                jump Emma_Clothes_Outfits                    
+                                jump Emma_Clothes                    
         
-        "Gym Clothes?" if not Taboo or bg_current == "bg dangerroom":
+        "Gym Clothes?" if not E_Taboo or bg_current == "bg dangerroom":
                 call EmmaOutfit("gym")
             
-        "Sleepwear?" if not Taboo:
-                call EmmaOutfit("sleep")
-            
-        "Swimwear?" if not Taboo or bg_current == "bg pool":
+    
+        "Sleepwear?" if not E_Taboo:
+                if ApprovalCheck("Emma", 1200):
+                        call EmmaOutfit("sleep")
+                else:
+                        call Display_DressScreen("Emma")
+                        if _return:
+                            call EmmaOutfit("sleep")
+                            
+        "Swimwear?" if not E_Taboo or bg_current == "bg pool":
                 call EmmaOutfit("swimwear")
                             
         "Your birthday suit looks really great. . .":                                     
@@ -4208,30 +4255,38 @@ label Emma_Clothes(Public=0,Bonus=0):
                 call EmmaFace("bemused", 1)
                 if ApprovalCheck("Emma", 800, TabM=(3-Public)) and (E_Chest or E_SeenChest):
                     ch_e "Certainly."
-                elif ApprovalCheck("Emma", 1200, TabM=0):
+                elif ApprovalCheck("Emma", 600, TabM=0):
                     call Emma_NoBra
                     if not _return:
-                        jump Emma_Clothes  
+                        if not ApprovalCheck("Emma", 1200):
+                            call Display_DressScreen("Emma")
+                            if not _return:
+                                jump Emma_Clothes
+                        else:
+                                jump Emma_Clothes                                 
                 else:
-                    ch_e "I'm afraid not."
-                    if not E_Chest:
-                        ch_e "I'm indecent under this. . ."
-                    jump Emma_Clothes                  
+                    call Display_DressScreen("Emma")
+                    if not _return:
+                            ch_e "I'm afraid not."
+                            if not E_Chest:
+                                ch_e "I'm indecent under this. . ."
+                            jump Emma_Clothes
                 $ Line = E_Over
                 $ E_Over = 0   
-                call Emma_Tits_Up
                 "She shrugs off her [Line]."
-                if not E_Chest:
-                    call Emma_First_Topless
+                if not E_Chest and not renpy.showing('DressScreen'):
+                        call Emma_First_Topless
             
         "Try on that white jacket you have." if E_Over != "jacket":
                 call EmmaFace("bemused")
                 if E_Chest or E_SeenChest or ApprovalCheck("Emma", 500, TabM=(3-Public)):
                     ch_e "Yeah, ok."          
                 else:
-                    call EmmaFace("bemused", 1)
-                    ch_e "I'm not sure this is appropriate without something more substantial underneath."
-                    jump Emma_Clothes    
+                    call Display_DressScreen("Emma")
+                    if not _return:
+                            call EmmaFace("bemused", 1)
+                            ch_e "I'm not sure this is appropriate without something more substantial underneath."
+                            jump Emma_Clothes
                 $ E_Over = "jacket"   
             
         "Try on that lace nighty." if E_Over != "nighty":
@@ -4239,9 +4294,11 @@ label Emma_Clothes(Public=0,Bonus=0):
                 if E_Chest or E_SeenChest or ApprovalCheck("Emma", 500, TabM=(3-Public)):
                     ch_e "Yeah, ok."          
                 else:
-                    call EmmaFace("bemused", 1)
-                    ch_e "This is a bit shear for this top."
-                    jump Emma_Clothes    
+                    call Display_DressScreen("Emma")
+                    if not _return:
+                            call EmmaFace("bemused", 1)
+                            ch_e "This is a bit shear for this top."
+                            jump Emma_Clothes
                 $ E_Over = "nighty"   
                             
         "Maybe just throw on a towel?" if E_Over != "towel":
@@ -4253,13 +4310,15 @@ label Emma_Clothes(Public=0,Bonus=0):
                     call EmmaFace("perplexed", 1)
                     ch_e "Fine."          
                 else:
-                    ch_e "This wouldn't leave much to the imagination."
-                    jump Emma_Clothes  
+                    call Display_DressScreen("Emma")
+                    if not _return:
+                            call EmmaFace("bemused", 1)
+                            ch_e "This wouldn't leave much to the imagination."
+                            jump Emma_Clothes
                 call Emma_NoBra
                 if not _return:
                     jump Emma_Clothes
-                $ E_Over = "towel"       
-                call Emma_Tits_Up
+                $ E_Over = "towel"    
                             
         "Never mind":
                 pass
@@ -4308,7 +4367,7 @@ label Emma_Clothes(Public=0,Bonus=0):
                         else: 
                                 call EmmaFace("surprised")
                                 $ E_Brows = "angry"
-                                if Taboo > 20:
+                                if E_Taboo > 20:
                                     ch_e "I'm afraid I couldn't do that in public."
                                 else:
                                     ch_e "I could, but I wouldn't."
@@ -4332,20 +4391,32 @@ label Emma_Clothes(Public=0,Bonus=0):
                     ch_e "Fine."
                 elif ApprovalCheck("Emma", 1300, TabM=(2-Public)) and E_Panties:
                     ch_e "It's not like I haven't worn this look before. . ."
-                elif ApprovalCheck("Emma", 800) and not E_Panties:
-                    call Emma_NoPantiesOn
-                    if not _return:
-                        jump Emma_Clothes
+                elif ApprovalCheck("Emma", 700) and not E_Panties:
+                    call Emma_NoPantiesOn                        
+                    if not _return and not E_Panties:
+                        if not ApprovalCheck("Emma", 1500):
+                            call Display_DressScreen("Emma")
+                            if not _return:
+                                jump Emma_Clothes
+                        else:
+                                jump Emma_Clothes                                
                 else:
-                    ch_e "I'm afraid not."
-                    if not E_Panties:
-                        ch_e "You understand, it could get. . . drafty. . ."
-                    jump Emma_Clothes
+                    call Display_DressScreen("Emma")
+                    if not _return:
+                        ch_e "I'm afraid not."
+                        if not E_Panties:
+                            ch_e "You understand, it could get. . . drafty. . ."
+                        jump Emma_Clothes
                 $ Line = E_Legs
                 $ E_Legs = 0    
                 "She peels her [Line] off."
-                $ Line = 0
-                call Emma_First_Bottomless
+                $ Line = 0                
+                if renpy.showing('DressScreen'):
+                    pass
+                elif E_Panties:                
+                    $ E_SeenPanties = 1
+                else:
+                    call Emma_First_Bottomless
         
         "You look great in those white pants." if E_Legs != "pants":
                 ch_e "I know."
@@ -4365,11 +4436,7 @@ label Emma_Clothes(Public=0,Bonus=0):
         "You look great in yoga pants." if E_Legs != "yoga pants":
                 ch_e "Yeah, ok."
                 $ E_Legs = "yoga pants"
-            
-#        "What about wearing your yellow shorts?" if E_Legs != "shorts":
-#               ch_e "K, no problem."
-#               $ E_Legs = "shorts"    
-                   
+                               
         "Never mind":
                 pass
     jump Emma_Clothes
@@ -4400,7 +4467,7 @@ label Emma_Clothes(Public=0,Bonus=0):
                                 ch_e "Yeah, I guess."
                                 $ E_Panties = "sports panties"
                                 "She pulls out her sports panties, and with your back turned she removes her pants, and slips her panties on."                   
-                        elif Taboo and ApprovalCheck("Emma", 800, TabM=0):
+                        elif E_Taboo and ApprovalCheck("Emma", 800, TabM=0):
                                 ch_e "I like how you think, but not in public like this."
                                 return 0
                         else:
@@ -4419,7 +4486,7 @@ label Emma_Clothes(Public=0,Bonus=0):
                         else: 
                                 call EmmaFace("surprised")
                                 $ E_Brows = "angry"
-                                if Taboo > 20:
+                                if E_Taboo > 20:
                                     ch_e "I'm afraid not out here, [E_Petname]!"
                                 else:
                                     ch_e "You wish, [E_Petname]!"
@@ -4441,47 +4508,58 @@ label Emma_Clothes(Public=0,Bonus=0):
                     if E_SeenChest and ApprovalCheck("Emma", 900, TabM=(4-Public)):
                         ch_e "Of course."    
                     elif ApprovalCheck("Emma", 1100, TabM=2):
-                        if Taboo:
+                        if E_Taboo:
                             ch_e "I'd rather not out here. . ."
                         else:
                             ch_e "I suppose for you. . ."
                     elif E_Over == "jacket" and ApprovalCheck("Emma", 700, TabM=(3-Public)):
                         ch_e "This is a bit daring without anything under it. . ."  
-                    elif not E_Over:
-                        ch_e "I don't think that would be appropriate."
-                        jump Emma_Clothes 
+                    elif not E_Over:                                         
+                        call Display_DressScreen("Emma")
+                        if not _return:
+                            ch_e "I don't think that would be appropriate."
+                            jump Emma_Clothes                                 
                     else:
-                        ch_e "I'm afraid not, [E_Petname]."
-                        jump Emma_Clothes 
+                        call Display_DressScreen("Emma")
+                        if not _return:
+                            ch_e "I'm afraid not, [E_Petname]."
+                            jump Emma_Clothes                                 
                     $ Line = E_Chest
                     $ E_Chest = 0
                     if E_Over:
                         "She reaches under her [E_Over] grabs her [Line], and pulls it out, dropping it to the ground."
                     else:
                         "She lets her [Line] fall to the ground."
-                        call Emma_First_Topless
+                        if not renpy.showing('DressScreen'):
+                            call Emma_First_Topless
                   
                 "I like that corset you have." if E_Chest != "corset":
                     if E_SeenChest or ApprovalCheck("Emma", 1000, TabM=(3-Public)):
                         ch_e "So do I."   
                         $ E_Chest = "corset"  
                         $ E_TitsUp = 1
-                    else:                
-                        ch_e "I don't think that would be appropriate. . ."      
+                    else:            
+                        call Display_DressScreen("Emma")
+                        if not _return:       
+                            ch_e "I don't think that would be appropriate. . ."      
                         
                 "I like that lace bra." if "lace bra" in E_Inventory and E_Chest != "lace bra":
                     if E_SeenChest or ApprovalCheck("Emma", 1300, TabM=(3-Public)):
                         ch_e "Fine."   
                         $ E_Chest = "lace bra"         
                     else:                
-                        ch_e "It's a bit revealing. . ."  
+                        call Display_DressScreen("Emma")
+                        if not _return:       
+                            ch_e "It's a bit revealing. . ."  
                     
                 "I like that sports bra." if E_Chest != "sports bra":
                     if E_SeenChest or ApprovalCheck("Emma", 1000, TabM=(3-Public)):
                         ch_e "Fine."   
                         $ E_Chest = "sports bra"         
                     else:                
-                        ch_e "I'm not sure about that. . ."  
+                        call Display_DressScreen("Emma")
+                        if not _return:       
+                            ch_e "I'm not sure about that. . ."  
                           
                 "I like that bikini top." if E_Chest != "bikini top" and "bikini top" in E_Inventory:
                     if bg_current == "bg pool":
@@ -4492,7 +4570,9 @@ label Emma_Clothes(Public=0,Bonus=0):
                                 ch_e "Fine."   
                                 $ E_Chest = "bikini top"         
                             else:                
-                                ch_e "I don't know about wearing that here. . ." 
+                                call Display_DressScreen("Emma")
+                                if not _return:       
+                                    ch_e "I don't know about wearing that here. . ." 
                 "Never mind":
                     pass 
             jump Emma_Clothes_Under
@@ -4519,7 +4599,7 @@ label Emma_Clothes(Public=0,Bonus=0):
             menu:
                 "You could lose those panties. . ." if E_Panties:
                         call EmmaFace("bemused", 1)  
-                        if (ApprovalCheck("Emma", 900) or E_SeenPussy) and not Taboo:
+                        if (ApprovalCheck("Emma", 900) or E_SeenPussy) and not E_Taboo:
                             #If you've got decent approval and either she's wearing pants or you've seen her pussy and it's not in public
                             
                             if ApprovalCheck("Emma", 850, "L"):               
@@ -4541,40 +4621,45 @@ label Emma_Clothes(Public=0,Bonus=0):
                             elif ApprovalCheck("Emma", 1300, TabM=(4-Public)):
                                     ch_e "Fine."
                             else: 
+                                call Display_DressScreen("Emma")
+                                if not _return:
                                     call EmmaFace("surprised")
-                                    $ E_Brows = "angry"
-                                    if Taboo > 20:
+                                    $ E_Brows = "angry" 
+                                    if E_Taboo > 20:
                                         ch_e "I don't think I could out here, [E_Petname]!"
                                     else:
                                         ch_e "I could, but I won't, [E_Petname]!"
                                     jump Emma_Clothes
-                                    
-                                    
                         $ Line = E_Panties
                         $ E_Panties = 0  
                         if E_Legs:
-                            if Taboo or ApprovalCheck("Emma", 1100) or E_SeenPussy:
+                            if E_Taboo or ApprovalCheck("Emma", 1100) or E_SeenPussy:
                                 "She pulls off her [E_Legs] then pulls her [Line] off, droping them to the ground, before putting them back on." 
                                 call Emma_First_Bottomless(1)
                             else:
                                 "She asks you to turn around. After a few seconds, you turn back to her as she drops the [Line] to the ground."               
                         else:
                             "She pulls off her [Line] and lets them drop to the ground."
-                            call Emma_First_Bottomless
-                            call Statup("Emma", "Inbt", 50, 2)  
+                            if not renpy.showing('DressScreen'):
+                                call Emma_First_Bottomless
+                                call Statup("Emma", "Inbt", 50, 2)  
                             
                 "Why don't you wear the white panties instead?" if E_Panties and E_Panties != "white panties":
                         if ApprovalCheck("Emma", 1100, TabM=(4-Public)):
                                 ch_e "Ok."
                                 $ E_Panties = "white panties"  
                         else:                
+                            call Display_DressScreen("Emma")
+                            if not _return:
                                 ch_e "I really don't see how that's any of your concern."
                   
                 "Why don't you wear the sporty panties instead?" if E_Panties and E_Panties != "sports panties":
                         if ApprovalCheck("Emma", 1200, TabM=(4-Public)):
                                 ch_e "Fine."
                                 $ E_Panties = "sports panties"
-                        else:
+                        else:    
+                            call Display_DressScreen("Emma")
+                            if not _return:
                                 ch_e "I really don't see how that's any of your concern."
                                 
                 "Why don't you wear the lace panties instead?" if "lace panties" in E_Inventory and E_Panties and E_Panties != "lace panties":
@@ -4582,6 +4667,8 @@ label Emma_Clothes(Public=0,Bonus=0):
                                 ch_e "Fine."
                                 $ E_Panties = "lace panties"
                         else:
+                            call Display_DressScreen("Emma")
+                            if not _return:
                                 ch_e "I really don't see how that's any of your concern."
                                  
                 "I like those bikini bottoms." if E_Panties != "bikini bottoms" and "bikini bottoms" in E_Inventory:
@@ -4592,8 +4679,10 @@ label Emma_Clothes(Public=0,Bonus=0):
                                 if ApprovalCheck("Emma", 800, TabM=2):
                                     ch_e "Fine."   
                                     $ E_Panties = "bikini bottoms"         
-                                else:                
-                                    ch_e "I don't know about wearing those here. . ." 
+                                else:        
+                                    call Display_DressScreen("Emma")
+                                    if not _return:        
+                                        ch_e "I don't know about wearing those here. . ." 
                                 
                 "You know, you could wear some panties with that. . ." if not E_Panties:
                         call EmmaFace("bemused", 1)
@@ -5089,7 +5178,7 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
             #if not a check, then it is only applied if it's in a taboo area
             # Tempshame is a throwaway value, 0-50, Agree is whether she will wear it out, 2 if yes, 1 if only around you.
             
-            if not Check and not Taboo and Custom != 20:
+            if not Check and not E_Taboo and Custom != 20:
                     #if this is not a custom check and you're in a safe space,
                     if E_Schedule[9]:
                             #if there is a "private outfit" set, ask to change.
@@ -5220,7 +5309,9 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
             
             if Check:
                     #if this is a custom outfit check
-                    if Custom == 4:
+                    if Check == 2:
+                        ch_p "So can I see it then?"
+                    elif Custom == 4:
                         ch_p "So would you work out in that?"
                     elif Custom == 7:
                         ch_p "So would you sleep in that?"
@@ -5228,7 +5319,50 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
                         ch_p "So would you wear that outside?"  
                                          
                     call EmmaFace("sexy", 0)
-                    if Taboo >= 40: #E_Loc != "bg player" and E_Loc != "bg emma": 
+                    
+                    if PantsNum("Emma") > 2:  
+                        pass        #if she's wearing pants
+                    elif PantiesNum("Emma") > 2 and (E_SeenPanties or ApprovalCheck("Emma", 900, TabM=0)):
+                        pass        #no pants, but panties
+                    elif E_SeenPussy or ApprovalCheck("Emma", 1200, TabM=0):
+                        pass        #no panties, but she's fine with that
+                    else:
+                        $ Agree = 0 #not fine with it
+                                    
+                    if not Agree:
+                        pass
+                    elif OverNum("Emma") > 2:    
+                        pass        #if she's wearing a top
+                    elif ChestNum("Emma") > 2 and (E_SeenChest or ApprovalCheck("Emma", 900, TabM=0)):
+                        pass        #no top, but bra
+                    elif E_SeenChest or ApprovalCheck("Emma", 1200, TabM=0):
+                        pass        #no bra, but she's fine with that
+                    else:
+                        $ Agree = 0 #not fine with it
+                    
+                    if Check == 2 and Agree:
+                                #if checking to see if she'll drop the dressing screen. . .                                
+                                $ E_Shame = Tempshame
+                                call EmmaFace("sly")
+                                ch_e "I suppose I could pull this off. . ."
+                                hide DressScreen
+                                return 1   
+                    if not Agree:
+                                #she isn't even comfortable with you seeing it
+                                call EmmaFace("sly", 1)
+                                ch_e "I wouldn't want to blind you. . ."
+                                menu:
+                                    extend ""
+                                    "Ok then, you can put your normal clothes back on.":
+                                                call EmmaOutfit(Changed=1)  
+                                                hide DressScreen
+                                    "Ok, we can keep tweaking it.":
+                                                pass
+                                call EmmaFace("smile", 1)
+                                ch_e "Appreciated."
+                                return
+                                
+                    if E_Taboo >= 40: #E_Loc != "bg player" and E_Loc != "bg emma": 
                             call EmmaFace("confused",1)
                             $ E_Mouth = "smile"
                             "She glances around."
@@ -5346,7 +5480,7 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
                             $ E_Custom[0] = 2 if Agree else 1
                             call Clothing_Schedule_Check("Emma",3,1)  
                     #End check  
-            elif Taboo <= 20:
+            elif E_Taboo <= 20:
                 # halves shame level if she's comfortable
                 $ Tempshame /= 2  
                 
@@ -5381,7 +5515,7 @@ label Emma_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree =
             elif (ApprovalCheck("Emma", 2500) or ApprovalCheck("Emma", 900, "I")):
                     #If the outfit is very scandelous but she's ok with that      
                     pass
-            elif Custom == 9 and not Taboo:
+            elif not E_Taboo:
                     pass
             else:
                     if E_Loc == bg_current:
