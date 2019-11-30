@@ -1,11 +1,10 @@
 ﻿label  Mod_Nude(Girl = "Kitty"):
     
-
     $ Roll = renpy.random.randint(1, 3)
     if Roll != 2: # 1/3 chance of getting a nude from this girl
         return
 
-    if Girl == "Kitty":
+    if Girl == "Kitty" and K_SEXP:
         # Current_Time #morning, midday, evening or night
         if K_NudeCurrent_Time != Current_Time:  #checks if a nude event for this girl already happened  at this time of day
             $ K_NudeCurrent_Time = Current_Time
@@ -109,7 +108,7 @@
         $ P_Sprite = P_SpriteTemp
         $ P_Cock = P_CockTemp
 
-    elif Girl == "Rogue":
+    elif Girl == "Rogue" and R_SEXP:
         # Current_Time #morning, evening or night
         if R_NudeCurrent_Time != Current_Time:  #checks if a nude event for this girl already happened  at this time of day
             $ R_NudeCurrent_Time = Current_Time
@@ -202,7 +201,7 @@
         $ P_Sprite = P_SpriteTemp
         $ P_Cock = P_CockTemp
 
-    elif Girl == "Emma":
+    elif Girl == "Emma" and E_SEXP:
         # Current_Time #morning, evening or night
         if E_NudeCurrent_Time != Current_Time:  #checks if a nude event for this girl already happened  at this time of day
             $ E_NudeCurrent_Time = Current_Time
@@ -295,7 +294,7 @@
         $ P_Sprite = P_SpriteTemp
         $ P_Cock = P_CockTemp
 
-    elif Girl == "Laura":
+    elif Girl == "Laura" and L_SEXP:
         # Current_Time #morning, evening or night
         if L_NudeCurrent_Time != Current_Time:  #checks if a nude event for this girl already happened  at this time of day
             $ L_NudeCurrent_Time = Current_Time
