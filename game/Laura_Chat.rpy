@@ -25,7 +25,8 @@ label Laura_Chat_Set(Preset=0):
                     $ renpy.pop_call() #this removes the callback to the previous settings menu
                     $ renpy.pop_call() #this removes the callback to the previous settings menu testing. . .
                     ch_p "I wanted to talk about your outfit. . ."
-                    if Taboo:
+                    call Taboo_Level
+                    if L_Taboo:
                             if "exhibitionist" in L_Traits:
                                 ch_l "Yes? . ."  
                             elif ApprovalCheck("Laura", 900, TabM=4) or ApprovalCheck("Laura", 400, "I", TabM=3): 
@@ -179,7 +180,6 @@ label Laura_Chat:
                                 pass
         
         "Change Laura":
-                    ch_p "Let's talk about you."
                     call Laura_Settings   
                         
         "Add her to party" if "Laura" not in Party and L_Loc == bg_current:
@@ -487,8 +487,8 @@ label Laura_Settings:
         ch_p "Let's talk about you."
         "Wardrobe": 
                     ch_p "I wanted to talk about your style."
-                    if L_Loc != "bg player" and L_Loc != "bg laura":  
-                        if Taboo:
+                    call Taboo_Level 
+                    if L_Taboo:
                             if "exhibitionist" in L_Traits:
                                 ch_l "Yes? . ."  
                             elif ApprovalCheck("Laura", 900, TabM=4) or ApprovalCheck("Laura", 400, "I", TabM=3): 
@@ -497,7 +497,7 @@ label Laura_Settings:
                                 ch_l "I don't think I'm supposed to undress around here. . ."
                                 ch_l "Can we talk about this in our rooms?"
                                 return
-                        call Laura_Clothes
+                            call Laura_Clothes
                     elif ApprovalCheck("Laura", 900, TabM=4) or ApprovalCheck("Laura", 600, "L") or ApprovalCheck("Laura", 300, "O"):
                                 ch_l "Oh? What about them?"
                                 call Laura_Clothes
@@ -1602,16 +1602,17 @@ label Laura_Flirt:
     if L_Loc == bg_current:         
         $ L_Chat[5] = 1                                         #can only flirt once per cycle. 
         menu:        
-#            "Compliment her":
+            "Compliment her":
+                    call Compliment("Laura")
                 
             "Say you love her":
-                        call Love_You("Laura")
+                    call Love_You("Laura")
                         
             "Touch her cheek":                                                                              
                     call L_TouchCheek
             
             "Hold hands":
-                        call Hold_Hands("Laura")    
+                    call Hold_Hands("Laura")    
                     
             "Pat her head":
                     call L_Headpat
@@ -2282,7 +2283,7 @@ return
 
 # start Laura_Gifts//////////////////////////////////////////////////////////
 label Laura_Gifts:  
-    if P_Inventory == []:
+    if not P_Inventory:
         "You don't have anything to give her."
         return
     menu:
@@ -2712,8 +2713,8 @@ label Laura_Gifts:
                 "Never mind":
                     pass
         "Exit":
-            pass
-    
+            return
+    jump Laura_Gifts
     return
 
 
@@ -3876,6 +3877,7 @@ label Laura_About(Girl="Rogue"):
 
 label Laura_Clothes:    
     call LauraFace
+    $ Trigger = 1 # to prevent Focus swapping. . .   
     menu:
         ch_l "What about my clothes?"      
         "Overshirts":
@@ -3891,7 +3893,36 @@ label Laura_Clothes:
         "Let's talk about what you wear around.":
                     call Laura_Clothes_Schedule
             
+        "Could I get a look at it?" if L_Loc != bg_current:
+                # checks to see if she'll drop the screen
+                call Laura_OutfitShame(0,2) 
+                if _return:                    
+                    show PhoneSex zorder 150
+                    ch_l "Ok, that good?"
+                hide PhoneSex
+        "Could I get a look at it?" if renpy.showing('DressScreen'):
+                # checks to see if she'll drop the screen
+                call Laura_OutfitShame(0,2) 
+                if _return:
+                    hide DressScreen
+        "Would you be more comfortable behind a screen? (locked)" if L_Taboo:
+                pass
+        "Would you be more comfortable behind a screen?" if L_Loc == bg_current and not L_Taboo and not renpy.showing('DressScreen'):
+                # checks to see if she'll drop the screen
+                if ApprovalCheck("Laura", 1500) or (L_SeenChest and L_SeenPussy):
+                        ch_l "Probably won't need it, thanks."
+                else:
+                        show DressScreen zorder 150
+                        ch_l "Yeah, this is better, thanks."
+                        
         "Switch to. . .":
+                if renpy.showing('DressScreen'):
+                        call Laura_OutfitShame(0,2) 
+                        if _return:
+                            hide DressScreen
+                        else:
+                            call LauraOutfit  
+                            
                 $ L_TempClothes[1] = L_Arms  
                 $ L_TempClothes[2] = L_Legs 
                 $ L_TempClothes[3] = L_Over
@@ -3904,6 +3935,7 @@ label Laura_Clothes:
                 $ L_TempClothes[0] = 1 
                 $ L_Outfit = "temporary"
                 $ L_OutfitDay = "temporary" 
+                $ Trigger = 0
                 menu:
                     "Rogue":
                         call Rogue_Chat_Set("wardrobe")                  
@@ -3932,6 +3964,13 @@ label Laura_Clothes:
                         else:
                                 ch_l "Sure."                    
                         $ L_RecentActions.append("wardrobe")  
+                        
+                if renpy.showing('DressScreen'):
+                        call Laura_OutfitShame(0,2) 
+                        if _return:
+                            hide DressScreen
+                        else:
+                            call LauraOutfit  
                 #sets up a temporary outfit
                 $ L_TempClothes[1] = L_Arms  
                 $ L_TempClothes[2] = L_Legs 
@@ -3945,7 +3984,8 @@ label Laura_Clothes:
                 $ L_TempClothes[0] = 1 
                 $ L_Outfit = "temporary"
                 $ L_OutfitDay = "temporary"        
-                $ L_Chat[1] += 1                
+                $ L_Chat[1] += 1   
+                $ Trigger = 0             
                 return
             
     jump Laura_Clothes
@@ -4054,15 +4094,20 @@ label Laura_Clothes:
                                 call Laura_Custom_Out(Cnt)
                         "Ok, back to what we were talking about. . .":
                                 $ Cnt = 0
-                                jump Laura_Clothes_Outfits                    
+                                jump Laura_Clothes                  
         
-        "Gym Clothes?" if not Taboo or bg_current == "bg dangerroom":
+        "Gym Clothes?" if not L_Taboo or bg_current == "bg dangerroom":
                 call LauraOutfit("gym")
             
-        "Sleepwear?" if not Taboo:
-                call LauraOutfit("sleep")
-            
-        "Swimwear?" if not Taboo or bg_current == "bg pool":
+        "Sleepwear?" if not L_Taboo:
+                if ApprovalCheck("Laura", 1200):
+                        call LauraOutfit("sleep")
+                else:
+                        call Display_DressScreen("Laura")
+                        if _return:
+                            call LauraOutfit("sleep")
+                                        
+        "Swimwear?" if not L_Taboo or bg_current == "bg pool":
                 call LauraOutfit("swimwear")
             
         "Your birthday suit looks really great. . .":                                     
@@ -4138,20 +4183,27 @@ label Laura_Clothes:
         "Why don't you go with no [L_Over]?" if L_Over:
                 call LauraFace("bemused", 1)
                 if ApprovalCheck("Laura", 800, TabM=3) and (L_Chest or L_SeenChest):
-                    ch_l "Ok."
-                elif ApprovalCheck("Laura", 1200, TabM=0):
+                    ch_l "Ok."                    
+                elif ApprovalCheck("Laura", 600, TabM=0):
                     call Laura_NoBra
                     if not _return:
-                        jump Laura_Clothes
+                        if not ApprovalCheck("Laura", 1200):
+                            call Display_DressScreen("Laura")
+                            if not _return:
+                                jump Laura_Clothes
+                        else:
+                                jump Laura_Clothes
                 else:
-                    ch_l "Not right now."
-                    if not L_Chest:
-                        ch_l "I don't have anything under this. . ."
-                    jump Laura_Clothes
+                    call Display_DressScreen("Laura")
+                    if not _return:
+                            ch_l "Not right now."
+                            if not L_Chest:
+                                ch_l "I don't have anything under this. . ."
+                            jump Laura_Clothes                            
                 $ Line = L_Over
                 $ L_Over = 0
                 "She throws her [Line] at her feet."
-                if not L_Chest:
+                if not L_Chest and not renpy.showing('DressScreen'):
                         call Laura_First_Topless
             
         "Try on that leather jacket." if L_Over != "jacket":
@@ -4162,9 +4214,11 @@ label Laura_Clothes:
                 elif ApprovalCheck("Laura", 800, TabM=0):
                     ch_l "Yeah, ok."          
                 else:
-                    call LauraFace("bemused", 1)
-                    ch_l "I don't really want to take this [L_Over] off at the moment."
-                    jump Laura_Clothes    
+                    call Display_DressScreen("Laura")
+                    if not _return:                            
+                            call LauraFace("bemused", 1)
+                            ch_l "I don't really want to take this [L_Over] off at the moment."
+                            jump Laura_Clothes    
                 $ L_Over = "jacket"   
                 
         "Maybe just throw on a towel?" if L_Over != "towel":
@@ -4175,8 +4229,10 @@ label Laura_Clothes:
                     call LauraFace("perplexed", 1)
                     ch_l "Huh, ok . ."          
                 else:
-                    ch_l "That wouldn't look right."
-                    jump Laura_Clothes    
+                    call Display_DressScreen("Laura")
+                    if not _return:                            
+                            ch_l "That wouldn't look right."
+                            jump Laura_Clothes    
                 $ L_Over = "towel"    
                             
         "Never mind":
@@ -4210,10 +4266,6 @@ label Laura_Clothes:
                                 ch_l "Yeah, I guess."
                                 $ L_Chest = "leather bra"
                                 "She pulls out her leather bra and slips it on under her [L_Over]."
-#                        elif ApprovalCheck("Laura", 600, TabM=2):
-#                                ch_l "Yeah, I guess."
-#                                $ L_Chest = "sports bra"
-#                                "She pulls out her sports bra and passes it through her [L_Over]."
                         else:
                                 ch_l "Yeah, I don't think so."
                                 return 0
@@ -4230,13 +4282,11 @@ label Laura_Clothes:
                         else: 
                                 call LauraFace("surprised")
                                 $ L_Brows = "angry"
-                                if Taboo > 20:
+                                if L_Taboo > 20:
                                     ch_l "Not in public, I won't!"
                                 else:
                                     ch_l "You're not that cute, [L_Petname]!"
                                 return 0
-                                
-                    
             "Never mind.":
                         ch_l "Ok. . ."
                         return 0
@@ -4255,22 +4305,32 @@ label Laura_Clothes:
                     ch_l "Yeah, ok."
                 elif ApprovalCheck("Laura", 1300, TabM=2) and L_Panties:
                     ch_l "For you, fine. . ."
-                elif ApprovalCheck("Laura", 800) and not L_Panties:
+                elif ApprovalCheck("Laura", 700) and not L_Panties:
                     call Laura_NoPantiesOn
-                    if not _return:
-                        jump Laura_Clothes
+                    if not _return and not L_Panties:
+                        if not ApprovalCheck("Laura", 1500):
+                            call Display_DressScreen("Laura")
+                            if not _return:
+                                jump Laura_Clothes
+                        else:
+                                jump Laura_Clothes
                 else:
-                    ch_l "Um, not with you around."
-                    if not L_Panties:
-                        ch_l "I'm going commando today. . ."
-                    jump Laura_Clothes
+                    call Display_DressScreen("Laura")
+                    if not _return:
+                        ch_l "Um, not with you around."
+                        if not L_Panties:
+                                ch_l "I'm going commando today. . ."
+                        jump Laura_Clothes
+                        
                 if L_Legs == "leather pants" or L_Legs == "mesh pants":
                         $ L_Legs = 0    
                         "She tugs her pants off and drops them to the ground."
                 else:
                         $ L_Legs = 0    
-                        "She tugs her skirt off and drops it to the ground."
-                if L_Panties:                
+                        "She tugs her skirt off and drops it to the ground."                
+                if renpy.showing('DressScreen'):
+                    pass
+                elif L_Panties:                
                     $ L_SeenPanties = 1
                 else:
                     call Laura_First_Bottomless
@@ -4284,6 +4344,8 @@ label Laura_Clothes:
                         ch_l "Yeah, ok."
                         $ L_Legs = "mesh pants"
                 else:
+                    call Display_DressScreen("Laura")
+                    if not _return:
                         ch_l "Sorry, those are kind of. . . breezy."
                     
         "What about wearing your leather skirt?" if L_Legs != "skirt":
@@ -4357,7 +4419,7 @@ label Laura_Clothes:
                         else: 
                                 call LauraFace("surprised")
                                 $ L_Brows = "angry"
-                                if Taboo > 20:
+                                if L_Taboo > 20:
                                     ch_l "Yeah, but not in public, [L_Petname]!"
                                 else:
                                     ch_l "You aren't that cute, [L_Petname]!"
@@ -4379,27 +4441,32 @@ label Laura_Clothes:
                         if L_SeenChest and ApprovalCheck("Laura", 900, TabM=2.7):
                             ch_l "Ok."    
                         elif ApprovalCheck("Laura", 1100, TabM=2):
-                            if Taboo:
+                            if L_Taboo:
                                 ch_l "I don't know, here. . ."
                             else:
                                 ch_l "Maybe. . ."
                         elif L_Over == "jacket" and ApprovalCheck("Laura", 600, TabM=2):
                             ch_l "This jacket is a bit revealing. . ."  
                         elif L_Over and ApprovalCheck("Laura", 500, TabM=2):
-                            ch_l "I guess I could. . ."  
-                        elif not L_Over:
-                            ch_l "Not without some other top."
-                            jump Laura_Clothes 
+                            ch_l "I guess I could. . ."                          
+                        elif not L_Over:                            
+                            call Display_DressScreen("Laura")
+                            if not _return:
+                                ch_l "Not without some other top."
+                                jump Laura_Clothes 
                         else:
-                            ch_l "Nah."
-                            jump Laura_Clothes 
+                            call Display_DressScreen("Laura")
+                            if not _return:
+                                ch_l "Nah."
+                                jump Laura_Clothes 
                         $ Line = L_Chest
                         $ L_Chest = 0
                         if L_Over:
                             "She reaches under her [L_Over] grabs her [Line], and pulls it off, dropping it to the ground."
                         else:
                             "She pulls off her [Line] and drops it to the ground."
-                            call Laura_First_Topless
+                            if not renpy.showing('DressScreen'):
+                                call Laura_First_Topless
                     
                     
                 "Try on that leather bra." if L_Chest != "leather bra":
@@ -4410,22 +4477,28 @@ label Laura_Clothes:
                         if L_SeenChest or ApprovalCheck("Laura", 1000, TabM=1):
                             ch_l "K."   
                             $ L_Chest = "corset"         
-                        else:                
-                            ch_l "It's a bit revealing. . ."  
+                        else:         
+                            call Display_DressScreen("Laura")
+                            if not _return:        
+                                ch_l "It's a bit revealing. . ."  
                         
                 "I like that lace corset." if L_Chest != "lace corset" and "lace corset" in L_Inventory :
                         if L_SeenChest or ApprovalCheck("Laura", 1300, TabM=2):
                             ch_l "K."   
                             $ L_Chest = "lace corset"         
-                        else:                
-                            ch_l "It's a bit transparent. . ."  
+                        else:      
+                            call Display_DressScreen("Laura")
+                            if not _return:           
+                                ch_l "It's a bit transparent. . ."  
                                     
                 "I like that wolverine tanktop." if L_Chest != "wolvie top" and "wolvie top" in L_Inventory:
                         if L_SeenChest or ApprovalCheck("Laura", 1000, TabM=2):
                             ch_l "K."   
                             $ L_Chest = "wolvie top"         
-                        else:                
-                            ch_l "It's a {i}little{/i} embarrassing. . ."  
+                        else:         
+                            call Display_DressScreen("Laura")
+                            if not _return:        
+                                ch_l "It's a {i}little{/i} embarrassing. . ."  
                
                 "I like that bikini top." if L_Chest != "bikini top" and "bikini top" in L_Inventory:
                         if bg_current == "bg pool":
@@ -4435,8 +4508,10 @@ label Laura_Clothes:
                                 if L_SeenChest or ApprovalCheck("Laura", 1000, TabM=2):
                                     ch_l "K."   
                                     $ L_Chest = "bikini top"         
-                                else:                
-                                    ch_l "This is not really a \"bikini\" sort of place. . ." 
+                                else:      
+                                    call Display_DressScreen("Laura")
+                                    if not _return:           
+                                            ch_l "This is not really a \"bikini\" sort of place. . ." 
                 "Never mind":
                         pass 
             jump Laura_Clothes_Under
@@ -4460,7 +4535,7 @@ label Laura_Clothes:
             menu:
                 "You could lose those panties. . ." if L_Panties:
                         call LauraFace("bemused", 1)  
-                        if ApprovalCheck("Laura", 900) and (L_Legs or (L_SeenPussy and not Taboo)):
+                        if ApprovalCheck("Laura", 900) and (L_Legs or (L_SeenPussy and not L_Taboo)):
                                 #If you've got decent approval and either she's wearing pants or you've seen her pussy and it's not in public                        
                                 if ApprovalCheck("Laura", 850, "L"):               
                                         ch_l "True. . ."
@@ -4479,18 +4554,21 @@ label Laura_Clothes:
                                         ch_l "Hrmm. . ."
                                 elif ApprovalCheck("Laura", 1300, TabM=3):
                                         ch_l "Okay, okay."
-                                else: 
-                                        call LauraFace("surprised")
-                                        $ L_Brows = "angry"
-                                        if Taboo > 20:
-                                            ch_l "This is too public."
-                                        else:
-                                            ch_l "You're not that cute, [L_Petname]!"
-                                        jump Laura_Clothes                                
+                                else:                                         
+                                        call Display_DressScreen("Laura")
+                                        if not _return:
+                                            call LauraFace("surprised")
+                                            $ L_Brows = "angry" 
+                                            if L_Taboo > 20:
+                                                ch_l "This is too public."
+                                            else:
+                                                ch_l "You're not that cute, [L_Petname]!"
+                                            jump Laura_Clothes
                         $ L_Panties = 0
                         if not L_Legs:
                             "She pulls off her panties, then drops them to the ground." 
-                            call Laura_First_Bottomless  
+                            if not renpy.showing('DressScreen'):
+                                    call Laura_First_Bottomless  
                         elif ApprovalCheck("Laura", 1200, TabM=4):   
                             $ Line = L_Legs
                             $ L_Legs = 0
@@ -4508,22 +4586,28 @@ label Laura_Clothes:
                         if ApprovalCheck("Laura", 1100, TabM=3):
                                 ch_l "Ok."
                                 $ L_Panties = "leather panties"  
-                        else:                
-                                ch_l "That's none of your busines."
+                        else:       
+                                call Display_DressScreen("Laura")
+                                if not _return:          
+                                        ch_l "That's none of your busines."
                         
                 "Why don't you wear the wolverine panties instead?" if "wolvie panties" in L_Inventory and L_Panties and L_Panties != "wolvie panties":
                         if ApprovalCheck("Laura", 1000, TabM=3):
                                 ch_l "I guess."
                                 $ L_Panties = "wolvie panties"
                         else:
-                                ch_l "That's none of your busines."
+                                call Display_DressScreen("Laura")
+                                if not _return: 
+                                        ch_l "That's none of your busines."
                             
                 "Why don't you wear the lace panties instead?" if "lace panties" in L_Inventory and L_Panties and L_Panties != "lace panties":
                         if ApprovalCheck("Laura", 1300, TabM=3):
                                 ch_l "I guess."
                                 $ L_Panties = "lace panties"
                         else:
-                                ch_l "That's none of your busines."
+                                call Display_DressScreen("Laura")
+                                if not _return: 
+                                        ch_l "That's none of your busines."
                             
                 "I like those bikini bottoms." if "bikini bottoms" in L_Inventory and L_Panties != "bikini bottoms":                            
                         if bg_current == "bg pool":
@@ -4533,8 +4617,10 @@ label Laura_Clothes:
                                 if ApprovalCheck("Laura", 1000, TabM=2):
                                     ch_l "K."   
                                     $ L_Panties = "bikini bottoms"         
-                                else:                
-                                    ch_l "This is not really a \"bikini\" sort of place. . ." 
+                                else:    
+                                    call Display_DressScreen("Laura")
+                                    if not _return:             
+                                            ch_l "This is not really a \"bikini\" sort of place. . ." 
                             
                 "You know, you could wear some panties with that. . ." if not L_Panties:
                         call LauraFace("bemused", 1)
@@ -5020,7 +5106,7 @@ label Laura_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             #if not a check, then it is only applied if it's in a taboo area
             # Tempshame is a throwaway value, 0-50, Agree is whether she will wear it out, 2 if yes, 1 if only around you.
             
-            if not Check and not Taboo and Custom != 20:
+            if not Check and not L_Taboo and Custom != 20:
                     #if this is not a custom check and you're in a safe space,
                     if L_Schedule[9]:
                             #if there is a "private outfit" set, ask to change.
@@ -5144,16 +5230,59 @@ label Laura_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             $ Tempshame -= Count                  #Set Outfit shame for the lower half
             
             if Check:
-                    #if this is a custom outfit check
-                    if Custom == 4:
+                    #if this is a custom outfit check                    
+                    if Check == 2:
+                        ch_p "So can I see it then?"
+                    elif Custom == 4:
                         ch_p "So would you work out in that?"
                     elif Custom == 7:
                         ch_p "So would you sleep in that?"
                     else:
-                        ch_p "So would you wear that outside?"  
-                        
+                        ch_p "So would you wear that outside?" 
                     call LauraFace("sexy", 0)
-                    if Taboo >= 40: #L_Loc != "bg player" and L_Loc != "bg laura": 
+                    if PantsNum("Laura") > 2:  
+                        pass        #if she's wearing pants
+                    elif PantiesNum("Laura") > 2 and (L_SeenPanties or ApprovalCheck("Laura", 900, TabM=0)):
+                        pass        #no pants, but panties
+                    elif L_SeenPussy or ApprovalCheck("Laura", 1200, TabM=0):
+                        pass        #no panties, but she's fine with that
+                    else:
+                        $ Agree = 0 #not fine with it
+                                
+                    if not Agree:
+                        pass
+                    elif OverNum("Laura") > 2:    
+                        pass        #if she's wearing a top
+                    elif ChestNum("Laura") > 2 and (L_SeenChest or ApprovalCheck("Laura", 900, TabM=0)):
+                        pass        #no top, but bra
+                    elif L_SeenChest or ApprovalCheck("Laura", 1200, TabM=0):
+                        pass        #no bra, but she's fine with that
+                    else:
+                        $ Agree = 0 #not fine with it
+                    
+                    if Check == 2 and Agree:
+                                #if checking to see if she'll drop the dressing screen. . .                                
+                                $ L_Shame = Tempshame
+                                call LauraFace("sly")
+                                ch_l "Huh, this'll work. . ."
+                                hide DressScreen
+                                return 1   
+                    if not Agree:
+                                #she isn't even comfortable with you seeing it
+                                call LauraFace("sly", 1)
+                                ch_l "You'll have to earn it."
+                                menu:
+                                    extend ""
+                                    "Ok then, you can put your normal clothes back on.":
+                                                call LauraOutfit(Changed=1)  
+                                                hide DressScreen
+                                    "Ok, we can keep tweaking it.":
+                                                pass
+                                call LauraFace("smile", 1)
+                                ch_l "Thanks."    
+                                return
+                                
+                    if L_Taboo >= 40: #L_Loc != "bg player" and L_Loc != "bg laura": 
                             call LauraFace("confused",1)
                             $ L_Mouth = "smile"
                             ch_l "Well a bit late for that, I guess." 
@@ -5264,7 +5393,7 @@ label Laura_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                             $ L_Custom[0] = 2 if Agree else 1
                             call Clothing_Schedule_Check("Laura",3,1)   
                     #End check                       
-            elif Taboo <= 20:
+            elif L_Taboo <= 20:
                 # halves shame level if she's comfortable
                 $ Tempshame /= 2
                 
@@ -5299,7 +5428,7 @@ label Laura_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             elif (ApprovalCheck("Laura", 2600) or ApprovalCheck("Laura", 950, "I")):
                     #If the outfit is very scandelous but she's ok with that 
                     pass
-            elif not Taboo:
+            elif not L_Taboo:
                     pass
             else:   
                     if Custom == 25:

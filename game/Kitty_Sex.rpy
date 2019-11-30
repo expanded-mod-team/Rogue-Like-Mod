@@ -978,27 +978,6 @@ label K_KissPrep:
         call KittyFace("sucking")
     else:
         call KittyFace("kiss")
-    if K_Kissed >= 10:
-        "She's all over you, licking all over your face and grinding against you."  
-    elif K_Kissed > 7:
-        "She's really sucking face."
-    elif K_Kissed > 3:
-        "She's really getting into it, her tongue's going at it."
-    else:
-        "You and Kitty make out for a while."    
-    if Taboo:
-        call DrainWord("Kitty","tabno")
-    call DrainWord("Kitty","no kissing")
-    $ K_RecentActions.append("kissing")                      
-    $ K_DailyActions.append("kissing") 
-    if not K_Kissed: 
-        $ K_Addict -= 5       
-        call Statup("Kitty", "Lust", 70, 5)
-        call Statup("Kitty", "Love", 90, 10)
-        call Statup("Kitty", "Love", 60, 25)            
-        call Statup("Kitty", "Obed", 30, 20)
-        call Statup("Kitty", "Inbt", 30, 20)
-        jump K_Kiss_After
     if Situation == "Kitty":                                                      
             #Kitty auto-starts   
             $ Situation = 0
@@ -1031,6 +1010,27 @@ label K_KissPrep:
                     call AnyWord("Kitty",1,"refused","refused")  
                     return          
             #end auto
+    if K_Kissed >= 10:
+        "She's all over you, licking all over your face and grinding against you."  
+    elif K_Kissed > 7:
+        "She's really sucking face."
+    elif K_Kissed > 3:
+        "She's really getting into it, her tongue's going at it."
+    else:
+        "You and Kitty make out for a while."    
+    if Taboo:
+        call DrainWord("Kitty","tabno")
+    call DrainWord("Kitty","no kissing")
+    $ K_RecentActions.append("kissing")                      
+    $ K_DailyActions.append("kissing") 
+    if not K_Kissed: 
+        $ K_Addict -= 5       
+        call Statup("Kitty", "Lust", 70, 5)
+        call Statup("Kitty", "Love", 90, 10)
+        call Statup("Kitty", "Love", 60, 25)            
+        call Statup("Kitty", "Obed", 30, 20)
+        call Statup("Kitty", "Inbt", 30, 20)
+        jump K_Kiss_After
     $ Trigger = "kiss you"
     $ Line = 0
     $ Cnt = 0

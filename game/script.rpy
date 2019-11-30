@@ -159,6 +159,7 @@ init -1:
     default Keys = [] 
     default PunishmentX = 0
     default GwenName = "????"
+    default Shop_Inventory = ["DL","DL","DL","DL","G","G","G","G","G","A","A","A","A"]
 # Player Sprite
     default P_Sprite = 0
     default P_Color = "green"
@@ -735,7 +736,7 @@ label VersionNumber:
     if SaveVersion == 975: #error correction, remove this eventually
         $ SaveVersion = 957  
         
-    if SaveVersion < 983:
+    if SaveVersion < 985:
         if SaveVersion < 976:
                 if SaveVersion < 94:
                     $ R_Love = R_Love * 10
@@ -1309,49 +1310,100 @@ label VersionNumber:
             #shifts case of these words. . .
             if "les kitty" in R_History:
                     $ R_History.remove("les kitty")
-                    $ R_History.append("les Kitty")
+                    if "les Kitty" not in R_History:
+                        $ R_History.append("les Kitty")
             if "les emma" in R_History:
-                    $ R_History.remove("les emma")
-                    $ R_History.append("les Emma")
+                    $ R_History.remove("les emma")                    
+                    if "les Emma" not in R_History:
+                        $ R_History.append("les Emma")
             if "les laura" in R_History:
                     $ R_History.remove("les laura")
-                    $ R_History.append("les Laura")                    
+                    if "les Laura" not in R_History:
+                        $ R_History.append("les Laura")                    
             if "les rogue" in K_History:
                     $ K_History.remove("les rogue")
-                    $ K_History.append("les Rogue")
+                    if "les Rogue" not in K_History:
+                        $ K_History.append("les Rogue")
             if "les emma" in K_History:
                     $ K_History.remove("les emma")
-                    $ K_History.append("les Emma")
+                    if "les Emma" not in K_History:
+                        $ K_History.append("les Emma")
             if "les laura" in K_History:
                     $ K_History.remove("les laura")
-                    $ K_History.append("les Laura")                    
+                    if "les Laura" not in K_History:
+                        $ K_History.append("les Laura")                    
             if "les rogue" in E_History:
                     $ E_History.remove("les rogue")
-                    $ E_History.append("les Rogue")
+                    if "les Rogue" not in E_History:
+                        $ E_History.append("les Rogue")
             if "les kitty" in E_History:
                     $ E_History.remove("les kitty")
-                    $ E_History.append("les Kitty")
+                    if "les Kitty" not in E_History:
+                        $ E_History.append("les Kitty")
             if "les laura" in E_History:
                     $ E_History.remove("les laura")
-                    $ E_History.append("les Laura")                    
+                    if "les Laura" not in E_History:
+                        $ E_History.append("les Laura")                    
             if "les rogue" in L_History:
                     $ L_History.remove("les rogue")
-                    $ L_History.append("les Rogue")
+                    if "les Rogue" not in L_History:
+                        $ L_History.append("les Rogue")
             if "les kitty" in L_History:
                     $ L_History.remove("les kitty")
-                    $ L_History.append("les Kitty")
+                    if "les Kitty" not in L_History:
+                        $ L_History.append("les Kitty")
             if "les emma" in L_History:
                     $ L_History.remove("les emma")
-                    $ L_History.append("les Emma")
+                    if "les Emma" not in L_History:
+                        $ L_History.append("les Emma")
             #end shifts case of these words. . .
              
             if "locked" in P_RecentActions:
                 $ P_RecentActions.remove("locked")
-                $ P_Traits.append("locked")       
+                if "locked" not in P_Traits:
+                        $ P_Traits.append("locked")       
                     
-#            $ SaveVersion = 984
-            #end Save 983 prep    
+            if "Dazzler and Longshot" in P_Inventory and "DL" in Shop_Inventory:
+                $ Shop_Inventory.remove("DL")    
+            if "Avengers Tower Penthouse" in P_Inventory and "A" in Shop_Inventory:
+                $ Shop_Inventory.remove("A")
+            if "256 Shades of Grey" in P_Inventory and "G" in Shop_Inventory:
+                $ Shop_Inventory.remove("G")
                 
+            if "Dazzler and Longshot" in R_Inventory and "DL" in Shop_Inventory:
+                $ Shop_Inventory.remove("DL")    
+            if "Avengers Tower Penthouse" in R_Inventory and "A" in Shop_Inventory:
+                $ Shop_Inventory.remove("A")
+            if "256 Shades of Grey" in R_Inventory and "G" in Shop_Inventory:
+                $ Shop_Inventory.remove("G")
+                
+            if "Dazzler and Longshot" in K_Inventory and "DL" in Shop_Inventory:
+                $ Shop_Inventory.remove("DL")    
+            if "Avengers Tower Penthouse" in K_Inventory and "A" in Shop_Inventory:
+                $ Shop_Inventory.remove("A")
+            if "256 Shades of Grey" in K_Inventory and "G" in Shop_Inventory:
+                $ Shop_Inventory.remove("G")
+                
+            if "Dazzler and Longshot" in E_Inventory and "DL" in Shop_Inventory:
+                $ Shop_Inventory.remove("DL")    
+            if "Avengers Tower Penthouse" in E_Inventory and "A" in Shop_Inventory:
+                $ Shop_Inventory.remove("A")
+            if "256 Shades of Grey" in E_Inventory and "G" in Shop_Inventory:
+                $ Shop_Inventory.remove("G")
+                
+            if "Dazzler and Longshot" in L_Inventory and "DL" in Shop_Inventory:
+                $ Shop_Inventory.remove("DL")    
+            if "Avengers Tower Penthouse" in L_Inventory and "A" in Shop_Inventory:
+                $ Shop_Inventory.remove("A")
+            if "256 Shades of Grey" in L_Inventory and "G" in Shop_Inventory:
+                $ Shop_Inventory.remove("G")
+                
+            $ SaveVersion = 984
+            #end Save 983 prep  
+            
+            
+            #when new girl added. . .
+            $ Shop_Inventory.extend(["A","DL","G"]) #adds a new one for each
                 
         
 #        call Failsafe
@@ -1383,19 +1435,7 @@ label EventCalls:
         if Day < 5 or Round <= 10:
                     #Disables events when it's too early in the game or the turn is about to end 
                     return
-                    
-#        #Activate's "Rogue like spunk" chat        
-#        if "hungry" not in R_Traits and (R_Swallow + R_Chat[2]) >= 10 and R_Loc == bg_current:      #She's swallowed a lot
-#                    call Set_The_Scene            
-#                    call Rogue_Hungry
-#                    return   
-        
-#        #Activate's "Kitty like spunk" chat
-#        if "hungry" not in K_Traits and (K_Swallow + K_Chat[2]) >= 10 and K_Loc == bg_current:      #She's swallowed a lot
-#                    call Set_The_Scene            
-#                    call Kitty_Hungry
-#                    return   
-                    
+                                        
         #Activates Kitty meet    
         if "traveling" in P_RecentActions and "met" not in K_History and bg_current == "bg classroom": 
                     jump KittyMeet
@@ -1403,14 +1443,14 @@ label EventCalls:
         
         #Activates Laura meet    
         if "traveling" in P_RecentActions and "met" not in L_History and bg_current == "bg dangerroom":
-                if Day >= 10:
+                if Day >= 10 and "dress0" not in L_History and "mission" not in  L_Todo:
                     call LauraMeet
                     return       
         
         #Calls Kitty starting dressup event
-        if bg_current == "bg campus" and Current_Time != "Night" and "met" in L_History and "met" in K_History:
-                if "dress3" not in L_History and "dress1" not in L_History:
-                    call Laura_Dressup
+        if bg_current == "bg campus" and Current_Time != "Night" and "met" in K_History and "met" not in L_History:
+                if "dress0" in L_History:
+                        call Laura_Dressup
             
         #Activates Emma meet and class stuff
         if "traveling" in P_RecentActions and bg_current == "bg classroom" and Weekday < 5:
@@ -3075,9 +3115,14 @@ label Emma_Schedule(Clothes = 1, Location = 1, LocTemp = E_Loc):
 label Emma_Todo:                       
         #Actions checked each night  
         #causes her to grow her pubes out nightly
-        if "pubes" in E_Todo:    
-                $ E_Pubes = 1
-                $ E_Todo.remove("pubes") 
+        if "pubes" in E_Todo:  
+                $ E_PubeC -= 1
+                if E_PubeC >= 1:
+                        pass
+                else:            
+                        $ E_Pubes = 1
+                        $ E_Todo.remove("pubes") 
+                             
                         
         #causes her to wax her pubes
         if "shave" in E_Todo:               
@@ -3378,7 +3423,7 @@ label Laura_Schedule(Clothes = 1, Location = 1, LocTemp = L_Loc):
         # If not Location, don't bother with the location portion of the schedule
         
         if "met" not in L_History or ("Laura" in Party and Clothes != 2): 
-                #if she's in a party, never mind
+                #if she's in a party, never mind, or on a mission
                 return  
         if Clothes != 2 and "sleepover" in L_Traits and Current_Time == "morning":
                 #she slept over, so just forget this for now  
@@ -3461,14 +3506,18 @@ label Laura_Schedule(Clothes = 1, Location = 1, LocTemp = L_Loc):
 
 label Laura_Todo:                       
         #Actions checked each night  
-        #causes her to grow her pubes out over a week
-        if "pubes" in L_Todo:
+        #causes her to grow her pubes out nightly
+        if "pubes" in L_Todo:         
+                $ L_Pubes = 1
+                $ L_Todo.remove("pubes") 
+                  
+        if "mission" in L_Todo: #puts her on ice until a week after the first meeting
                 $ L_PubeC -= 1
                 if L_PubeC >= 1:
-                        pass
-                else:            
-                        $ L_Pubes = 1
-                        $ L_Todo.remove("pubes") 
+                        $ L_Loc = "hold"
+                else:          
+                        $ L_History.append("dress0") #starts dress event where you'll meet again
+                        $ L_Todo.remove("mission") 
                         
         #causes her to wax her pubes
         if "shave" in L_Todo:               
@@ -3856,7 +3905,7 @@ label Wait (Outfit = 1, Lights = 1):
     call GirlWaitAttract #checks girls attraction based on who's in the room
     
     #Things that are about Rogue:      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    if R_Lust >= 70 or R_Thirst >= 30 or renpy.random.randint(1, 20) >= 15:
+    if R_Lust >= 70 or R_Thirst >= 30 or (renpy.random.randint(1, 40) + R_Lust)>= 70:
                 # checks if she wants to fap
                 if "nofap" in R_Traits:
                         call AnyWord("Rogue",1,0,"wannafap")  #adds "wannafap" tag to daily 
@@ -3921,7 +3970,7 @@ label Wait (Outfit = 1, Lights = 1):
         
     #Things that are about Kitty:   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
     if "met" in K_History:
-            if K_Lust >= 70 or K_Thirst >= 30 or renpy.random.randint(1, 20) >= 15:
+            if K_Lust >= 70 or K_Thirst >= 30 or (renpy.random.randint(1, 50) + K_Lust)>= 80:
                         # checks if she wants to fap
                         if "nofap" in K_Traits:
                                 call AnyWord("Kitty",1,0,"wannafap")  #adds "wannafap" tag to daily 
@@ -3982,7 +4031,7 @@ label Wait (Outfit = 1, Lights = 1):
         
     #Things that are about Emma:   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  
     if "met" in E_History:
-            if E_Lust >= 70 or E_Thirst >= 30 or renpy.random.randint(1, 20) >= 15:
+            if E_Lust >= 70 or E_Thirst >= 30 or (renpy.random.randint(1, 40) + E_Lust)>= 60:
                         # checks if she wants to fap
                         if "nofap" in E_Traits:
                                 call AnyWord("Emma",1,0,"wannafap")  #adds "wannafap" tag to daily 
@@ -4045,7 +4094,7 @@ label Wait (Outfit = 1, Lights = 1):
        
     #Things that are about Laura:   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  
     if "met" in L_History:
-            if L_Lust >= 70 or L_Thirst >= 30 or renpy.random.randint(1, 20) >= 15:
+            if L_Lust >= 70 or L_Thirst >= 30 or (renpy.random.randint(1, 50) + L_Lust)>= 60:
                         # checks if she wants to fap
                         if "nofap" in L_Traits:
                                 call AnyWord("Laura",1,0,"wannafap")  #adds "wannafap" tag to daily 
@@ -4165,6 +4214,8 @@ label Taboo_Level(Taboo_Loc=0):
                     $ E_Loc = bg_current
         if E_Loc == "nearby":
                 $ Taboo_Check = bg_current
+        elif E_Loc == "bg teacher" or E_Loc == "bg desk":            
+                $ Taboo_Check = "bg classroom"
         else:
                 $ Taboo_Check = E_Loc
         call CheckTaboo("Emma",Taboo_Check)
@@ -4189,7 +4240,7 @@ label CheckTaboo(Girl=0,Taboo_Check=0):
                 if Current_Time == "Night":
                     call Set_Taboo(Girl,5)
                 elif Current_Time == "Evening" or Weekday >= 5:
-                    if "locked" in P_Traits:
+                    if "locked" in P_Traits and Taboo_Check == bg_current:
                             call Set_Taboo(Girl,0)
                     else:
                             call Set_Taboo(Girl,30)
@@ -4197,7 +4248,7 @@ label CheckTaboo(Girl=0,Taboo_Check=0):
                     call Set_Taboo(Girl,40)
         elif Taboo_Check == "bg dangerroom":
                 if Current_Time == "Night":
-                    if "locked" in P_Traits:
+                    if "locked" in P_Traits and Taboo_Check == bg_current:
                             call Set_Taboo(Girl,0)
                     else:
                             call Set_Taboo(Girl,5)
@@ -4405,7 +4456,8 @@ label Checkout(Total = 0):
             $ P_Semen = P_Semen_Max if P_Semen > P_Semen_Max else P_Semen  
             $ P_Semen = 0 if P_Semen < 0 else P_Semen   
             
-            if Total:
+            if Total: 
+                    $ MultiAction = 1 
                     call DrainWord("Player","cockout")
                     call DrainWord("Player","nude")
 #                    $ LesFlag = 0
@@ -4525,7 +4577,8 @@ label Set_The_Scene(Chr = 1, Entry = 0, Dress = 1, TrigReset = 1, Quiet=0):
         if TrigReset and Dress:       
                 #resets your clothing if nude
                 call Get_Dressed
-            
+        
+        hide DressScreen
         if "Historia" in P_Traits: #Simulation haze
                 show BlueScreen onlayer black
         else:
@@ -5391,8 +5444,8 @@ label Shop:
     menu:
         "You are logged into the store. You have %(P_Cash)d dollars."       
         "Buy dildo for $20.":
-            $ Count = Inventory_Check("dildo")
-            if Count >= 10:
+#            $ Count = Inventory_Check("dildo")
+            if P_Inventory.count("dildo") >= 10:
                 "You already have way more dildos than you need. 2, 4, 6. . . yes, way too many."
             elif P_Cash >= 20:                
                 "You purchase one dildo."
@@ -5401,8 +5454,8 @@ label Shop:
             else:
                 "You don't have enough for that."
         "Buy \"Shocker\" vibrator for $25.":
-            $ Count = Inventory_Check("vibrator")
-            if Count >= 10:
+#            $ Count = Inventory_Check("vibrator")
+            if P_Inventory.count("vibrator") >= 10:
                 "If you bought one more vibrator, you would risk a geological event."
             elif P_Cash >= 25:
                 "You purchase one vibrator."
@@ -5456,7 +5509,7 @@ label Shop:
                             "You don't have enough for that."  
                 "Never mind.":
                     pass
-        "Gifts for Kitty":
+        "Gifts for Kitty" if "met" in K_History:
             menu:  
                 "Buy white lace bra for $90." if "lace bra" not in K_Inventory and "k lace bra" not in P_Inventory:            
                     if P_Cash >= 90:
@@ -5495,7 +5548,7 @@ label Shop:
                             "You don't have enough for that."  
                 "Never mind.":
                     pass
-        "Gifts for Emma":
+        "Gifts for Emma" if "met" in E_History:
             menu:  
                 "Buy white lace bra for $90." if "lace bra" not in E_Inventory and "e lace bra" not in P_Inventory:            
                         if P_Cash >= 90:
@@ -5541,7 +5594,7 @@ label Shop:
                             "You don't have enough for that."  
                 "Never mind.":
                     pass
-        "Gifts for Laura":
+        "Gifts for Laura" if "met" in L_History:
             menu:  
                 "Buy red corset for $70." if "corset" not in L_Inventory and "l corset" not in P_Inventory:            
                     if P_Cash >= 70:
@@ -5584,30 +5637,33 @@ label Shop:
             menu Shop_Books:
                 "Buy \"Dazzler and Longshot\" for $20.":
                     "A sappy romantic novel about two starcrossed lovers."
-                    if "Dazzler and Longshot" in P_Inventory:
-                        "You already have a copy, and really only need one."
+                    if "DL" not in Shop_Inventory: #if Inventory_Check("Dazzler and Longshot") >= 4:
+                        "They seem to be out of stock at the moment."
                     elif P_Cash >= 20:                
                         "You purchase the book."
+                        $ Shop_Inventory.remove("DL")
                         $ P_Inventory.append("Dazzler and Longshot")
                         $ P_Cash -= 20
                     else:
                         "You don't have enough for that."        
                 "Buy \"256 Shades of Grey\" for $20.":
                     "A gripping sexual thriller about a stern red-headed \"goblin queen\" and her subject."
-                    if "256 Shades of Grey" in P_Inventory:
-                        "You already have a copy, and really only need one."
+                    if "G" not in Shop_Inventory: #if "256 Shades of Grey" in P_Inventory:
+                        "They seem to be out of stock at the moment."
                     elif P_Cash >= 20:                
                         "You purchase the book."
+                        $ Shop_Inventory.remove("G")
                         $ P_Inventory.append("256 Shades of Grey")
                         $ P_Cash -= 20
                     else:
                         "You don't have enough for that."
                 "Buy \"Avengers Tower Penthouse\" for $20.":
                     "A book filled with nude pictures of various Avengers, sexy."
-                    if "Avengers Tower Penthouse" in P_Inventory:
-                        "You already have a copy, and really only need one."
+                    if "A" not in Shop_Inventory:
+                        "They seem to be out of stock at the moment."
                     elif P_Cash >= 20:                
                         "You purchase the book."
+                        $ Shop_Inventory.remove("A")
                         $ P_Inventory.append("Avengers Tower Penthouse")
                         $ P_Cash -= 20
                     else:
@@ -5703,7 +5759,7 @@ label Show_Inventory:
                 jump Show_Inventory
             menu:
                 "View the Mandrill Cologne." if "Mandrill Cologne" in P_Inventory:
-                    $ Count = Inventory_Check("Mandrill Cologne")
+                    $ Count = P_Inventory.count("Mandrill Cologne")
                     "This cologne is guaranteed to make women love you more [[+Love]]. You have [Count] doses left."
                     "Product warning, any love gained while under the effects may be lost when this wears off, if the limits are reached."
                     menu:
@@ -5720,7 +5776,7 @@ label Show_Inventory:
                             pass
                             
                 "View the Purple Rain Cologne." if "Purple Rain Cologne" in P_Inventory:
-                    $ Count = Inventory_Check("Purple Rain Cologne")
+                    $ Count = P_Inventory.count("Purple Rain Cologne")
                     "This cologne is guaranteed to make women more suggestible to your orders until tomorrow [[+Obedience]]. You have [Count] doses left."
                     "Product warning, any obedience gained whie under the effects may be lost when this wears off, if the limits are reached."
                     menu:
@@ -5737,7 +5793,7 @@ label Show_Inventory:
                             pass
                             
                 "View the Corruption Cologne." if "Corruption Cologne" in P_Inventory:
-                    $ Count = Inventory_Check("Corruption Cologne")
+                    $ Count = P_Inventory.count("Corruption Cologne")
                     "This cologne is guaranteed to make women let loose their wild side [[-Inhibition]]. You have [Count] doses left."
                     "Product warning, any Inhibition lost whie under the effects may be regained when this wears off, if the limits are reached."
                     menu:

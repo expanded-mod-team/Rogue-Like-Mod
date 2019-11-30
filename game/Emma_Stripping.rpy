@@ -1723,6 +1723,7 @@ label Emma_First_Peen(Silent = 0, Undress = 0, Second = 0, React = 0):
         call Statup("Emma", "Inbt", 60, 20) 
         call Statup("Emma", "Lust", 80, 10)
     
+    call EmmaFace("sly",1)  
     return React
     # End Emma shown peen
     

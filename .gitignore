@@ -114,6 +114,7 @@ errors.txt
 game/cache/
 game/saves/
 game/*.bat
+game/images
 
 # UnRen specific ignores
 unren*

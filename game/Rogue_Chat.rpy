@@ -23,7 +23,8 @@ label Rogue_Chat_Set(Preset=0):
                     $ renpy.pop_call() #this removes the callback to the previous settings menu
                     $ renpy.pop_call() #this removes the callback to the previous settings menu testing. . .
                     ch_p "I wanted to talk about your outfit. . ."
-                    if Taboo:
+                    call Taboo_Level
+                    if R_Taboo:
                             if "exhibitionist" in R_Traits:
                                 ch_r "Oooh, naughty. . ."  
                             elif ApprovalCheck("Rogue", 900, TabM=4) or ApprovalCheck("Rogue", 400, "I", TabM=3): 
@@ -156,7 +157,6 @@ label Rogue_Chat:
                                 pass
                     
         "Change Rogue":
-                    ch_p "Let's talk about you."
                     call Rogue_Settings   
          
         "Add her to party" if "Rogue" not in Party and R_Loc == bg_current:
@@ -918,8 +918,8 @@ label Rogue_Settings:
         ch_p "Let's talk about you."
         "Wardrobe":
                     ch_p "I wanted to talk about your style."
-                    if R_Loc != "bg player" and R_Loc != "bg rogue":  
-                        if Taboo:
+                    call Taboo_Level
+                    if R_Taboo:
                             if "exhibitionist" in R_Traits:
                                 ch_r "Oooh, naughty. . ."  
                             elif ApprovalCheck("Rogue", 900, TabM=4) or ApprovalCheck("Rogue", 400, "I", TabM=3): 
@@ -928,7 +928,7 @@ label Rogue_Settings:
                                 ch_r "This is a pretty public place for that, don't you think?"
                                 ch_r "We can talk about that back in our rooms."
                                 return
-                        call Rogue_Clothes
+                            call Rogue_Clothes
                     elif ApprovalCheck("Rogue", 900, TabM=4) or ApprovalCheck("Rogue", 600, "L") or ApprovalCheck("Rogue", 300, "O"):
                         ch_r "Ok, what did you want?"
                         call Rogue_Clothes
@@ -1815,8 +1815,9 @@ label Rogue_Flirt:
         
     $ R_Chat[5] = 1                                         #can only flirt once per cycle. 
     menu:        
-#            "Compliment her":
-            
+        "Compliment her":
+                    call Compliment("Rogue")
+                
         "Say you love her":
                     call Love_You("Rogue")
             
@@ -2843,7 +2844,7 @@ return
 
 # start Rogue_Gifts//////////////////////////////////////////////////////////
 label Rogue_Gifts:  
-    if P_Inventory == []:
+    if not P_Inventory:
         "You don't have anything to give her."
         return
     menu:
@@ -3266,8 +3267,9 @@ label Rogue_Gifts:
 #                "She already has enough of those."
 #            
         "Exit":
-            pass
+            return
     
+    jump Rogue_Gifts
     return
 
 
@@ -4306,7 +4308,8 @@ label Rogue_Dismissed(Leaving = 0):
     #end "you can leave"
 
 # Rogue's Clothes  // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-label Rogue_Clothes:    
+label Rogue_Clothes:   
+    $ Trigger = 1 # to prevent Focus swapping. . .    
     call RogueFace
     menu:
         ch_r "So what did you want to tell me about my clothes again?"
@@ -4322,8 +4325,36 @@ label Rogue_Clothes:
                 jump Rogue_Clothes_Outfits  
         "Let's talk about what you wear around.":
                 call Rogue_Clothes_Schedule
-                                                
+                           
+        "Could I get a look at it?" if R_Loc != bg_current:
+                # checks to see if she'll drop the screen
+                call Rogue_OutfitShame(0,2) 
+                if _return:                    
+                    show PhoneSex zorder 150
+                    ch_r "How's that? . ."
+                hide PhoneSex
+        "Could I get a look at it?" if renpy.showing('DressScreen'):
+                # checks to see if she'll drop the screen
+                call Rogue_OutfitShame(0,2) 
+                if _return:
+                    hide DressScreen
+        "Would you be more comfortable behind a screen? (locked)" if R_Taboo:
+                pass
+        "Would you be more comfortable behind a screen?" if R_Loc == bg_current and not R_Taboo and not renpy.showing('DressScreen'):
+                # checks to see if she'll drop the screen
+                if ApprovalCheck("Rogue", 1500) or (R_SeenChest and R_SeenPussy):
+                        ch_r "Don't really need that, thanks."
+                else:
+                        show DressScreen zorder 150
+                        ch_r "This is more comfortable, thanks."
+                        
         "Switch to. . .":
+                if renpy.showing('DressScreen'):
+                        call Rogue_OutfitShame(0,2) 
+                        if _return:
+                            hide DressScreen
+                        else:
+                            call RogueOutfit 
                 $ R_TempClothes[1] = R_Arms  
                 $ R_TempClothes[2] = R_Legs 
                 $ R_TempClothes[3] = R_Over
@@ -4336,6 +4367,7 @@ label Rogue_Clothes:
                 $ R_TempClothes[0] = 1 
                 $ R_Outfit = "temporary"
                 $ R_OutfitDay = "temporary"  
+                $ Trigger = 0
                 menu:
                     "Kitty":
                         call Kitty_Chat_Set("wardrobe")                    
@@ -4364,6 +4396,12 @@ label Rogue_Clothes:
                         else:
                                 ch_r "Ok."
                         $ R_RecentActions.append("wardrobe")  
+                if renpy.showing('DressScreen'):
+                        call Rogue_OutfitShame(0,2) 
+                        if _return:
+                            hide DressScreen
+                        else:
+                            call RogueOutfit 
                 #sets up a temporary outfit
                 $ R_TempClothes[1] = R_Arms  
                 $ R_TempClothes[2] = R_Legs 
@@ -4378,6 +4416,7 @@ label Rogue_Clothes:
                 $ R_Outfit = "temporary"
                 $ R_OutfitDay = "temporary"  
                 $ R_Chat[1] += 1
+                $ Trigger = 0
                 return
                 
     jump Rogue_Clothes
@@ -4488,15 +4527,20 @@ label Rogue_Clothes:
                                     call Rogue_Custom_Out(Cnt)
                                 "Ok, back to what we were talking about. . .":
                                     $ Cnt = 0
-                                    jump Rogue_Clothes_Outfits                                 
+                                    jump Rogue_Clothes                               
         
-        "Gym Clothes?" if not Taboo or bg_current == "bg dangerroom":
+        "Gym Clothes?" if not R_Taboo or bg_current == "bg dangerroom":
                 call RogueOutfit("gym")
-            
-        "Sleepwear?" if not Taboo:
-                call RogueOutfit("sleep")
-            
-        "Swimwear?" if not Taboo or bg_current == "bg pool":
+                
+        "Sleepwear?" if not R_Taboo:
+                if ApprovalCheck("Rogue", 1200):
+                        call RogueOutfit("sleep")
+                else:
+                        call Display_DressScreen("Rogue")
+                        if _return:
+                            call RogueOutfit("sleep")
+                                        
+        "Swimwear?" if not R_Taboo or bg_current == "bg pool":
                 call RogueOutfit("swimwear")
                             
         "Your birthday suit looks really great. . .":                                 
@@ -4568,25 +4612,47 @@ label Rogue_Clothes:
                 call RogueFace("bemused", 1)
                 if R_Chest or (R_SeenChest and ApprovalCheck("Rogue", 600)):
                     ch_r "Sure."
-                elif ApprovalCheck("Rogue", 1100, TabM=0):
-                    ch_r "I guess I don't really mind if you see them. . ."                
-                    call Rogue_First_Topless      
+                elif ApprovalCheck("Rogue", 600, TabM=0):
+                    call Rogue_NoBra
+                    if not _return:
+                        if not ApprovalCheck("Rogue", 1200):
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                jump Rogue_Clothes
+                        else:
+                                jump Rogue_Clothes
                 else:
-                    ch_r "I'm afraid I don't have anything on under this."
-                    jump Rogue_Clothes    
+                    call Display_DressScreen("Rogue")
+                    if not _return:
+                            ch_r "I'd rather not. . ."
+                            if not R_Chest:
+                                ch_r "I'm afraid I don't have anything on under this."
+                            jump Rogue_Clothes
                 $ R_Over = 0
-                if not R_Chest:
-                    call Rogue_First_Topless
+                if not R_Chest and not renpy.showing('DressScreen'):
+                        call Rogue_First_Topless
                         
         "Try on the green mesh top." if R_Over != "mesh top":
                 call RogueFace("bemused", 1)
-                if R_Chest or (R_SeenChest and ApprovalCheck("Rogue", 500)):
-                    ch_r "Sure."
-                elif ApprovalCheck("Rogue", 1100, TabM=0):
-                    ch_r "I guess I don't really mind if you see them. . ."    
+                if R_Chest or (R_SeenChest and ApprovalCheck("Rogue", 500, TabM=2)):
+                    ch_r "Sure."  
+                elif ApprovalCheck("Rogue", 600, TabM=0):
+                    call Rogue_NoBra
+                    if not _return:
+                        if not ApprovalCheck("Rogue", 1200):
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                jump Rogue_Clothes
+                        else:
+                                jump Rogue_Clothes
                 else:
-                    ch_r "I'm afraid that top is a bit sheer to have nothing under it."
-                    jump Rogue_Clothes    
+                    call Display_DressScreen("Rogue")
+                    if not _return:
+                            ch_r "I'm afraid that top is a bit sheer to have nothing under it."
+                            if not R_Chest:
+                                ch_r "I don't have anything on under this."
+                            jump Rogue_Clothes
+                            
                 $ R_Over = "mesh top"    
                 menu:
                     ch_r "With the collar?"
@@ -4596,7 +4662,7 @@ label Rogue_Clothes:
                         $ R_Neck = 0
                 if R_Chest == "buttoned tank":
                     $ R_Chest = "tank"   
-                if not R_Chest:
+                if not R_Chest and not renpy.showing('DressScreen'):
                     call Rogue_First_Topless 
                             
         "How about that pink top?" if R_Over != "pink top":
@@ -4614,8 +4680,10 @@ label Rogue_Clothes:
                     call RogueFace("perplexed", 1)
                     ch_r "I suppose? . ."          
                 else:
-                    ch_r "That don't leave much to the imagination. . ."
-                    jump Rogue_Clothes   
+                    call Display_DressScreen("Rogue")
+                    if not _return:
+                            ch_r "That don't leave much to the imagination. . ."
+                            jump Rogue_Clothes
                 $ R_Over = "towel"  
             
         "How about that green nighty I got you?" if R_Over != "nighty" and "nighty" in R_Inventory:
@@ -4648,8 +4716,11 @@ label Rogue_Clothes:
                             else:
                                 ch_r "Be happy with what you get."
                 else:
-                    ch_r "That's a bit . . . revealing."
-                if not R_Chest:
+                    call Display_DressScreen("Rogue")
+                    if not _return:
+                            ch_r "That's a bit . . . revealing."
+                            jump Rogue_Clothes
+                if not R_Chest and not renpy.showing('DressScreen'):
                     call Rogue_First_Topless
                 
         "Never mind":
@@ -4657,7 +4728,58 @@ label Rogue_Clothes:
     jump Rogue_Clothes
     #End of Rogue Top
                        
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                        
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
+
+    label Rogue_NoBra:
+        menu:
+            ch_r "I don't have anything under this. . ."
+            "Then you could slip something on under it. . .":   
+                        if R_SeenChest and ApprovalCheck("Rogue", 1000, TabM=3) or ApprovalCheck("Rogue", 1200, TabM=4):
+                                $ R_Blush = 2
+                                ch_r "'course, I don't exactly need something under it either. . ."
+                                $ R_Blush = 1                
+                        elif ApprovalCheck("Rogue", 900, TabM=2) and "lace bra" in R_Inventory:
+                                ch_r "I suppose this would work. . ."
+                                $ R_Chest  = "lace bra"    
+                                "She pulls out her lace bra and slips it on under her [R_Over]."
+                        elif ApprovalCheck("Rogue", 800, TabM=2):
+                                ch_r "Yeah, I guess."
+                                $ R_Chest = "bra"
+                                "She pulls out her bra and slips it on under her [R_Over]."
+                        elif ApprovalCheck("Rogue", 600, TabM=2):
+                                ch_r "Yeah, I guess."
+                                $ R_Chest = "tank"
+                                "She pulls out her tanktop and slips it on under her [R_Over]."
+                        else:
+                                ch_r "Yeah, I don't think so."
+                                return 0
+                        
+            "You could always just wear nothing at all. . .":
+                        if ApprovalCheck("Rogue", 1100, "LI", TabM=2) and R_Love > R_Inbt:               
+                                ch_r "I suppose I could. . ."
+                        elif ApprovalCheck("Rogue", 700, "OI", TabM=2) and R_Obed > R_Inbt:
+                                ch_r "Sure. . ."
+                        elif ApprovalCheck("Rogue", 600, "I", TabM=2):
+                                ch_r "Yeah. . ."
+                        elif ApprovalCheck("Rogue", 1300, TabM=2):
+                                ch_r "Okay, fine."
+                        else: 
+                                call RogueFace("surprised")
+                                $ R_Brows = "angry"
+                                if R_Taboo > 20:
+                                    ch_r "Not in public, [R_Petname]!"
+                                else:
+                                    ch_r "Don't push it, [R_Petname]."
+                                return 0
+                                
+                    
+            "Never mind.":
+                        ch_r "Ok. . ."
+                        return 0
+        return 1
+        #End of Rogue bra check
+       
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                      
                        
     menu Rogue_Clothes_Legs:                                                                                                   
         # Leggings   
@@ -4668,23 +4790,32 @@ label Rogue_Clothes:
                 elif R_SeenPussy and ApprovalCheck("Rogue", 900, TabM=4):
                     ch_r "Sure, why not?"             
                 elif ApprovalCheck("Rogue", 1300, TabM=2) and R_Panties:
-                    ch_r "Well, I suppose if it's for you. . ."        
-                elif ApprovalCheck("Rogue", 800) and not R_Panties:
+                    ch_r "Well, I suppose if it's for you. . ."                         
+                elif ApprovalCheck("Rogue", 700) and not R_Panties:
                     call Rogue_NoPantiesOn
-                    if not _return:
-                        jump Rogue_Clothes
+                    if not _return and not R_Panties:
+                        if not ApprovalCheck("Rogue", 1500):
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                jump Rogue_Clothes
+                        else:
+                                jump Rogue_Clothes
                 else:
-                    ch_r "Not in front of you, [R_Petname]."
-                    if not R_Panties:
-                        ch_r "Maybe if I put some panties on first. . ."
-                    jump Rogue_Clothes
+                    call Display_DressScreen("Rogue")
+                    if not _return:
+                        ch_r "Not in front of you, [R_Petname]."
+                        if not R_Panties:
+                            ch_r "Maybe if I put some panties on first. . ."
+                        jump Rogue_Clothes
                 if R_Legs == "leather pants" or R_Legs == "mesh pants":
                         $ R_Legs = 0    
                         "She tugs her pants off and drops them to the ground."
                 else:
                         $ R_Legs = 0    
                         "She tugs her skirt off and drops it to the ground."
-                if R_Panties:                
+                if renpy.showing('DressScreen'):
+                    pass
+                elif R_Panties:                
                     $ R_SeenPanties = 1
                 else:
                     call Rogue_First_Bottomless
@@ -4714,20 +4845,29 @@ label Rogue_Clothes:
                 elif R_SeenPussy and ApprovalCheck("Rogue", 900, TabM=4):
                     ch_r "Sure, why not?"             
                 elif ApprovalCheck("Rogue", 1300, TabM=2) and R_Panties:
-                    ch_r "Well, I suppose if it's for you. . ."        
-                elif ApprovalCheck("Rogue", 800) and not R_Panties:
+                    ch_r "Well, I suppose if it's for you. . ."   
+                elif ApprovalCheck("Rogue", 700) and not R_Panties:
                     call Rogue_NoPantiesOn
-                    if not _return:
-                        jump Rogue_Clothes
+                    if not _return and not R_Panties:
+                        if not ApprovalCheck("Rogue", 1500):
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                jump Rogue_Clothes
+                        else:
+                                jump Rogue_Clothes
                 else:
-                    ch_r "Not in front of you, [R_Petname]."
-                    if not R_Panties:
-                        ch_r "Maybe if I put some panties on first. . ."
-                    jump Rogue_Clothes
+                    call Display_DressScreen("Rogue")
+                    if not _return:
+                        ch_r "Not in front of you, [R_Petname]."
+                        if not R_Panties:
+                            ch_r "Maybe if I put some panties on first. . ."
+                        jump Rogue_Clothes
                 if R_Panties == "shorts":
                         $ R_Panties = 0
                 "She tugs her shorts off and drops them to the ground."
-                if R_Panties:                
+                if renpy.showing('DressScreen'):
+                    pass
+                elif R_Panties:                
                     $ R_SeenPanties = 1
                 else:
                     call Rogue_First_Bottomless
@@ -4799,7 +4939,7 @@ label Rogue_Clothes:
                     else: 
                             call RogueFace("surprised")
                             $ R_Brows = "angry"
-                            if Taboo:
+                            if R_Taboo:
                                 ch_r "Not here,[R_Petname]!"
                             else:
                                 ch_r "Not with you around,[R_Petname]!"
@@ -4816,27 +4956,32 @@ label Rogue_Clothes:
         "Tops":
             menu:
                 "How about you lose the [R_Chest]?" if R_Chest:
-                        call RogueFace("bemused", 1)
+                        call RogueFace("bemused", 1)                        
                         if R_SeenChest and ApprovalCheck("Rogue", 1100, TabM=2):
                             ch_r "Sure."    
                         elif ApprovalCheck("Rogue", 1100, TabM=2):
                             ch_r "I guess I don't really mind if you see them. . ."
                         elif R_Over == "hoodie" and ApprovalCheck("Rogue", 500, TabM=2):
                             ch_r "I guess this covers enough. . ."  
-                        elif R_Over == "pink top" and ApprovalCheck("Rogue", 950, TabM=2):
-                            ch_r "This look is a bit revealing. . ."  
-                            call Rogue_First_Topless      
-                        elif R_Over == "mesh top":
-                            ch_r "In this top? That would leave nothing to the imagination!" 
-                            jump Rogue_Clothes
-                        elif not R_Over:
-                            ch_r "Not without a little coverage, for modesty."
-                            jump Rogue_Clothes                            
-                        else:
-                            ch_r "I don't think so, [R_Petname]."
-                            jump Rogue_Clothes 
+                        elif not R_SeenChest and not ApprovalCheck("Rogue", 1100):
+                                call Display_DressScreen("Rogue")
+                                if not _return:
+                                    if R_Over == "pink top" and ApprovalCheck("Rogue", 950, TabM=2):
+                                        ch_r "This look is a bit revealing. . ."  
+                                    elif R_Over == "mesh top":
+                                        ch_r "In this top? That would leave nothing to the imagination!" 
+                                    elif not R_Over:
+                                        ch_r "Not without a little coverage, for modesty."
+                                    else:
+                                        ch_r "I don't think so, [R_Petname]."
+                                    jump Rogue_Clothes 
+                        $ Line = R_Chest
                         $ R_Chest = 0
-                        if not R_Over or R_Over == "mesh top":
+                        if R_Over:
+                            "She reaches into her [R_Over] grabs her [Line], and pulls it out, dropping it to the ground."
+                        else:
+                            "She lets her [Line] fall to the ground."
+                        if (not R_Over or R_Over == "mesh top") and not renpy.showing('DressScreen'):
                             call Rogue_First_Topless
 
                 "Try on that black tank top." if R_Chest != "tank":
@@ -4849,21 +4994,30 @@ label Rogue_Clothes:
                             ch_r "Sure."   
                             $ R_Chest = "sports bra"         
                         else:                
-                            ch_r "I don't know about wearing it with this. . ."  
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                ch_r "I don't know about wearing it with this. . ." 
+                                jump Rogue_Clothes 
                                     
                 "I like that black bra." if R_Chest != "bra":
                         if (R_SeenChest and ApprovalCheck("Rogue", 600)) or ApprovalCheck("Rogue", 1100, TabM=2):
                             ch_r "Sure."   
                             $ R_Chest = "bra"         
-                        else:                
-                            ch_r "That's a bit too revealing. . ."  
+                        else:          
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                ch_r "That's a bit too revealing. . ." 
+                                jump Rogue_Clothes      
                                 
                 "I like that lace bra." if "lace bra" in R_Inventory and R_Chest != "lace bra":
                         if (R_SeenChest and ApprovalCheck("Rogue", 800)) or ApprovalCheck("Rogue", 1100, TabM=2):
                             ch_r "Sure."   
                             $ R_Chest = "lace bra"         
                         else:                
-                            ch_r "That's a bit too revealing. . ."  
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                ch_r "That's a bit too revealing. . ." 
+                                jump Rogue_Clothes   
                 
                 "I like that bikini top." if R_Chest != "bikini top" and "bikini top" in R_Inventory:
                         if bg_current == "bg pool":
@@ -4873,8 +5027,11 @@ label Rogue_Clothes:
                                 if R_SeenChest or ApprovalCheck("Rogue", 1000, TabM=2):
                                     ch_r "Sure."   
                                     $ R_Chest = "bikini top"         
-                                else:                
-                                    ch_r "I kinda don't feel right about that. . ."  
+                                else:             
+                                    call Display_DressScreen("Rogue")
+                                    if not _return:
+                                        ch_r "I kinda don't feel right about that. . ." 
+                                        jump Rogue_Clothes       
                         
                 "Never mind":
                             pass
@@ -4904,7 +5061,7 @@ label Rogue_Clothes:
                 
                 "You could lose those panties. . ." if R_Panties and R_Panties != "shorts":
                         call RogueFace("bemused", 1)
-                        if (R_SeenPussy and ApprovalCheck("Rogue", 900)) and not Taboo: # You've seen her pussy
+                        if (R_SeenPussy and ApprovalCheck("Rogue", 900)) and not R_Taboo: # You've seen her pussy
                             if ApprovalCheck("Rogue", 850, "L", TabM=2):               
                                 ch_r "Well aren't you cheeky. . ."
                             elif ApprovalCheck("Rogue", 500, "O", TabM=2):
@@ -4923,14 +5080,30 @@ label Rogue_Clothes:
                             elif ApprovalCheck("Rogue", 1400, TabM=3):
                                 ch_r "Oh, fine. You've been a good boy."
                             else: 
-                                call RogueFace("surprised")
-                                $ R_Brows = "angry"
-                                ch_r "Not with you around,[R_Petname]!"
-                                jump Rogue_Clothes  
-                        
-                        $ R_Panties = 0              
-                        call Rogue_First_Bottomless
-                        call Statup("Rogue", "Inbt", 50, 2)  
+                                call Display_DressScreen("Rogue")
+                                if not _return:
+                                    call RogueFace("surprised")
+                                    $ R_Brows = "angry" 
+                                    if R_Taboo > 20:
+                                        ch_r "Not in public, [R_Petname]!"
+                                    else:
+                                        ch_r "Not with you around,[R_Petname]!"
+                                    jump Rogue_Clothes
+                        $ Line = R_Panties
+                        $ R_Panties = 0  
+                        if R_Legs == "skirt":
+                            "She reaches under her skirt and pulls her [Line] out, droping them to the ground." 
+                        elif R_Legs:
+                            if renpy.showing('DressScreen') or ApprovalCheck("Rogue", 1400, TabM=3):
+                                    "She pulls down her [R_Legs], removes her [Line], and then pulls them back on."
+                            else:
+                                    "She steps away for a moment."
+                        else:
+                            "She pulls her [Line] off and drops them to the ground."
+                        if not R_Legs and not renpy.showing('DressScreen'):
+                            call Rogue_First_Bottomless
+                            call Statup("Rogue", "Inbt", 50, 2)  
+                                
                                         
                 "Why don't you wear the green panties instead?" if R_Panties and R_Panties != "green panties":
                         if ApprovalCheck("Rogue", 1000, TabM=3):
@@ -4939,7 +5112,9 @@ label Rogue_Clothes:
                         elif R_Panties == "shorts":
                             ch_r "Heh, no, I think I'll stick with these, thanks."
                         else:
-                            ch_r "I think I'll choose my own underwear, thank you."
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                ch_r "I think I'll choose my own underwear, thank you."
                         
                 "Why don't you wear the black panties instead?" if R_Panties and R_Panties != "black panties":
                         if ApprovalCheck("Rogue", 1100, TabM=3):
@@ -4948,7 +5123,9 @@ label Rogue_Clothes:
                         elif R_Panties == "shorts":
                             ch_r "Heh, no, I think I'll stick with these, thanks."
                         else:
-                            ch_r "I don't see how that's any business of yours, [R_Petname]."
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                ch_r "I don't see how that's any business of yours, [R_Petname]."
                                     
                 "Why don't you wear the lace panties instead?" if "lace panties" in R_Inventory and R_Panties and R_Panties != "lace panties":
                         if ApprovalCheck("Rogue", 1200, TabM=3):
@@ -4957,7 +5134,9 @@ label Rogue_Clothes:
                         elif R_Panties == "shorts":
                             ch_r "Heh, no, I think I'll stick with these, thanks."
                         else:
-                            ch_r "I don't see how that's any business of yours, [R_Petname]."
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                ch_r "I don't see how that's any business of yours, [R_Petname]."
                                     
                 "I like those bikini bottoms." if R_Panties != "bikini bottoms" and "bikini bottoms" in R_Inventory:
                         if bg_current == "bg pool":
@@ -4967,8 +5146,10 @@ label Rogue_Clothes:
                             if ApprovalCheck("Rogue", 1000, TabM=2):
                                 ch_r "Sure."   
                                 $ R_Panties = "bikini bottoms"         
-                            else:                
-                                ch_r "I kinda don't feel right about that. . ."  
+                            else:        
+                                call Display_DressScreen("Rogue")
+                                if not _return:        
+                                    ch_r "I kinda don't feel right about that. . ."  
                 "You know, you could wear some panties with that. . ." if not R_Panties:
                         call RogueFace("bemused", 1)
                         if (R_Love+R_Obed) <= (1.5 * R_Inbt):
@@ -5453,7 +5634,7 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             #if not a check, then it is only applied if it's in a taboo area
             # Tempshame is a throwaway value, 0-50, Agree is whether she will wear it out, 2 if yes, 1 if only around you.
             
-            if not Check and not Taboo and Custom != 20:
+            if not Check and not R_Taboo and Custom != 20:
                     #if this is not a custom check and you're in a safe space,
                     if R_Schedule[9]:
                             #if there is a "private outfit" set, ask to change.
@@ -5585,15 +5766,59 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             $ Tempshame -= Count                  #Set Outfit shame for the lower half
             
             if Check:
-                    #if this is a custom outfit check
-                    if Custom == 4:
+                    #if this is a custom outfit check                    
+                    if Check == 2:
+                        ch_p "So can I see it then?"
+                    elif Custom == 4:
                         ch_p "So would you work out in that?"
                     elif Custom == 7:
                         ch_p "So would you sleep in that?"
                     else:
                         ch_p "So would you wear that outside?"  
                     call RogueFace("sexy", 0)
-                    if Taboo >= 40: 
+                    if PantsNum("Rogue") > 2:  
+                        pass        #if she's wearing pants
+                    elif PantiesNum("Rogue") > 2 and (R_SeenPanties or ApprovalCheck("Rogue", 900, TabM=0)):
+                        pass        #no pants, but panties
+                    elif R_SeenPussy or ApprovalCheck("Rogue", 1200, TabM=0):
+                        pass        #no panties, but she's fine with that
+                    else:
+                        $ Agree = 0 #not fine with it
+                        
+                    if not Agree:
+                        pass
+                    elif OverNum("Rogue") > 2:    
+                        pass        #if she's wearing a top
+                    elif ChestNum("Rogue") > 2 and (R_SeenChest or ApprovalCheck("Rogue", 900, TabM=0)):
+                        pass        #no top, but bra
+                    elif R_SeenChest or ApprovalCheck("Rogue", 1200, TabM=0):
+                        pass        #no bra, but she's fine with that
+                    else:
+                        $ Agree = 0 #not fine with it
+                    
+                    if Check == 2 and Agree:
+                                #if checking to see if she'll drop the dressing screen. . .                                
+                                $ R_Shame = Tempshame
+                                call RogueFace("sly")
+                                ch_r "This ain't a bad look, I guess. . ."
+                                hide DressScreen
+                                return 1   
+                    if not Agree:
+                                #she isn't even comfortable with you seeing it
+                                call RogueFace("bemused", 2,Eyes="side")
+                                ch_r "I don't really feel comfortable in this. . ."
+                                        
+                                menu:
+                                    extend ""
+                                    "Ok then, you can put your normal clothes back on.":
+                                                call RogueOutfit(Changed=1)  
+                                                hide DressScreen
+                                    "Ok, we can keep tweaking it.":
+                                                pass
+                                call RogueFace("smile", 1)
+                                ch_r "Thanks, [R_Petname]."
+                                return
+                    if R_Taboo >= 40: 
                         call RogueFace("confused",1)
                         $ R_Mouth = "smile"
                         ch_r "It's a little late to worry about that, right?" 
@@ -5703,7 +5928,7 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                         $ R_Custom[9] = R_Hose
                         $ R_Custom[0] = 2 if Agree else 1
                         call Clothing_Schedule_Check("Rogue",3,1)   
-            elif Taboo <= 20:
+            elif R_Taboo <= 20:
                 # halves shame level if she's comfortable
                 $ Tempshame /= 2
                 
@@ -5739,7 +5964,7 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             elif (ApprovalCheck("Rogue", 2500) or ApprovalCheck("Rogue", 800, "I")):
                     #If the outfit is very scandelous but she's ok with that      
                     pass
-            elif Custom == 9 and not Taboo:
+            elif not R_Taboo:
                     pass
             else:
                     if R_Loc == bg_current:

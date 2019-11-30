@@ -317,13 +317,6 @@ label R_FB_Prep: #Animation set-up
     if Trigger2 == "fondle breasts": 
         return
     
-    if not R_Forced and Situation != "auto":
-        $ Tempmod = 0
-        call Rogue_Top_Off
-        if "angry" in R_RecentActions:
-            return
-        
-    $ Tempmod = 0  
     call R_Breasts_Launch("fondle breasts")
     
     if Situation == "Rogue":                                                                  
@@ -372,6 +365,13 @@ label R_FB_Prep: #Animation set-up
                     return          
             #end auto
         
+    if not R_Forced and Situation != "auto":
+        $ Tempmod = 0
+        call Rogue_Top_Off
+        if "angry" in R_RecentActions:
+            return
+        
+    $ Tempmod = 0  
     if not R_FondleB:        
         if R_Forced:
             call Statup("Rogue", "Love", 90, -20)
@@ -825,14 +825,7 @@ label R_SB_Prep:                                                                
             
     if Trigger2 == "suck breasts":
         return
-        
-    if not R_Forced and Situation != "auto":
-        $ Tempmod = 0   
-        call Rogue_Top_Off
-        if "angry" in R_RecentActions:
-            return
-    
-    $ Tempmod = 0      
+           
     call R_Breasts_Launch("suck breasts")
         
     if Situation == "Rogue":                                                        
@@ -881,6 +874,13 @@ label R_SB_Prep:                                                                
                     return          
             #end auto
             
+    if not R_Forced and Situation != "auto":
+        $ Tempmod = 0   
+        call Rogue_Top_Off
+        if "angry" in R_RecentActions:
+            return
+    
+    $ Tempmod = 0   
     if not R_SuckB:        
         if R_Forced:
             call Statup("Rogue", "Love", 90, -25)
@@ -1795,14 +1795,7 @@ label RFP_Prep: #Animation set-up
 label R_FP_Prep: #Animation set-up 
     if Trigger2 == "fondle pussy":
         return
-        
-    if not R_Forced and Situation != "auto":
-        $ Tempmod = 0
-        call Rogue_Bottoms_Off   
-        if "angry" in R_RecentActions:
-            return 
-    $ Tempmod = 0
-    
+            
     call R_Pussy_Launch("fondle pussy")
     
     if Situation == "Rogue":                                                        
@@ -1868,6 +1861,12 @@ label R_FP_Prep: #Animation set-up
                     return          
             #end auto
             
+    if not R_Forced and Situation != "auto":
+        $ Tempmod = 0
+        call Rogue_Bottoms_Off   
+        if "angry" in R_RecentActions:
+            return 
+    $ Tempmod = 0
     if not R_FondleP:        
         if R_Forced:
             call Statup("Rogue", "Love", 90, -50)
@@ -2424,16 +2423,7 @@ label RLP_Prep: #Animation set-up
 label R_LP_Prep: #Animation set-up  
     if Trigger2 == "lick pussy": #fix pull down pants now an option, make it work
         return
-        
-    if not R_Forced and Situation != "auto":
-        $ Tempmod = 0
-        if R_Legs == "pants":
-            $ Tempmod = 15
-        call Rogue_Bottoms_Off
-        if "angry" in R_RecentActions:
-            return  
-            
-    $ Tempmod = 0      
+             
     call R_Pussy_Launch("lick pussy")
     
     
@@ -2500,6 +2490,15 @@ label R_LP_Prep: #Animation set-up
                     return          
             #end auto
             
+    if not R_Forced and Situation != "auto":
+        $ Tempmod = 0
+        if R_Legs == "pants":
+            $ Tempmod = 15
+        call Rogue_Bottoms_Off
+        if "angry" in R_RecentActions:
+            return  
+            
+    $ Tempmod = 0 
     if not R_LickP:        
         if R_Forced:
             call Statup("Rogue", "Love", 90, -30)
@@ -3448,17 +3447,9 @@ label RIA_Prep: #Animation set-up
 label R_IA_Prep: #Animation set-up 
     if Trigger2 == "insert ass":
         return
-        
-    if not R_Forced and Situation != "auto":
-        $ Tempmod = 0
-        call Rogue_Bottoms_Off
-        if "angry" in R_RecentActions:
-            return    
             
-    $ Tempmod = 0      
     call R_Pussy_Launch("insert ass")
-    
-    
+        
     if Situation == "Rogue":                                                         
             #Rogue auto-starts    
             $ Situation = 0
@@ -3521,7 +3512,14 @@ label R_IA_Prep: #Animation set-up
                     call AnyWord("Rogue",1,"refused","refused")  
                     return          
             #end auto
+          
+    if not R_Forced and Situation != "auto":
+        $ Tempmod = 0
+        call Rogue_Bottoms_Off
+        if "angry" in R_RecentActions:
+            return    
             
+    $ Tempmod = 0    
     if not R_InsertA:        
         if R_Forced:
             call Statup("Rogue", "Love", 90, -50)

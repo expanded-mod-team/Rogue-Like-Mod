@@ -983,21 +983,7 @@ label L_KissPrep:
         call LauraFace("sucking")
     else:
         call LauraFace("kiss")
-    "You and Laura make out for a while."    
-    if Taboo:
-        call DrainWord("Laura","tabno")
-    call DrainWord("Laura","no kissing")
-    $ L_RecentActions.append("kissing")                      
-    $ L_DailyActions.append("kissing") 
-    if not L_Kissed: 
-        $ L_Addict -= 5       
-        call Statup("Laura", "Lust", 70, 5)
-        call Statup("Laura", "Love", 90, 10)
-        call Statup("Laura", "Love", 60, 25)            
-        call Statup("Laura", "Obed", 30, 20)
-        call Statup("Laura", "Inbt", 30, 20)
-        jump L_Kiss_After
-    
+        
     if Situation == "Laura":                                                      
             #Laura auto-starts   
             $ Situation = 0
@@ -1030,7 +1016,22 @@ label L_KissPrep:
                     call AnyWord("Laura",1,"refused","refused")  
                     return          
             #end auto
-    
+            
+    "You and Laura make out for a while."    
+    if Taboo:
+        call DrainWord("Laura","tabno")
+    call DrainWord("Laura","no kissing")
+    $ L_RecentActions.append("kissing")                      
+    $ L_DailyActions.append("kissing") 
+    if not L_Kissed: 
+        $ L_Addict -= 5       
+        call Statup("Laura", "Lust", 70, 5)
+        call Statup("Laura", "Love", 90, 10)
+        call Statup("Laura", "Love", 60, 25)            
+        call Statup("Laura", "Obed", 30, 20)
+        call Statup("Laura", "Inbt", 30, 20)
+        jump L_Kiss_After
+        
     $ Trigger = "kiss you"
     $ Line = 0
     $ Cnt = 0

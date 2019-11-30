@@ -3943,6 +3943,34 @@ image PhoneScreen:
         zoom 1.1
 
 
+image DressScreen:
+    #this is dressing screen displayed during wardrobe
+    contains:
+        #base
+        "images/DressScreen.png"
+    contains:
+        #screen        
+        AlphaMask("images/DressScreenShadow.png","DressShadow")
+    zoom 1
+    offset (375,225)
+    
+image DressShadow:
+    #this is the shadow projected on that screen
+    contains:
+        #girl
+        ConditionSwitch(
+            "RogueLayer == 100", "Rogue",
+            "KittyLayer == 100", "Kitty_Sprite",
+            "EmmaLayer == 100", "Emma_Sprite",
+            "LauraLayer == 100", "Laura_Sprite",
+#            "Ch_Focus == 'Rogue'", "Rogue",
+#            "Ch_Focus == 'Kitty'", "Kitty_Sprite",
+#            "Ch_Focus == 'Emma'", "Emma_Sprite",
+#            "Ch_Focus == 'Laura'", "Laura_Sprite",
+            "True", Null(),        
+            ) 
+        offset (210,-170)
+        zoom 1
 
     
 # Rogue's Faces //////////////////////////////////////////////

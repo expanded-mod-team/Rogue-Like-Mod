@@ -25,7 +25,8 @@ label Kitty_Chat_Set(Preset=0):
                     $ renpy.pop_call() #this removes the callback to the previous settings menu
                     $ renpy.pop_call() #this removes the callback to the previous settings menu testing. . .
                     ch_p "I wanted to talk about your outfit. . ."
-                    if Taboo:
+                    call Taboo_Level
+                    if K_Taboo:
                             if "exhibitionist" in K_Traits:
                                 ch_k "Mmmmm. . ."  
                             elif ApprovalCheck("Kitty", 900, TabM=4) or ApprovalCheck("Kitty", 400, "I", TabM=3): 
@@ -161,7 +162,6 @@ label Kitty_Chat:
                     "Back":
                                 pass
         "Change Kitty":
-                    ch_p "Let's talk about you."
                     call Kitty_Settings   
         
         "Add her to party" if "Kitty" not in Party and K_Loc == bg_current:
@@ -496,8 +496,7 @@ label Kitty_Settings:
         ch_p "Let's talk about you."
         "Wardrobe": 
                 ch_p "I wanted to talk about your style."
-                if K_Loc != "bg player" and K_Loc != "bg kitty":  
-                    if Taboo:
+                if K_Taboo:
                         if "exhibitionist" in K_Traits:
                             ch_k "Mmmmm. . ."  
                         elif ApprovalCheck("Kitty", 900, TabM=4) or ApprovalCheck("Kitty", 400, "I", TabM=3): 
@@ -506,7 +505,7 @@ label Kitty_Settings:
                             ch_k "This is[K_like]pretty exposed, right?"
                             ch_k "Can't we talk about this in our rooms?"
                             return
-                    call Kitty_Clothes
+                        call Kitty_Clothes
                 elif ApprovalCheck("Kitty", 900, TabM=4) or ApprovalCheck("Kitty", 600, "L") or ApprovalCheck("Kitty", 300, "O"):
                     ch_k "[K_Like]what were you thinking here?"
                     call Kitty_Clothes
@@ -1546,10 +1545,12 @@ label Kitty_Flirt:
     if K_Loc == bg_current:         
         $ K_Chat[5] = 1                                         #can only flirt once per cycle. 
         menu:        
-#            "Compliment her":
+            "Compliment her":
+                    call Compliment("Kitty")
+                
                 
             "Say you love her":
-                        call Love_You("Kitty")
+                    call Love_You("Kitty")
                 
             "Touch her cheek.":
                     call K_TouchCheek
@@ -2221,9 +2222,9 @@ return
 
 # start Kitty_Gifts//////////////////////////////////////////////////////////
 label Kitty_Gifts:  
-#    if P_Inventory == []:
-#        "You don't have anything to give her."
-#        return
+    if not P_Inventory:
+        "You don't have anything to give her."
+        return
     menu:
         "What would you like to give her?"
         "Toys and books":
@@ -2673,8 +2674,8 @@ label Kitty_Gifts:
             call Laura_Dressup2
             
         "Exit":
-            pass
-    
+            return
+    jump Kitty_Gifts
     return
 
 
@@ -3786,7 +3787,8 @@ label Kitty_About(Girl="Rogue"):
     return
     
 ## Kitty's Clothes  // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-label Kitty_Clothes:    
+label Kitty_Clothes:         
+    $ Trigger = 1 # to prevent Focus swapping. . .   
     call KittyFace
     menu:
         ch_k "So[K_like]you wanted to talk about my clothes?"   
@@ -3803,7 +3805,36 @@ label Kitty_Clothes:
         "Let's talk about what you wear around.":
                     call Kitty_Clothes_Schedule
                     
-        "Switch to. . .":
+        "Could I get a look at it?" if K_Loc != bg_current:
+                # checks to see if she'll drop the screen
+                call Kitty_OutfitShame(0,2) 
+                if _return:    
+                    show PhoneSex zorder 150
+                    ch_k "Cute? . ."
+                hide PhoneSex
+        "Could I get a look at it?" if renpy.showing('DressScreen'):
+                # checks to see if she'll drop the screen
+                call Kitty_OutfitShame(0,2) 
+                if _return:
+                    hide DressScreen
+        "Would you be more comfortable behind a screen? (locked)" if K_Taboo:
+                pass
+        "Would you be more comfortable behind a screen?" if K_Loc == bg_current and not K_Taboo and not renpy.showing('DressScreen'):
+                # checks to see if she'll drop the screen
+                if ApprovalCheck("Kitty", 1500) or (K_SeenChest and K_SeenPussy):
+                        ch_k "Probably won't need it, thanks."
+                else:
+                        show DressScreen zorder 150
+                        ch_k "Yeah, this is a bit more comfortable, thanks."
+            
+        "Switch to. . .":            
+                if renpy.showing('DressScreen'):
+                        call Kitty_OutfitShame(0,2) 
+                        if _return:
+                            hide DressScreen
+                        else:
+                            call KittyOutfit                    
+                    
                 $ K_TempClothes[1] = K_Arms  
                 $ K_TempClothes[2] = K_Legs 
                 $ K_TempClothes[3] = K_Over
@@ -3815,7 +3846,8 @@ label Kitty_Clothes:
                 $ K_TempClothes[9] = K_Hose
                 $ K_TempClothes[0] = 1 
                 $ K_Outfit = "temporary"
-                $ K_OutfitDay = "temporary"     
+                $ K_OutfitDay = "temporary" 
+                $ Trigger = 0
                 menu:
                     "Rogue":
                         call Rogue_Chat_Set("wardrobe")                    
@@ -3843,6 +3875,14 @@ label Kitty_Clothes:
                         else:
                                 ch_k "Sure."                    
                         $ K_RecentActions.append("wardrobe")  
+                        
+                if renpy.showing('DressScreen'):
+                        call Kitty_OutfitShame(0,2) 
+                        if _return:
+                            hide DressScreen
+                        else:
+                            call KittyOutfit 
+                            
                 #sets up a temporary outfit
                 $ K_TempClothes[1] = K_Arms  
                 $ K_TempClothes[2] = K_Legs 
@@ -3856,7 +3896,8 @@ label Kitty_Clothes:
                 $ K_TempClothes[0] = 1 
                 $ K_Outfit = "temporary"
                 $ K_OutfitDay = "temporary"        
-                $ K_Chat[1] += 1                
+                $ K_Chat[1] += 1         
+                $ Trigger = 0
                 return
             
     jump Kitty_Clothes
@@ -3966,15 +4007,20 @@ label Kitty_Clothes:
                             call Kitty_Custom_Out(Cnt)
                         "Ok, back to what we were talking about. . .":
                             $ Cnt = 0
-                            jump Kitty_Clothes_Outfits                    
+                            jump Kitty_Clothes                  
                     
-        "Gym Clothes?" if not Taboo or bg_current == "bg dangerroom":
+        "Gym Clothes?" if not K_Taboo or bg_current == "bg dangerroom":
                 call KittyOutfit("gym")
             
-        "Sleepwear?" if not Taboo:
-                call KittyOutfit("sleep")
+        "Sleepwear?" if not K_Taboo:
+                if ApprovalCheck("Kitty", 1200):
+                        call KittyOutfit("sleep")
+                else:
+                        call Display_DressScreen("Kitty")
+                        if _return:
+                            call KittyOutfit("sleep")
             
-        "Swimwear?" if not Taboo or bg_current == "bg pool":
+        "Swimwear?" if not K_Taboo or bg_current == "bg pool":
                 call KittyOutfit("swimwear")
                 
         "Your birthday suit looks really great. . .":                                     
@@ -4050,19 +4096,26 @@ label Kitty_Clothes:
                 call KittyFace("bemused", 1)
                 if ApprovalCheck("Kitty", 800, TabM=3) and (K_Chest or K_SeenChest):
                     ch_k "Why not?"
-                elif ApprovalCheck("Kitty", 1200, TabM=0):
+                elif ApprovalCheck("Kitty", 600, TabM=0):
                     call Kitty_NoBra
                     if not _return:
-                        jump Kitty_Clothes
+                        if not ApprovalCheck("Kitty", 1200):
+                            call Display_DressScreen("Kitty")
+                            if not _return:
+                                jump Kitty_Clothes
+                        else:
+                                jump Kitty_Clothes
                 else:
-                    ch_k "Lol, not around you."
-                    if not K_Chest:
-                        ch_k "I don't have anything under this. . ."
-                    jump Kitty_Clothes
+                    call Display_DressScreen("Kitty")
+                    if not _return:
+                            ch_k "Lol, not around you."
+                            if not K_Chest:
+                                ch_k "I don't have anything under this. . ."
+                            jump Kitty_Clothes
                 $ Line = K_Over
                 $ K_Over = 0
                 "She lets her [Line] drop to her feet."
-                if not K_Chest:
+                if not K_Chest and not renpy.showing('DressScreen'):
                         call Kitty_First_Topless
             
         "Try on that pink shirt you have." if K_Over != "pink top":
@@ -4072,9 +4125,11 @@ label Kitty_Clothes:
                 elif ApprovalCheck("Kitty", 800, TabM=0):
                     ch_k "Yeah, ok."          
                 else:
-                    call KittyFace("bemused", 1)
-                    ch_k "This top is a little skimpy for what I have on under it."
-                    jump Kitty_Clothes    
+                    call Display_DressScreen("Kitty")
+                    if not _return:
+                            call KittyFace("bemused", 1)
+                            ch_k "This top is a little skimpy for what I have on under it."
+                            jump Kitty_Clothes
                 $ K_Over = "pink top"   
                 
         "How about that red t-shirt you have?" if K_Over != "red shirt":
@@ -4085,12 +4140,14 @@ label Kitty_Clothes:
                 call KittyFace("bemused", 1)
                 if K_Chest or K_SeenChest:
                     ch_k "Weirdo."
-                elif ApprovalCheck("Kitty", 1000, TabM=0):
+                elif ApprovalCheck("Kitty", 1000, TabM=0): #or showing screen
                     call KittyFace("perplexed", 1)
                     ch_k "I guess? . ."          
                 else:
-                    ch_k "I don't think so with what I have on under it."
-                    jump Kitty_Clothes    
+                    call Display_DressScreen("Kitty")
+                    if not _return:
+                            ch_k "I don't think so with what I have on under it."
+                            jump Kitty_Clothes
                 $ K_Over = "towel"    
                             
         "Never mind":
@@ -4144,7 +4201,7 @@ label Kitty_Clothes:
                         else: 
                                 call KittyFace("surprised")
                                 $ K_Brows = "angry"
-                                if Taboo > 20:
+                                if K_Taboo > 20:
                                     ch_k "Not in public, [K_Petname]!"
                                 else:
                                     ch_k "I don't like you {i}that{/i} much, [K_Petname]!"
@@ -4162,27 +4219,36 @@ label Kitty_Clothes:
     menu Kitty_Clothes_Legs:                                                                                                    
         # Leggings    
         "Maybe go without the [K_Legs]." if K_Legs:
-                call KittyFace("sexy", 1)
+                call KittyFace("sexy", 1)       
                 if K_SeenPanties and K_Panties and ApprovalCheck("Kitty", 500, TabM=5):
                     ch_k "K."
                 elif K_SeenPussy and ApprovalCheck("Kitty", 900, TabM=4):
                     ch_k "Yeah, ok."
                 elif ApprovalCheck("Kitty", 1300, TabM=2) and K_Panties:
                     ch_k "For you, I guess. . ."
-                elif ApprovalCheck("Kitty", 800) and not K_Panties:
+                elif ApprovalCheck("Kitty", 700) and not K_Panties:
                     call Kitty_NoPantiesOn
-                    if not _return:
-                        jump Kitty_Clothes
+                    if not _return and not K_Panties:
+                        if not ApprovalCheck("Kitty", 1500):
+                            call Display_DressScreen("Kitty")
+                            if not _return:
+                                jump Kitty_Clothes
+                        else:
+                                jump Kitty_Clothes
                 else:
-                    ch_k "Lol, not around you."
-                    if not K_Panties:
-                        ch_k "I'm not {i}wearing any panties{/i}. . ."
-                    jump Kitty_Clothes
+                    call Display_DressScreen("Kitty")
+                    if not _return:
+                        ch_k "Lol, not around you."
+                        if not K_Panties:
+                            ch_k "I'm not {i}wearing any panties{/i}. . ."
+                        jump Kitty_Clothes
                 $ Line = K_Legs
                 $ K_Legs = 0    
                 "She lets her [Line] drop through her to the ground."
                 $ Line = 0
-                if K_Panties:                
+                if renpy.showing('DressScreen'):
+                    pass
+                elif K_Panties:                
                     $ K_SeenPanties = 1
                 else:
                     call Kitty_First_Bottomless
@@ -4253,7 +4319,7 @@ label Kitty_Clothes:
                         else: 
                                 call KittyFace("surprised")
                                 $ K_Brows = "angry"
-                                if Taboo > 20:
+                                if K_Taboo > 20:
                                     ch_k "Not in public, [K_Petname]!"
                                 else:
                                     ch_k "I don't like you {i}that{/i} much, [K_Petname]!"
@@ -4275,27 +4341,32 @@ label Kitty_Clothes:
                         if K_SeenChest and ApprovalCheck("Kitty", 900, TabM=2.7):
                             ch_k "Sure."    
                         elif ApprovalCheck("Kitty", 1100, TabM=2):
-                            if Taboo:
+                            if K_Taboo:
                                 ch_k "I'm kind of nervous. . ."
                             else:
                                 ch_k "If it's just you. . ."
                         elif K_Over == "pink top" and ApprovalCheck("Kitty", 600, TabM=2):
                             ch_k "This look is a bit revealing. . ."  
                         elif K_Over == "red shirt" and ApprovalCheck("Kitty", 500, TabM=2):
-                            ch_k "I guess I could. . ."  
-                        elif not K_Over:
-                            ch_k "Not without a little coverage, for modesty."
-                            jump Kitty_Clothes 
+                            ch_k "I guess I could. . ." 
+                        elif not K_Over:                            
+                            call Display_DressScreen("Kitty")
+                            if not _return:
+                                ch_k "Not without a little coverage, for modesty."
+                                jump Kitty_Clothes 
                         else:
-                            ch_k "I don't think so, [K_Petname]."
-                            jump Kitty_Clothes 
+                            call Display_DressScreen("Kitty")
+                            if not _return:
+                                ch_k "I don't think so, [K_Petname]."
+                                jump Kitty_Clothes 
                         $ Line = K_Chest
                         $ K_Chest = 0
                         if K_Over:
                             "She reaches into her [K_Over] grabs her [Line], and pulls it out, dropping it to the ground."
                         else:
                             "She lets her [Line] fall to the ground."
-                            call Kitty_First_Topless
+                            if not renpy.showing('DressScreen'):
+                                call Kitty_First_Topless
                                         
                 "Try on that yellow camisole." if K_Chest != "cami":
                         ch_k "Ok."
@@ -4305,22 +4376,28 @@ label Kitty_Clothes:
                         if K_SeenChest or ApprovalCheck("Kitty", 1200, TabM=2):
                             ch_k "K."   
                             $ K_Chest = "bra"         
-                        else:                
-                            ch_k "I'm not really comfortable with that. . ."  
+                        else:       
+                            call Display_DressScreen("Kitty")
+                            if not _return:       
+                                ch_k "I'm not really comfortable with that. . ."  
                         
                 "I like that lace bra." if "lace bra" in K_Inventory and K_Chest != "lace bra":
                         if K_SeenChest or ApprovalCheck("Kitty", 1300, TabM=2):
                             ch_k "K."   
                             $ K_Chest = "lace bra"         
-                        else:                
-                            ch_k "It's pretty skimpy. . ."  
+                        else:           
+                            call Display_DressScreen("Kitty")
+                            if not _return: 
+                                ch_k "It's pretty skimpy. . ."  
                     
                 "I like that sports bra." if K_Chest != "sports bra":
                         if K_SeenChest or ApprovalCheck("Kitty", 1000, TabM=2):
                             ch_k "K."   
                             $ K_Chest = "sports bra"         
-                        else:                
-                            ch_k "I'm not sure about that. . ."  
+                        else:               
+                            call Display_DressScreen("Kitty")
+                            if not _return:
+                                ch_k "I'm not sure about that. . ."  
                     
                 "I like that bikini top." if K_Chest != "bikini top" and "bikini top" in K_Inventory:
                         if bg_current == "bg pool":
@@ -4330,8 +4407,10 @@ label Kitty_Clothes:
                                 if K_SeenChest or ApprovalCheck("Kitty", 1000, TabM=2):
                                     ch_k "K."   
                                     $ K_Chest = "bikini top"         
-                                else:                
-                                    ch_k "Geez, not here!"  
+                                else:           
+                                    call Display_DressScreen("Kitty")
+                                    if not _return:     
+                                            ch_k "Geez, not here!"  
                 "Never mind":
                         pass
             jump Kitty_Clothes_Under
@@ -4341,7 +4420,7 @@ label Kitty_Clothes:
             menu:
                 "You could lose those panties. . ." if K_Panties:
                         call KittyFace("bemused", 1)  
-                        if ApprovalCheck("Kitty", 900) and (K_Legs or (K_SeenPussy and not Taboo)):
+                        if ApprovalCheck("Kitty", 900) and (K_Legs or (K_SeenPussy and not K_Taboo)):
                             #If you've got decent approval and either she's wearing pants or you've seen her pussy and it's not in public                            
                             if ApprovalCheck("Kitty", 850, "L"):               
                                     ch_k "Well, if you ask me nicely. . ."
@@ -4361,9 +4440,11 @@ label Kitty_Clothes:
                             elif ApprovalCheck("Kitty", 1300, TabM=3):
                                     ch_k "Okay, okay."
                             else: 
+                                call Display_DressScreen("Kitty")
+                                if not _return:
                                     call KittyFace("surprised")
-                                    $ K_Brows = "angry"
-                                    if Taboo > 20:
+                                    $ K_Brows = "angry" 
+                                    if K_Taboo > 20:
                                         ch_k "Not in public, [K_Petname]!"
                                     else:
                                         ch_k "I don't like you that much, [K_Petname]!"
@@ -4375,22 +4456,27 @@ label Kitty_Clothes:
                             "She reaches into her pocket, grabs hold of something, and then pulls her [Line] out, droping them to the ground."                
                         else:
                             "She lets her [Line] drop to the ground."
-                            call Kitty_First_Bottomless
-                            call Statup("Kitty", "Inbt", 50, 2)  
+                            if  not renpy.showing('DressScreen'):
+                                call Kitty_First_Bottomless
+                                call Statup("Kitty", "Inbt", 50, 2)  
                         
                 "Why don't you wear the green panties instead?" if K_Panties and K_Panties != "green panties":
                         if ApprovalCheck("Kitty", 1100, TabM=3):
                                 ch_k "K."
                                 $ K_Panties = "green panties"  
-                        else:                
-                                ch_k "I don't think that's any of your beeswax."
+                        else:            
+                                call Display_DressScreen("Kitty")
+                                if not _return:
+                                    ch_k "I don't think that's any of your beeswax."
                         
                 "Why don't you wear the lace panties instead?" if "lace panties" in K_Inventory and K_Panties and K_Panties != "lace panties":
                         if ApprovalCheck("Kitty", 1300, TabM=3):
                                 ch_k "I guess."
                                 $ K_Panties = "lace panties"
                         else:
-                                ch_k "That's[K_like]none of your business."
+                                call Display_DressScreen("Kitty")
+                                if not _return:
+                                    ch_k "That's[K_like]none of your business."
                             
                 "I like those bikini bottoms." if K_Panties != "bikini bottoms" and "bikini bottoms" in K_Inventory:
                         if bg_current == "bg pool":
@@ -4400,8 +4486,10 @@ label Kitty_Clothes:
                                 if ApprovalCheck("Kitty", 1000, TabM=2):
                                     ch_k "K."   
                                     $ K_Panties = "bikini bottoms"         
-                                else:                
-                                    ch_k "Geez, not here!"  
+                                else:           
+                                    call Display_DressScreen("Kitty")
+                                    if not _return: 
+                                        ch_k "Geez, not here!"  
                         
                 "You know, you could wear some panties with that. . ." if not K_Panties:
                         call KittyFace("bemused", 1)
@@ -4890,7 +4978,7 @@ label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             #if not a check, then it is only applied if it's in a taboo area
             # Tempshame is a throwaway value, 0-50, Agree is whether she will wear it out, 2 if yes, 1 if only around you.
             
-            if not Check and not Taboo and Custom != 20:
+            if not Check and not K_Taboo and Custom != 20:
                     #if this is not a custom check and you're in a safe space,
                     if K_Schedule[9]:
                             #if there is a "private outfit" set, ask to change.
@@ -5027,47 +5115,50 @@ label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                         ch_p "So would you wear that outside?"  
                         
                     call KittyFace("sexy", 0)
-                    if Check ==2:
-                                #if checking to see if she'll drop the curtain. . .
-                                if PantsNum("Kitty") > 2:    
-                                    pass        #if she's wearing pants
-                                elif PantiesNum("Kitty") > 2 and (K_SeenPanties or ApprovalCheck("Kitty", 900, TabM=0)):
-                                    pass        #no pants, but panties
-                                elif K_SeenPussy or ApprovalCheck("Kitty", 1200, TabM=0):
-                                    pass        #no panties, but she's fine with that
-                                else:
-                                    $ Agree = 0 #not fine with it
-                                    
-                                if not Agree:
-                                    pass
-                                elif OverNum("Kitty") > 2:    
-                                    pass        #if she's wearing a top
-                                elif ChestNum("Kitty") > 2 and (K_SeenChest or ApprovalCheck("Kitty", 900, TabM=0)):
-                                    pass        #no top, but bra
-                                elif K_SeenChest or ApprovalCheck("Kitty", 1200, TabM=0):
-                                    pass        #no bra, but she's fine with that
-                                else:
-                                    $ Agree = 0 #not fine with it
-                                
-                                if Agree:
-                                        $ K_Shame = Tempshame
-                                        call KittyFace("sly")
-                                        ch_k "I suppose you've put together a cute little outfit. . ."
-                                        #hide DressingScreen
-                                else:
-                                        call KittyFace("bemused", 2,Eyes="side")
-                                        ch_k "I don't think I'd be comfortable with you seeing me like this. . ."
-                                        menu:
-                                            extend ""
-                                            "Ok then, you can put your normal clothes back on.":
-                                                        call KittyOutfit(Changed=1)  
-                                                        #hide DressingScreen
-                                            "Ok, we can keep tweaking it.":
-                                                        pass
-                                        call KittyFace("smile", 1)
-                                        ch_k "Thanks."
-                                return                    
-                    elif Taboo >= 40: #K_Loc != "bg player" and K_Loc != "bg kitty": 
+                    
+                    if PantsNum("Kitty") > 2:  
+                        pass        #if she's wearing pants
+                    elif PantiesNum("Kitty") > 2 and (K_SeenPanties or ApprovalCheck("Kitty", 900, TabM=0)):
+                        pass        #no pants, but panties
+                    elif K_SeenPussy or ApprovalCheck("Kitty", 1200, TabM=0):
+                        pass        #no panties, but she's fine with that
+                    else:
+                        $ Agree = 0 #not fine with it
+                        
+                    if not Agree:
+                        pass
+                    elif OverNum("Kitty") > 2:    
+                        pass        #if she's wearing a top
+                    elif ChestNum("Kitty") > 2 and (K_SeenChest or ApprovalCheck("Kitty", 900, TabM=0)):
+                        pass        #no top, but bra
+                    elif K_SeenChest or ApprovalCheck("Kitty", 1200, TabM=0):
+                        pass        #no bra, but she's fine with that
+                    else:
+                        $ Agree = 0 #not fine with it
+                    
+                    if Check == 2 and Agree:
+                                #if checking to see if she'll drop the dressing screen. . .                                
+                                $ K_Shame = Tempshame
+                                call KittyFace("sly")
+                                ch_k "I suppose you've put together a cute little outfit. . ."
+                                hide DressScreen
+                                return 1   
+                    if not Agree:
+                                #she isn't even comfortable with you seeing it
+                                call KittyFace("bemused", 2,Eyes="side")
+                                ch_k "I don't think I'd be comfortable with you seeing me like this. . ."
+                                menu:
+                                    extend ""
+                                    "Ok then, you can put your normal clothes back on.":
+                                                call KittyOutfit(Changed=1)  
+                                                hide DressScreen
+                                    "Ok, we can keep tweaking it.":
+                                                pass
+                                call KittyFace("smile", 1)
+                                ch_k "Thanks."    
+                                return
+                                         
+                    if K_Taboo >= 40: #K_Loc != "bg player" and K_Loc != "bg kitty": 
                         call KittyFace("confused",1)
                         $ K_Mouth = "smile"
                         ch_k "Kinda late to ask, right?" 
@@ -5176,7 +5267,7 @@ label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                             $ K_Custom[0] = 2 if Agree else 1
                             call Clothing_Schedule_Check("Kitty",3,1)  
                     #End check                       
-            elif Taboo <= 20:
+            elif K_Taboo <= 20:
                 # halves shame level if she's comfortable
                 $ Tempshame /= 2
                 
@@ -5212,7 +5303,7 @@ label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             elif (ApprovalCheck("Kitty", 2600) or ApprovalCheck("Kitty", 950, "I")):
                     #If the outfit is very scandelous but she's ok with that      
                     pass
-            elif Custom == 9 and not Taboo:
+            elif not K_Taboo: #Custom == 9 and not K_Taboo?
                     pass
             else:       
                     if K_Loc == bg_current:

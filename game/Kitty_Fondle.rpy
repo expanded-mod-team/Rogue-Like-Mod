@@ -311,13 +311,6 @@ label KFB_Prep: #Animation set-up
     if Trigger2 == "fondle breasts": 
         return
     
-    if not K_Forced and Situation != "auto":
-        $ Tempmod = 0
-        call Kitty_Top_Off
-        if "angry" in K_RecentActions:
-            return
-        
-    $ Tempmod = 0  
     call K_Breasts_Launch("fondle breasts")
     
     if Situation == "Kitty":                                                                  
@@ -366,6 +359,13 @@ label KFB_Prep: #Animation set-up
                     return          
             #end auto
 
+    if not K_Forced and Situation != "auto":
+        $ Tempmod = 0
+        call Kitty_Top_Off
+        if "angry" in K_RecentActions:
+            return
+        
+    $ Tempmod = 0  
     if not K_FondleB:        
         if K_Forced:
             call Statup("Kitty", "Love", 90, -20)
@@ -815,14 +815,7 @@ label KSB_Prep:                                                                 
             
     if Trigger2 == "suck breasts":
         return
-        
-    if not K_Forced and Situation != "auto":
-        $ Tempmod = 0   
-        call Kitty_Top_Off
-        if "angry" in K_RecentActions:
-            return
-    
-    $ Tempmod = 0      
+             
     call K_Breasts_Launch("suck breasts")
         
     if Situation == "Kitty":                                                        
@@ -869,7 +862,14 @@ label KSB_Prep:                                                                 
                     $ P_RecentActions.append("nope")      
                     call AnyWord("Kitty",1,"refused","refused")  
                     return          
-            #end auto
+            #end auto            
+    if not K_Forced and Situation != "auto":
+        $ Tempmod = 0   
+        call Kitty_Top_Off
+        if "angry" in K_RecentActions:
+            return
+    
+    $ Tempmod = 0 
     if not K_SuckB:        
         if K_Forced:
             call Statup("Kitty", "Love", 90, -25)
@@ -1776,14 +1776,7 @@ label K_FP_Prep: #Animation set-up
 label KFP_Prep: #Animation set-up 
     if Trigger2 == "fondle pussy":
         return
-        
-    if not K_Forced and Situation != "auto":
-        $ Tempmod = 0
-        call Kitty_Bottoms_Off   
-        if "angry" in K_RecentActions:
-            return 
-    $ Tempmod = 0
-    
+            
     call K_Pussy_Launch("fondle pussy")
     
     if Situation == "Kitty":                                                        
@@ -1849,6 +1842,12 @@ label KFP_Prep: #Animation set-up
                     return          
             #end auto
             
+    if not K_Forced and Situation != "auto":
+        $ Tempmod = 0
+        call Kitty_Bottoms_Off   
+        if "angry" in K_RecentActions:
+            return 
+    $ Tempmod = 0
     if not K_FondleP:        
         if K_Forced:
             call Statup("Kitty", "Love", 90, -50)
@@ -2409,16 +2408,7 @@ label K_LP_Prep: #Animation set-up
 label KLP_Prep: #Animation set-up  
     if Trigger2 == "lick pussy": #fix pull down pants now an option, make it work
         return
-        
-    if not K_Forced and Situation != "auto":
-        $ Tempmod = 0
-        if K_Legs == "pants":
-            $ Tempmod = 15
-        call Kitty_Bottoms_Off
-        if "angry" in K_RecentActions:
-            return  
-            
-    $ Tempmod = 0      
+             
     call K_Pussy_Launch("lick pussy")
     
     if Situation == "Kitty":                                                       
@@ -2483,7 +2473,16 @@ label KLP_Prep: #Animation set-up
                     call AnyWord("Kitty",1,"refused","refused")  
                     return          
             #end auto
+           
+    if not K_Forced and Situation != "auto":
+        $ Tempmod = 0
+        if K_Legs == "pants":
+            $ Tempmod = 15
+        call Kitty_Bottoms_Off
+        if "angry" in K_RecentActions:
+            return  
             
+    $ Tempmod = 0  
     if not K_LickP:        
         if K_Forced:
             call Statup("Kitty", "Love", 90, -30)
@@ -3430,14 +3429,7 @@ label K_IA_Prep: #Animation set-up
 label KIA_Prep: #Animation set-up 
     if Trigger2 == "insert ass":
         return
-        
-    if not K_Forced and Situation != "auto":
-        $ Tempmod = 0
-        call Kitty_Bottoms_Off
-        if "angry" in K_RecentActions:
-            return    
-            
-    $ Tempmod = 0      
+         
     call K_Pussy_Launch("insert ass")
     
     if Situation == "Kitty":                                                         
@@ -3503,6 +3495,13 @@ label KIA_Prep: #Animation set-up
                     return          
             #end auto
             
+    if not K_Forced and Situation != "auto":
+        $ Tempmod = 0
+        call Kitty_Bottoms_Off
+        if "angry" in K_RecentActions:
+            return    
+            
+    $ Tempmod = 0     
     if not K_InsertA:        
         if K_Forced:
             call Statup("Kitty", "Love", 90, -50)
