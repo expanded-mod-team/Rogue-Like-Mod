@@ -5830,6 +5830,8 @@ label Pool_Sunbathe(Girl=0,Chest=0,Panties=0,Over=0,Legs=0,Line=0,Type=0,Mod=0):
             #if she's already nude. . .
             call AnyFace(Girl,"sly")
             call AnyLine(Girl,"Little late for that.")
+            if Girl == "Kitty" or Girl == "Rogue":
+                call Mod_Tan(Girl,5)
             return            
     if CheckWord(Girl,"Recent","no tan"):
             call AnyFace(Girl,"angry")
@@ -5897,6 +5899,8 @@ label Pool_Sunbathe(Girl=0,Chest=0,Panties=0,Over=0,Legs=0,Line=0,Type=0,Mod=0):
             elif Girl == "Laura":
                 ch_l "Yup."
             call AnyWord(Girl,1,"tan","tan") #adds the "tan" trait to recent and daily actions
+            if Girl == "Kitty" or Girl == "Rogue":
+                call Mod_Tan(Girl,5)
             return
         
         
@@ -5939,6 +5943,8 @@ label Pool_Sunbathe(Girl=0,Chest=0,Panties=0,Over=0,Legs=0,Line=0,Type=0,Mod=0):
                                 $ Mod = 200    
                                                                 
                     "never mind.":
+                            if Girl == "Kitty" or Girl == "Rogue":
+                                call Mod_Tan(Girl,5)
                             return
             # end menu
                                         
@@ -6210,6 +6216,8 @@ label Pool_Sunbathe(Girl=0,Chest=0,Panties=0,Over=0,Legs=0,Line=0,Type=0,Mod=0):
             if ClothingCheck(Girl):
                 "Anything else?" #loops back to menu
             else:
+                if Girl == "Kitty" or Girl == "Rogue":
+                    call Mod_Tan(Girl,5)
                 return                
     return
 
