@@ -9,7 +9,9 @@ image Emma_Sprite:
 #            ),   
         (0,0), ConditionSwitch(                                                                         
             #cape layer       
-            "E_Uptop or E_Over == 'jacket' or E_Chest != 'corset'", Null(),  
+            "E_Uptop or E_Over == 'jacket' or E_Over == 'modded black jacket' or (E_Chest != 'corset' and E_Chest != 'modded black corset')", Null(),  
+            "Emma_Arms == 2 and E_Chest == 'modded black corset'", "images/EmmaSprite/EmmaSprite_Chest_modded black corset_cape2.png",              
+            "E_Chest == 'modded black corset'", "images/EmmaSprite/EmmaSprite_Chest_modded black corset_cape1.png",
             "Emma_Arms == 2", "images/EmmaSprite/EmmaSprite_Cape2.png",              
             "True", "images/EmmaSprite/EmmaSprite_Cape1.png",   
             ), 
@@ -20,19 +22,28 @@ image Emma_Sprite:
             ), 
         (0,0), ConditionSwitch(
             #hair back 
-            "not E_Hair", Null(),
+            "not E_Hair or E_HairColor", Null(),
             "E_Hair == 'wet' or E_Water", "images/EmmaSprite/EmmaSprite_HairbackWet.png",
             "E_Hair", "images/EmmaSprite/EmmaSprite_Hairback.png",   
+            "True", Null(),        
+            ), 
+        (0,0), ConditionSwitch(
+            #hair back 
+            "not E_Hair or not E_HairColor", Null(),
+            "E_Hair == 'wet' or E_Water", im.MatrixColor("images/EmmaSprite/EmmaSprite_HairWhitebackWet.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
+            "E_Hair", im.MatrixColor("images/EmmaSprite/EmmaSprite_HairWhiteback.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "True", Null(),        
             ),     
         (0,0), ConditionSwitch(
             #nighty underlayer
+            "IsOutfitModdedEmma('Over')", GetModdedString("images/EmmaSprite/EmmaSprite_Over_", E_Over, "_Back.png"),
             "E_Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_Under.png", 
             "True", Null(),              
             ), 
         (0,0), ConditionSwitch(            
             #panties down back 
-            "not E_Panties or not E_PantiesDown or (E_Legs == 'pants' and not E_Upskirt)", Null(), 
+            "not E_Panties or not E_PantiesDown or (PantsNum('Emma') > 5 and not E_Upskirt)", Null(), 
+            "IsOutfitModdedEmma('Panties')", GetModdedString("images/EmmaSprite/EmmaSprite_Panties_", E_Panties, "_DownBack.png"),
             "E_Panties == 'sports panties'", "images/EmmaSprite/EmmaSprite_Panties_Sports_DownBack.png",   
             "E_Panties == 'bikini bottoms'", "images/EmmaSprite/EmmaSprite_Panties_Bikini_DownBack.png",  
             "True", "images/EmmaSprite/EmmaSprite_Panties_DownBack.png",   
@@ -46,7 +57,7 @@ image Emma_Sprite:
         (215,540), ConditionSwitch(                                                                         
             #Personal Wetness            
             "not E_Wet", Null(),
-            "E_Legs == 'pants' and not E_Upskirt", Null(),   
+            "PantsNum('Emma') > 5 and not E_Upskirt", Null(),   
             "E_Panties and not E_PantiesDown and E_Wet <= 1", Null(),                   
             "E_Wet == 1", ConditionSwitch( #Wet = 1
                     "E_Panties and E_PantiesDown", AlphaMask("Wet_Drip","Emma_Drip_MaskP"),  
@@ -81,6 +92,7 @@ image Emma_Sprite:
             ),    
         (0,0), ConditionSwitch(
             #pubes 
+            "E_Pubes and E_PubesColor", im.MatrixColor("images/EmmaSprite/EmmaSprite_Pubes.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "E_Pubes", "images/EmmaSprite/EmmaSprite_Pubes.png",   
             "True", Null(),        
             ),      
@@ -98,9 +110,10 @@ image Emma_Sprite:
             "E_Water", "images/EmmaSprite/EmmaSprite_Water_Legs.png",   
             "True", Null(),        
             ),               
-        (0,0), ConditionSwitch( 
-            # stockings   
+        (0,0), ConditionSwitch(
+            # stockings
             "renpy.showing('Emma_FJ_Animation')", Null(),                    
+            "IsOutfitModdedEmma('Hose')", GetModdedString("images/EmmaSprite/EmmaSprite_Hose_", E_Hose, ".png"),
             "E_Hose == 'stockings'", "images/EmmaSprite/EmmaSprite_Stockings.png",   
             "E_Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_StockingsGarter.png",   
             "E_Hose == 'garterbelt'", "images/EmmaSprite/EmmaSprite_Garter.png",   
@@ -108,12 +121,14 @@ image Emma_Sprite:
             ),                  
         (0,0), ConditionSwitch(
             #boots    
-            "E_PantiesDown and E_Boots == 'thigh boots' and (E_Legs == 'skirt' or not E_Legs)", "images/EmmaSprite/EmmaSprite_Boots.png",    
+            "E_PantiesDown and E_Boots == 'thigh boots' and (PantsNum('Emma') >= 5 or not E_Legs)", "images/EmmaSprite/EmmaSprite_Boots.png",    
             "True", Null(), 
             ),     
         (0,0), ConditionSwitch(
             #panties down if not wearing pants
-            "not E_Panties or not E_PantiesDown or (E_Legs == 'pants' and not E_Upskirt)", Null(),   
+            "not E_Panties or not E_PantiesDown or (PantsNum('Emma') > 5 and not E_Upskirt)", Null(),   
+            "IsOutfitModdedEmma('Panties') and E_Wet", GetModdedString("images/EmmaSprite/EmmaSprite_Panties_", E_Panties, "_DownWet.png"),
+            "IsOutfitModdedEmma('Panties')", GetModdedString("images/EmmaSprite/EmmaSprite_Panties_", E_Panties, "_Down.png"),
             "E_Panties == 'sports panties' and E_Wet", "images/EmmaSprite/EmmaSprite_Panties_Sports_DownWet.png",  
             "E_Panties == 'sports panties'", "images/EmmaSprite/EmmaSprite_Panties_Sports_Down.png",              
             "E_Panties == 'lace panties' and E_Wet", "images/EmmaSprite/EmmaSprite_Panties_Lace_DownWet.png",  
@@ -126,6 +141,8 @@ image Emma_Sprite:
             #panties up
             "E_PantiesDown or not E_Panties", Null(),   
 #            "E_Panties == 'sports panties' and E_Wet", "images/EmmaSprite/EmmaSprite_Panties_Sports_Wet.png",     
+            "IsOutfitModdedEmma('Panties') and E_Wet", GetModdedString("images/EmmaSprite/EmmaSprite_Panties_", E_Panties, "_Wet.png"),
+            "IsOutfitModdedEmma('Panties')", GetModdedString("images/EmmaSprite/EmmaSprite_Panties_", E_Panties, ".png"),
             "E_Panties == 'sports panties'", "images/EmmaSprite/EmmaSprite_Panties_Sports.png",  
             "E_Panties == 'lace panties' and E_Wet", "images/EmmaSprite/EmmaSprite_Panties_Lace_Wet.png", 
             "E_Panties == 'lace panties'", "images/EmmaSprite/EmmaSprite_Panties_Lace.png",  
@@ -141,7 +158,7 @@ image Emma_Sprite:
             ),    
         (0,0), ConditionSwitch(
             #pussy spunk 
-            "E_Legs and E_Legs != 'skirt' and not E_Upskirt", Null(),
+            "E_Legs and PantsNum('Emma') != 5 and not E_Upskirt", Null(),
             "'in' in E_Spunk or 'anal' in E_Spunk", "images/EmmaSprite/EmmaSprite_Spunk_Pussy.png",
             "True", Null(), 
             ),   
@@ -151,6 +168,7 @@ image Emma_Sprite:
             "E_Upskirt", ConditionSwitch(                   
                         #if the skirt's up or pants down 
                         "E_Legs == 'skirt'", "images/EmmaSprite/EmmaSprite_SkirtUp.png", 
+                        "IsOutfitModdedEmma('Legs')", GetModdedString("images/EmmaSprite/EmmaSprite_Legs_", E_Legs, "_Down.png"),
                         "E_Boots", Null(),
                         "E_Legs == 'pants'", "images/EmmaSprite/EmmaSprite_Pants_Down.png",   
                         "E_Legs == 'yoga pants'", "images/EmmaSprite/EmmaSprite_Pants_Yoga_Down.png",   
@@ -160,6 +178,7 @@ image Emma_Sprite:
                     #if it's the ring pericings
                     "E_Wet", ConditionSwitch(   
                         #if she's not wet
+                        "IsOutfitModdedEmma('Legs')", GetModdedString("images/EmmaSprite/EmmaSprite_Legs_", E_Legs, "_Wet.png"),
                         "E_Legs == 'pants'", "images/EmmaSprite/EmmaSprite_Pants.png",   
                         "E_Legs == 'yoga pants'", "images/EmmaSprite/EmmaSprite_Pants_YogaWet.png",       
                         "E_Legs == 'skirt'", "images/EmmaSprite/EmmaSprite_Skirt.png", 
@@ -167,6 +186,7 @@ image Emma_Sprite:
                         ),
                     "True", ConditionSwitch(   
                         #if she's wet
+                        "IsOutfitModdedEmma('Legs')", GetModdedString("images/EmmaSprite/EmmaSprite_Legs_", E_Legs, ".png"),
                         "E_Legs == 'pants'", "images/EmmaSprite/EmmaSprite_Pants.png",   
                         "E_Legs == 'yoga pants'", "images/EmmaSprite/EmmaSprite_Pants_Yoga.png",       
                         "E_Legs == 'skirt'", "images/EmmaSprite/EmmaSprite_Skirt.png", 
@@ -198,6 +218,7 @@ image Emma_Sprite:
             ),    
         (0,0), ConditionSwitch(
             #Chest underlayer
+            "IsOutfitModdedEmma('Chest') and not E_Uptop", GetModdedString("images/EmmaSprite/EmmaSprite_Chest_", E_Chest, "_Under.png"),
             "E_Chest == 'sports bra' and not E_Uptop", "images/EmmaSprite/EmmaSprite_Bra_Sports_Under.png",   
             "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Bra_Lace_Under.png",   
             "E_Chest == 'corset'", "images/EmmaSprite/EmmaSprite_CorsetUnder.png",   
@@ -242,7 +263,8 @@ image Emma_Sprite:
         (0,0), ConditionSwitch(
             #tits
             "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_TitsUp.png",   # E_TitsUp = 1
-            "E_Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_TitsUp.png",   # E_TitsUp = 1
+            "E_Chest in ('corset','lace bra','sports bra','bikini top') or E_Chest in ('modded black corset','modded red sports bra','modded white sports bra', 'modded NewX', 'modded NewX black')", "images/EmmaSprite/EmmaSprite_TitsUp.png",   # E_TitsUp = 1
+            #"E_Chest in ('modded black corset','modded red sports bra','modded white sports bra', 'modded NewX', 'modded NewX black')", "images/EmmaSprite/EmmaSprite_TitsUp.png",   # E_TitsUp = 1
             "True", "images/EmmaSprite/EmmaSprite_TitsDown.png",   # E_TitsUp = 0
             ), 
         (0,0), ConditionSwitch(
@@ -252,7 +274,7 @@ image Emma_Sprite:
             "E_Pierce == 'barbell'", ConditionSwitch(   
                     #if it's the barbell pericings
                     "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",                     
-                    "E_Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",   
+                    "E_Chest in ('corset','lace bra','sports bra','bikini top') or E_Chest in ('modded black corset','modded red sports bra','modded white sports bra', 'modded NewX', 'modded NewX black')", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",   
 #                    "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",    
 #                    "E_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",  
                     "True", "images/EmmaSprite/EmmaSprite_Pierce_Down_Barbell.png",        
@@ -260,7 +282,7 @@ image Emma_Sprite:
             "E_Pierce == 'ring'", ConditionSwitch(                      
                     #if it's the ring pericings                                 
                     "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png", 
-                    "E_Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png",                          
+                    "E_Chest in ('corset','lace bra','sports bra','bikini top') or E_Chest in ('modded black corset','modded red sports bra','modded white sports bra', 'modded NewX', 'modded NewX black')", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png",                          
 #                    "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png", 
 #                    "E_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png", 
                     "True", "images/EmmaSprite/EmmaSprite_Pierce_Down_Ring.png", 
@@ -269,6 +291,7 @@ image Emma_Sprite:
             ),    
         (0,0), ConditionSwitch(                          
             #neck
+            "IsOutfitModdedEmma('Neck')", GetModdedString("images/EmmaSprite/EmmaSprite_Neck_", E_Neck, ".png"),
             "E_Neck == 'choker'", "images/EmmaSprite/EmmaSprite_Neck_Choker.png",       
             "True", Null(), 
             ),  
@@ -287,6 +310,9 @@ image Emma_Sprite:
                             "E_Chest == 'corset'", "images/EmmaSprite/EmmaSprite_CorsetTits_Up.png",  
                             "True", Null(), 
                             ),    
+            "not E_Chest", Null(),
+            "E_Chest == 'modded black corset' and E_Over", "images/EmmaSprite/EmmaSprite_Chest_modded black corset_TitsX.png",   
+            "IsOutfitModdedEmma('Chest')", GetModdedString("images/EmmaSprite/EmmaSprite_Chest_", E_Chest, ".png"),
             "E_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Bra_Sports.png",   
             "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Bra_Lace.png",   
             "E_Chest == 'bikini top'", "images/EmmaSprite/EmmaSprite_Bra_Bikini.png",   
@@ -299,16 +325,18 @@ image Emma_Sprite:
 #            "True", Null(),                 
 #            ),
         (0,0), ConditionSwitch(                                                                         #cape layer       
-            "E_Uptop or E_Over == 'jacket' or E_Chest != 'corset'", Null(),  
+            "E_Uptop or E_Over == 'jacket' or E_Over == 'modded black jacket' or (E_Chest != 'corset' and E_Chest != 'modded black corset')", Null(),  
+            "Emma_Arms == 2 and E_Chest == 'modded black corset'", "images/EmmaSprite/EmmaSprite_Chest_modded black corset_cape2.png",              
+            "E_Chest == 'modded black corset'", "images/EmmaSprite/EmmaSprite_Chest_modded black corset_cape1.png",
             "Emma_Arms == 2", "images/EmmaSprite/EmmaSprite_Cape2.png",              
-            "True", "images/EmmaSprite/EmmaSprite_Cape1.png",   
+            "True", "images/EmmaSprite/EmmaSprite_Cape1.png",  
             ), 
         (0,0), ConditionSwitch(                                                                         #Overshirt layer       
             "not E_Over", Null(),  
             "Emma_Arms == 2", ConditionSwitch(   
                     #if her arms are down, allowing her breasts to sink                    
                     "E_Uptop", ConditionSwitch(   
-                                    "E_Chest in ('corset','lace bra','sports bra','bikini top')", ConditionSwitch(   
+                                    "E_Chest in ('corset','lace bra','sports bra','bikini top') or E_Chest in ('modded black corset','modded red sports bra','modded white sports bra', 'modded NewX', 'modded NewX black')", ConditionSwitch(   
                                             #If she's wearing a supporting bra. . .
                                             "E_Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_2Up_Up.png",  
                                             "E_Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_Up2_Up.png",   
@@ -320,14 +348,16 @@ image Emma_Sprite:
                                     "True", Null(), 
                                     ),    
                     #if not Uptop. . .
-                    "E_Chest in ('corset','lace bra','sports bra','bikini top')", ConditionSwitch(   
+                    "E_Chest in ('corset','lace bra','sports bra','bikini top') or E_Chest in ('modded black corset','modded red sports bra','modded white sports bra', 'modded NewX', 'modded NewX black')", ConditionSwitch(   
                             #If she's wearing a supporting bra. . .
+                            "IsOutfitModdedEmma('Over')", GetModdedString("images/EmmaSprite/EmmaSprite_Over_", E_Over, "_2Up.png"),
                             "E_Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_2Up.png",  
                             "E_Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_2Up.png",      
                             "E_Over == 'towel'", "images/EmmaSprite/EmmaSprite_Towel_Up2.png",  
                             "True", Null(), 
                             ),  
                     #if she's not wearing a supporting bra. . .
+                    "IsOutfitModdedEmma('Over')", GetModdedString("images/EmmaSprite/EmmaSprite_Over_", E_Over, "_2Down.png"),
                     "E_Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_2Down.png",  
                     "E_Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_2Down.png",      
                     "E_Over == 'towel'", "images/EmmaSprite/EmmaSprite_Towel_Down2.png",  
@@ -341,6 +371,7 @@ image Emma_Sprite:
                             "True", Null(), 
                             ),    
             #if her top is not up. . .
+            "IsOutfitModdedEmma('Over')", GetModdedString("images/EmmaSprite/EmmaSprite_Over_", E_Over, "_1Up.png"),
             "E_Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_1Up.png",  
             "E_Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_1Up.png",      
             "E_Over == 'towel'", "images/EmmaSprite/EmmaSprite_Towel_Up1.png",               
@@ -351,7 +382,7 @@ image Emma_Sprite:
             "E_Pierce == 'barbell'", ConditionSwitch(   
                     #if it's the barbell pericings
                     "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",  
-                    "E_Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",   
+                    "E_Chest in ('corset','lace bra','sports bra','bikini top') or E_Chest in ('modded black corset','modded red sports bra','modded white sports bra', 'modded NewX', 'modded NewX black')", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",   
 #                    "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",    
 #                    "E_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",  
                     "True", "images/EmmaSprite/EmmaSprite_Pierce_Down_BarOut.png", 
@@ -359,7 +390,7 @@ image Emma_Sprite:
             "E_Pierce == 'ring'", ConditionSwitch(   
                     #if it's the ring pericings
                     "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",  
-                    "E_Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",   
+                    "E_Chest in ('corset','lace bra','sports bra','bikini top') or E_Chest in ('modded black corset','modded red sports bra','modded white sports bra', 'modded NewX', 'modded NewX black')", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",   
 #                    "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",    
 #                    "E_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",  
                     "True", "images/EmmaSprite/EmmaSprite_Pierce_Down_RingOut.png", 
@@ -374,6 +405,7 @@ image Emma_Sprite:
                     "E_Chest == 'corset'", "images/EmmaSprite/EmmaSprite_Spunk_TitsU.png",   
                     "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Spunk_TitsU.png",    
                     "E_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Spunk_TitsU.png",  
+                    "E_Chest", "images/EmmaSprite/EmmaSprite_Spunk_TitsU.png",        
                     "True", "images/EmmaSprite/EmmaSprite_Spunk_TitsD.png",        
                     ),       
             "True", Null(),  
@@ -537,7 +569,10 @@ image Emma_Sprite:
     zoom .75                
 
 image TempHairBack:
-    "images/EmmaSprite/EmmaSprite_Head_HairBackWet.png"         
+    (0,0), ConditionSwitch(             
+        "not E_HairColor", "images/EmmaSprite/EmmaSprite_Head_HairBackWet.png",             
+        "True", im.MatrixColor("images/EmmaSprite/EmmaSprite_Head_HairWhiteBackWet.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),             
+        ),  
     anchor (0.6, 0.0)                
     zoom .5                   
     
@@ -694,9 +729,15 @@ image EmmaSprite_Head:
             "True", Null(),
             ),  
         (0,0), ConditionSwitch(                                                                         #Hair
-            "not E_Hair", Null(),
+            "not E_Hair or E_HairColor", Null(),
             "E_Hair == 'wet' or E_Water", "images/EmmaSprite/EmmaSprite_Head_HairWet.png",
             "E_Hair", "images/EmmaSprite/EmmaSprite_Head_Hair.png",
+            "True", Null(),
+            ),  
+        (0,0), ConditionSwitch(                                                                         #Hair
+            "not E_Hair or not E_HairColor", Null(),
+            "E_Hair == 'wet' or E_Water", im.MatrixColor("images/EmmaSprite/EmmaSprite_Head_HairWhiteWet.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
+            "E_Hair", im.MatrixColor("images/EmmaSprite/EmmaSprite_Head_HairWhite.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "True", Null(),
             ),        
         (0,0), ConditionSwitch(                                                                         #Hair Water
@@ -1031,6 +1072,7 @@ image Emma_Sex_Legs_S:
     contains:
             # pubes
         ConditionSwitch(    
+            "E_Pubes and E_PubesColor", im.MatrixColor("images/EmmaSex/Emma_PubesWhite_Sex.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "E_Pubes", "images/EmmaSex/Emma_Pubes_Sex.png", 
             "True", Null(),
             )        
@@ -1098,6 +1140,7 @@ image Emma_Sex_Legs_A:
     contains:
             # pubes
         ConditionSwitch(    
+            "E_Pubes and E_PubesColor", im.MatrixColor("images/EmmaSex/Emma_PubesWhite_Anal.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "E_Pubes", "images/EmmaSex/Emma_Pubes_Anal.png", 
             "True", Null(),
             )
@@ -2029,10 +2072,6 @@ label Emma_Sex_Launch(Line = "solo"):
 label Emma_Sex_Reset:
     if not renpy.showing("Emma_SexSprite") and not renpy.showing("Emma_Doggy"):
         return
-#MOD MARKER RESET
-label Emma_Sex_Reset:
-    if not renpy.showing("Emma_SexSprite") and not renpy.showing("Emma_Doggy"):
-        return
     $ Emma_Arms = 2     
     call mod_hide_Emma_SexSprite  
     call Emma_Hide 
@@ -2671,7 +2710,8 @@ image Emma_BJ_HairBack:
     #Hair underlay
     ConditionSwitch(                                 
             "E_Water or E_Hair == 'wet'", Null(),
-            "True", "images/EmmaBJFace/Emma_BJ_Hair_Wave_Back.png", 
+            "E_HairColor", im.MatrixColor("images/EmmaBJFace/Emma_BJ_HairWhite_Wave_Back.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
+            "True", "images/EmmaBJFace/Emma_BJ_Hair_Wave_Back.png",
             ),
     zoom 1.4
     anchor (0.5, 0.5)
@@ -2700,7 +2740,9 @@ image Emma_BJ_Head:                                                             
         (858,928), 
          (0,0), ConditionSwitch(                                                                 
             #Hair behind face above body
+            "E_HairColor and (E_Water or E_Hair == 'wet')", im.MatrixColor("images/EmmaBJFace/Emma_BJ_HairWhite_Wet_Mid.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "E_Water or E_Hair == 'wet'", "images/EmmaBJFace/Emma_BJ_Hair_Wet_Mid.png",
+            "E_HairColor", im.MatrixColor("images/EmmaBJFace/Emma_BJ_HairWhite_Wave_Mid.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "True", "images/EmmaBJFace/Emma_BJ_Hair_Wave_Mid.png",
             ),
         (0,0), ConditionSwitch(
@@ -2790,7 +2832,9 @@ image Emma_BJ_Head:                                                             
             ),
         (0,0), ConditionSwitch(                                                                 
             #Hair overlay
+            "E_HairColor and (E_Water or E_Hair == 'wet')", im.MatrixColor("images/EmmaBJFace/Emma_BJ_HairWhite_Wet_Top.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "E_Water or E_Hair == 'wet'", "images/EmmaBJFace/Emma_BJ_Hair_Wet_Top.png",
+            "E_HairColor", im.MatrixColor("images/EmmaBJFace/Emma_BJ_HairWhite_Wave_Top.png",im.matrix.tint(float(E_HairCustomColor.red)/255.0, float(E_HairCustomColor.green)/255.0, float(E_HairCustomColor.blue)/255.0)),
             "True", "images/EmmaBJFace/Emma_BJ_Hair_Wave_Top.png",
             ),
 #        (0,0), ConditionSwitch(                                                                 
@@ -3991,10 +4035,6 @@ label E_Pos_Reset(Pose = 0):
     $ Trigger = Pose
     return
     
-#MOD MARKER HIDE
-label Emma_Hide:
-        if renpy.showing("Emma_SexSprite") or renpy.showing("Emma_Doggy"):
-            call Emma_Sex_Reset
 #MOD MARKER HIDE
 label Emma_Hide:
         if renpy.showing("Emma_SexSprite") or renpy.showing("Emma_Doggy"):
