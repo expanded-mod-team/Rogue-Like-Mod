@@ -2073,7 +2073,7 @@ label Rogue_Flirt:
                         ch_r "Ow! Lay off."  
                         #End pinch her ass
                     
-        "Flip her skirt up" if R_Legs == "skirt" and not R_Upskirt:                                         #Flip her skirt           
+        "Flip her skirt up" if (PantsNum("Rogue") == 5 or WearingDress("Rogue")) and not R_Upskirt:                                         #Flip her skirt           
                     call RogueFace("surprised", 1)
                     $ R_Upskirt = 1
                     pause 0.5            

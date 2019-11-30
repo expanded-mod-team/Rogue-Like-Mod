@@ -691,41 +691,6 @@ label start:
     show screen R_Status_screen    
     show screen Inventorybutton            
         
-    if config.developer:
-#        show screen roguebutton
-#        show screen statbutton
-            # Testing settings
-            $ P_Cash = 200
-            $ Cheat = 1
-            $ R_Kissed = 5
-            $ Digits.append("Rogue") 
-            $ Keys.append("Rogue") 
-            $ K_Kissed = 5      
-            $ Digits.append("Kitty")
-            $ Keys.append("Kitty")
-            $ K_History.append("met")
-            $ E_Kissed = 5      
-            $ E_Petname = "Mr. Zero"
-            $ Digits.append("Emma")
-            $ Keys.append("Emma")
-            $ E_History.append("met")
-            $ E_History.append("classcaught")         
-            $ Digits.append("Laura")
-            $ Keys.append("Laura")
-            $ L_History.append("met")
-            $ P_Traits.append("focus")
-            $ R_Event[1] = 1 
-            $ R_Addictionrate = 10
-            #$ R_Resistance = 1 #how fast her rate falls
-            $ Day = 16
-            $ Time_Options = ["Morning", "Midday", "Evening", "Night"]
-            $ Time_Count = 4
-            $ Current_Time = "Midday"   
-            $ Week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-            $ Weekday = 6
-            $ DayofWeek = Week[Weekday]
-            call Wait
-            jump Rogue_Room_Test             
         
     jump Prologue
 
@@ -733,6 +698,7 @@ label start:
 # After loading, this runs ////////////////////////////////////////////////////////////////
 label after_load: 
 label VersionNumber: 
+    call mod_Save_Version
     $ SaveVersion = 0 if "SaveVersion" not in globals().keys() else SaveVersion    
     if SaveVersion == 975: #error correction, remove this eventually
         $ SaveVersion = 957  
@@ -1417,6 +1383,7 @@ label EventCalls:
         $ D20 = renpy.random.randint(1, 20)       
         call Get_Dressed
         
+        call Mod_EventCalls
         if Current_Time == "Evening" and "yesdate" in P_DailyActions:
             if bg_current == "bg campus": 
                     call DateNight
@@ -2378,7 +2345,7 @@ label RogueOutfit(R_OutfitTemp = R_Outfit, Spunk = 0, Undressed = 0, Changed = 1
                         "Rogue throws on a towel."
                 elif Undressed:
                         "Rogue throws her clothes back on."        
-        
+        call Mod_Update_Rogue_Image
         return
 #End Rogue Outfits
 
@@ -2908,7 +2875,7 @@ label KittyOutfit(K_OutfitTemp = K_Outfit, Spunk = 0, Undressed = 0, Changed = 1
                         "She throws on a towel."
                 elif Undressed:
                         "She throws her clothes back on."
-        
+        call Mod_Update_Kitty_Image
         if Undressed:
             return 1
         else:
@@ -3448,6 +3415,7 @@ label EmmaOutfit(E_OutfitTemp = E_Outfit, Spunk = 0, Undressed = 0, Changed = 1)
                         "She throws on a towel."
                 elif Undressed:
                         "She throws her clothes back on."  
+        call Mod_Update_Emma_Image
         return
 #End Emma's Outfits
       
@@ -4168,6 +4136,8 @@ label Wait (Outfit = 1, Lights = 1):
     # If Lights is 1, it removes the blackout screen, otherwise it does not. 
     show blackscreen onlayer black 
     
+    call Mod_Wait(Wait = 0)
+
     $ R_Addict += R_Addictionrate 
     $ K_Addict += K_Addictionrate
     $ E_Addict += E_Addictionrate
@@ -4289,6 +4259,8 @@ label Wait (Outfit = 1, Lights = 1):
                         $ R_Inbt += 10   
                     
         # Things about Kitty when you sleep:
+                if K_DynamicTan[0]:
+                    $ K_DynamicTan[0] -= 1
                 if K_Loc == "hold":
                         $ K_Loc = "bg kitty"  
                 if K_Todo:
