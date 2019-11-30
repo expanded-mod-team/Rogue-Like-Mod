@@ -1346,7 +1346,7 @@ label Laura_SexDialog(TempLine = 0, TempLust = 0, TempLust2 = 0):
                 call Laura_SexDialog_Threeway("lesbian")      
     
     elif Trigger == "foot":
-                        $ Line = "Laura continues stroke your cock with her feet. "
+                        $ Line = "Laura continues stroke your cock with her foot. "
                            
                         if not Speed:
                                     if L_Foot > 2:
@@ -1403,7 +1403,6 @@ label Laura_SexDialog(TempLine = 0, TempLust = 0, TempLust2 = 0):
                                 if Speed <= 1:                      #slow
                                     $ Line = Line + renpy.random.choice(["She makes up for her inexperience with determination, carefully stroking your cock", 
                                             "She moves her feet up and down the shaft. She's a little rough at this, but at least she tries", 
-                                            "She strokes you gently. She isn't quite sure what to do with the balls",
                                             "Her toes fumble with your shaft a bit",
                                             "She nudges one of your balls too tightly, but stops when you wince",
                                             "She has a firm grip, and she's not letting go. This may take a few tries"])     

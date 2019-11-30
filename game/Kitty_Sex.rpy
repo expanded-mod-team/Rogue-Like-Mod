@@ -71,7 +71,8 @@ label Kitty_SexMenu:
         "Kitty's looking a bit tired out, maybe let her rest a bit."
     
     if "caught" in K_RecentActions or "angry" in K_RecentActions:  
-        ch_k "I don't want to deal with you right now."
+        if K_Loc == bg_current:                
+                ch_k "I don't want to deal with you right now."
         call KittyOutfit        
         call DrainWord("Kitty","caught",1,0)
         return
@@ -411,17 +412,19 @@ label K_Jackin(Cnt = 0, TempVar = 0):
                     "Kitty blushes furiously, shocked at your behavior."  
                     call KittyFace("angry", 1) 
                     call Statup("Kitty", "Lust", 50, 5) 
-                    $ K_RecentActions.append("angry")
-                    $ K_DailyActions.append("angry")  
-                    $ renpy.pop_call()
-                    return
+                    if not ApprovalCheck("Kitty", 1200, TabM = 3):
+                            $ K_RecentActions.append("angry")
+                            $ K_DailyActions.append("angry")  
+                            $ renpy.pop_call()
+                            return
             elif K_SEXP <= 15:            
                     call KittyFace("surprised", 2) 
                     $ K_Eyes = "down"
                     "Kitty looks down at your cock with surprise."
                     call KittyFace("perplexed", 1) 
                     call Statup("Kitty", "Lust", 60, 8)
-                    return
+                    if not ApprovalCheck("Kitty", 1200, TabM = 3):
+                            return
             elif ApprovalCheck("Kitty", 1200, TabM = 3):
                     call KittyFace("surprised", 1) 
                     $ K_Eyes = "down"
@@ -443,7 +446,7 @@ label K_Jackin(Cnt = 0, TempVar = 0):
                     $ K_DailyActions.append("angry")  
                     return
             
-            if K_Action:
+            if K_Action and K_Loc == bg_current:
                 $ Options = ["none"]
                 
                 if K_Hand >= 5 and ApprovalCheck("Kitty", 1200, TabM = 3):
@@ -997,6 +1000,38 @@ label K_KissPrep:
         call KittyFace("sucking")
     else:
         call KittyFace("kiss")
+    if Situation == "Kitty":                                                      
+            #Kitty auto-starts   
+            $ Situation = 0
+            "Kitty presses her body against yours, and kisses you passionately."
+            menu:
+                "What do you do?"
+                "Go with it.":                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    call Statup("Kitty", "Inbt", 50, 2)
+                    "You lean in to the kiss."
+                "Praise her.":       
+                    call KittyFace("sexy", 1)                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    ch_p "Mmm, this is a nice surprise, [K_Pet]."
+                    call Kitty_Namecheck
+                    "You lean in to the kiss."
+                    call Statup("Kitty", "Love", 85, 1)
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 2)
+                "Ask her to stop.":
+                    "You pull back."
+                    call KittyFace("surprised")       
+                    call Statup("Kitty", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [K_Pet]."
+                    call Kitty_Namecheck
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 1)
+                    call Statup("Kitty", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Kitty",1,"refused","refused")  
+                    return          
+            #end auto
     if K_Kissed >= 10:
         "She's all over you, licking all over your face and grinding against you."  
     elif K_Kissed > 7:
@@ -1164,7 +1199,7 @@ label K_KissCycle:
                                 call K_Pos_Reset
                                 return    
                             call Statup("Kitty", "Lust", 200, 5) 
-                            if 100 > K_Lust >= 70 and K_OCount < 2:             
+                            if 100 > K_Lust >= 70 and K_OCount < 2 and K_SEXP >= 20:             
                                     $ K_RecentActions.append("unsatisfied")                      
                                     $ K_DailyActions.append("unsatisfied") 
                             
@@ -1188,6 +1223,8 @@ label K_KissCycle:
         if Partner:
                 call Partner_Cumming("Kitty")            
         #End orgasm
+        
+        call Escalation("Kitty","K") #sees if she wants to escalate things
         
         if Round == 10:
             ch_k "You might want to wrap this up, it's getting late."  
@@ -1374,6 +1411,7 @@ label K_Masturbate: #(Situation = Situation):
                             "Kitty's hand slides down her body and begins to caress her pussy."
                         $ K_SeenPanties = 1
                         "She starts to slowly rub herself."
+                        call Kitty_First_Bottomless
                         menu:
                             "What do you do?"
                             "Nothing.":                    
@@ -1582,6 +1620,7 @@ label K_Masturbate: #(Situation = Situation):
 label KM_Prep: 
     $ K_Upskirt = 1    
     $ K_PantiesDown = 1 
+    call Kitty_First_Bottomless(1)
     call Set_The_Scene(Dress=0)   
     
     #if she hasn't seen you yet. . .
@@ -1636,12 +1675,12 @@ label KM_Cycle:
                         "Keep Watching.":
                                 pass
                                 
-                        "Kitty. . .[[jump in]" if "unseen" not in K_RecentActions:                 
+                        "Kitty. . .[[jump in]" if "unseen" not in K_RecentActions and K_Loc == bg_current:                 
                                 "Kitty slows what she's doing with a sly grin."
                                 ch_k "Like what you see?"
                                 $ Situation = "join"
                                 call K_Masturbate               
-                        "\"Ahem. . .\"" if "unseen" in K_RecentActions:  
+                        "\"Ahem. . .\"" if "unseen" in K_RecentActions and K_Loc == bg_current:  
                                 jump KM_Interupted    
                                                    
                         "Start jack'in it." if Trigger2 != "jackin":
@@ -1649,7 +1688,7 @@ label KM_Cycle:
                         "Stop jack'in it." if Trigger2 == "jackin":
                                 $ Trigger2 = 0    
                                             
-                        "Slap her ass":    
+                        "Slap her ass" if K_Loc == bg_current:    
                                 if "unseen" in K_RecentActions:
                                         "You smack Kitty firmly on the ass!"
                                         jump KM_Interupted                                          
@@ -1670,7 +1709,7 @@ label KM_Cycle:
                                     
                         "Change what I'm doing":
                                 menu:
-                                    "Offhand action":
+                                    "Offhand action" if K_Loc == bg_current:
                                             if K_Action and MultiAction:
                                                 call Kitty_Offhand_Set
                                                 if Trigger2:
@@ -1678,9 +1717,9 @@ label KM_Cycle:
                                             else:
                                                 ch_k "I'm actually getting a little tired, so maybe we could wrap this up?"  
                                                            
-                                    "Threesome actions (locked)" if not Partner or "unseen" in K_RecentActions: 
+                                    "Threesome actions (locked)" if not Partner or "unseen" in K_RecentActions or K_Loc != bg_current: 
                                         pass
-                                    "Threesome actions" if Partner and "unseen" not in K_RecentActions:   
+                                    "Threesome actions" if Partner and "unseen" not in K_RecentActions and K_Loc == bg_current:   
                                         menu:
                                             "Ask [Partner] to do something else":
                                                         call Partner_Threechange("Kitty")      
@@ -1711,13 +1750,13 @@ label KM_Cycle:
                                     "Never mind":
                                             jump KM_Cycle                               
                          
-                        "Back to Sex Menu" if MultiAction: 
+                        "Back to Sex Menu" if MultiAction and K_Loc == bg_current: 
                                     ch_p "Let's try something else."
                                     call K_Pos_Reset
                                     $ Situation = "shift"
                                     $ Line = 0
                                     jump KM_Interupted
-                        "End Scene" if not MultiAction: 
+                        "End Scene" if not MultiAction or K_Loc != bg_current: 
                                     ch_p "Let's stop for now."
                                     call K_Pos_Reset
                                     $ Line = 0
@@ -1751,28 +1790,31 @@ label KM_Cycle:
                         else: #If she wasn't aware you were there
                             "You grunt and try to hold it in."
                             $ P_Focus = 95
-                            jump KM_Interupted
+                            if K_Loc == bg_current:
+                                    jump KM_Interupted
      
                     #If Kitty can cum
                     if K_Lust >= 100:                                               
                         call K_Cumming
-                        jump KM_Interupted
+                        if K_Loc == bg_current:
+                                jump KM_Interupted
                        
                     if Line == "came": 
                         $ Line = 0
                         if not P_Semen:
                             "You're emptied out, you should probably take a break."
+                            $ Trigger2 = 0 if Trigger2 == "jackin" else Trigger2
                             
                             
                         if "unsatisfied" in K_RecentActions:#And Kitty is unsatisfied,  
                             "Kitty still seems a bit unsatisfied with the experience."
                             menu:
-                                "Finish her?"
-                                "Yes, keep going for a bit." if P_Semen:
-                                    $ Line = "You get back into it" 
+                                "Let her keep going?"
+                                "Yes, keep going for a bit.":
+                                    $ Line = "You let her get back into it" 
                                     jump KM_Cycle  
                                 "No, I'm done.":
-                                    "You pull back."
+                                    "You ask her to stop."
                                     return
         if Partner:
                 #Checks if partner could orgasm
@@ -1785,6 +1827,9 @@ label KM_Cycle:
                 elif Round == 5:
                     "She's definitely going to stop soon."
         else:
+                if K_Loc == bg_current:
+                        call Escalation("Kitty","K") #sees if she wants to escalate things
+        
                 if Round == 10:
                     ch_k "We might want to wrap this up, it's getting late."  
                     $ K_Lust += 10
@@ -1882,6 +1927,9 @@ label KM_Interupted:
     $ Situation = 0
         
     call Partner_Like("Kitty",3)
+        
+    if K_Loc != bg_current:
+        return
             
     if Round <= 10:
             ch_k "Gimme a minute, I need to collect myself here. . ."
@@ -2190,8 +2238,12 @@ label Kitty_ShameIndex:
     
     return
             
-label Kitty_Taboo(Cnt= 1):    
-    
+label Kitty_Taboo(Cnt= 1,Choice=0):   
+    if "Kitty" not in P_DailyActions:
+            $ P_DailyActions.append("Kitty") 
+    if "scent" not in P_DailyActions:
+            $ P_DailyActions.append("scent") 
+            
     $ Cnt = Action_Check("Kitty", "recent", "spotted") if "spotted" in K_RecentActions else 1
     $ Cnt = 4 if Cnt > 4 else Cnt   
     
@@ -2255,7 +2307,7 @@ label Kitty_Taboo(Cnt= 1):
                     if "spotted" not in K_RecentActions:
                         ch_k "I think we can give'em a show, [K_Petname]."                          
                     call Statup("Kitty", "Lust", 200, 5) 
-                    $ Line = "A"
+                    $ Choice = "A"
             elif ApprovalCheck("Kitty", 750, "I", TabM=Cnt):            
                     #not an exhibitionist but very uninhibited       
                     call KittyFace("sexy", 1)                    
@@ -2263,13 +2315,13 @@ label Kitty_Taboo(Cnt= 1):
                     if "spotted" not in K_RecentActions:                        
                         ch_k "What should we do?" 
                     call Statup("Kitty", "Lust", 200, 4)   
-                    $ Line = "B"
+                    $ Choice = "B"
             elif ApprovalCheck("Kitty", 1000, "OI", TabM=Cnt):     
                     #not an exhibitionist but obedient/uninhibited          
                     call KittyFace("surprised", 2)
                     "Kitty looks a bit panicked."
                     call Statup("Kitty", "Lust", 200, 4)
-                    $ Line = "C"
+                    $ Choice = "C"
             else:  
                     # She fails her inhibition checks
                     call KittyFace("surprised", 2)
@@ -2280,21 +2332,21 @@ label Kitty_Taboo(Cnt= 1):
                         "With a sudden embarrassed start, Kitty panics. She dives through the nearest wall."
                         call Statup("Kitty", "Love", 90, -15) 
                     "You head back to your room."                    
-                    $ Line = "stop"
+                    $ Choice = "stop"
                 
-            if Line != "stop":
+            if Choice != "stop":
                 menu:
                     "What would you like to do?"
                     "Let them watch. . ." if "spotted" not in K_RecentActions:   
-                        if Line == "A":                
+                        if Choice == "A":                
                                 call KittyFace("sexy", 0) 
                                 ch_k "I'll bring my \"A\" game."             
-                        elif Line == "B":            
+                        elif Choice == "B":            
                                 #not an exhibitionist but very uninhibited       
                                 call KittyFace("sexy", 1)
                                 $ K_Brows = "sad"               
                                 ch_k "Hehe, um, yeah."    
-                        elif Line == "C":     
+                        elif Choice == "C":     
                                 call KittyFace("sexy",2)
                                 if K_Obed > K_Inbt:
                                     $ K_Eyes = "side"
@@ -2307,23 +2359,23 @@ label Kitty_Taboo(Cnt= 1):
                         "You get back to it." 
                         $ K_Blush = 1
                     "Continue" if "spotted" in K_RecentActions:
-                        if Line == "C":          
+                        if Choice == "C":          
                             call Statup("Kitty", "Obed", 200, 5) 
                     "Ok, let's stop.":   
-                        if Line == "A":                            
+                        if Choice == "A":                            
                                 call KittyFace("sad")
                                 ch_k "Booo."                                         
-                        elif Line == "B":            
+                        elif Choice == "B":            
                                 call KittyFace("sad")
                                 ch_k "Um, yeah." 
-                        elif Line == "C":     
+                        elif Choice == "C":     
                                 call Statup("Kitty", "Love", 90, 10)          
                                 call KittyFace("smile")
                                 ch_k "Heh, thanks [K_Petname]." 
                         "You both run back to your rooms."
-                        $ Line = "stop"
+                        $ Choice = "stop"
                         
-            if Line == "stop":            
+            if Choice == "stop":            
                     $ K_RecentActions.append("caught")
                     $ K_DailyActions.append("caught")     
                     show blackscreen onlayer black 

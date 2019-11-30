@@ -34,46 +34,6 @@ label E_Handjob:
         
     $ Approval = ApprovalCheck("Emma", 1100, TabM = 3) # 110, 125, 140, Taboo -120(230)
     
-    if Situation == "Emma":                                                                  #Emma auto-starts   
-        if Approval > 2:                                                      # fix, add emma auto stuff here
-            if Trigger2 == "jackin":
-                "Emma brushes your hand aside and starts stroking your cock."
-            else:
-                "Emma draws her fingers across your cock, and begins to stroke it."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Emma", "Inbt", 70, 3) 
-                    call Statup("Emma", "Inbt", 30, 1)                     
-                    "Emma continues her actions."
-                "Praise her.":       
-                    call EmmaFace("sexy", 1)                    
-                    call Statup("Emma", "Inbt", 70, 2) 
-                    ch_p "Oooh, that's good, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma continues her actions."
-                    call Statup("Emma", "Love", 80, 1)
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 2)
-                "Ask her to stop.":
-                    call EmmaFace("surprised")       
-                    call Statup("Emma", "Inbt", 70, 1) 
-                    ch_p "Let's not do that for now, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma puts it down."
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 1)
-                    call Statup("Emma", "Obed", 30, 2)
-                    return            
-            if Trigger:
-                $ Trigger3 = "hand"
-                return
-            jump E_HJ_Prep
-        else:                
-            $ Tempmod = 0                               # fix, add emma auto stuff here
-            $ Trigger2 = 0
-            return            
-    
     if not E_Hand and "no hand" not in E_RecentActions:        
         call EmmaFace("sly", 2)
         ch_e "You'd like me to take care of that for you?"
@@ -272,8 +232,44 @@ label E_HJ_Prep:
         $ E_Eyes = "sexy"
         $ E_Mouth = "smile"
         
-    call Seen_First_Peen("Emma",Partner)
+    call Seen_First_Peen("Emma",Partner,React=Situation)
     call Emma_HJ_Launch("L")
+        
+    if Situation == "Emma":                                                          
+            #Emma auto-starts  
+            $ Situation = 0 
+            if Trigger2 == "jackin":
+                "Emma brushes your hand aside and starts stroking your cock."
+            else:
+                "Emma draws her fingers across your cock, and begins to stroke it."
+            menu:
+                "What do you do?"
+                "Nothing.":                    
+                    call Statup("Emma", "Inbt", 70, 3) 
+                    call Statup("Emma", "Inbt", 30, 2)                     
+                    "Emma continues her actions."
+                "Praise her.":       
+                    call EmmaFace("sexy", 1)                    
+                    call Statup("Emma", "Inbt", 70, 3) 
+                    ch_p "Oooh, that's good, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma continues her actions."
+                    call Statup("Emma", "Love", 80, 1)
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call EmmaFace("surprised")       
+                    call Statup("Emma", "Inbt", 70, 1) 
+                    ch_p "Let's not do that for now, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma puts it down."
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 1)
+                    call Statup("Emma", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Emma",1,"refused","refused")  
+                    return   
+                    
     if not E_Hand:        
         if E_Forced:
             call Statup("Emma", "Love", 90, -20)
@@ -429,7 +425,7 @@ label E_HJ_Cycle:
                                 call Emma_HJ_Reset
                                 return    
                             call Statup("Emma", "Lust", 200, 5) 
-                            if 100 > E_Lust >= 70 and E_OCount < 2:             
+                            if 100 > E_Lust >= 70 and E_OCount < 2 and E_SEXP >= 20:             
                                 $ E_RecentActions.append("unsatisfied")                      
                                 $ E_DailyActions.append("unsatisfied") 
                             
@@ -509,6 +505,8 @@ label E_HJ_Cycle:
                     ch_e "Are you certain you didn't have anything else in mind?"         
         #End Count check
                    
+        call Escalation("Emma","E") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_e "It's about time for a break."     
         elif Round == 5:
@@ -603,42 +601,6 @@ label E_Titjob:
         $ Tempmod -= 10 if "no titjob" in E_RecentActions else 0    
         
     $ Approval = ApprovalCheck("Emma", 1200, TabM = 5) # 120, 135, 150, Taboo -200(320)
-    
-    if Situation == "Emma":                                                                  #Emma auto-starts   
-        if Approval > 2:                                                      # fix, add emma auto stuff here
-            call Emma_TJ_Launch  
-            $ Speed = 0
-            "Emma slides down and sandwiches your dick between her tits."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    call Statup("Emma", "Inbt", 40, 2)                     
-                    "Emma starts to slide them up and down."
-                "Praise her.":       
-                    call EmmaFace("sexy", 1)                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    ch_p "Oh, that sounds like a good idea, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma continues her actions."
-                    call Statup("Emma", "Love", 85, 1)
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 2)
-                "Ask her to stop.":     
-                    call EmmaFace("confused")  
-                    call Statup("Emma", "Inbt", 70, 1) 
-                    ch_p "Let's not do that for now, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma lets it drop out from between her breasts."
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 3)
-                    call Emma_TJ_Reset  
-                    return            
-            jump E_TJ_Cycle
-        else:                
-            $ Tempmod = 0                               # fix, add emma auto stuff here
-            $ Trigger2 = 0
-            return            
     
     if not E_Tit and "no titjob" not in E_RecentActions:        
         call EmmaFace("surprised", 1)
@@ -879,8 +841,40 @@ label E_TJ_Prep:
         $ E_Eyes = "sexy"
         $ E_Mouth = "smile"
     
-    call Seen_First_Peen("Emma",Partner)
-    call Emma_TJ_Launch("L")    
+    call Seen_First_Peen("Emma",Partner,React=Situation)
+    call Emma_TJ_Launch("L") 
+    
+    if Situation == "Emma":                                                               
+            #Emma auto-starts   
+            $ Situation = 0
+            call Emma_TJ_Launch("L")            
+            "Emma slides down and wraps her tits around your dick."
+            menu:
+                "What do you do?"
+                "Nothing.":                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    call Statup("Emma", "Inbt", 40, 2)                     
+                    "Emma starts to slide them up and down."
+                "Praise her.":       
+                    call EmmaFace("sexy", 1)                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    ch_p "Oh, that sounds like a good idea, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma continues her actions."
+                    call Statup("Emma", "Love", 85, 1)
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 2)
+                "Ask her to stop.":     
+                    call EmmaFace("confused")  
+                    call Statup("Emma", "Inbt", 70, 1) 
+                    ch_p "Let's not do that for now, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma lets it drop out from between her breasts."
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 3)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Emma",1,"refused","refused")  
+                    return 
     if not E_Tit:        
         if E_Forced:
             call Statup("Emma", "Love", 90, -25)
@@ -1045,7 +1039,7 @@ label E_TJ_Cycle: #Repeating strokes
                                 call Emma_TJ_Reset
                                 return    
                             call Statup("Emma", "Lust", 200, 5) 
-                            if 100 > E_Lust >= 70 and E_OCount < 2:             
+                            if 100 > E_Lust >= 70 and E_OCount < 2 and E_SEXP >= 20:             
                                 $ E_RecentActions.append("unsatisfied")                      
                                 $ E_DailyActions.append("unsatisfied") 
                             
@@ -1124,6 +1118,8 @@ label E_TJ_Cycle: #Repeating strokes
                                     jump E_TJ_After
         #End Count check
            
+        call Escalation("Emma","E") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_e "You might want to wrap this up, it's getting late."  
         elif Round == 5:
@@ -1209,40 +1205,7 @@ label E_Blowjob:
         $ Tempmod -= 10 if "no blow" in E_RecentActions else 0    
     
     $ Approval = ApprovalCheck("Emma", 1300, TabM = 4) # 130, 145, 160, Taboo -160(290)
-    
-    if Situation == "Emma":                                                                  #Emma auto-starts   
-        if Approval > 2:                                                      # fix, add emma auto stuff here
-            "Emma slides down and places your cock against her lips."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    call Statup("Emma", "Inbt", 40, 2)                     
-                    "Emma starts to lick it."
-                "Praise her.":       
-                    call EmmaFace("sexy", 1)                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    ch_p "Hmmm, keep doing that, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma continues her actions."
-                    call Statup("Emma", "Love", 85, 1)
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 2)
-                "Ask her to stop.":     
-                    call EmmaFace("surprised")  
-                    call Statup("Emma", "Inbt", 70, 1) 
-                    ch_p "Let's not do that for now, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma puts it down."
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 3)
-                    return            
-            jump E_BJ_Prep
-        else:                
-            $ Tempmod = 0                               # fix, add emma auto stuff here
-            $ Trigger2 = 0
-            return            
-    
+           
     if not E_Blow and "no blow" not in E_RecentActions:        
         call EmmaFace("sly")
         ch_e "So you'd like me to suck you off?"
@@ -1466,8 +1429,39 @@ label E_BJ_Prep:
     if E_Forced:
         call EmmaFace("sad")
     
-    call Seen_First_Peen("Emma",Partner)
+    call Seen_First_Peen("Emma",Partner,React=Situation)
     call Emma_BJ_Launch("L")
+
+    if Situation == "Emma":                                                                  
+            #Emma auto-starts   
+            $ Situation = 0      
+            "Emma slides down and places your cock against her lips."
+            menu:
+                "What do you do?"
+                "Nothing.":                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    call Statup("Emma", "Inbt", 40, 2)                     
+                    "Emma continues licking at it."
+                "Praise her.":       
+                    call EmmaFace("sexy", 1)                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    ch_p "Hmmm, keep doing that, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma continues her actions."
+                    call Statup("Emma", "Love", 85, 1)
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 2)
+                "Ask her to stop.":     
+                    call EmmaFace("surprised")  
+                    call Statup("Emma", "Inbt", 70, 1) 
+                    ch_p "Let's not do that for now, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma puts it down."
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 3)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Emma",1,"refused","refused")  
+                    return  
     if not E_Blow:        
         if E_Forced:
             call Statup("Emma", "Love", 90, -70)
@@ -1662,7 +1656,7 @@ label E_BJ_Cycle: #Repeating strokes
                                 call Emma_BJ_Reset
                                 return    
                             call Statup("Emma", "Lust", 200, 5) 
-                            if 100 > E_Lust >= 70 and E_OCount < 2:             
+                            if 100 > E_Lust >= 70 and E_OCount < 2 and E_SEXP >= 20:             
                                 $ E_RecentActions.append("unsatisfied")                      
                                 $ E_DailyActions.append("unsatisfied") 
                             
@@ -1743,6 +1737,8 @@ label E_BJ_Cycle: #Repeating strokes
                     $ E_Brows = "confused"
                     ch_e "Are you about done? I'm a little tired of this."  
         #End Count check
+        
+        call Escalation("Emma","E") #sees if she wants to escalate things        
         
         if Round == 10:
             ch_e "It's getting a bit late. . ."  
@@ -3322,7 +3318,7 @@ label E_FJ_Prep:
         $ E_Eyes = "sexy"
         $ E_Mouth = "smile"
     
-    call Seen_First_Peen("Emma",Partner)
+    call Seen_First_Peen("Emma",Partner,React=Situation)
     if not E_Foot:        
         if E_Forced:
             call Statup("Emma", "Love", 90, -20)
@@ -3568,6 +3564,8 @@ label E_FJ_Cycle:
                     ch_e "Could we be done here, my feet are getting sore."         
         #End Count check
                    
+        call Escalation("Emma","E") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_e "Ok, it's getting a bit lake here."   
         elif Round == 5:
@@ -3637,9 +3635,11 @@ label E_Les_Interupted:
                 jump E_Les_After
         call DrainWord("Emma","unseen",1,0) #She sees you, so remove unseens
         call DrainWord(Partner,"unseen",1,0) #She sees you, so remove unseens
-        call EmmaFace("surprised", 2)
+        call EmmaFace("surprised", 2)        
+        call AnyFace(Partner,"surprised",2) 
         "Suddenly, Emma looks up from what she was doing with a start, and gives [Partner] a nudge."
-        call EmmaFace("sly",0)
+        call EmmaFace("sly",0) 
+        call AnyFace(Partner,"perplexed",1) 
         ch_e "Hmm? [E_Petname], enjoying the show?"
         $ E_Action -= 1 if E_Action > 0 else 0
         call Checkout(1)
@@ -3746,8 +3746,6 @@ label E_LesScene(Bonus = 0): #Repeating strokes
         
     if R_Loc == bg_current:
             #if it's Rogue. . .
-            $ R_RecentActions.append("noticed Emma")
-            $ E_RecentActions.append("noticed Rogue")
             $ Partner = "Rogue"  
             if E_LikeRogue >= 900:
                     $ Bonus += 150
@@ -3762,8 +3760,6 @@ label E_LesScene(Bonus = 0): #Repeating strokes
             call DrainWord("Rogue","unseen",1,0) #She sees you, so remove unseens
     elif K_Loc == bg_current:
             #if it's Kitty. . .
-            $ K_RecentActions.append("noticed Emma")
-            $ E_RecentActions.append("noticed Kitty")
             $ Partner = "Kitty"  
             if E_LikeKitty >= 900:
                     $ Bonus += 150
@@ -3778,8 +3774,6 @@ label E_LesScene(Bonus = 0): #Repeating strokes
             call DrainWord("Kitty","unseen",1,0) #She sees you, so remove unseens
     elif L_Loc == bg_current:
             #if it's Laura. . .
-            $ L_RecentActions.append("noticed Emma")
-            $ E_RecentActions.append("noticed Laura")
             $ Partner = "Laura"  
             if E_LikeLaura >= 900:
                     $ Bonus += 150
@@ -3792,6 +3786,34 @@ label E_LesScene(Bonus = 0): #Repeating strokes
             elif E_LikeLaura <= 500:
                     $ Bonus -= 100
             call DrainWord("Laura","unseen",1,0) #She sees you, so remove unseens
+            
+    
+    if R_Loc == bg_current:
+            #if it's Rogue. . .
+            $ Partner = "Rogue"   
+    elif K_Loc == bg_current:
+            #if it's Kitty. . .
+            $ Partner = "Kitty"  
+    elif L_Loc == bg_current:
+            #if it's Laura. . .
+            $ Partner = "Laura" 
+           
+    $ Line = GirlLikeCheck("Emma",Partner)      
+    if Line >= 900:
+            $ Bonus += 150
+    elif Line >= 800 or "poly "+Partner in E_Traits:
+            $ Bonus += 100
+    elif Line >= 700:
+            $ Bonus += 50
+    elif Line <= 200:
+            $ Bonus -= 200
+    elif Line <= 500:
+            $ Bonus -= 100
+    call DrainWord(Partner,"unseen",1,0) #She sees you, so remove unseens    
+    $ Line = 0
+    
+    call AnyWord("Emma",1,"noticed "+Partner,"noticed "+Partner) #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,1,"noticed Emma","noticed Emma") #ie $ R_RecentActions.append("noticed Laura") 
             
     if bg_current in ("bg player", "bg emma", "bg rogue", "bg kitty"):
         $ Taboo == 0
@@ -3938,14 +3960,17 @@ label E_LesScene(Bonus = 0): #Repeating strokes
                     call EmmaFace("sexy", 1)
                     call Statup("Emma", "Love", 90, 1)
                     call Statup("Emma", "Inbt", 50, 3) 
-                    $ Line = renpy.random.choice(["Well. . . ok.",                 
-                        "I don't mind getting cozy with her. . .",
-                        "I kinda needed this anyways. . .",
-                        "Sure!", 
-                        "I guess. . .",
-                        "Heh, ok, fine."]) 
-                    ch_e "[Line]"
-                    $ Line = 0
+                    if Situation == "interrupted":
+                            ch_e "Well I suppose we could continue. . ."
+                    else:
+                            $ Line = renpy.random.choice(["Well. . . fine.",                 
+                                "I don't mind getting intimate with her. . .",
+                                "I may have needed this anyways. . .",
+                                "Sure!", 
+                                "I suppose. . .",
+                                "Oh, very well. . ."]) 
+                            ch_e "[Line]"
+                            $ Line = 0
                 call Statup("Emma", "Obed", 20, 1)
                 call Statup("Emma", "Obed", 60, 1)
                 call Statup("Emma", "Inbt", 70, 2) 
@@ -4083,24 +4108,15 @@ label E_Les_Partner:
 label E_Les_Prep:    
     #sets the scene up   
     
-    if R_Loc == bg_current:
-            if "noticed Emma" not in R_RecentActions:
-                    $ R_RecentActions.append("noticed Emma")    
-            if "noticed Rogue" not in E_RecentActions:
-                    $ E_RecentActions.append("noticed Rogue")           
+    if R_Loc == bg_current:    
             $ Partner = "Rogue"  
     elif K_Loc == bg_current:
-            if "noticed Emma" not in K_RecentActions:
-                    $ K_RecentActions.append("noticed Emma")    
-            if "noticed Kitty" not in E_RecentActions:
-                    $ E_RecentActions.append("noticed Kitty")         
             $ Partner = "Kitty"  
-    elif L_Loc == bg_current:
-            if "noticed Emma" not in L_RecentActions:
-                    $ L_RecentActions.append("noticed Emma")  
-            if "noticed Laura" not in E_RecentActions:
-                    $ E_RecentActions.append("noticed Laura")           
+    elif L_Loc == bg_current:      
             $ Partner = "Laura" 
+            
+    call AnyWord("Emma",1,"noticed "+Partner,"noticed "+Partner) #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,1,"noticed Emma","noticed Emma") #ie $ R_RecentActions.append("noticed Laura") 
             
     if "unseen" not in E_RecentActions:
             #if she knows you're there. . .
@@ -4129,8 +4145,8 @@ label E_Les_Prep:
     if Taboo:
         call DrainWord("Emma","tabno")
     call DrainWord("Emma","no lesbian")
-    $ E_RecentActions.append("lesbian")                      
-    $ E_DailyActions.append("lesbian") 
+    call AnyWord("Emma",0,"lesbian","lesbian") #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,0,"lesbian","lesbian") #ie $ R_RecentActions.append("noticed Laura") 
     
 label E_Les_Cycle: #Repeating strokes
     while Round >=0:  
@@ -4324,58 +4340,12 @@ label E_Les_After:
                     ch_e "something to keep in mind?"
     
     if not Situation:
-            ch_e "That was enjoyable. . ."
-            if R_Loc == bg_current:
-                if "les emma" not in R_History:
-                        if E_LikeRogue >= 600:
-                                ch_e "You were delightful dear!"
-                        else:
-                                ch_e "At least you could keep up. . ."
-                        if R_LikeEmma >= 600:
-                                ch_r "Um, yeah, you too. . ."
-                        else:
-                                ch_r "I guess. . ."
-                        $ E_History.append("les rogue")   
-                        $ R_History.append("les emma")  
-                else:
-                    #second time
-                    ch_r "Mmmm yeah. . ."
-            elif K_Loc == bg_current:
-                if "les emma" not in K_History:
-                        if E_LikeKitty >= 600:
-                                ch_e "You were delightful dear!"
-                        else:
-                                ch_e "At least you could keep up. . ."
-                        if K_LikeEmma >= 600:
-                                ch_r "Yeah, that was. . . wow."
-                        else:
-                                ch_k "Sure, whatever. . ."
-                        $ E_History.append("les kitty")   
-                        $ K_History.append("les emma")  
-                else:
-                    #second time
-                    ch_k "Oh yeah. . ."
-            elif L_Loc == bg_current:
-                if "les kitty" not in L_History:
-                        if E_LikeLaura >= 600:
-                                ch_e "You were delightful dear!"
-                        else:
-                                ch_e "At least you could keep up. . ."
-                        if L_LikeEmma >= 600:
-                                ch_l "Yeah, I try. . ."
-                        else:
-                                ch_l "Uh-huh."
-                        $ K_History.append("les laura")   
-                        $ L_History.append("les kitty") 
-                else:
-                    #second time
-                    ch_l "Yup. . ."
+            call Post_Les_Dialog("Emma")
                     
-                        
-     
+    call AnyWord("Emma",1,0,0,0,"les "+Partner) #ie $ L_RecentActions.append("noticed Rogue") 
+    call AnyWord(Partner,1,0,0,0,"les Emma") #ie $ R_RecentActions.append("noticed Laura") 
+              
     $ Tempmod = 0  
-#    if Situation == "shift":
-#        ch_e "So what else did you have in mind?"
     call Checkout
     return   
 
@@ -4657,7 +4627,7 @@ label E_Les_Response(Girl="Rogue", Step=1, B=0, B2=0, Tempmod=0, Result=0, Appro
 label E_Les_FirstKiss:
     # called when there is a first kiss situation between two girls
     if Partner == "Rogue":
-            if "les rogue" in E_History:
+            if "les Rogue" in E_History:
                 #if they've been together before              
                 $ Line = "experienced"
             elif E_Les and R_Les:   
@@ -4670,7 +4640,7 @@ label E_Les_FirstKiss:
                 #Rogue's had experience                
                 $ Line = "first partner"
     elif Partner == "Kitty":
-            if "les kitty" in E_History:
+            if "les Kitty" in E_History:
                 #if they've been together before              
                 $ Line = "experienced"
             elif E_Les and K_Les:   
@@ -4683,7 +4653,7 @@ label E_Les_FirstKiss:
                 #Kitty's had experience                
                 $ Line = "first partner"
     elif Partner == "Laura":
-            if "les laura" in E_History:
+            if "les Laura" in E_History:
                 #if they've been together before              
                 $ Line = "experienced"
             elif E_Les and L_Les:   

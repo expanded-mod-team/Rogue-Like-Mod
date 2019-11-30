@@ -266,7 +266,7 @@ init python:
 
 #this function checks how many of "item" are in the player's inventory
 
-    def Inventory_Check(Item = "item", Count = 0):      
+    def Inventory_Check(Item = "item", Count = 0):      #remove, unneeded
             if Item in P_Inventory:
                 Count = P_Inventory.count(Item) 
             else:
@@ -373,9 +373,12 @@ init python:
                         return 1
                     else:
                         return 0
+                elif Type == "TRST":
+                    return K_Thirst                    
                 L = K_Love
                 O = K_Obed
                 I = K_Inbt
+                LocalTaboo = K_Taboo
                 Loc = K_Loc if not Loc else Loc
         elif Chr == "Emma":                                      
                 #sets the data based on Emma's data
@@ -384,9 +387,12 @@ init python:
                         return 1
                     else:
                         return 0
+                elif Type == "TRST":
+                    return E_Thirst  
                 L = E_Love
                 O = E_Obed
                 I = E_Inbt
+                LocalTaboo = E_Taboo
                 Loc = E_Loc if not Loc else Loc
         elif Chr == "Laura":                                      
                 #sets the data based on Laura's data
@@ -395,9 +401,12 @@ init python:
                         return 1
                     else:
                         return 0
+                elif Type == "TRST":
+                    return L_Thirst  
                 L = L_Love
                 O = L_Obed
                 I = L_Inbt
+                LocalTaboo = L_Taboo
                 Loc = L_Loc if not Loc else Loc
         else: # Chr == "Rogue":                                 
                 #sets the data based on Rogue's data
@@ -406,9 +415,12 @@ init python:
                         return 1
                     else:
                         return 0
+                elif Type == "TRST":
+                    return R_Thirst  
                 L = R_Love
                 O = R_Obed
                 I = R_Inbt
+                LocalTaboo = R_Taboo
                 Loc = R_Loc if not Loc else Loc
         
         if Loc == bg_current:
@@ -452,44 +464,43 @@ init python:
                                 else:
                                     I = 1000
        
-        
         if Type == "LOI":
-                LocalTaboo = Taboo * 10
+                LocalTaboo = LocalTaboo * 10
                 LocalTempmod = Tempmod * 10
                 
         elif Type == "LO":                      #40 -> 240
                 #culls unwanted parameters.
                 #These bits multiply everything from the 0-300 range to the 0-3000 range  
                 I = 0
-                LocalTaboo = Taboo * 6                              
+                LocalTaboo = LocalTaboo * 6                              
                 LocalTempmod = Tempmod * 6
         elif Type == "OI":
                 L = 0
-                LocalTaboo = Taboo * 6
+                LocalTaboo = LocalTaboo * 6
                 LocalTempmod = Tempmod * 6
         elif Type == "LI":
                 O = 0
-                LocalTaboo = Taboo * 6      
+                LocalTaboo = LocalTaboo * 6      
                 LocalTempmod = Tempmod * 6
                 
         elif Type == "L":                       #40 -> 120
                 O = 0
                 I = 0
-                LocalTaboo = Taboo * 3
+                LocalTaboo = LocalTaboo * 3
                 LocalTempmod = Tempmod * 3
         elif Type == "O":
                 L = 0
                 I = 0
-                LocalTaboo = Taboo * 3
+                LocalTaboo = LocalTaboo * 3
                 LocalTempmod = Tempmod * 3
         elif Type == "I":
                 O = 0
                 L = 0
-                LocalTaboo = Taboo * 3      
+                LocalTaboo = LocalTaboo * 3      
                 LocalTempmod = Tempmod * 3
                 
         else:            
-                LocalTaboo = Taboo * 10         #40 -> 400
+                LocalTaboo = LocalTaboo * 10         #40 -> 400
                 LocalTempmod = Tempmod * 10
         
         TabM = 0 if TabM <= 0 else TabM #test this, makes sure TabM is positive
@@ -546,9 +557,35 @@ init python:
             
     #end RoomFull
 
+    def Zero_Loc(Girl=0):
+                #returns the location of the girl fed to it.
+                # if Zero_Loc(Girl) == bg_current: #. . .
+                if Girl == "Rogue":
+                        return R_Loc
+                elif Girl == "Kitty":
+                        return K_Loc
+                elif Girl == "Emma":
+                        return E_Loc
+                elif Girl == "Laura":                
+                        return L_Loc                        
+                return 
     
+    def AloneCheck(Girl=0,Alone=0):
+                # returns a positive value if other people are around
+                # if Girl, it checks if she's the only one in the room
+                Alone = 0
+                if R_Loc == bg_current and Girl != "Rogue":
+                        Alone += 1
+                if K_Loc == bg_current and Girl != "Kitty":
+                        Alone += 1
+                if E_Loc == bg_current and Girl != "Emma":
+                        Alone += 1
+                if L_Loc == bg_current and Girl != "Laura": 
+                        Alone += 1
+                return Alone
+                        
     def ChestNum(Chr = "Rogue"): 
-                #This function determines how much Bra are on, 5 for decent, less for less.
+                #This function determines how much Bra are on, 5 for decent, less for less.                
                 if Chr == "Rogue":
                         if R_Uptop and R_Chest:
                             return 1
@@ -654,8 +691,6 @@ init python:
                             return 1
                         if R_Legs == "skirt":
                             return 5
-                        elif IsOutfitModdedRogue("Legs"):
-                            return ModPantsNum("Rogue")    
                         elif R_Legs == "pants":
                             return 10
                         elif R_Panties == "shorts":
@@ -666,9 +701,7 @@ init python:
                         if K_Upskirt and K_Legs:
                             return 1
                         if K_Legs == "black jeans":
-                            return 10
-                        elif IsOutfitModdedKitty("Legs"):
-                            return ModPantsNum("Kitty")            
+                            return 10            
                         elif K_Legs == "capris":
                             return 10    
                         elif K_Legs == "yoga pants":
@@ -938,6 +971,8 @@ init python:
     def CheckWord(Girl=0,Type=0,Check=0):
             # checks whether the girl has the required stat
             # CheckWord("Rogue","Recent","something")
+            
+#            "[Girl],[Type],[Check]" #fix, remove, diagnostic
             if Girl == "Rogue":
                     if Type == "Recent":
                         if Check in R_RecentActions:
@@ -1003,6 +1038,251 @@ init python:
                         if Check in L_Petnames:
                             return 1      
             return 0
+            
+# Start History checker / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+    def HistoryCheck(Girl=0,Check=0):
+        #girl is the girl, Check is the condition being checked, returns the value of that stat
+        if Girl == "Rogue":
+                if Check == "caught":
+                    return R_Caught
+                elif Check == "kissed":
+                    return R_Kissed 
+                elif Check == "hand":
+                    return R_Hand
+                elif Check == "sex":
+                    return R_Sex
+                elif Check == "anal":
+                    return R_Anal                  
+                elif Check == "blow":
+                    return R_Blow 
+                elif Check == "foot":
+                    return R_Foot
+                elif Check == "titjob":
+                    return R_Tit                      
+                elif Check == "hotdog":
+                    return R_Hotdog                    
+                elif Check == "masturbation":
+                    return R_Mast 
+                elif Check == "orgasm":
+                    return R_Org
+                elif Check == "fondle breast":
+                    return R_FondleB 
+                elif Check == "fondle thighs":
+                    return R_FondleT
+                elif Check == "fondle pussy":
+                    return R_FondleP 
+                elif Check == "fondle ass":
+                    return R_FondleA 
+                elif Check == "dildo pussy":
+                    return R_DildoP
+                elif Check == "dildo ass":
+                    return R_DildoA 
+                elif Check == "suck breasts":
+                    return R_SuckB                
+                elif Check == "insert ass":
+                    return R_InsertA
+                elif Check == "lick pussy":
+                    return R_LickP                    
+                elif Check == "lick ass":
+                    return R_LickA                
+                elif Check == "swallowed":
+                    return R_Swallow
+                elif Check == "strip":
+                    return R_Strip 
+        if Girl == "Rogue":
+                if Check == "caught":
+                    return R_Caught
+                elif Check == "kissed":
+                    return R_Kissed 
+                elif Check == "hand":
+                    return R_Hand
+                elif Check == "sex":
+                    return R_Sex
+                elif Check == "anal":
+                    return R_Anal                  
+                elif Check == "blow":
+                    return R_Blow 
+                elif Check == "foot":
+                    return R_Foot
+                elif Check == "titjob":
+                    return R_Tit                      
+                elif Check == "hotdog":
+                    return R_Hotdog                    
+                elif Check == "masturbation":
+                    return R_Mast 
+                elif Check == "orgasm":
+                    return R_Org
+                elif Check == "fondle breast":
+                    return R_FondleB 
+                elif Check == "fondle thighs":
+                    return R_FondleT
+                elif Check == "fondle pussy":
+                    return R_FondleP 
+                elif Check == "fondle ass":
+                    return R_FondleA 
+                elif Check == "dildo pussy":
+                    return R_DildoP
+                elif Check == "dildo ass":
+                    return R_DildoA 
+                elif Check == "suck breasts":
+                    return R_SuckB                
+                elif Check == "insert ass":
+                    return R_InsertA
+                elif Check == "lick pussy":
+                    return R_LickP                    
+                elif Check == "lick ass":
+                    return R_LickA                
+                elif Check == "swallowed":
+                    return R_Swallow
+                elif Check == "strip":
+                    return R_Strip 
+        elif Girl == "Kitty":
+                if Check == "caught":
+                    return K_Caught
+                elif Check == "kissed":
+                    return K_Kissed 
+                elif Check == "hand":
+                    return K_Hand
+                elif Check == "sex":
+                    return K_Sex
+                elif Check == "anal":
+                    return K_Anal                  
+                elif Check == "blow":
+                    return K_Blow 
+                elif Check == "foot":
+                    return K_Foot
+                elif Check == "titjob":
+                    return K_Tit                      
+                elif Check == "hotdog":
+                    return K_Hotdog                    
+                elif Check == "masturbation":
+                    return K_Mast 
+                elif Check == "orgasm":
+                    return K_Org
+                elif Check == "fondle breast":
+                    return K_FondleB 
+                elif Check == "fondle thighs":
+                    return K_FondleT
+                elif Check == "fondle pussy":
+                    return K_FondleP 
+                elif Check == "fondle ass":
+                    return K_FondleA 
+                elif Check == "dildo pussy":
+                    return K_DildoP
+                elif Check == "dildo ass":
+                    return K_DildoA 
+                elif Check == "suck breasts":
+                    return K_SuckB                
+                elif Check == "insert ass":
+                    return K_InsertA
+                elif Check == "lick pussy":
+                    return K_LickP                    
+                elif Check == "lick ass":
+                    return K_LickA                
+                elif Check == "swallowed":
+                    return K_Swallow
+                elif Check == "strip":
+                    return K_Strip 
+        elif Girl == "Emma":
+                if Check == "caught":
+                    return E_Caught
+                elif Check == "kissed":
+                    return E_Kissed 
+                elif Check == "hand":
+                    return E_Hand
+                elif Check == "sex":
+                    return E_Sex
+                elif Check == "anal":
+                    return E_Anal                  
+                elif Check == "blow":
+                    return E_Blow 
+                elif Check == "foot":
+                    return E_Foot
+                elif Check == "titjob":
+                    return E_Tit                      
+                elif Check == "hotdog":
+                    return E_Hotdog                    
+                elif Check == "masturbation":
+                    return E_Mast 
+                elif Check == "orgasm":
+                    return E_Org
+                elif Check == "fondle breast":
+                    return E_FondleB 
+                elif Check == "fondle thighs":
+                    return E_FondleT
+                elif Check == "fondle pussy":
+                    return E_FondleP 
+                elif Check == "fondle ass":
+                    return E_FondleA 
+                elif Check == "dildo pussy":
+                    return E_DildoP
+                elif Check == "dildo ass":
+                    return E_DildoA 
+                elif Check == "suck breasts":
+                    return E_SuckB                
+                elif Check == "insert ass":
+                    return E_InsertA
+                elif Check == "lick pussy":
+                    return E_LickP                    
+                elif Check == "lick ass":
+                    return E_LickA                
+                elif Check == "swallowed":
+                    return E_Swallow
+                elif Check == "strip":
+                    return E_Strip 
+        elif Girl == "Laura":
+                if Check == "caught":
+                    return L_Caught
+                elif Check == "kissed":
+                    return L_Kissed 
+                elif Check == "hand":
+                    return L_Hand
+                elif Check == "sex":
+                    return L_Sex
+                elif Check == "anal":
+                    return L_Anal                  
+                elif Check == "blow":
+                    return L_Blow 
+                elif Check == "foot":
+                    return L_Foot
+                elif Check == "titjob":
+                    return L_Tit                      
+                elif Check == "hotdog":
+                    return L_Hotdog                    
+                elif Check == "masturbation":
+                    return L_Mast 
+                elif Check == "orgasm":
+                    return L_Org
+                elif Check == "fondle breast":
+                    return L_FondleB 
+                elif Check == "fondle thighs":
+                    return L_FondleT
+                elif Check == "fondle pussy":
+                    return L_FondleP 
+                elif Check == "fondle ass":
+                    return L_FondleA 
+                elif Check == "dildo pussy":
+                    return L_DildoP
+                elif Check == "dildo ass":
+                    return L_DildoA 
+                elif Check == "suck breasts":
+                    return L_SuckB                
+                elif Check == "insert ass":
+                    return L_InsertA
+                elif Check == "lick pussy":
+                    return L_LickP                    
+                elif Check == "lick ass":
+                    return L_LickA                
+                elif Check == "swallowed":
+                    return L_Swallow
+                elif Check == "strip":
+                    return L_Strip         
+        return
+# End History checker / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+
+
+# End Python Init stuff/ / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / // / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 label Speed_Shift(S=0):   
     #adjusts the speed of animations to S, uses fade to hide glitches
     # call Speed_Shift(2)
@@ -1079,6 +1359,11 @@ label Statup(Name=0, Flavor=0, Check=100, Value=1, Greater=0, Type=0, Overflow=0
                 return
         # endset
         
+#        if Clear:
+#            #if set to Clear, subtract the full amount from the trait.
+#            # ie call Statup(Options[0], "Lust", 25, 5, 1, Clear=1), if Lust is >25, it will subtract all Lust from Lust
+#            $ Value = -Type
+            
         if Greater:                             
                 #this checks if it's greater or less than the intended value
                 #if it fails, the value is zeroed out, cancelling the rest
@@ -1093,8 +1378,7 @@ label Statup(Name=0, Flavor=0, Check=100, Value=1, Greater=0, Type=0, Overflow=0
                     $ Type += Value  
                 else:
                     $ Value = 0
-        
-                    
+                            
         if Value:                                       
             #If there is any change to the stat           
             if Flavor == "Love":                        
@@ -1158,13 +1442,13 @@ label Statup(Name=0, Flavor=0, Check=100, Value=1, Greater=0, Type=0, Overflow=0
                 if not Trigger:
                         #calls orgasm if Lust goes over 100, breaks routine
                         if Name == "Rogue":        
-                            call R_Cumming
+                            call R_Cumming(1)
                         elif Name == "Kitty":     
-                            call K_Cumming
+                            call K_Cumming(1)
                         elif Name == "Emma":    
-                            call E_Cumming
+                            call E_Cumming(1)
                         elif Name == "Laura":    
-                            call L_Cumming  
+                            call L_Cumming(1)  
                         $ Value = 0
                         return
                     
@@ -1298,17 +1582,17 @@ label AnyFace(Girl=0,Emote = 5, B = 5, M = 0, Mouth = 0, Eyes = 0, Brows = 0):
                         call LauraFace(Emote=Emote,B=B,M=M,Mouth=Mouth,Eyes=Eyes,Brows=Brows)
         return
 
-label AnyLine(Girl=0,Line=". . ."):
+label AnyLine(Girl=0,PassLine=". . ."):
         #This calls a line from any girl you reference
         if Girl == "Rogue":
-                ch_r "[Line]"
+                ch_r "[PassLine]"
         elif Girl == "Kitty":
-                ch_k "[Line]"
+                ch_k "[PassLine]"
         elif Girl == "Emma":
-                ch_e "[Line]"
+                ch_e "[PassLine]"
         elif Girl == "Laura":
-                ch_l "[Line]"
-        return
+                ch_l "[PassLine]"
+        return                          #fix try returning PassLine, and see if extend can use that. . .
 
 label AnyOutfit(Girl=0,OutfitTemp = 5, Spunk = 0, Undressed = 0, Changed = 1, Perm=0, TempOver=0,TempChest=0,TempLegs=0,TempPanties=0,TempUpskirt=1,TempUptop=1,TempHose=0):
         #this sends a face change to any girl listed
@@ -1323,7 +1607,8 @@ label AnyOutfit(Girl=0,OutfitTemp = 5, Spunk = 0, Undressed = 0, Changed = 1, Pe
         # if OutfitTemp == 11: $ R_Upskirt = TempUpskirt
         # if OutfitTemp == 12: $ R_Uptop = TempUptop
         # if OutfitTemp == 13: $ R_Hose = TempHose
-                        
+        # call AnyOutfit(Girl,8,TempChest=0)
+                                
         if Girl == "Rogue": 
                     if 7 <= OutfitTemp <= 20:
                         # if Outfittemp is between 7 and 20                        
@@ -2028,10 +2313,10 @@ label Activity_Check(Girl=0,Girl2=0,Silent=0,Removal=1,ClothesCheck=1,Mod=0,Appr
                 
         return Approval
 
-label DrainWord(Character = "Rogue", Word = "word", Recent = 1, Daily = 1):
+label DrainWord(Character = "Rogue", Word = "word", Recent = 1, Daily = 1, Traits=0):
             # to remove words from the daily/recent lists , ie call DrainWord("Rogue","sex",1,0)
             if Character == "Rogue" or Character == "All":
-                            if Word == "around" and Word in R_Traits:
+                            if Traits and Word in R_Traits:
                                 while Word in R_Traits:
                                         $ R_Traits.remove(Word) 
                             if Word in R_RecentActions and Recent:
@@ -2041,7 +2326,7 @@ label DrainWord(Character = "Rogue", Word = "word", Recent = 1, Daily = 1):
                                 while Word in R_DailyActions:
                                         $ R_DailyActions.remove(Word)   
             if Character == "Kitty" or Character == "All":
-                            if Word == "around" and Word in K_Traits:
+                            if Traits and Word in K_Traits:
                                 while Word in K_Traits:
                                         $ K_Traits.remove(Word) 
                             if Word in K_RecentActions and Recent:
@@ -2051,6 +2336,9 @@ label DrainWord(Character = "Rogue", Word = "word", Recent = 1, Daily = 1):
                                 while Word in K_DailyActions:
                                         $ K_DailyActions.remove(Word) 
             if Character == "Emma" or Character == "All":
+                            if Traits and Word in E_Traits:
+                                while Word in E_Traits:
+                                        $ E_Traits.remove(Word) 
                             if Word in E_RecentActions and Recent:
                                 while Word in E_RecentActions:
                                         $ E_RecentActions.remove(Word) 
@@ -2058,6 +2346,9 @@ label DrainWord(Character = "Rogue", Word = "word", Recent = 1, Daily = 1):
                                 while Word in E_DailyActions:
                                         $ E_DailyActions.remove(Word) 
             if Character == "Laura" or Character == "All":
+                            if Traits and Word in L_Traits:
+                                while Word in L_Traits:
+                                        $ L_Traits.remove(Word) 
                             if Word in L_RecentActions and Recent:
                                 while Word in L_RecentActions:
                                         $ L_RecentActions.remove(Word) 
@@ -2075,7 +2366,7 @@ label DrainWord(Character = "Rogue", Word = "word", Recent = 1, Daily = 1):
 
 label AnyWord(Girl=0,Only=0,Recent=0,Daily=0,Trait=0,History=0):
             #applies variables to appropriate character stats
-            # call Anyword(Girl,1,0,0,0,0)
+            # call AnyWord(Girl,1,0,0,0,0)
             #if Only, then only apply it if it's not already there
             if Girl == "Rogue":
                     if (Recent and not Only) or (Recent and Recent not in R_RecentActions):
@@ -2788,7 +3079,9 @@ label Dismissed:
 # Favorite sex acts >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 label Favorite_Actions(Character=0, Quick=0, Temp=0, ATemp=0, PTemp=0, BTemp=0, TTemp=0, HTemp=0, FTemp=0, D20F=0):
-                        
+    # Character is the selected girl    
+    # if there's no selected character, it does it for all girls
+    # if Quick is True, it just returns a string of the action as a value, otherwise it sets it as a lasting variable. 
     if not Character or Character == "Rogue":
                 #ass, pussy, blow, tits, hand, fondling, kiss
                 $ ATemp = R_Anal + R_DildoA + R_FondleA + R_InsertA + R_LickA        
@@ -3282,356 +3575,356 @@ label FlashTits(Girl = "Rogue", Timing = 1, Over = 0, Under = 0):
 
 # Start Gym Clothes / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / 
 label Gym_Clothes(Mode = 0, Girl = 0, GirlsNum = 0): #checked each time you enter the Gym
-    #GirlsNum tracks whether multiple girls have changed clothes
-    #Mode: "change" forces her to change to street clothes
-    #"pre" is for if she was meant to have changed before you got there
-    #"auto" is for if it happens silently
-    #"exit" is for leaving people only.
-    if Taboo == 0 and bg_current == "bg dangerroom" and Mode != "change":
-        menu:
-            "Is this visit for work or for play?"
-            "Work [[get geared up]":
-                pass
-            "Play [[keep on this outfit]":
-                return
-    if not Girl or Girl == "Rogue":
-        if R_Loc != "bg dangerroom" or Mode == "change" or Mode == "exit":  
-                #If Rogue has left the gym or was told to change back
-                if Mode == "exit" and "leaving" not in R_RecentActions:
-                        #this means she will only change into street clothes if leaving
-                        #during the "exit" phase.
-                        pass
+        #GirlsNum tracks whether multiple girls have changed clothes
+        #Mode: "change" forces her to change to street clothes
+        #"pre" is for if she was meant to have changed before you got there
+        #"auto" is for if it happens silently
+        #"exit" is for leaving people only.
+        if Taboo == 0 and bg_current == "bg dangerroom" and Mode != "change":
+            menu:
+                "Is this visit for work or for play?"
+                "Work [[get geared up]":
+                    pass
+                "Play [[keep on this outfit]":
+                    return
+        if not Girl or Girl == "Rogue":
+                if R_Loc != "bg dangerroom" or Mode == "change" or Mode == "exit":  
+                        #If Rogue has left the gym or was told to change back
+                        if Mode == "exit" and "leaving" not in R_RecentActions:
+                                #this means she will only change into street clothes if leaving
+                                #during the "exit" phase.
+                                pass
+                        elif R_Outfit == "gym":
+                                if bg_current == "bg dangerroom" and "leaving" in R_RecentActions:
+                                        #if you're in the danger room, and so is Rogue
+                                        show blackscreen onlayer black
+                                $ R_Outfit = R_OutfitDay
+                                call RogueOutfit(Changed=1)                        
                 elif R_Outfit == "gym":
-                        if bg_current == "bg dangerroom" and "leaving" in R_RecentActions:
-                                #if you're in the danger room, and so is Rogue
+                            #If it's already gym clothes, skip this
+                            pass           
+                elif Mode == "pre":
+                        #If she was already in the gym when you got there
+                        if R_Loc == "bg dangerroom" and "Rogue" not in Party:
+                                $ R_Outfit = "gym"
+                                call RogueOutfit(Changed=1)
+                elif Mode == "auto":
+                        #If it's set to do it automatically by the call
+                        if R_Loc == "bg dangerroom" and R_Loc == bg_current:
                                 show blackscreen onlayer black
-                        $ R_Outfit = R_OutfitDay
-                        call RogueOutfit(Changed=1)                        
-        elif R_Outfit == "gym":
-                    #If it's already gym clothes, skip this
-                    pass           
-        elif Mode == "pre":
-                #If she was already in the gym when you got there
-                if R_Loc == "bg dangerroom" and "Rogue" not in Party:
-                        $ R_Outfit = "gym"
-                        call RogueOutfit(Changed=1)
-        elif Mode == "auto":
-                #If it's set to do it automatically by the call
-                if R_Loc == "bg dangerroom" and R_Loc == bg_current:
-                        show blackscreen onlayer black
-                        $ R_Outfit = "gym"
-                call RogueOutfit(Changed=1)        
-        elif R_Loc == bg_current:
-                #If Rogue is in the gym, see if she'll change clothes                
-                if ApprovalCheck("Rogue", 1200, "LO") or "sub" in R_Traits:
-                    pass
-                elif ApprovalCheck("Rogue", 800, "LO") and R_Custom[0]:
-                    pass
-                elif ApprovalCheck("Rogue", 600, "LO") and R_Gym[0]:
-                    pass
-                else:
-                    $ Line = "no"
-                if Line == "no"  or "asked gym" in R_DailyActions or "no ask gym" in R_Traits:   
-                    #If she decides not to ask you
-                    ch_r "I'll be right back, gotta change."                       
-                    show blackscreen onlayer black
-                    $ R_Outfit = "gym"
-                    call RogueOutfit(Changed=1)
-                else:
-                    # She asks to change outfits
-                    $ R_DailyActions.append("asked gym")
-                    menu:
-                            ch_r "Did you want me to change into my gym clothes?"
-                            "Yeah, they look great.":   
-                                call RogueFace("smile")                          
-                                call Statup("Rogue", "Love", 80, 2)
-                                call Statup("Rogue", "Obed", 40, 1)
-                                call Statup("Rogue", "Inbt", 30, 1)
-                                $ Line = 1                            
-                            "No, stay in that.":
-                                call RogueFace("confused")    
-                                call Statup("Rogue", "Obed", 50, 4)
-                                $ Line = 0
-                            "Whichever you like.":
-                                call RogueFace("confused")                                    
-                                call Statup("Rogue", "Inbt", 50, 2)
-                                $ Line = renpy.random.randint(0, 3)
-                            "I don't care.":        
-                                call RogueFace("angry")   
-                                call Statup("Rogue", "Love", 50, -2, 1)
-                                call Statup("Rogue", "Obed", 50, 2)
-                                call Statup("Rogue", "Inbt", 50, 2)  
-                                $ Line = renpy.random.randint(0, 1)
-                    if Line:
-                            #If she decided to change     
-                            ch_r "Ok, be right back."                       
+                                $ R_Outfit = "gym"
+                        call RogueOutfit(Changed=1)        
+                elif R_Loc == bg_current:
+                        #If Rogue is in the gym, see if she'll change clothes                
+                        if ApprovalCheck("Rogue", 1200, "LO") or "sub" in R_Traits:
+                            pass
+                        elif ApprovalCheck("Rogue", 800, "LO") and R_Custom[0]:
+                            pass
+                        elif ApprovalCheck("Rogue", 600, "LO") and R_Gym[0]:
+                            pass
+                        else:
+                            $ Line = "no"
+                        if Line == "no"  or "asked gym" in R_DailyActions or "no ask gym" in R_Traits:   
+                            #If she decides not to ask you
+                            ch_r "I'll be right back, gotta change."                       
                             show blackscreen onlayer black
                             $ R_Outfit = "gym"
                             call RogueOutfit(Changed=1)
-                    #end asked
-                if R_Outfit == "gym":
-                    $ GirlsNum += 1 
-                $ Line = 0
-        hide blackscreen onlayer black
+                        else:
+                            # She asks to change outfits
+                            $ R_DailyActions.append("asked gym")
+                            menu:
+                                    ch_r "Did you want me to change into my gym clothes?"
+                                    "Yeah, they look great.":   
+                                        call RogueFace("smile")                          
+                                        call Statup("Rogue", "Love", 80, 2)
+                                        call Statup("Rogue", "Obed", 40, 1)
+                                        call Statup("Rogue", "Inbt", 30, 1)
+                                        $ Line = 1                            
+                                    "No, stay in that.":
+                                        call RogueFace("confused")    
+                                        call Statup("Rogue", "Obed", 50, 4)
+                                        $ Line = 0
+                                    "Whichever you like.":
+                                        call RogueFace("confused")                                    
+                                        call Statup("Rogue", "Inbt", 50, 2)
+                                        $ Line = renpy.random.randint(0, 3)
+                                    "I don't care.":        
+                                        call RogueFace("angry")   
+                                        call Statup("Rogue", "Love", 50, -2, 1)
+                                        call Statup("Rogue", "Obed", 50, 2)
+                                        call Statup("Rogue", "Inbt", 50, 2)  
+                                        $ Line = renpy.random.randint(0, 1)
+                            if Line:
+                                    #If she decided to change     
+                                    ch_r "Ok, be right back."                       
+                                    show blackscreen onlayer black
+                                    $ R_Outfit = "gym"
+                                    call RogueOutfit(Changed=1)
+                            #end asked
+                        if R_Outfit == "gym":
+                            $ GirlsNum += 1 
+                        $ Line = 0
+                hide blackscreen onlayer black
         # End Rogue      
-        
-    if not Girl or Girl == "Kitty" or Mode == "exit":
-        if K_Loc != "bg dangerroom" or Mode == "change":  
-                #If Kitty has left the gym or was told to change back
-                if Mode == "exit" and "leaving" not in K_RecentActions:
-                        #this means she will only change into street clothes if leaving
-                        #during the "exit" phase.
-                        pass
+            
+        if not Girl or Girl == "Kitty" or Mode == "exit":
+                if K_Loc != "bg dangerroom" or Mode == "change":  
+                        #If Kitty has left the gym or was told to change back
+                        if Mode == "exit" and "leaving" not in K_RecentActions:
+                                #this means she will only change into street clothes if leaving
+                                #during the "exit" phase.
+                                pass
+                        elif K_Outfit == "gym":
+                                if bg_current == "bg dangerroom" and "leaving" in K_RecentActions:
+                                        #if you're in the danger room, and so is Kitty
+                                        show blackscreen onlayer black
+                                $ K_Outfit = K_OutfitDay
+                                call KittyOutfit(Changed=1)                        
                 elif K_Outfit == "gym":
-                        if bg_current == "bg dangerroom" and "leaving" in K_RecentActions:
-                                #if you're in the danger room, and so is Kitty
-                                show blackscreen onlayer black
-                        $ K_Outfit = K_OutfitDay
-                        call KittyOutfit(Changed=1)                        
-        elif K_Outfit == "gym":
-                    #If it's already gym clothes, skip this
-                    pass   
-        elif Mode == "pre":
-                #If she was already here
-                if K_Loc == "bg dangerroom" and "Kitty" not in Party:
-                    $ K_Outfit = "gym"
-                    call KittyOutfit(Changed=1)
-        elif Mode == "auto":
-                #If it's set to do it automatically by the call
-                        if K_Loc == "bg dangerroom" and K_Loc == bg_current:
-                                show blackscreen onlayer black
-                        $ K_Outfit = "gym"
-                        call KittyOutfit(Changed=1)
-        elif K_Loc == bg_current:
-                #If Kitty is in the gym, see if she'll change clothes
-                if ApprovalCheck("Kitty", 1300, "LO") or "sub" in K_Traits:
-                    pass
-                elif ApprovalCheck("Kitty", 800, "LO") and K_Custom[0]:
-                    pass
-                elif ApprovalCheck("Kitty", 600, "LO") and K_Gym[0]:
-                    pass
-                else:
-                    $ Line = "no"
-                if Line == "no" or "asked gym" in K_DailyActions or "no ask gym" in K_Traits:   
-                    #If she decides not to ask you   
-                    if GirlsNum:
-                        ch_k "I'll be right back too."  
-                    else:
-                        ch_k "I'll be back soon, gotta change."                       
-                    show blackscreen onlayer black
-                    $ K_Outfit = "gym"
-                    call KittyOutfit(Changed=1)
-                else:
-                    # She asks to change outfits
-                    $ K_DailyActions.append("asked gym")
-                    if GirlsNum:
-                        $ Line = "Should I change too?"  
-                    else:
-                        $ Line = "Would you like me to change into my gym clothes?"   
-                    menu:
-                            ch_k "[Line]"
-                            "Yeah, they look great.":  
-                                call KittyFace("smile")                              
-                                call Statup("Kitty", "Love", 80, 2)
-                                call Statup("Kitty", "Obed", 40, 1)
-                                call Statup("Kitty", "Inbt", 30, 1)
-                                $ Line = 1                            
-                            "No, stay in that.":
-                                call KittyFace("confused")    
-                                call Statup("Kitty", "Obed", 50, 5)
-                                $ Line = 0
-                            "Whichever you like.": 
-                                call KittyFace("confused")                                      
-                                call Statup("Kitty", "Inbt", 50, 1)
-                                $ Line = renpy.random.randint(0, 3)
-                            "I don't care.":        
-                                call KittyFace("angry")      
-                                call Statup("Kitty", "Love", 50, -3, 1)
-                                call Statup("Kitty", "Obed", 50, 4)
-                                call Statup("Kitty", "Inbt", 50, 2)  
-                                $ Line = renpy.random.randint(0, 1)
-                    if Line:
-                            #If she decided to change     
-                            ch_k "Ok, back in a bit"                       
+                            #If it's already gym clothes, skip this
+                            pass   
+                elif Mode == "pre":
+                        #If she was already here
+                        if K_Loc == "bg dangerroom" and "Kitty" not in Party:
+                            $ K_Outfit = "gym"
+                            call KittyOutfit(Changed=1)
+                elif Mode == "auto":
+                        #If it's set to do it automatically by the call
+                                if K_Loc == "bg dangerroom" and K_Loc == bg_current:
+                                        show blackscreen onlayer black
+                                $ K_Outfit = "gym"
+                                call KittyOutfit(Changed=1)
+                elif K_Loc == bg_current:
+                        #If Kitty is in the gym, see if she'll change clothes
+                        if ApprovalCheck("Kitty", 1300, "LO") or "sub" in K_Traits:
+                            pass
+                        elif ApprovalCheck("Kitty", 800, "LO") and K_Custom[0]:
+                            pass
+                        elif ApprovalCheck("Kitty", 600, "LO") and K_Gym[0]:
+                            pass
+                        else:
+                            $ Line = "no"
+                        if Line == "no" or "asked gym" in K_DailyActions or "no ask gym" in K_Traits:   
+                            #If she decides not to ask you   
+                            if GirlsNum:
+                                ch_k "I'll be right back too."  
+                            else:
+                                ch_k "I'll be back soon, gotta change."                       
                             show blackscreen onlayer black
                             $ K_Outfit = "gym"
                             call KittyOutfit(Changed=1)
-                    #end asked
-                if K_Outfit == "gym":
-                    $ GirlsNum += 1 
-                $ Line = 0
-        hide blackscreen onlayer black
+                        else:
+                            # She asks to change outfits
+                            $ K_DailyActions.append("asked gym")
+                            if GirlsNum:
+                                $ Line = "Should I change too?"  
+                            else:
+                                $ Line = "Would you like me to change into my gym clothes?"   
+                            menu:
+                                    ch_k "[Line]"
+                                    "Yeah, they look great.":  
+                                        call KittyFace("smile")                              
+                                        call Statup("Kitty", "Love", 80, 2)
+                                        call Statup("Kitty", "Obed", 40, 1)
+                                        call Statup("Kitty", "Inbt", 30, 1)
+                                        $ Line = 1                            
+                                    "No, stay in that.":
+                                        call KittyFace("confused")    
+                                        call Statup("Kitty", "Obed", 50, 5)
+                                        $ Line = 0
+                                    "Whichever you like.": 
+                                        call KittyFace("confused")                                      
+                                        call Statup("Kitty", "Inbt", 50, 1)
+                                        $ Line = renpy.random.randint(0, 3)
+                                    "I don't care.":        
+                                        call KittyFace("angry")      
+                                        call Statup("Kitty", "Love", 50, -3, 1)
+                                        call Statup("Kitty", "Obed", 50, 4)
+                                        call Statup("Kitty", "Inbt", 50, 2)  
+                                        $ Line = renpy.random.randint(0, 1)
+                            if Line:
+                                    #If she decided to change     
+                                    ch_k "Ok, back in a bit"                       
+                                    show blackscreen onlayer black
+                                    $ K_Outfit = "gym"
+                                    call KittyOutfit(Changed=1)
+                            #end asked
+                        if K_Outfit == "gym":
+                            $ GirlsNum += 1 
+                        $ Line = 0
+                hide blackscreen onlayer black
         # End Kitty   
-        
-    if not Girl or Girl == "Emma" or Mode == "exit":
-        if E_Loc != "bg dangerroom" or Mode == "change":  
-                #If Emma has left the gym or was told to change back
-                if Mode == "exit" and "leaving" not in E_RecentActions:
-                        #this means she will only change into street clothes if leaving
-                        #during the "exit" phase.
-                        pass
+            
+        if not Girl or Girl == "Emma" or Mode == "exit":
+                if E_Loc != "bg dangerroom" or Mode == "change":  
+                        #If Emma has left the gym or was told to change back
+                        if Mode == "exit" and "leaving" not in E_RecentActions:
+                                #this means she will only change into street clothes if leaving
+                                #during the "exit" phase.
+                                pass
+                        elif E_Outfit == "gym":
+                                if bg_current == "bg dangerroom" and "leaving" in E_RecentActions:
+                                        #if you're in the danger room, and so is Emma
+                                        show blackscreen onlayer black
+                                $ E_Outfit = E_OutfitDay
+                                call EmmaOutfit(Changed=1)                        
                 elif E_Outfit == "gym":
-                        if bg_current == "bg dangerroom" and "leaving" in E_RecentActions:
-                                #if you're in the danger room, and so is Emma
-                                show blackscreen onlayer black
-                        $ E_Outfit = E_OutfitDay
-                        call EmmaOutfit(Changed=1)                        
-        elif E_Outfit == "gym":
-                    #If it's already gym clothes, skip this
-                    pass   
-        elif Mode == "pre":
-                #If she was already here
-                if E_Loc == "bg dangerroom" and "Emma" not in Party:
-                    $ E_Outfit = "gym"
-                    call EmmaOutfit(Changed=1)
-        elif Mode == "auto":
-                #If it's set to do it automatically by the call
-                        if E_Loc == "bg dangerroom" and E_Loc == bg_current:
-                                show blackscreen onlayer black
-                        $ E_Outfit = "gym"
-                        call EmmaOutfit(Changed=1)
-        elif E_Loc == bg_current:
-                #If Emma is in the gym, see if she'll change clothes
-                if ApprovalCheck("Emma", 1300, "LO") or "sub" in E_Traits:
-                    pass
-                elif ApprovalCheck("Emma", 900, "LO") and E_Custom[0]:
-                    pass
-                elif ApprovalCheck("Emma", 700, "LO") and E_Gym[0]:
-                    pass
-                else:
-                    $ Line = "no"
-                if Line == "no" or "asked gym" in E_DailyActions or "no ask gym" in E_Traits:   
-                    #If she decides not to ask you
-                    if GirlsNum:
-                        ch_e "I should change too."  
-                    else:
-                        ch_e "I need to change into something more appropriate."                       
-                    show blackscreen onlayer black
-                    $ E_Outfit = "gym"
-                    call EmmaOutfit(Changed=1)
-                else:
-                    # She asks to change outfits
-                    $ E_DailyActions.append("asked gym")
-                    if GirlsNum:
-                        $ Line = "Do you think I should change as well?"  
-                    else:
-                        $ Line = "Did you want me to change into my gear?"   
-                    menu:
-                            ch_e "[Line]"
-                            "Yeah, they look great.":  
-                                call EmmaFace("smile")                              
-                                call Statup("Emma", "Love", 60, 1)
-                                call Statup("Emma", "Obed", 50, 1)
-                                call Statup("Emma", "Inbt", 30, 1)
-                                $ Line = 1                            
-                            "No, stay in that.":
-                                call EmmaFace("confused")    
-                                call Statup("Emma", "Obed", 50, 5)
-                                $ Line = 0
-                            "Whichever you like.": 
-                                call EmmaFace("confused")                                      
-                                call Statup("Emma", "Inbt", 50, 1)
-                                $ Line = renpy.random.randint(0, 3)
-                            "I don't care.":        
-                                call EmmaFace("angry")      
-                                call Statup("Emma", "Love", 50, -3, 1)
-                                call Statup("Emma", "Obed", 50, 4)
-                                call Statup("Emma", "Inbt", 50, 2)  
-                                $ Line = renpy.random.randint(0, 1)
-                    if Line:
-                            #If she decided to change     
-                            ch_e "Fine, I'll be right back."                       
+                            #If it's already gym clothes, skip this
+                            pass   
+                elif Mode == "pre":
+                        #If she was already here
+                        if E_Loc == "bg dangerroom" and "Emma" not in Party:
+                            $ E_Outfit = "gym"
+                            call EmmaOutfit(Changed=1)
+                elif Mode == "auto":
+                        #If it's set to do it automatically by the call
+                                if E_Loc == "bg dangerroom" and E_Loc == bg_current:
+                                        show blackscreen onlayer black
+                                $ E_Outfit = "gym"
+                                call EmmaOutfit(Changed=1)
+                elif E_Loc == bg_current:
+                        #If Emma is in the gym, see if she'll change clothes
+                        if ApprovalCheck("Emma", 1300, "LO") or "sub" in E_Traits:
+                            pass
+                        elif ApprovalCheck("Emma", 900, "LO") and E_Custom[0]:
+                            pass
+                        elif ApprovalCheck("Emma", 700, "LO") and E_Gym[0]:
+                            pass
+                        else:
+                            $ Line = "no"
+                        if Line == "no" or "asked gym" in E_DailyActions or "no ask gym" in E_Traits:   
+                            #If she decides not to ask you
+                            if GirlsNum:
+                                ch_e "I should change too."  
+                            else:
+                                ch_e "I need to change into something more appropriate."                       
                             show blackscreen onlayer black
                             $ E_Outfit = "gym"
                             call EmmaOutfit(Changed=1)
-                    #end asked
-                if E_Outfit == "gym":
-                    $ GirlsNum += 1 
-                $ Line = 0
-        hide blackscreen onlayer black
+                        else:
+                            # She asks to change outfits
+                            $ E_DailyActions.append("asked gym")
+                            if GirlsNum:
+                                $ Line = "Do you think I should change as well?"  
+                            else:
+                                $ Line = "Did you want me to change into my gear?"   
+                            menu:
+                                    ch_e "[Line]"
+                                    "Yeah, they look great.":  
+                                        call EmmaFace("smile")                              
+                                        call Statup("Emma", "Love", 60, 1)
+                                        call Statup("Emma", "Obed", 50, 1)
+                                        call Statup("Emma", "Inbt", 30, 1)
+                                        $ Line = 1                            
+                                    "No, stay in that.":
+                                        call EmmaFace("confused")    
+                                        call Statup("Emma", "Obed", 50, 5)
+                                        $ Line = 0
+                                    "Whichever you like.": 
+                                        call EmmaFace("confused")                                      
+                                        call Statup("Emma", "Inbt", 50, 1)
+                                        $ Line = renpy.random.randint(0, 3)
+                                    "I don't care.":        
+                                        call EmmaFace("angry")      
+                                        call Statup("Emma", "Love", 50, -3, 1)
+                                        call Statup("Emma", "Obed", 50, 4)
+                                        call Statup("Emma", "Inbt", 50, 2)  
+                                        $ Line = renpy.random.randint(0, 1)
+                            if Line:
+                                    #If she decided to change     
+                                    ch_e "Fine, I'll be right back."                       
+                                    show blackscreen onlayer black
+                                    $ E_Outfit = "gym"
+                                    call EmmaOutfit(Changed=1)
+                            #end asked
+                        if E_Outfit == "gym":
+                            $ GirlsNum += 1 
+                        $ Line = 0
+                hide blackscreen onlayer black
         # End Emma 
-        
-    if not Girl or Girl == "Laura" or Mode == "exit":
-        if L_Loc != "bg dangerroom" or Mode == "change":  
-                #If Laura has left the gym or was told to change back
-                if Mode == "exit" and "leaving" not in L_RecentActions:
-                        #this means she will only change into street clothes if leaving
-                        #during the "exit" phase.
-                        pass
+            
+        if not Girl or Girl == "Laura" or Mode == "exit":
+                if L_Loc != "bg dangerroom" or Mode == "change":  
+                        #If Laura has left the gym or was told to change back
+                        if Mode == "exit" and "leaving" not in L_RecentActions:
+                                #this means she will only change into street clothes if leaving
+                                #during the "exit" phase.
+                                pass
+                        elif L_Outfit == "gym":
+                                if bg_current == "bg dangerroom" and "leaving" in L_RecentActions:
+                                        #if you're in the danger room, and so is Laura
+                                        show blackscreen onlayer black
+                                $ L_Outfit = L_OutfitDay
+                                call LauraOutfit(Changed=1)                        
                 elif L_Outfit == "gym":
-                        if bg_current == "bg dangerroom" and "leaving" in L_RecentActions:
-                                #if you're in the danger room, and so is Laura
+                            #If it's already gym clothes, skip this
+                            pass           
+                elif Mode == "pre":
+                        #If she was already in the gym when you got there
+                        if L_Loc == "bg dangerroom" and "Laura" not in Party:
+                            $ L_Outfit = "gym"
+                            call LauraOutfit(Changed=1)
+                elif Mode == "auto":
+                        #If it's set to do it automatically by the call
+                        if L_Loc == "bg dangerroom" and L_Loc == bg_current:
                                 show blackscreen onlayer black
-                        $ L_Outfit = L_OutfitDay
-                        call LauraOutfit(Changed=1)                        
-        elif L_Outfit == "gym":
-                    #If it's already gym clothes, skip this
-                    pass           
-        elif Mode == "pre":
-                #If she was already in the gym when you got there
-                if L_Loc == "bg dangerroom" and "Laura" not in Party:
-                    $ L_Outfit = "gym"
-                    call LauraOutfit(Changed=1)
-        elif Mode == "auto":
-                #If it's set to do it automatically by the call
-                if L_Loc == "bg dangerroom" and L_Loc == bg_current:
-                        show blackscreen onlayer black
-                        $ L_Outfit = "gym"
-                call LauraOutfit(Changed=1)        
-        elif L_Loc == bg_current:
-                #If Laura is in the gym, see if she'll change clothes                
-                if ApprovalCheck("Laura", 1200, "LO") or "sub" in L_Traits:
-                    pass
-                elif ApprovalCheck("Laura", 800, "LO") and L_Custom[0]:
-                    pass
-                elif ApprovalCheck("Laura", 600, "LO") and L_Gym[0]:
-                    pass
-                else:
-                    $ Line = "no"
-                if Line == "no"  or "asked gym" in L_DailyActions or "no ask gym" in L_Traits:   
-                    #If she decides not to ask you
-                    ch_l "I'll be right back.."                       
-                    show blackscreen onlayer black
-                    $ L_Outfit = "gym"
-                    call LauraOutfit(Changed=1)
-                else:
-                    # She asks to change outfits
-                    $ L_DailyActions.append("asked gym")
-                    menu:
-                            ch_l "Did you want me to change into my gym clothes?"
-                            "Yeah, they look great.":   
-                                call LauraFace("smile")                          
-                                call Statup("Laura", "Love", 80, 2)
-                                call Statup("Laura", "Obed", 40, 1)
-                                call Statup("Laura", "Inbt", 30, 1)
-                                $ Line = 1                            
-                            "No, stay in that.":
-                                call LauraFace("confused")    
-                                call Statup("Laura", "Obed", 50, 4)
-                                $ Line = 0
-                            "Whichever you like.":
-                                call LauraFace("confused")                                    
-                                call Statup("Laura", "Inbt", 50, 2)
-                                $ Line = renpy.random.randint(0, 3)
-                            "I don't care.":        
-                                call LauraFace("angry")   
-                                call Statup("Laura", "Love", 50, -2, 1)
-                                call Statup("Laura", "Obed", 50, 2)
-                                call Statup("Laura", "Inbt", 50, 2)  
-                                $ Line = renpy.random.randint(0, 1)
-                    if Line:
-                            #If she decided to change     
-                            ch_l "I'll be right back then."                       
+                                $ L_Outfit = "gym"
+                        call LauraOutfit(Changed=1)        
+                elif L_Loc == bg_current:
+                        #If Laura is in the gym, see if she'll change clothes                
+                        if ApprovalCheck("Laura", 1200, "LO") or "sub" in L_Traits:
+                            pass
+                        elif ApprovalCheck("Laura", 800, "LO") and L_Custom[0]:
+                            pass
+                        elif ApprovalCheck("Laura", 600, "LO") and L_Gym[0]:
+                            pass
+                        else:
+                            $ Line = "no"
+                        if Line == "no"  or "asked gym" in L_DailyActions or "no ask gym" in L_Traits:   
+                            #If she decides not to ask you
+                            ch_l "I'll be right back.."                       
                             show blackscreen onlayer black
                             $ L_Outfit = "gym"
                             call LauraOutfit(Changed=1)
-                    #end asked
-                if L_Outfit == "gym":
-                    $ GirlsNum += 1 
-                $ Line = 0
-        hide blackscreen onlayer black
+                        else:
+                            # She asks to change outfits
+                            $ L_DailyActions.append("asked gym")
+                            menu:
+                                    ch_l "Did you want me to change into my gym clothes?"
+                                    "Yeah, they look great.":   
+                                        call LauraFace("smile")                          
+                                        call Statup("Laura", "Love", 80, 2)
+                                        call Statup("Laura", "Obed", 40, 1)
+                                        call Statup("Laura", "Inbt", 30, 1)
+                                        $ Line = 1                            
+                                    "No, stay in that.":
+                                        call LauraFace("confused")    
+                                        call Statup("Laura", "Obed", 50, 4)
+                                        $ Line = 0
+                                    "Whichever you like.":
+                                        call LauraFace("confused")                                    
+                                        call Statup("Laura", "Inbt", 50, 2)
+                                        $ Line = renpy.random.randint(0, 3)
+                                    "I don't care.":        
+                                        call LauraFace("angry")   
+                                        call Statup("Laura", "Love", 50, -2, 1)
+                                        call Statup("Laura", "Obed", 50, 2)
+                                        call Statup("Laura", "Inbt", 50, 2)  
+                                        $ Line = renpy.random.randint(0, 1)
+                            if Line:
+                                    #If she decided to change     
+                                    ch_l "I'll be right back then."                       
+                                    show blackscreen onlayer black
+                                    $ L_Outfit = "gym"
+                                    call LauraOutfit(Changed=1)
+                            #end asked
+                        if L_Outfit == "gym":
+                            $ GirlsNum += 1 
+                        $ Line = 0
+                hide blackscreen onlayer black
         # End Laura  
-        
+            
         return
 # End Gym clothes / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /        
 
@@ -3709,715 +4002,795 @@ label Girls_Location(GirlsNum = 0, Change=0):
 # End Girls Location / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
     
 label GirlsAngry(Girls = 0):
-    # Causes girls to storm off if you've pissed them off. 
-    if R_Loc == bg_current and "angry" in R_RecentActions:
-            if bg_current == "bg rogue":                
-                ch_r "You should get out, I'm fix'in ta throw down."
-                "You head back to your room."
-                $ renpy.pop_call()
-                jump Player_Room_Entry
-            else:        
-                $ R_Loc = "bg rogue"            
-            if "Rogue" in Party:
-                $ Party.remove("Rogue")  
-            "Rogue storms off."
-            $ Girls += 1
-            hide Rogue with easeoutleft
-    if K_Loc == bg_current and "angry" in K_RecentActions:
-            if bg_current == "bg kitty":
-                ch_k "You should get out of here, I can't even look at you right now."
-                "You head back to your room."
-                $ renpy.pop_call()
-                jump Player_Room_Entry
-            else:        
-                $ K_Loc = "bg kitty"
-                if Girls:
-                    ". . . and so does Kitty."
-                else:
-                    "Kitty storms off."            
-            if "Kitty" in Party:
-                $ Party.remove("Kitty")  
-            $ Girls += 1
-            hide Kitty_Sprite with easeoutleft
-    if E_Loc == bg_current and "angry" in E_RecentActions:
-            if bg_current == "bg emma":
-                ch_e "You should leave, or do you want to test me?"
-                "You head back to your room."
-                $ renpy.pop_call()
-                jump Player_Room_Entry
-            else:        
-                $ E_Loc = "bg emma"
-                if Girls:
-                    ". . . and so does [EmmaName]."
-                else:
-                    "[EmmaName] storms off."            
-            if "Emma" in Party:
-                $ Party.remove("Emma")  
-            $ Girls += 1
-            hide Emma_Sprite with easeoutleft
-    if L_Loc == bg_current and "angry" in L_RecentActions:
-            if bg_current == "bg laura":
-                ch_l "You should leave."
-                "You head back to your room."
-                $ renpy.pop_call()
-                jump Player_Room_Entry
-            else:        
-                $ L_Loc = "bg laura"
-                if Girls:
-                    ". . . and so does [LauraName]."
-                else:
-                    "[LauraName] storms off."            
-            if "Laura" in Party:
-                $ Party.remove("Laura")  
-            $ Girls += 1
-            hide Laura_Sprite with easeoutleft
-    return    
+        # Causes girls to storm off if you've pissed them off. 
+        $ Tempmod = 0
+        if R_Loc == bg_current and "angry" in R_RecentActions:
+                if bg_current == "bg rogue":                
+                    ch_r "You should get out, I'm fix'in ta throw down."
+                    "You head back to your room."
+                    $ renpy.pop_call()
+                    jump Player_Room_Entry
+                else:        
+                    $ R_Loc = "bg rogue"            
+                if "Rogue" in Party:
+                    $ Party.remove("Rogue")  
+                "Rogue storms off."
+                $ Girls += 1
+                hide Rogue with easeoutleft
+        if K_Loc == bg_current and "angry" in K_RecentActions:
+                if bg_current == "bg kitty":
+                    ch_k "You should get out of here, I can't even look at you right now."
+                    "You head back to your room."
+                    $ renpy.pop_call()
+                    jump Player_Room_Entry
+                else:        
+                    $ K_Loc = "bg kitty"
+                    if Girls:
+                        ". . . and so does Kitty."
+                    else:
+                        "Kitty storms off."            
+                if "Kitty" in Party:
+                    $ Party.remove("Kitty")  
+                $ Girls += 1
+                hide Kitty_Sprite with easeoutleft
+        if E_Loc == bg_current and "angry" in E_RecentActions:
+                if bg_current == "bg emma":
+                    ch_e "You should leave, or do you want to test me?"
+                    "You head back to your room."
+                    $ renpy.pop_call()
+                    jump Player_Room_Entry
+                else:        
+                    $ E_Loc = "bg emma"
+                    if Girls:
+                        ". . . and so does [EmmaName]."
+                    else:
+                        "[EmmaName] storms off."            
+                if "Emma" in Party:
+                    $ Party.remove("Emma")  
+                $ Girls += 1
+                hide Emma_Sprite with easeoutleft
+        if L_Loc == bg_current and "angry" in L_RecentActions:
+                if bg_current == "bg laura":
+                    ch_l "You should leave."
+                    "You head back to your room."
+                    $ renpy.pop_call()
+                    jump Player_Room_Entry
+                else:        
+                    $ L_Loc = "bg laura"
+                    if Girls:
+                        ". . . and so does [LauraName]."
+                    else:
+                        "[LauraName] storms off."            
+                if "Laura" in Party:
+                    $ Party.remove("Laura")  
+                $ Girls += 1
+                hide Laura_Sprite with easeoutleft
+        return    
     
 # Start Girls Arrive / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /  
 label Girls_Arrive(Primary = 0, Secondary = 0, GirlsNum = 0):
-    #"arriving" is set by the "Schedule" code, and will not be applied unless 
-    # the girl in questions was someplace else, and just showed up here on their own.
-    
-    $ Options = []
-    if "arriving" in R_RecentActions and "Rogue" not in Party:   
-            $ GirlsNum += 1
-            $ Options.append("Rogue")
-            call DrainWord("Rogue","arriving")  
-    if "arriving" in K_RecentActions and "Kitty" not in Party: 
-            $ GirlsNum += 1
-            $ Options.append("Kitty")
-            call DrainWord("Kitty","arriving")  
-    if "arriving" in E_RecentActions and "Emma" not in Party: 
-            $ GirlsNum += 1
-            $ Options.append("Emma")
-            call DrainWord("Emma","arriving")  
-    if "arriving" in L_RecentActions and "Laura" not in Party: 
-            $ GirlsNum += 1
-            $ Options.append("Laura")
-            call DrainWord("Laura","arriving")  
-         
-    $ renpy.random.shuffle(Options)
-            
-    if len(Options) <= 0 or (len(Party)+len(Adjacent)) >= 2:
-                
-#                "[Options]" #fix diagnostic
-                #If nobody's here, or if the space is full, return
-                return    
-    elif (len(Party)+len(Adjacent)) <= 1:
-                #if the party is one or less and people are in the room
-                $ Primary = Options[0] 
-                if (len(Party)+len(Adjacent)) == 0 and len(Options) >= 2:                    
-                    #if the party is empty and 2+ people are in the room
-                    $ Secondary = Options[1] 
-                
-    if len(Options) > 2:
-            #This triggers if there are more than two girls in the room. Primary and Secondary have been chosen and removed.            
-            #If it's her room, she gets to be primary, otherwise she goes to her room            
-            $ Options.remove(Primary)
-            $ Options.remove(Secondary)
-            if "Rogue" in Options:
-                        if bg_current == "bg rogue":
-                            $ Secondary = Primary
-                            $ Primary = "Rogue"
-                        else:
-                            $ R_Loc = "bg rogue"
-                        $ Options.remove("Rogue")
-            if "Kitty" in Options:
-                        if bg_current == "bg kitty":
-                            $ Secondary = Primary
-                            $ Primary = "Kitty"
-                        else:
-                            $ K_Loc = "bg kitty"
-                        $ Options.remove("Kitty")   
-            if "Emma" in Options:
-                        if bg_current == "bg emma":
-                            $ Secondary = Primary
-                            $ Primary = "Emma"
-                        else:
-                            $ E_Loc = "bg emma"
-                        $ Options.remove("Emma")    
-            if "Laura" in Options:
-                        if bg_current == "bg laura":
-                            $ Secondary = Primary
-                            $ Primary = "Laura"
-                        else:
-                            $ E_Loc = "bg laura"
-                        $ Options.remove("Laura")            
-            #end list clearing
-    
-    if "locked" in P_RecentActions:
-            if Primary == "Kitty":
-                    call Locked_Door("Kitty")
-                    if K_Loc != bg_current:
-                        $ Primary = 0
-                    elif Secondary:
-                        #since Kitty can just barg right in, if she does so, 
-                        #flip the two girls in their order
-                        $ Primary = Secondary
-                        $ Secondary = "Kitty"
-                        "You hear a \"thump\" as if someone was trying to follow Kitty."
-                    
-            if Primary == "Rogue":
-                    call Locked_Door("Rogue")
-                    if R_Loc != bg_current:
-                        $ Primary = 0
-            elif Primary == "Emma":
-                    call Locked_Door("Emma")
-                    if E_Loc != bg_current:
-                        $ Primary = 0
-            elif Primary == "Laura":
-                    call Locked_Door("Laura")
-                    if L_Loc != bg_current:
-                        $ Primary = 0
-    #End "if the door was locked." 
-                
-    if len(Options) > 2:
-            # if there is two girl in the area, remove the excess.
-            # If "nearby" is a valid place to put them, it puts them there
-            if R_Loc == bg_current and "Rogue" not in (Primary,Secondary) and "Rogue" not in Party and "Rogue" not in Adjacent:
-                    call Remove_Girl("Rogue",Hold=1)
-            if K_Loc == bg_current and "Kitty" not in (Primary,Secondary) and "Kitty" not in Party and "Kitty" not in Adjacent:
-                    call Remove_Girl("Kitty",Hold=1)
-            if E_Loc == bg_current and "Emma" not in (Primary,Secondary) and "Emma" not in Party and "Emma" not in Adjacent:
-                    call Remove_Girl("Emma",Hold=1)
-            if L_Loc == bg_current and "Laura" not in (Primary,Secondary) and "Laura" not in Party and "Laura" not in Adjacent:
-                    call Remove_Girl("Laura",Hold=1)
-    
-    if not Primary:
-            return
-    $ Options = []    
-    #This sequence sets the pecking order, more important once there are more girls
-    #girls left out of this are put into "Nearby" for the current space
+        #"arriving" is set by the "Schedule" code, and will not be applied unless 
+        # the girl in questions was someplace else, and just showed up here on their own.
         
-    if bg_current == "bg dangerroom":   
-            call Gym_Clothes("auto")
-    call Set_The_Scene #causes the girls to display
-    if bg_current == "bg player":
-                if Secondary:  
-                        #if there's a second girl
-                        "[Primary] and [Secondary] just entered your room."
-                else:
-                        #if there's no second girl,
-                        "[Primary] just entered your room."
+        $ Options = []
+        if "arriving" in R_RecentActions and "Rogue" not in Party:   
+                $ GirlsNum += 1
+                $ Options.append("Rogue")
+                call DrainWord("Rogue","arriving")  
+        if "arriving" in K_RecentActions and "Kitty" not in Party: 
+                $ GirlsNum += 1
+                $ Options.append("Kitty")
+                call DrainWord("Kitty","arriving")  
+        if "arriving" in E_RecentActions and "Emma" not in Party: 
+                $ GirlsNum += 1
+                $ Options.append("Emma")
+                call DrainWord("Emma","arriving")  
+        if "arriving" in L_RecentActions and "Laura" not in Party: 
+                $ GirlsNum += 1
+                $ Options.append("Laura")
+                call DrainWord("Laura","arriving")  
+             
+        $ renpy.random.shuffle(Options)
+                
+        if len(Options) <= 0 or (len(Party)+len(Adjacent)) >= 2:                
+                    #If nobody's here, or if the space is full, return
+                    return    
+        elif (len(Party)+len(Adjacent)) <= 1:
+                    #if the party is one or less and people are in the room
+                    $ Primary = Options[0] 
+                    if (len(Party)+len(Adjacent)) == 0 and len(Options) >= 2:                    
+                        #if the party is empty and 2+ people are in the room
+                        $ Secondary = Options[1] 
+                    
+        if len(Options) > 2:
+                #This triggers if there are more than two girls in the room. Primary and Secondary have been chosen and removed.            
+                #If it's her room, she gets to be primary, otherwise she goes to her room            
+                $ Options.remove(Primary)
+                $ Options.remove(Secondary)
+                if "Rogue" in Options:
+                            if bg_current == "bg rogue":
+                                $ Secondary = Primary
+                                $ Primary = "Rogue"
+                            else:
+                                $ R_Loc = "bg rogue"
+                            $ Options.remove("Rogue")
+                if "Kitty" in Options:
+                            if bg_current == "bg kitty":
+                                $ Secondary = Primary
+                                $ Primary = "Kitty"
+                            else:
+                                $ K_Loc = "bg kitty"
+                            $ Options.remove("Kitty")   
+                if "Emma" in Options:
+                            if bg_current == "bg emma":
+                                $ Secondary = Primary
+                                $ Primary = "Emma"
+                            else:
+                                $ E_Loc = "bg emma"
+                            $ Options.remove("Emma")    
+                if "Laura" in Options:
+                            if bg_current == "bg laura":
+                                $ Secondary = Primary
+                                $ Primary = "Laura"
+                            else:
+                                $ E_Loc = "bg laura"
+                            $ Options.remove("Laura")            
+                #end list clearing
+        
+        if "locked" in P_Traits:
+                if Primary == "Kitty":
+                        call Locked_Door("Kitty")
+                        if K_Loc != bg_current:
+                            $ Primary = 0
+                        elif Secondary:
+                            #since Kitty can just barg right in, if she does so, 
+                            #flip the two girls in their order
+                            $ Primary = Secondary
+                            $ Secondary = "Kitty"
+                            "You hear a \"thump\" as if someone was trying to follow Kitty."
                         
                 if Primary == "Rogue":
-                            if Secondary:                        
-                                ch_r "Hey, [R_Petname], can we come in?"
-                            else:
-                                ch_r "Hey, [R_Petname], can I come in?"
-                elif Primary == "Kitty":
-                            if Secondary:                        
-                                ch_k "Hey[K_like]can we come in?"
-                            else:
-                                ch_k "Hey[K_like]can I come in?"
+                        call Locked_Door("Rogue")
+                        if R_Loc != bg_current:
+                            $ Primary = 0
                 elif Primary == "Emma":
-                            if Secondary:                        
-                                ch_e "Ah, good, you're here. May we come in?"
-                            else:
-                                ch_e "Ah, good, you're here. May I come in?"
-                elif Primary == "Laura":                      
-                            ch_l "Hey."
-                            ch_p ". . . [[She seems to want to stay]."
-                menu:
-                    extend ""
-                    "Sure.":
-                        $ Line = "sure"                               
-                    "Not right now, maybe later.":
-                        $ Line = "later"
-                    "Nope.":  
-                        $ Line = "no"
-                               
-                                
-                if Line == "sure":
-                    if Primary == "Rogue" or Secondary == "Rogue":
-                                call Statup("Rogue", "Love", 80, 1)
-                                call Statup("Rogue", "Obed", 50, 2)
-                                call Statup("Rogue", "Inbt", 50, 2) 
-                                if Primary == "Rogue": 
-                                        ch_r "Thanks."
-                    if Primary == "Kitty" or Secondary == "Kitty":
-                                call Statup("Kitty", "Love", 80, 1)
-                                call Statup("Kitty", "Obed", 60, 2)
-                                call Statup("Kitty", "Inbt", 50, 3)
-                                if Primary == "Kitty":
-                                        ch_k "Thanks."
-                    if Primary == "Emma" or Secondary == "Emma":
-                                call Statup("Emma", "Love", 50, 1)
-                                call Statup("Emma", "Obed", 60, 1)
-                                call Statup("Emma", "Inbt", 50, 2)
-                                if Primary == "Emma":
-                                        ch_e "Good."
-                    if Primary == "Laura" or Secondary == "Laura":
-                                call Statup("Laura", "Love", 50, 1)
-                                call Statup("Laura", "Obed", 60, 1)
-                                call Statup("Laura", "Inbt", 50, 2)
-                                if Primary == "Laura":
-                                        "She doesn't leave."
-                    #end "sure"
-                if Line == "later":     
-                    if Primary == "Rogue" or Secondary == "Rogue":
-                                call Statup("Rogue", "Love", 60, -1, 1)
-                                call Statup("Rogue", "Obed", 70, 5) 
-                                call RogueFace("confused") 
-                                if Primary == "Rogue" and Secondary: 
-                                        ch_r "Um, ok, we'll go then."
-                                elif Primary == "Rogue":
-                                        ch_r "Um, ok."
-                                call Remove_Girl("Rogue")
-                    if Primary == "Kitty" or Secondary == "Kitty":  
-                                call Statup("Kitty", "Love", 60, -2, 1)
-                                call Statup("Kitty", "Obed", 70, 7) 
-                                call KittyFace("confused") 
-                                if Primary == "Kitty" and Secondary: 
-                                        ch_k "Oh[K_like]we'll get going then."
-                                elif Primary == "Kitty":
-                                        ch_k "Oh[K_like]I'll get going then."
-                                call Remove_Girl("Kitty")
-                    if Primary == "Emma" or Secondary == "Emma":  
-                                call Statup("Emma", "Love", 90, -2)
-                                call Statup("Emma", "Love", 50, -5)
-                                call Statup("Emma", "Obed", 70, 5) 
-                                call Statup("Emma", "Obed", 30, -7) 
-                                call EmmaFace("confused") 
-                                if Primary == "Emma": 
-                                        ch_e "If that's how you wish to play it. . ."
-                                call Remove_Girl("Emma")
-                    if Primary == "Laura" or Secondary == "Laura":  
-                                call Statup("Laura", "Love", 90, -2)
-                                call Statup("Laura", "Love", 50, -5)
-                                call Statup("Laura", "Obed", 70, 5) 
-                                call Statup("Laura", "Obed", 30, -7) 
-                                call LauraFace("confused") 
-                                if Primary == "Laura": 
-                                        ch_l "Ok, later."
-                                call Remove_Girl("Laura")
-                    #end "later"
-                if Line == "no":
-                    if Primary == "Rogue" or Secondary == "Rogue":
-                                call Statup("Rogue", "Obed", 50, 5)         
-                                if ApprovalCheck("Rogue", 1800) or ApprovalCheck("Rogue", 500, "O"):
-                                    call Statup("Rogue", "Obed", 80, 2)
-                                    ch_r "I guess that's ok. See you later then."
-                                else:    
-                                    call RogueFace("angry") 
-                                    call Statup("Rogue", "Love", 60, -5, 1)
-                                    call Statup("Rogue", "Love", 80, -2)
-                                    call Statup("Rogue", "Obed", 80, 3)
-                                    call Statup("Rogue", "Inbt", 50, 1) 
-                                    ch_r "Well fine!"
-                                call Remove_Girl("Rogue")
-                    if Primary == "Kitty" or Secondary == "Kitty":  
-                                call Statup("Kitty", "Obed", 50, 7)         
-                                if ApprovalCheck("Kitty", 1800) or ApprovalCheck("Kitty", 500, "O"):
-                                    call Statup("Kitty", "Obed", 80, 2)
-                                    ch_k "If you want some alone time. . ."
-                                else:    
-                                    call KittyFace("angry") 
-                                    call Statup("Kitty", "Love", 60, -6, 1)
-                                    call Statup("Kitty", "Love", 80, -4)
-                                    call Statup("Kitty", "Obed", 80, 5)
-                                    call Statup("Kitty", "Inbt", 50, 1) 
-                                    ch_k "Jerk!"
-                                call Remove_Girl("Kitty")
-                    if Primary == "Emma" or Secondary == "Emma":  
-                                call Statup("Emma", "Obed", 50, 7)         
-                                if ApprovalCheck("Emma", 2000) or ApprovalCheck("Emma", 500, "O"):
-                                    call Statup("Emma", "Obed", 80, 2)
-                                    ch_e "I suppose you can have your personal space. . ."
-                                else:    
-                                    call EmmaFace("angry") 
-                                    call Statup("Emma", "Love", 60, -6, 1)
-                                    call Statup("Emma", "Love", 90, -4)
-                                    call Statup("Emma", "Obed", 80, 5)
-                                    call Statup("Emma", "Inbt", 50, 1) 
-                                    ch_e "We'll see how long that attitude lasts. . ."
-                                call Remove_Girl("Emma")
-                    if Primary == "Laura" or Secondary == "Laura":  
-                                call Statup("Laura", "Obed", 50, 7)         
-                                if ApprovalCheck("Laura", 2000) or ApprovalCheck("Laura", 500, "O"):
-                                    call Statup("Laura", "Obed", 80, 2)
-                                    ch_l "Not a problem."
-                                else:    
-                                    call LauraFace("angry") 
-                                    call Statup("Laura", "Love", 60, -6, 1)
-                                    call Statup("Laura", "Love", 90, -4)
-                                    call Statup("Laura", "Obed", 80, 5)
-                                    call Statup("Laura", "Inbt", 50, 1) 
-                                    "She seems upset."
-                                call Remove_Girl("Laura")
-                    if Secondary:
-                                "The girls storm out."
-                    #end "nope"
-                #end girls showed up to player's room.
-    elif bg_current == "bg rogue":       
-                if Secondary:  
-                        #if there's a second girl
-                        "[Primary] and [Secondary] just entered the room."
-                else:
-                        #if there's no second girl,
-                        "[Primary] just entered the room."         
-                if Primary == "Rogue" or Secondary == "Rogue":
-                                if "angry" in R_DailyActions:
-                                        call RogueFace("bemused", 1) 
-                                        ch_r "I'm kinda pissed at you right now, get out of here." 
-                                elif Current_Time == "Night" and ApprovalCheck("Rogue", 1000, "LI") and ApprovalCheck("Rogue", 600, "OI"):
-                                        ch_r "Oh, hey, [R_Petname], it's pretty late, but I guess you can stick around for a bit."  
-                                        $ Line = "stay"                     
-                                elif ApprovalCheck("Rogue", 1300) or ApprovalCheck("Rogue", 500, "O"):
-                                        ch_r "Oh, hey, [R_Petname], nice to see you here."
-                                        $ Line = "stay"
-                                elif Current_Time == "Night":
-                                        ch_r "Oh, hey, [R_Petname], it's kind late, could you head out of here?" 
-                                elif ApprovalCheck("Rogue", 600, "LI") or ApprovalCheck("Rogue", 300, "OI"):
-                                        ch_r "Oh, hey, [R_Petname]. You can stick around, I guess."
-                                        $ Line = "stay"
-                                else: 
-                                        ch_r "Hey, [R_Petname], I'm not sure why you're here, but I'd rather you leave."  
-                                if Line != "stay":
-                                    menu:
-                                        extend ""
-                                        "Sure, ok. [[you go]":
-                                                    call Statup("Rogue", "Love", 80, 1)
-                                                    call Statup("Rogue", "Obed", 50, 2)
-                                                    call Statup("Rogue", "Inbt", 50, 2)  
-                                                    ch_r "Thanks."
-                                                    "You head back to your room."
-                                        "Sorry, I'll go.":
-                                                    call Statup("Rogue", "Love", 90, 2)
-                                                    call Statup("Rogue", "Obed", 50, 3) 
-                                                    call RogueFace("smile") 
-                                                    ch_r "Thanks."
-                                                    "You head back to your room."
-                                        "Are you sure I can't stay?":
-                                                    if "angry" in R_DailyActions:
-                                                            call RogueFace("angry") 
-                                                            ch_r "What part of \"no\" don't ya get?"                  
-                                                    elif Current_Time == "Night" and ApprovalCheck("Rogue", 800, "LI") and ApprovalCheck("Rogue", 400, "OI"):                                                            
-                                                            call RogueFace("sadside") 
-                                                            ch_r "I suppose I can make an exception this once." 
-                                                            $ Line = "stay"
-                                                    elif Current_Time == "Night":
-                                                            ch_r "No way, [R_Petname]. Try again tomorrow."                                                 
-                                                    elif ApprovalCheck("Rogue", 750):
-                                                            ch_r "Oh, fine. For a little bit."
-                                                            $ Line = "stay"
-                                                    else: 
-                                                            call RogueFace("angry") 
-                                                            ch_r "No, seriously, get."   
-                                                    if Line != "stay": 
-                                                            call Statup("Rogue", "Love", 80, -1)
-                                                            call Statup("Rogue", "Inbt", 50, 3) 
-                                                            "Rogue kicks you out of the room."                                                    
-                                        "I'm sticking around, thanks.":   
-                                                    if "angry" in R_DailyActions:
-                                                            call RogueFace("angry") 
-                                                            ch_r "Oh {i}hell{/i} no."
-                                                    elif not ApprovalCheck("Rogue", 1800) and not ApprovalCheck("Rogue", 500, "O"):
-                                                            call RogueFace("angry") 
-                                                            ch_r "No way, buster! Out!"
-                                                    else:
-                                                            call Statup("Rogue", "Obed", 80, 5)
-                                                            call RogueFace("sad") 
-                                                            ch_r ". . ." 
-                                                            ch_r "I guess that's ok."
-                                                            $ Line = "stay"
-                                                    if Line != "stay":
-                                                            call Statup("Rogue", "Love", 60, -5, 1)
-                                                            call Statup("Rogue", "Love", 80, -5)
-                                                            call Statup("Rogue", "Obed", 50, 2)
-                                                            call Statup("Rogue", "Inbt", 60, 5) 
-                                                            "Rogue kicks you out of the room."
-                                if Line != "stay":
-                                    $ bg_current = "bg player"  
-                                    jump Player_Room
-                                #End Rogue tells you to leave. 
-                elif Primary == "Kitty":                       
-                                ch_k "Hey[K_like]funny meeting you here."
-                elif Primary == "Emma":                       
-                                ch_e "I didn't expect to run into you here."
-                elif Primary == "Laura":                       
-                                ch_l "Oh, hey."
-                #end girls showed up to Rogues's room.    
-            
-    elif bg_current == "bg kitty":   
-                if Secondary:  
-                        #if there's a second girl
-                        "[Primary] and [Secondary] just entered the room."
-                else:
-                        #if there's no second girl,
-                        "[Primary] just entered the room."         
-                if Primary == "Kitty" or Secondary == "Kitty":
-                                if "angry" in K_DailyActions:
-                                        call KittyFace("angry") 
-                                        ch_k "You shouldn't be here right now." 
-                                elif Current_Time == "Night" and ApprovalCheck("Kitty", 1000, "LI") and ApprovalCheck("Kitty", 600, "OI"):
-                                        ch_k "Oh, hey, it's kinds late, but you can stay for a bit."  
-                                        $ Line = "stay"                     
-                                elif ApprovalCheck("Kitty", 1300) or ApprovalCheck("Kitty", 500, "O"):
-                                        ch_k "Oh, hey, nice to see you."
-                                        $ Line = "stay"
-                                elif Current_Time == "Night":
-                                        ch_k "Oh, hey, [K_Petname]. It's kind of late, could you come back tomorrow?" 
-                                elif ApprovalCheck("Kitty", 600, "LI") or ApprovalCheck("Kitty", 300, "OI"):
-                                        ch_k "Oh, hey, [K_Petname], what's up?"
-                                        $ Line = "stay"
-                                else: 
-                                        call KittyFace("confused") 
-                                        ch_k "Hey, [K_Petname], what are you even doing here?"
-                                        ch_k "Could you[K_like]get out?"  
-                                if Line != "stay":
-                                    menu:
-                                        extend ""
-                                        "Sure, ok. [[you go]":
-                                                    call Statup("Kitty", "Love", 80, 1)
-                                                    call Statup("Kitty", "Obed", 50, 2)
-                                                    call Statup("Kitty", "Inbt", 50, 2)  
-                                                    ch_k "Thanks."
-                                                    "You head back to your room."
-                                        "Sorry, I'll go.":
-                                                    call Statup("Kitty", "Love", 90, 2)
-                                                    call Statup("Kitty", "Obed", 50, 3) 
-                                                    call KittyFace("smile") 
-                                                    ch_k "Thanks."
-                                                    "You head back to your room."
-                                        "Are you sure I can't stay?":
-                                                    if "angry" in K_DailyActions:
-                                                            call KittyFace("angry") 
-                                                            ch_k "I think I said {i}NO!{/i}"                  
-                                                    elif Current_Time == "Night" and ApprovalCheck("Kitty", 800, "LI") and ApprovalCheck("Kitty", 400, "OI"):
-                                                            call KittyFace("sadside") 
-                                                            ch_k "Maybe just this once. . ." 
-                                                            $ Line = "stay"
-                                                    elif Current_Time == "Night":
-                                                            ch_k "Noooope. Try again tomorrow."                                                 
-                                                    elif ApprovalCheck("Kitty", 750):
-                                                            ch_k "Oh, fiiiine."
-                                                            ch_k "Just for a little bit."
-                                                            $ Line = "stay"
-                                                    else: 
-                                                            ch_k "Noooope."  
-                                                    if Line != "stay":  
-                                                            call Statup("Kitty", "Love", 80, -1)
-                                                            call Statup("Kitty", "Inbt", 50, 3) 
-                                                            "Kitty kicks you out of the room."                                                    
-                                        "I'm sticking around, thanks.":   
-                                                    if "angry" in K_DailyActions:
-                                                            call KittyFace("angry") 
-                                                            ch_k "Oh no you do not!"
-                                                    elif not ApprovalCheck("Kitty", 1800) and not ApprovalCheck("Kitty", 500, "O"):
-                                                            call KittyFace("angry") 
-                                                            ch_k "Nooope, out!"
-                                                    else:
-                                                            call Statup("Kitty", "Obed", 80, 5)
-                                                            call KittyFace("sad") 
-                                                            ch_k ". . ." 
-                                                            ch_k "Fine."
-                                                            $ Line = "stay"
-                                                    if Line != "stay":
-                                                            call Statup("Kitty", "Love", 60, -5, 1)
-                                                            call Statup("Kitty", "Love", 80, -5)
-                                                            call Statup("Kitty", "Obed", 50, 2)
-                                                            call Statup("Kitty", "Inbt", 60, 5) 
-                                                            "Kitty kicks you out of the room."
-                                if Line != "stay":
-                                        $ bg_current = "bg player"  
-                                        jump Player_Room
-                                        #End Kitty tells you to leave. 
-                elif Primary == "Rogue":                       
-                                ch_r "Sorry, I wasn't expecting to bump into you here."
-                elif Primary == "Emma":                       
-                                ch_e "I didn't expect to run into you here."
-                elif Primary == "Laura":                       
-                                ch_l "Oh, hey."
-                #end girls showed up to Kitty's room.
-    elif bg_current == "bg emma": 
-                if Secondary:  
-                        #if there's a second girl
-                        "[Primary] and [Secondary] just entered the room."
-                else:
-                        #if there's no second girl,
-                        "[Primary] just entered the room."         
-                if Primary == "Emma" or Secondary == "Emma":
-                                if "angry" in E_DailyActions:
-                                        call EmmaFace("angry") 
-                                        ch_e "I don't think you should be here." 
-                                elif Current_Time == "Night" and ApprovalCheck("Emma", 1000, "LI") and ApprovalCheck("Emma", 600, "OI"):
-                                        ch_e "Oh, it's a bit late, but you're welcome."  
-                                        $ Line = "stay"                     
-                                elif ApprovalCheck("Emma", 1300) or ApprovalCheck("Emma", 500, "O"):
-                                        ch_e "Oh, nice to see you."
-                                        $ Line = "stay"
-                                elif Current_Time == "Night":
-                                        ch_e "Oh, hello, [E_Petname]. It's a bit late, could you come back tomorrow?" 
-                                elif ApprovalCheck("Emma", 600, "LI") or ApprovalCheck("Emma", 300, "OI"):
-                                        ch_e "Oh, hello, [E_Petname], can I help you with anything?"
-                                        $ Line = "stay"
-                                else: 
-                                        call EmmaFace("confused") 
-                                        ch_e "Oh, hello, [E_Petname]?"
-                                        ch_e "Did you have a reason to be visiting me?"  
-                                if Line != "stay":
-                                    menu:
-                                        extend ""
-                                        "Sure, ok. [[you go]":
-                                                    call Statup("Emma", "Love", 80, 1)
-                                                    call Statup("Emma", "Obed", 50, 2)
-                                                    call Statup("Emma", "Inbt", 50, 2)  
-                                                    ch_e "Appreciated."
-                                                    "You head back to your room."
-                                        "Sorry, I'll go.":
-                                                    call Statup("Emma", "Love", 90, 2)
-                                                    call Statup("Emma", "Obed", 50, 3) 
-                                                    call EmmaFace("smile") 
-                                                    ch_e "Thank you."
-                                                    "You head back to your room."
-                                        "Are you sure I can't stay?":
-                                                    if "angry" in E_DailyActions:
-                                                            call EmmaFace("angry") 
-                                                            ch_e "I believe I said {i}no.{/i}"                  
-                                                    elif Current_Time == "Night" and ApprovalCheck("Emma", 800, "LI") and ApprovalCheck("Emma", 400, "OI"):
-                                                            call EmmaFace("sadside") 
-                                                            ch_e "Perhaps just this once. . ." 
-                                                            $ Line = "stay"
-                                                    elif Current_Time == "Night":
-                                                            ch_e "I'm afraid not. Try again tomorrow."                                                 
-                                                    elif ApprovalCheck("Emma", 750):
-                                                            ch_e "Oh, very well. . ."
-                                                            ch_e "Just for a little bit."
-                                                            $ Line = "stay"
-                                                    else: 
-                                                            ch_e "Definitely not."    
-                                                    if Line != "stay":
-                                                            call Statup("Emma", "Love", 80, -1)
-                                                            call Statup("Emma", "Inbt", 50, 3) 
-                                                            "Emma kicks you out of the room."                                                    
-                                        "I'm sticking around, thanks.":   
-                                                    if "angry" in E_DailyActions:
-                                                            call EmmaFace("angry") 
-                                                            ch_e "You must be joking."
-                                                    elif not ApprovalCheck("Emma", 1800) and not ApprovalCheck("Emma", 500, "O"):
-                                                            call EmmaFace("angry") 
-                                                            ch_e "No, get out."
-                                                    else:
-                                                            call Statup("Emma", "Obed", 80, 5)
-                                                            call EmmaFace("sad") 
-                                                            ch_e ". . ." 
-                                                            ch_e "Fine."
-                                                            $ Line = "stay"
-                                                    if Line != "stay":
-                                                            call Statup("Emma", "Love", 60, -5, 1)
-                                                            call Statup("Emma", "Love", 80, -5)
-                                                            call Statup("Emma", "Obed", 50, 2)
-                                                            call Statup("Emma", "Inbt", 60, 5) 
-                                                            "Emma kicks you out of the room."
-                                if Line != "stay":
-                                        $ bg_current = "bg player"  
-                                        jump Player_Room
-                                        #End Emma tells you to leave. 
-                elif Primary == "Rogue":                       
-                                ch_r "Sorry, I wasn't expecting to bump into you here."
-                elif Primary == "Kitty":                       
-                                ch_k "Hey[K_like]funny meeting you here."
-                elif Primary == "Laura":                       
-                                ch_l "Oh, hey."
-                #end girls showed up to Emma's room.                
-    elif bg_current == "bg laura": 
-                if Secondary:  
-                        #if there's a second girl
-                        "[Primary] and [Secondary] just entered the room."
-                else:
-                        #if there's no second girl,
-                        "[Primary] just entered the room."         
-                if Primary == "Laura" or Secondary == "Laura":
-                                if "angry" in L_DailyActions:
-                                        call LauraFace("angry") 
-                                        ch_l "You should get away while you can." 
-                                elif Current_Time == "Night" and ApprovalCheck("Laura", 1000, "LI") and ApprovalCheck("Laura", 600, "OI"):
-                                        ch_l "It's late."  
-                                        $ Line = "stay"                     
-                                elif ApprovalCheck("Laura", 1300) or ApprovalCheck("Laura", 500, "O"):
-                                        ch_l "Oh, hey."
-                                        $ Line = "stay"
-                                elif Current_Time == "Night":
-                                        ch_l "Oh, hey, it's late." 
-                                elif ApprovalCheck("Laura", 600, "LI") or ApprovalCheck("Laura", 300, "OI"):
-                                        ch_l "Oh, hey, [L_Petname]."
-                                        $ Line = "stay"
-                                else: 
-                                        call LauraFace("confused") 
-                                        ch_l "Hey, [L_Petname], why are you here?"
-                                if Line != "stay":
-                                    menu:
-                                        extend ""
-                                        "Sorry, I'll go.":
-                                                    call Statup("Laura", "Love", 90, 2)
-                                                    call Statup("Laura", "Obed", 50, 3) 
-                                                    call LauraFace("smile") 
-                                                    ch_l "Thanks."
-                                                    "You head back to your room."
-                                        "Can I stay?":
-                                                    if "angry" in L_DailyActions:
-                                                            call LauraFace("angry") 
-                                                            ch_l "[[growls] . . .You probably shouldn't."                  
-                                                    elif Current_Time == "Night" and ApprovalCheck("Laura", 800, "LI") and ApprovalCheck("Laura", 400, "OI"):
-                                                            call LauraFace("sadside") 
-                                                            ch_l "I guess. . ." 
-                                                            $ Line = "stay"
-                                                    elif Current_Time == "Night":
-                                                            ch_l "No. Maybe tomorrow."                                                 
-                                                    elif ApprovalCheck("Laura", 750):
-                                                            ch_l "Ok."
-                                                            ch_l "Just for a minute."
-                                                            $ Line = "stay"
-                                                    else: 
-                                                            ch_l "No."  
-                                                    if Line != "stay":  
-                                                            call Statup("Laura", "Love", 80, -1)
-                                                            call Statup("Laura", "Inbt", 50, 3) 
-                                                            "Laura kicks you out of the room."                                                    
-                                        "I'm sticking around.":   
-                                                    if "angry" in L_DailyActions:
-                                                            call LauraFace("angry") 
-                                                            ch_l "You really shouldn't."
-                                                    elif not ApprovalCheck("Laura", 1800) and not ApprovalCheck("Laura", 500, "O"):
-                                                            call LauraFace("angry") 
-                                                            ch_l "No."
-                                                    else:
-                                                            call Statup("Laura", "Obed", 80, 5)
-                                                            call LauraFace("sad") 
-                                                            ch_l ". . ." 
-                                                            $ Line = "stay"
-                                                    if Line != "stay":
-                                                            call Statup("Laura", "Love", 60, -5, 1)
-                                                            call Statup("Laura", "Love", 80, -5)
-                                                            call Statup("Laura", "Obed", 50, 2)
-                                                            call Statup("Laura", "Inbt", 60, 5) 
-                                                            "Laura kicks you out of the room."
-                                if Line != "stay":
-                                        $ bg_current = "bg player"  
-                                        jump Player_Room
-                                        #End Laura tells you to leave. 
-                elif Primary == "Rogue":                       
-                                ch_r "Sorry, I wasn't expecting to bump into you here."
-                elif Primary == "Kitty":                       
-                                ch_k "Hey[K_like]funny meeting you here."
-                elif Primary == "Emma":                       
-                                ch_e "I didn't expect to run into you here."
-                #end girls showed up to Laura's room.
-    elif bg_current == "bg classroom":  
-
-            
-            
-            #if this is triggered, Adjacent should never be higher than 1. 
-            #adjacent characters who are neither Primary nor secondary should have been removed from adjacency
-
-            if Secondary:  
-                    #if there's a second girl
-                    "[Primary] and [Secondary] just entered the room."
-            else:
-                    #if there's no second girl,
-                    "[Primary] just entered the room."       
+                        call Locked_Door("Emma")
+                        if E_Loc != bg_current:
+                            $ Primary = 0
+                elif Primary == "Laura":
+                        call Locked_Door("Laura")
+                        if L_Loc != bg_current:
+                            $ Primary = 0
+        #End "if the door was locked." 
                     
+        if len(Options) > 2:
+                # if there is two girl in the area, remove the excess.
+                # If "nearby" is a valid place to put them, it puts them there
+                if R_Loc == bg_current and "Rogue" not in (Primary,Secondary) and "Rogue" not in Party and "Rogue" not in Adjacent:
+                        call Remove_Girl("Rogue",Hold=1)
+                if K_Loc == bg_current and "Kitty" not in (Primary,Secondary) and "Kitty" not in Party and "Kitty" not in Adjacent:
+                        call Remove_Girl("Kitty",Hold=1)
+                if E_Loc == bg_current and "Emma" not in (Primary,Secondary) and "Emma" not in Party and "Emma" not in Adjacent:
+                        call Remove_Girl("Emma",Hold=1)
+                if L_Loc == bg_current and "Laura" not in (Primary,Secondary) and "Laura" not in Party and "Laura" not in Adjacent:
+                        call Remove_Girl("Laura",Hold=1)
+        
+        if not Primary:
+                return
+        $ Options = []    
+        #This sequence sets the pecking order, more important once there are more girls
+        #girls left out of this are put into "Nearby" for the current space
+            
+        if bg_current == "bg dangerroom":   
+                call Gym_Clothes("auto")
+        call Set_The_Scene #causes the girls to display
+        if bg_current == "bg player":
+                    if Secondary:  
+                            #if there's a second girl
+                            "[Primary] and [Secondary] just entered your room."
+                    else:
+                            #if there's no second girl,
+                            "[Primary] just entered your room."
+                            
+                    if Primary == "Rogue":
+                                if Secondary:                        
+                                    ch_r "Hey, [R_Petname], can we come in?"
+                                else:
+                                    ch_r "Hey, [R_Petname], can I come in?"
+                    elif Primary == "Kitty":
+                                if Secondary:                        
+                                    ch_k "Hey[K_like]can we come in?"
+                                else:
+                                    ch_k "Hey[K_like]can I come in?"
+                    elif Primary == "Emma":
+                                if Secondary:                        
+                                    ch_e "Ah, good, you're here. May we come in?"
+                                else:
+                                    ch_e "Ah, good, you're here. May I come in?"
+                    elif Primary == "Laura":                      
+                                ch_l "Hey."
+                                ch_p ". . . [[She seems to want to stay]."
+                    menu:
+                        extend ""
+                        "Sure.":
+                            $ Line = "sure"                               
+                        "Not right now, maybe later.":
+                            $ Line = "later"
+                        "Nope.":  
+                            $ Line = "no"
+                                   
+                                    
+                    if Line == "sure":
+                        if Primary == "Rogue" or Secondary == "Rogue":
+                                    call Statup("Rogue", "Love", 80, 1)
+                                    call Statup("Rogue", "Obed", 50, 2)
+                                    call Statup("Rogue", "Inbt", 50, 2) 
+                                    if Primary == "Rogue": 
+                                            ch_r "Thanks."
+                        if Primary == "Kitty" or Secondary == "Kitty":
+                                    call Statup("Kitty", "Love", 80, 1)
+                                    call Statup("Kitty", "Obed", 60, 2)
+                                    call Statup("Kitty", "Inbt", 50, 3)
+                                    if Primary == "Kitty":
+                                            ch_k "Thanks."
+                        if Primary == "Emma" or Secondary == "Emma":
+                                    call Statup("Emma", "Love", 50, 1)
+                                    call Statup("Emma", "Obed", 60, 1)
+                                    call Statup("Emma", "Inbt", 50, 2)
+                                    if Primary == "Emma":
+                                            ch_e "Good."
+                        if Primary == "Laura" or Secondary == "Laura":
+                                    call Statup("Laura", "Love", 50, 1)
+                                    call Statup("Laura", "Obed", 60, 1)
+                                    call Statup("Laura", "Inbt", 50, 2)
+                                    if Primary == "Laura":
+                                            "She doesn't leave."
+                        #end "sure"
+                    if Line == "later":     
+                        if Primary == "Rogue" or Secondary == "Rogue":
+                                    call Statup("Rogue", "Love", 60, -1, 1)
+                                    call Statup("Rogue", "Obed", 70, 5) 
+                                    call RogueFace("confused") 
+                                    if Primary == "Rogue" and Secondary: 
+                                            ch_r "Um, ok, we'll go then."
+                                    elif Primary == "Rogue":
+                                            ch_r "Um, ok."
+                                    call Remove_Girl("Rogue")
+                        if Primary == "Kitty" or Secondary == "Kitty":  
+                                    call Statup("Kitty", "Love", 60, -2, 1)
+                                    call Statup("Kitty", "Obed", 70, 7) 
+                                    call KittyFace("confused") 
+                                    if Primary == "Kitty" and Secondary: 
+                                            ch_k "Oh[K_like]we'll get going then."
+                                    elif Primary == "Kitty":
+                                            ch_k "Oh[K_like]I'll get going then."
+                                    call Remove_Girl("Kitty")
+                        if Primary == "Emma" or Secondary == "Emma":  
+                                    call Statup("Emma", "Love", 90, -2)
+                                    call Statup("Emma", "Love", 50, -5)
+                                    call Statup("Emma", "Obed", 70, 5) 
+                                    call Statup("Emma", "Obed", 30, -7) 
+                                    call EmmaFace("confused") 
+                                    if Primary == "Emma": 
+                                            ch_e "If that's how you wish to play it. . ."
+                                    call Remove_Girl("Emma")
+                        if Primary == "Laura" or Secondary == "Laura":  
+                                    call Statup("Laura", "Love", 90, -2)
+                                    call Statup("Laura", "Love", 50, -5)
+                                    call Statup("Laura", "Obed", 70, 5) 
+                                    call Statup("Laura", "Obed", 30, -7) 
+                                    call LauraFace("confused") 
+                                    if Primary == "Laura": 
+                                            ch_l "Ok, later."
+                                    call Remove_Girl("Laura")
+                        #end "later"
+                    if Line == "no":
+                        if Primary == "Rogue" or Secondary == "Rogue":
+                                    call Statup("Rogue", "Obed", 50, 5)         
+                                    if ApprovalCheck("Rogue", 1800) or ApprovalCheck("Rogue", 500, "O"):
+                                        call Statup("Rogue", "Obed", 80, 2)
+                                        ch_r "I guess that's ok. See you later then."
+                                    else:    
+                                        call RogueFace("angry") 
+                                        call Statup("Rogue", "Love", 60, -5, 1)
+                                        call Statup("Rogue", "Love", 80, -2)
+                                        call Statup("Rogue", "Obed", 80, 3)
+                                        call Statup("Rogue", "Inbt", 50, 1) 
+                                        ch_r "Well fine!"
+                                    call Remove_Girl("Rogue")
+                        if Primary == "Kitty" or Secondary == "Kitty":  
+                                    call Statup("Kitty", "Obed", 50, 7)         
+                                    if ApprovalCheck("Kitty", 1800) or ApprovalCheck("Kitty", 500, "O"):
+                                        call Statup("Kitty", "Obed", 80, 2)
+                                        ch_k "If you want some alone time. . ."
+                                    else:    
+                                        call KittyFace("angry") 
+                                        call Statup("Kitty", "Love", 60, -6, 1)
+                                        call Statup("Kitty", "Love", 80, -4)
+                                        call Statup("Kitty", "Obed", 80, 5)
+                                        call Statup("Kitty", "Inbt", 50, 1) 
+                                        ch_k "Jerk!"
+                                    call Remove_Girl("Kitty")
+                        if Primary == "Emma" or Secondary == "Emma":  
+                                    call Statup("Emma", "Obed", 50, 7)         
+                                    if ApprovalCheck("Emma", 2000) or ApprovalCheck("Emma", 500, "O"):
+                                        call Statup("Emma", "Obed", 80, 2)
+                                        ch_e "I suppose you can have your personal space. . ."
+                                    else:    
+                                        call EmmaFace("angry") 
+                                        call Statup("Emma", "Love", 60, -6, 1)
+                                        call Statup("Emma", "Love", 90, -4)
+                                        call Statup("Emma", "Obed", 80, 5)
+                                        call Statup("Emma", "Inbt", 50, 1) 
+                                        ch_e "We'll see how long that attitude lasts. . ."
+                                    call Remove_Girl("Emma")
+                        if Primary == "Laura" or Secondary == "Laura":  
+                                    call Statup("Laura", "Obed", 50, 7)         
+                                    if ApprovalCheck("Laura", 2000) or ApprovalCheck("Laura", 500, "O"):
+                                        call Statup("Laura", "Obed", 80, 2)
+                                        ch_l "Not a problem."
+                                    else:    
+                                        call LauraFace("angry") 
+                                        call Statup("Laura", "Love", 60, -6, 1)
+                                        call Statup("Laura", "Love", 90, -4)
+                                        call Statup("Laura", "Obed", 80, 5)
+                                        call Statup("Laura", "Inbt", 50, 1) 
+                                        "She seems upset."
+                                    call Remove_Girl("Laura")
+                        if Secondary:
+                                    "The girls storm out."
+                        #end "nope"
+                    #end girls showed up to player's room.
+        elif bg_current == "bg rogue":       
+                    if Secondary:  
+                            #if there's a second girl
+                            "[Primary] and [Secondary] just entered the room."
+                    else:
+                            #if there's no second girl,
+                            "[Primary] just entered the room."         
+                    if Primary == "Rogue" or Secondary == "Rogue":
+                                    if "angry" in R_DailyActions:
+                                            call RogueFace("bemused", 1) 
+                                            ch_r "I'm kinda pissed at you right now, get out of here." 
+                                    elif Current_Time == "Night" and ApprovalCheck("Rogue", 1000, "LI") and ApprovalCheck("Rogue", 600, "OI"):
+                                            ch_r "Oh, hey, [R_Petname], it's pretty late, but I guess you can stick around for a bit."  
+                                            $ Line = "stay"                     
+                                    elif ApprovalCheck("Rogue", 1300) or ApprovalCheck("Rogue", 500, "O"):
+                                            ch_r "Oh, hey, [R_Petname], nice to see you here."
+                                            $ Line = "stay"
+                                    elif Current_Time == "Night":
+                                            ch_r "Oh, hey, [R_Petname], it's kind late, could you head out of here?" 
+                                    elif ApprovalCheck("Rogue", 600, "LI") or ApprovalCheck("Rogue", 300, "OI"):
+                                            ch_r "Oh, hey, [R_Petname]. You can stick around, I guess."
+                                            $ Line = "stay"
+                                    else: 
+                                            ch_r "Hey, [R_Petname], I'm not sure why you're here, but I'd rather you leave."  
+                                    if Line != "stay":
+                                        menu:
+                                            extend ""
+                                            "Sure, ok. [[you go]":
+                                                        call Statup("Rogue", "Love", 80, 1)
+                                                        call Statup("Rogue", "Obed", 50, 2)
+                                                        call Statup("Rogue", "Inbt", 50, 2)  
+                                                        ch_r "Thanks."
+                                                        "You head back to your room."
+                                            "Sorry, I'll go.":
+                                                        call Statup("Rogue", "Love", 90, 2)
+                                                        call Statup("Rogue", "Obed", 50, 3) 
+                                                        call RogueFace("smile") 
+                                                        ch_r "Thanks."
+                                                        "You head back to your room."
+                                            "Are you sure I can't stay?":
+                                                        if "angry" in R_DailyActions:
+                                                                call RogueFace("angry") 
+                                                                ch_r "What part of \"no\" don't ya get?"                  
+                                                        elif Current_Time == "Night" and ApprovalCheck("Rogue", 800, "LI") and ApprovalCheck("Rogue", 400, "OI"):                                                            
+                                                                call RogueFace("sadside") 
+                                                                ch_r "I suppose I can make an exception this once." 
+                                                                $ Line = "stay"
+                                                        elif Current_Time == "Night":
+                                                                ch_r "No way, [R_Petname]. Try again tomorrow."                                                 
+                                                        elif ApprovalCheck("Rogue", 750):
+                                                                ch_r "Oh, fine. For a little bit."
+                                                                $ Line = "stay"
+                                                        else: 
+                                                                call RogueFace("angry") 
+                                                                ch_r "No, seriously, get."   
+                                                        if Line != "stay": 
+                                                                call Statup("Rogue", "Love", 80, -1)
+                                                                call Statup("Rogue", "Inbt", 50, 3) 
+                                                                "Rogue kicks you out of the room."                                                    
+                                            "I'm sticking around, thanks.":   
+                                                        if "angry" in R_DailyActions:
+                                                                call RogueFace("angry") 
+                                                                ch_r "Oh {i}hell{/i} no."
+                                                        elif not ApprovalCheck("Rogue", 1800) and not ApprovalCheck("Rogue", 500, "O"):
+                                                                call RogueFace("angry") 
+                                                                ch_r "No way, buster! Out!"
+                                                        else:
+                                                                call Statup("Rogue", "Obed", 80, 5)
+                                                                call RogueFace("sad") 
+                                                                ch_r ". . ." 
+                                                                ch_r "I guess that's ok."
+                                                                $ Line = "stay"
+                                                        if Line != "stay":
+                                                                call Statup("Rogue", "Love", 60, -5, 1)
+                                                                call Statup("Rogue", "Love", 80, -5)
+                                                                call Statup("Rogue", "Obed", 50, 2)
+                                                                call Statup("Rogue", "Inbt", 60, 5) 
+                                                                "Rogue kicks you out of the room."
+                                    if Line != "stay":
+                                        $ bg_current = "bg player"  
+                                        jump Player_Room
+                                    #End Rogue tells you to leave. 
+                    elif Primary == "Kitty":                       
+                                    ch_k "Hey[K_like]funny meeting you here."
+                    elif Primary == "Emma":                       
+                                    ch_e "I didn't expect to run into you here."
+                    elif Primary == "Laura":                       
+                                    ch_l "Oh, hey."
+                    #end girls showed up to Rogues's room.    
+                
+        elif bg_current == "bg kitty":   
+                    if Secondary:  
+                            #if there's a second girl
+                            "[Primary] and [Secondary] just entered the room."
+                    else:
+                            #if there's no second girl,
+                            "[Primary] just entered the room."         
+                    if Primary == "Kitty" or Secondary == "Kitty":
+                                    if "angry" in K_DailyActions:
+                                            call KittyFace("angry") 
+                                            ch_k "You shouldn't be here right now." 
+                                    elif Current_Time == "Night" and ApprovalCheck("Kitty", 1000, "LI") and ApprovalCheck("Kitty", 600, "OI"):
+                                            ch_k "Oh, hey, it's kinds late, but you can stay for a bit."  
+                                            $ Line = "stay"                     
+                                    elif ApprovalCheck("Kitty", 1300) or ApprovalCheck("Kitty", 500, "O"):
+                                            ch_k "Oh, hey, nice to see you."
+                                            $ Line = "stay"
+                                    elif Current_Time == "Night":
+                                            ch_k "Oh, hey, [K_Petname]. It's kind of late, could you come back tomorrow?" 
+                                    elif ApprovalCheck("Kitty", 600, "LI") or ApprovalCheck("Kitty", 300, "OI"):
+                                            ch_k "Oh, hey, [K_Petname], what's up?"
+                                            $ Line = "stay"
+                                    else: 
+                                            call KittyFace("confused") 
+                                            ch_k "Hey, [K_Petname], what are you even doing here?"
+                                            ch_k "Could you[K_like]get out?"  
+                                    if Line != "stay":
+                                        menu:
+                                            extend ""
+                                            "Sure, ok. [[you go]":
+                                                        call Statup("Kitty", "Love", 80, 1)
+                                                        call Statup("Kitty", "Obed", 50, 2)
+                                                        call Statup("Kitty", "Inbt", 50, 2)  
+                                                        ch_k "Thanks."
+                                                        "You head back to your room."
+                                            "Sorry, I'll go.":
+                                                        call Statup("Kitty", "Love", 90, 2)
+                                                        call Statup("Kitty", "Obed", 50, 3) 
+                                                        call KittyFace("smile") 
+                                                        ch_k "Thanks."
+                                                        "You head back to your room."
+                                            "Are you sure I can't stay?":
+                                                        if "angry" in K_DailyActions:
+                                                                call KittyFace("angry") 
+                                                                ch_k "I think I said {i}NO!{/i}"                  
+                                                        elif Current_Time == "Night" and ApprovalCheck("Kitty", 800, "LI") and ApprovalCheck("Kitty", 400, "OI"):
+                                                                call KittyFace("sadside") 
+                                                                ch_k "Maybe just this once. . ." 
+                                                                $ Line = "stay"
+                                                        elif Current_Time == "Night":
+                                                                ch_k "Noooope. Try again tomorrow."                                                 
+                                                        elif ApprovalCheck("Kitty", 750):
+                                                                ch_k "Oh, fiiiine."
+                                                                ch_k "Just for a little bit."
+                                                                $ Line = "stay"
+                                                        else: 
+                                                                ch_k "Noooope."  
+                                                        if Line != "stay":  
+                                                                call Statup("Kitty", "Love", 80, -1)
+                                                                call Statup("Kitty", "Inbt", 50, 3) 
+                                                                "Kitty kicks you out of the room."                                                    
+                                            "I'm sticking around, thanks.":   
+                                                        if "angry" in K_DailyActions:
+                                                                call KittyFace("angry") 
+                                                                ch_k "Oh no you do not!"
+                                                        elif not ApprovalCheck("Kitty", 1800) and not ApprovalCheck("Kitty", 500, "O"):
+                                                                call KittyFace("angry") 
+                                                                ch_k "Nooope, out!"
+                                                        else:
+                                                                call Statup("Kitty", "Obed", 80, 5)
+                                                                call KittyFace("sad") 
+                                                                ch_k ". . ." 
+                                                                ch_k "Fine."
+                                                                $ Line = "stay"
+                                                        if Line != "stay":
+                                                                call Statup("Kitty", "Love", 60, -5, 1)
+                                                                call Statup("Kitty", "Love", 80, -5)
+                                                                call Statup("Kitty", "Obed", 50, 2)
+                                                                call Statup("Kitty", "Inbt", 60, 5) 
+                                                                "Kitty kicks you out of the room."
+                                    if Line != "stay":
+                                            $ bg_current = "bg player"  
+                                            jump Player_Room
+                                            #End Kitty tells you to leave. 
+                    elif Primary == "Rogue":                       
+                                    ch_r "Sorry, I wasn't expecting to bump into you here."
+                    elif Primary == "Emma":                       
+                                    ch_e "I didn't expect to run into you here."
+                    elif Primary == "Laura":                       
+                                    ch_l "Oh, hey."
+                    #end girls showed up to Kitty's room.
+        elif bg_current == "bg emma": 
+                    if Secondary:  
+                            #if there's a second girl
+                            "[Primary] and [Secondary] just entered the room."
+                    else:
+                            #if there's no second girl,
+                            "[Primary] just entered the room."         
+                    if Primary == "Emma" or Secondary == "Emma":
+                                    if "angry" in E_DailyActions:
+                                            call EmmaFace("angry") 
+                                            ch_e "I don't think you should be here." 
+                                    elif Current_Time == "Night" and ApprovalCheck("Emma", 1000, "LI") and ApprovalCheck("Emma", 600, "OI"):
+                                            ch_e "Oh, it's a bit late, but you're welcome."  
+                                            $ Line = "stay"                     
+                                    elif ApprovalCheck("Emma", 1300) or ApprovalCheck("Emma", 500, "O"):
+                                            ch_e "Oh, nice to see you."
+                                            $ Line = "stay"
+                                    elif Current_Time == "Night":
+                                            ch_e "Oh, hello, [E_Petname]. It's a bit late, could you come back tomorrow?" 
+                                    elif ApprovalCheck("Emma", 600, "LI") or ApprovalCheck("Emma", 300, "OI"):
+                                            ch_e "Oh, hello, [E_Petname], can I help you with anything?"
+                                            $ Line = "stay"
+                                    else: 
+                                            call EmmaFace("confused") 
+                                            ch_e "Oh, hello, [E_Petname]?"
+                                            ch_e "Did you have a reason to be visiting me?"  
+                                    if Line != "stay":
+                                        menu:
+                                            extend ""
+                                            "Sure, ok. [[you go]":
+                                                        call Statup("Emma", "Love", 80, 1)
+                                                        call Statup("Emma", "Obed", 50, 2)
+                                                        call Statup("Emma", "Inbt", 50, 2)  
+                                                        ch_e "Appreciated."
+                                                        "You head back to your room."
+                                            "Sorry, I'll go.":
+                                                        call Statup("Emma", "Love", 90, 2)
+                                                        call Statup("Emma", "Obed", 50, 3) 
+                                                        call EmmaFace("smile") 
+                                                        ch_e "Thank you."
+                                                        "You head back to your room."
+                                            "Are you sure I can't stay?":
+                                                        if "angry" in E_DailyActions:
+                                                                call EmmaFace("angry") 
+                                                                ch_e "I believe I said {i}no.{/i}"                  
+                                                        elif Current_Time == "Night" and ApprovalCheck("Emma", 800, "LI") and ApprovalCheck("Emma", 400, "OI"):
+                                                                call EmmaFace("sadside") 
+                                                                ch_e "Perhaps just this once. . ." 
+                                                                $ Line = "stay"
+                                                        elif Current_Time == "Night":
+                                                                ch_e "I'm afraid not. Try again tomorrow."                                                 
+                                                        elif ApprovalCheck("Emma", 750):
+                                                                ch_e "Oh, very well. . ."
+                                                                ch_e "Just for a little bit."
+                                                                $ Line = "stay"
+                                                        else: 
+                                                                ch_e "Definitely not."    
+                                                        if Line != "stay":
+                                                                call Statup("Emma", "Love", 80, -1)
+                                                                call Statup("Emma", "Inbt", 50, 3) 
+                                                                "Emma kicks you out of the room."                                                    
+                                            "I'm sticking around, thanks.":   
+                                                        if "angry" in E_DailyActions:
+                                                                call EmmaFace("angry") 
+                                                                ch_e "You must be joking."
+                                                        elif not ApprovalCheck("Emma", 1800) and not ApprovalCheck("Emma", 500, "O"):
+                                                                call EmmaFace("angry") 
+                                                                ch_e "No, get out."
+                                                        else:
+                                                                call Statup("Emma", "Obed", 80, 5)
+                                                                call EmmaFace("sad") 
+                                                                ch_e ". . ." 
+                                                                ch_e "Fine."
+                                                                $ Line = "stay"
+                                                        if Line != "stay":
+                                                                call Statup("Emma", "Love", 60, -5, 1)
+                                                                call Statup("Emma", "Love", 80, -5)
+                                                                call Statup("Emma", "Obed", 50, 2)
+                                                                call Statup("Emma", "Inbt", 60, 5) 
+                                                                "Emma kicks you out of the room."
+                                    if Line != "stay":
+                                            $ bg_current = "bg player"  
+                                            jump Player_Room
+                                            #End Emma tells you to leave. 
+                    elif Primary == "Rogue":                       
+                                    ch_r "Sorry, I wasn't expecting to bump into you here."
+                    elif Primary == "Kitty":                       
+                                    ch_k "Hey[K_like]funny meeting you here."
+                    elif Primary == "Laura":                       
+                                    ch_l "Oh, hey."
+                    #end girls showed up to Emma's room.                
+        elif bg_current == "bg laura": 
+                    if Secondary:  
+                            #if there's a second girl
+                            "[Primary] and [Secondary] just entered the room."
+                    else:
+                            #if there's no second girl,
+                            "[Primary] just entered the room."         
+                    if Primary == "Laura" or Secondary == "Laura":
+                                    if "angry" in L_DailyActions:
+                                            call LauraFace("angry") 
+                                            ch_l "You should get away while you can." 
+                                    elif Current_Time == "Night" and ApprovalCheck("Laura", 1000, "LI") and ApprovalCheck("Laura", 600, "OI"):
+                                            ch_l "It's late."  
+                                            $ Line = "stay"                     
+                                    elif ApprovalCheck("Laura", 1300) or ApprovalCheck("Laura", 500, "O"):
+                                            ch_l "Oh, hey."
+                                            $ Line = "stay"
+                                    elif Current_Time == "Night":
+                                            ch_l "Oh, hey, it's late." 
+                                    elif ApprovalCheck("Laura", 600, "LI") or ApprovalCheck("Laura", 300, "OI"):
+                                            ch_l "Oh, hey, [L_Petname]."
+                                            $ Line = "stay"
+                                    else: 
+                                            call LauraFace("confused") 
+                                            ch_l "Hey, [L_Petname], why are you here?"
+                                    if Line != "stay":
+                                        menu:
+                                            extend ""
+                                            "Sorry, I'll go.":
+                                                        call Statup("Laura", "Love", 90, 2)
+                                                        call Statup("Laura", "Obed", 50, 3) 
+                                                        call LauraFace("smile") 
+                                                        ch_l "Thanks."
+                                                        "You head back to your room."
+                                            "Can I stay?":
+                                                        if "angry" in L_DailyActions:
+                                                                call LauraFace("angry") 
+                                                                ch_l "[[growls] . . .You probably shouldn't."                  
+                                                        elif Current_Time == "Night" and ApprovalCheck("Laura", 800, "LI") and ApprovalCheck("Laura", 400, "OI"):
+                                                                call LauraFace("sadside") 
+                                                                ch_l "I guess. . ." 
+                                                                $ Line = "stay"
+                                                        elif Current_Time == "Night":
+                                                                ch_l "No. Maybe tomorrow."                                                 
+                                                        elif ApprovalCheck("Laura", 750):
+                                                                ch_l "Ok."
+                                                                ch_l "Just for a minute."
+                                                                $ Line = "stay"
+                                                        else: 
+                                                                ch_l "No."  
+                                                        if Line != "stay":  
+                                                                call Statup("Laura", "Love", 80, -1)
+                                                                call Statup("Laura", "Inbt", 50, 3) 
+                                                                "Laura kicks you out of the room."                                                    
+                                            "I'm sticking around.":   
+                                                        if "angry" in L_DailyActions:
+                                                                call LauraFace("angry") 
+                                                                ch_l "You really shouldn't."
+                                                        elif not ApprovalCheck("Laura", 1800) and not ApprovalCheck("Laura", 500, "O"):
+                                                                call LauraFace("angry") 
+                                                                ch_l "No."
+                                                        else:
+                                                                call Statup("Laura", "Obed", 80, 5)
+                                                                call LauraFace("sad") 
+                                                                ch_l ". . ." 
+                                                                $ Line = "stay"
+                                                        if Line != "stay":
+                                                                call Statup("Laura", "Love", 60, -5, 1)
+                                                                call Statup("Laura", "Love", 80, -5)
+                                                                call Statup("Laura", "Obed", 50, 2)
+                                                                call Statup("Laura", "Inbt", 60, 5) 
+                                                                "Laura kicks you out of the room."
+                                    if Line != "stay":
+                                            $ bg_current = "bg player"  
+                                            jump Player_Room
+                                            #End Laura tells you to leave. 
+                    elif Primary == "Rogue":                       
+                                    ch_r "Sorry, I wasn't expecting to bump into you here."
+                    elif Primary == "Kitty":                       
+                                    ch_k "Hey[K_like]funny meeting you here."
+                    elif Primary == "Emma":                       
+                                    ch_e "I didn't expect to run into you here."
+                    #end girls showed up to Laura's room.
+        elif bg_current == "bg classroom":  
+
+                
+                
+                #if this is triggered, Adjacent should never be higher than 1. 
+                #adjacent characters who are neither Primary nor secondary should have been removed from adjacency
+
+                if Secondary:  
+                        #if there's a second girl
+                        "[Primary] and [Secondary] just entered the room."
+                else:
+                        #if there's no second girl,
+                        "[Primary] just entered the room."       
+                        
+                if Primary == "Rogue" or Secondary == "Rogue":
+                                ch_r "Hey, [R_Petname]."
+                if Primary == "Kitty" or Secondary == "Kitty":
+                                ch_k "Oh, hey."
+                if Primary == "Emma" or Secondary == "Emma":
+                                ch_e "Oh, hello, [E_Petname]."
+                if Primary == "Laura" or Secondary == "Laura":
+                                ch_l "Hey."     
+                            
+                            
+                $ Line = 0
+                $ D20 = renpy.random.randint(1, 20)
+                
+                if Primary and Primary != "Emma":                
+                        #Determines who sits next to you
+                        if ApprovalCheck(Primary, 1000): 
+                            if len(Adjacent) < 2 and D20 >= 10:
+                                    $Line = Primary + " takes the seat next to you"
+                                    $ Adjacent.append(Primary)
+                            else:
+                                    $Line = Primary + " sits across the room from you"
+                                    $ Nearby.append(Primary)
+                        else:
+                                $Line = Primary + " sits across the room from you"
+                                $ Nearby.append(Primary)
+                if Secondary and Secondary != "Emma":                
+                        #Determines who sits next to you
+                        if Primary == "Emma":
+                            $ Line = "Emma walks over and stands near you"
+                        if ApprovalCheck(Secondary, 1000): 
+                            if len(Adjacent) < 2 and D20 >= 10:
+                                #changes dialog based on whether she does the same or differently than the last person
+                                if Primary in Adjacent and Primary != "Emma":
+                                    $Line = Primary + " and " + Secondary + " sit down next to you"
+                                else:
+                                    $Line = Line + ", while " + Secondary + " takes the seat next to you"
+                                $ Adjacent.append(Secondary)
+                            else:
+                                if Primary in Nearby and Primary != "Emma":
+                                    $Line = Primary + " and " + Secondary + " sit across the room from you"
+                                else:
+                                    $Line = Line + ", while " + Secondary + " sits across the room from you"
+                                $ Nearby.append(Secondary)
+                        else:
+                                if Primary in Nearby and Primary != "Emma":
+                                    $Line = Primary + " and " + Secondary + " sit across the room from you"
+                                else:
+                                    $Line = Line + ", while " + Secondary + " sits across the room from you"
+                                $ Nearby.append(Secondary)
+                if Line:
+                    "[Line]."
+                                    
+                if E_Loc == "bg teacher":
+                        "Emma takes her position behind the podium."                    
+                #end girls showed up to class
+        elif bg_current == "bg dangerroom":   
+                if Secondary:  
+                        #if there's a second girl
+                        "[Primary] and [Secondary] just entered the room."
+                else:
+                        #if there's no second girl,
+                        "[Primary] just entered the room."   
+                #end girls showed up to the Danger Room
+        elif bg_current == "bg campus":   
+                if Secondary:  
+                        #if there's a second girl
+                        "[Primary] and [Secondary] just entered the square."
+                else:
+                        #if there's no second girl,
+                        "[Primary] just entered the square."   
+                #end girls showed up to the campus
+        else: #if it's anywhere else,   
+                if Secondary:  
+                        #if there's a second girl
+                        "[Primary] and [Secondary] just entered the room."
+                else:
+                        #if there's no second girl,
+                        "[Primary] just entered the room."  
+                #end girls showed up someplace
+                                    
+        if bg_current in ("bg campus","bg dangerroom"):
             if Primary == "Rogue" or Secondary == "Rogue":
                             ch_r "Hey, [R_Petname]."
             if Primary == "Kitty" or Secondary == "Kitty":
@@ -4425,202 +4798,132 @@ label Girls_Arrive(Primary = 0, Secondary = 0, GirlsNum = 0):
             if Primary == "Emma" or Secondary == "Emma":
                             ch_e "Oh, hello, [E_Petname]."
             if Primary == "Laura" or Secondary == "Laura":
-                            ch_l "Hey."     
-                        
-                        
-            $ Line = 0
-            $ D20 = renpy.random.randint(1, 20)
-            
-            if Primary and Primary != "Emma":                
-                    #Determines who sits next to you
-                    if ApprovalCheck(Primary, 1000): 
-                        if len(Adjacent) < 2 and D20 >= 10:
-                                $Line = Primary + " takes the seat next to you"
-                                $ Adjacent.append(Primary)
-                        else:
-                                $Line = Primary + " sits across the room from you"
-                                $ Nearby.append(Primary)
-                    else:
-                            $Line = Primary + " sits across the room from you"
-                            $ Nearby.append(Primary)
-            if Secondary and Secondary != "Emma":                
-                    #Determines who sits next to you
-                    if Primary == "Emma":
-                        $ Line = "Emma walks over and stands near you"
-                    if ApprovalCheck(Secondary, 1000): 
-                        if len(Adjacent) < 2 and D20 >= 10:
-                            #changes dialog based on whether she does the same or differently than the last person
-                            if Primary in Adjacent and Primary != "Emma":
-                                $Line = Primary + " and " + Secondary + " sit down next to you"
-                            else:
-                                $Line = Line + ", while " + Secondary + " takes the seat next to you"
-                            $ Adjacent.append(Secondary)
-                        else:
-                            if Primary in Nearby and Primary != "Emma":
-                                $Line = Primary + " and " + Secondary + " sit across the room from you"
-                            else:
-                                $Line = Line + ", while " + Secondary + " sits across the room from you"
-                            $ Nearby.append(Secondary)
-                    else:
-                            if Primary in Nearby and Primary != "Emma":
-                                $Line = Primary + " and " + Secondary + " sit across the room from you"
-                            else:
-                                $Line = Line + ", while " + Secondary + " sits across the room from you"
-                            $ Nearby.append(Secondary)
-            if Line:
-                "[Line]."
-                                
-            if E_Loc == "bg teacher":
-                    "Emma takes her position behind the podium."                    
-            #end girls showed up to class
-    elif bg_current == "bg dangerroom":   
-            if Secondary:  
-                    #if there's a second girl
-                    "[Primary] and [Secondary] just entered the room."
-            else:
-                    #if there's no second girl,
-                    "[Primary] just entered the room."   
-            #end girls showed up to the Danger Room
-    elif bg_current == "bg campus":   
-            if Secondary:  
-                    #if there's a second girl
-                    "[Primary] and [Secondary] just entered the square."
-            else:
-                    #if there's no second girl,
-                    "[Primary] just entered the square."   
-            #end girls showed up to the campus
-    else: #if it's anywhere else,   
-            if Secondary:  
-                    #if there's a second girl
-                    "[Primary] and [Secondary] just entered the room."
-            else:
-                    #if there's no second girl,
-                    "[Primary] just entered the room."  
-            #end girls showed up someplace
-                                
-    if bg_current in ("bg campus","bg dangerroom"):
-        if Primary == "Rogue" or Secondary == "Rogue":
-                        ch_r "Hey, [R_Petname]."
-        if Primary == "Kitty" or Secondary == "Kitty":
-                        ch_k "Oh, hey."
-        if Primary == "Emma" or Secondary == "Emma":
-                        ch_e "Oh, hello, [E_Petname]."
-        if Primary == "Laura" or Secondary == "Laura":
-                        ch_l "Hey."                          
-    #end "girls showed up"    
-    
-    
-    if "Rogue" in Nearby:
-            $ R_Loc = "nearby"
-    if "Kitty" in Nearby:
-            $ K_Loc = "nearby"   
-    if "Laura" in Nearby:
-            $ L_Loc = "nearby"
-            
-    call Present_Check #updates who is present  
-    if Nearby:
-            "There were some others as well, but they kept their distance." 
-    return
+                            ch_l "Hey."                          
+        #end "girls showed up"    
+        
+        
+        if "Rogue" in Nearby:
+                $ R_Loc = "nearby"
+        if "Kitty" in Nearby:
+                $ K_Loc = "nearby"   
+        if "Laura" in Nearby:
+                $ L_Loc = "nearby"
+                
+        call Present_Check #updates who is present  
+        if Nearby:
+                "There were some others as well, but they kept their distance." 
+        return
 # End Girls Arrive / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
         
 label Locked_Door(Girl=0):
-    # called when a girl tries to enter a locked room, mainly from the summon function
-    # Girl is the indicated girl
-    
-    if Girl == "Kitty":
-            "You look to the door just as Kitty phases into the room."
-            $ K_Loc = bg_current 
-            call KittyOutfit
-            call Display_Kitty
-            ch_k "Hi, [K_Petname]!"
-            return
+        # called when a girl tries to enter a locked room, mainly from the summon function
+        # Girl is the indicated girl
+        
+        if Girl == "Kitty":
+                "You look to the door just as Kitty phases into the room."
+                $ K_Loc = bg_current 
+                call KittyOutfit
+                call Display_Kitty
+                ch_k "Hi, [K_Petname]!"
+                return
 
-    "The doorknob jiggles. A moment later, you hear a knock."
-    if Girl == "Rogue":
-            ch_r "Could I come in, [R_Petname]?"
-            menu:
-                extend ""
-                "Open door":
-                        ch_p "Hold on, Rogue!" 
-                        "You unlock the door and let her in."
-                        $ R_Loc = bg_current 
-                        call RogueOutfit
-                "Send her away":
-                        ch_p "Er, sorry, could you come back later?"
-                        call Statup("Rogue","Love", 80, -2)
-                        ch_r "C'mon, [R_Petname], don't yank my chain like this!"
-                        if R_Loc == bg_current:
-                            call Remove_Girl("Rogue")
-                        return
-    elif Girl == "Emma":        
-            ch_e "[E_Petname], I'm waiting."
-            menu:
-                extend ""
-                "Open door":
-                        ch_p "Hold on, [EmmaName]!" 
-                        "You unlock the door and let her in."
-                        $ E_Loc = bg_current 
-                        call EmmaOutfit
-                "Send her away":
-                        ch_p "Er, sorry, could you come back later?"
-                        call Statup("Emma","Obed", 80, -2)
-                        ch_e "I have to say, [E_Petname], I understand the appeal of having someone at your beck and call. . ."
-                        call Statup("Emma","Love", 80, -2)
-                        ch_e "but I don't appreciate being on the receiving end!"
-                        if E_Loc == bg_current:
-                            call Remove_Girl("Emma")
-                        return
-    elif Girl == "Laura":
-            ch_l "It's me."
-            menu:
-                extend ""
-                "Open door":
-                        "You walk over to the door and open it."
-                        ch_p "Come on in, [LauraName]."
-                        $ L_Loc = bg_current 
-                        call LauraOutfit
-                "Send her away":
-                    ch_p "Er, sorry, could you come back later?"
-                    "Laura goes quiet."
-                    if ApprovalCheck("Laura", 500,"I") and not ApprovalCheck("Laura", 500,"O"):
+        if Girl == "Rogue":
+            if R_Loc == "bg rogue":
+                "You hear a key in the lock, and Rogue enters the room." 
+            else:    
+                "The doorknob jiggles. A moment later, you hear a knock."
+                ch_r "Could I come in, [R_Petname]?"
+                menu:
+                    extend ""
+                    "Open door":
+                            ch_p "Hold on, Rogue!" 
+                            "You unlock the door and let her in."
+                            $ R_Loc = bg_current 
+                            call RogueOutfit
+                    "Send her away":
+                            ch_p "Er, sorry, could you come back later?"
+                            call Statup("Rogue","Love", 80, -2)
+                            ch_r "C'mon, [R_Petname], don't yank my chain like this!"
+                            if R_Loc == bg_current:
+                                call Remove_Girl("Rogue")
+                            return
+        elif Girl == "Emma":      
+            if E_Loc == "bg emma" or E_Loc:
+                "You hear a key in the lock, and Emma enters the room." 
+            else:    
+                "The doorknob jiggles. A moment later, you hear a knock."  
+                ch_e "[E_Petname], I'm waiting."
+                menu:
+                    extend ""
+                    "Open door":
+                            ch_p "Hold on, [EmmaName]!" 
+                            "You unlock the door and let her in."
+                            $ E_Loc = bg_current 
+                            call EmmaOutfit
+                    "Send her away":
+                            ch_p "Er, sorry, could you come back later?"
+                            call Statup("Emma","Obed", 80, -2)
+                            ch_e "I have to say, [E_Petname], I understand the appeal of having someone at your beck and call. . ."
+                            call Statup("Emma","Love", 80, -2)
+                            ch_e "but I don't appreciate being on the receiving end!"
+                            if E_Loc == bg_current:
+                                call Remove_Girl("Emma")
+                            return
+        elif Girl == "Laura":
+            if L_Loc == "bg laura":
+                "You hear a key in the lock, and Laura enters the room." 
+            else:    
+                "The doorknob jiggles. A moment later, you hear a knock."
+                ch_l "It's me."
+                menu:
+                    extend ""
+                    "Open door":
+                            "You walk over to the door and open it."
+                            ch_p "Come on in, [LauraName]."
                             $ L_Loc = bg_current 
                             call LauraOutfit
-                            $ Laura_Arms = 2
-                            $ L_Claws = 1
-                            "snickt"
-                            call Display_Laura
-                            "The door swings open."
-                            call Statup("Laura", "Love", 80, -2)
-                            call Statup("Laura", "Obed", 80, -4)
-                            $ L_Claws = 0
-                            ch_l "Hey, so I don't like being jerked around, so don't do that, okay?"
-                    else:
-                            call Statup("Laura", "Love", 80, -3)
-                            call Statup("Laura", "Obed", 80, 3)
-                            ch_l "Ok."
-                            "You hear her shuffling off."
-                            if L_Loc == bg_current:
-                                call Remove_Girl("Laura")
-                            return
-     
-    if "locked" in P_RecentActions:         
-            $P_RecentActions.remove("locked")
-    call Set_The_Scene(1,0,0,0)#characters, no entry, no clothes changes, no triggers
-    return
+                    "Send her away":
+                        ch_p "Er, sorry, could you come back later?"
+                        "Laura goes quiet."
+                        if ApprovalCheck("Laura", 500,"I") and not ApprovalCheck("Laura", 500,"O"):
+                                $ L_Loc = bg_current 
+                                call LauraOutfit
+                                $ Laura_Arms = 2
+                                $ L_Claws = 1
+                                "snickt"
+                                call Display_Laura
+                                "The door swings open."
+                                call Statup("Laura", "Love", 80, -2)
+                                call Statup("Laura", "Obed", 80, -4)
+                                $ L_Claws = 0
+                                ch_l "Hey, so I don't like being jerked around, so don't do that, okay?"
+                        else:
+                                call Statup("Laura", "Love", 80, -3)
+                                call Statup("Laura", "Obed", 80, 3)
+                                ch_l "Ok."
+                                "You hear her shuffling off."
+                                if L_Loc == bg_current:
+                                    call Remove_Girl("Laura")
+                                return
+         
+        if "locked" in P_Traits:         
+                $ P_Traits.remove("locked")
+        call Set_The_Scene(1,0,0,0)#characters, no entry, no clothes changes, no triggers
+        return
 #End Locked door responses / / / / / / / / / / / / / / / / / / / / / / / / / / / /
         
     
 # Start Last Namer / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / 
 label LastNamer(NameTemp = Playername, Wordcount = 0, Splitname = 0, Lastname = 0):
-    # Wordcount = number of words
-    $ Wordcount = Playername.count(" ")
-    
-    # Splitname turns the name into a list, ie [Charles, Francis, Xavier]
-    $ Splitname = Playername.split()
-    
-    # Lastname picks the last word in that set
-    $ Lastname = "Mr. " + Splitname[Wordcount]
-    return Lastname
+        # Wordcount = number of words
+        $ Wordcount = Playername.count(" ")
+        
+        # Splitname turns the name into a list, ie [Charles, Francis, Xavier]
+        $ Splitname = Playername.split()
+        
+        # Lastname picks the last word in that set
+        $ Lastname = "Mr. " + Splitname[Wordcount]
+        return Lastname
     
 # End Last Namer / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / 
 
@@ -4631,7 +4934,7 @@ label LikeUpdater(Primary = "Rogue", Value = 1, Noticed = 1):
     # call LikeUpdater("Rogue",1)
     # Primary is the primary girl in action, Value is the amount added/subtracted
     # Noticed is whether it matters if she notices or not.
-    
+                  
     if Primary == "Rogue":
             if K_Loc == bg_current:
                 if not Noticed or "noticed Rogue" in K_RecentActions: 
@@ -4992,6 +5295,433 @@ label Partner_Like(Girl=0,Value=1,AltValue=1,Measure=800,Backsies=0,Partner=Part
         return
 #End Partner_Like
     
+
+
+        
+# Start Lesbian Jumping check / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+
+label LesCheck(Girls=[]):
+        #Checks if any girls will jump each other behind the scenes. . . 
+        # They will if they have over 500 Inbt and are thirsty
+        if "touch" in R_Traits and ApprovalCheck("Rogue", 500, "I") and R_Thirst >= 30: #and "refused" not in R_DailyActions:
+                if ("mono" not in R_Traits or R_Break[0]) and "Rogue" not in Party:
+                    $ Girls.append("Rogue")      
+                    if R_Thirst >= 60:
+                            $ Girls.append("Rogue")      
+                if R_Thirst >= 90:
+                        $ Girls.append("Rogue")     
+        if ApprovalCheck("Kitty", 500, "I") and K_Thirst >= 30 and "met" in K_History:
+                if ("mono" not in K_Traits or K_Break[0]) and "Kitty" not in Party:
+                    $ Girls.append("Kitty")   
+                    if K_Thirst >= 60:
+                            $ Girls.append("Kitty")      
+                if K_Thirst >= 90:
+                        $ Girls.append("Kitty")     
+        if ApprovalCheck("Emma", 500, "I") and E_Thirst >= 30 and "met" in E_History:
+                if "threecheck" not in E_History:  
+                        if ApprovalCheck("Emma", 800, "I"):
+                                #this addes threecheck if she's really slutty
+                                $ E_History.append("threecheck")                                 
+                if "threecheck" in E_History: 
+                        if ("mono" not in E_Traits or E_Break[0]) and "Emma" not in Party:
+                            $ Girls.append("Emma")  
+                            if E_Thirst >= 60:
+                                    $ Girls.append("Emma")      
+                        if E_Thirst >= 90:
+                                $ Girls.append("Emma")      
+        if ApprovalCheck("Laura", 500, "I") and L_Thirst >= 30 and "met" in L_History:
+                if ("mono" not in L_Traits or L_Break[0]) and "Laura" not in Party:
+                    $ Girls.append("Laura")   
+                    if L_Thirst >= 60:
+                            $ Girls.append("Laura")      
+                if L_Thirst >= 90:
+                        $ Girls.append("Laura")                     
+        
+        if not Girls:
+            return
+            
+        $ renpy.random.shuffle(Girls)   
+#        $ Lead = Girls[0] #sets lead girl to the first one in the list
+        
+        $ Partner = 0
+        while len(Girls) > 2:
+                # So long as the list has two people in it, check to see if the second girl is viable
+                # if not, remove her and try again                
+                if Partner:
+                        # if a partner's been picked, cull out the 3+ girls
+                        $ Girls.remove(Girls[2])                    
+                elif (Girls[1] in P_Harem and Girls[0] in P_Harem) and GirlLikeCheck(Girls[0],Girls[1]) >= 600: 
+                        $ Partner = Girls[1]
+                elif GirlLikeCheck(Girls[1],Girls[0]) >= 800 and GirlLikeCheck(Girls[0],Girls[1]) >= 800: 
+                        $ Partner = Girls[1]
+                elif ApprovalCheck(Girls[1], 0, "TRST") >= 90 and GirlLikeCheck(Girls[0],Girls[1]) >= 600: 
+                        $ Partner = Girls[1]
+                else:   
+                        #if not picked, remove this girl from the list
+                        $ Girls.remove(Girls[1])
+        if not Partner:
+                # if nobody is picked, then return, otherwise you should have at least two girls picked
+                return
+                
+        $ Partner = 0
+        #move both girls into the same room   
+        if "Rogue" in Girls and bg_current != "bg rogue":
+                $ R_Loc = "bg rogue"
+                if "Kitty" in Girls:
+                        $ K_Loc = "bg rogue"
+                if "Emma" in Girls:
+                        $ E_Loc = "bg rogue"
+                if "Laura" in Girls:
+                        $ L_Loc = "bg rogue"  
+        elif "Kitty" in Girls and bg_current != "bg kitty":
+                $ K_Loc = "bg kitty"
+                if "Rogue" in Girls:
+                        $ R_Loc = "bg kitty"
+                if "Emma" in Girls:
+                        $ E_Loc = "bg kitty"
+                if "Laura" in Girls:
+                        $ L_Loc = "bg kitty" 
+        elif "Emma" in Girls and bg_current != "bg emma":
+                $ E_Loc = "bg emma"
+                if "Rogue" in Girls:
+                        $ R_Loc = "bg emma"
+                if "Kitty" in Girls:
+                        $ K_Loc = "bg emma"
+                if "Laura" in Girls:
+                        $ L_Loc = "bg emma" 
+        elif "Laura" in Girls and bg_current != "bg laura":
+                $ L_Loc = "bg laura"
+                if "Rogue" in Girls:
+                        $ R_Loc = "bg laura"
+                if "Kitty" in Girls:
+                        $ K_Loc = "bg laura"
+                if "Emma" in Girls:
+                        $ E_Loc = "bg laura"
+             
+        call AnyWord(Girls[0],1,"les") #adds "les" to recent actions for both girls
+        call AnyWord(Girls[1],1,"les") 
+        
+        call GirlLikesGirl(Girls[0],Girls[1],700,15,1) #Like +15 if under 700
+        call GirlLikesGirl(Girls[1],Girls[0],700,15,1)
+        
+        call GirlLikesGirl(Girls[0],Girls[1],900,10,1) #Like +10 if under 900
+        call GirlLikesGirl(Girls[1],Girls[0],900,10,1)
+        
+        call GirlLikesGirl(Girls[0],Girls[1],1000,5,1) #Like +5 if under 1000
+        call GirlLikesGirl(Girls[1],Girls[0],1000,5,1)
+                
+        call DrainWord(Girls[0],"arriving",1,0) #removes "arriving" from recent  
+        call DrainWord(Girls[1],"arriving",1,0) #removes "arriving" from recent  
+        
+        call Statup(Girls[0], "Lust", 60, 20) 
+        call Statup(Girls[1], "Lust", 60, 20) 
+                
+        if "Rogue" in Girls: 
+                    #if she had a lesbian encounter without you. . .
+                    $ R_Thirst -= 5 
+        if "Kitty" in Girls:
+                    $ K_Thirst -= 5 
+        if "Emma" in Girls:
+                    $ E_Thirst -= 5 
+        if "Laura" in Girls:
+                    $ L_Thirst -= 5 
+                
+        return
+# end Les_Check, checking to see if the girls jump each other
+       
+# Start Jumping check / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+label JumperCheck(Girls=[]):
+        #decides whether a girl wants to jump you unexpectedly
+        if "nope" in P_RecentActions:
+                #if you refused sex. . .
+                return
+        if R_Action and R_Thirst >= 30 and ApprovalCheck("Rogue", 500, "I") and "refused" not in R_DailyActions:
+                if "chill" not in R_Traits and "Rogue" not in P_DailyActions:
+                    if renpy.random.randint(0,3) > 1:
+                            $ Girls.append("Rogue")      
+                    if R_Thirst >= 60:
+                            $ Girls.append("Rogue")      
+                if R_Thirst >= 90:
+                        $ Girls.append("Rogue")     
+        if K_Action and K_Thirst >= 30 and ApprovalCheck("Kitty", 500, "I") and "refused" not in K_DailyActions and "met" in K_History:
+                if "chill" not in K_Traits and "Kitty" not in P_DailyActions:
+                    if renpy.random.randint(0,3) > 1:
+                            $ Girls.append("Kitty")   
+                    if K_Thirst >= 60:
+                            $ Girls.append("Kitty")      
+                if K_Thirst >= 90:
+                        $ Girls.append("Kitty")     
+        if E_Action and E_Thirst >= 30 and ApprovalCheck("Emma", 500, "I") and "refused" not in E_DailyActions and "met" in E_History:
+                if "chill" not in E_Traits and "Emma" not in P_DailyActions and E_Loc != "bg teacher":
+                    # I rule out if she is teaching, she won't jump you. . .
+                    if renpy.random.randint(0,3) > 1:
+                            $ Girls.append("Emma")  
+                    if E_Thirst >= 60:
+                            $ Girls.append("Emma")      
+                if E_Thirst >= 90:
+                        $ Girls.append("Emma")      
+        if L_Action and L_Thirst >= 30 and ApprovalCheck("Laura", 500, "I") and "refused" not in L_DailyActions and "met" in L_History:
+                if "chill" not in L_Traits and "Laura" not in P_DailyActions:
+                    if renpy.random.randint(0,3) > 1:
+                            $ Girls.append("Laura")   
+                    if L_Thirst >= 60:
+                            $ Girls.append("Laura")      
+                if L_Thirst >= 90:
+                        $ Girls.append("Laura")                     
+        
+        if not Girls:
+            return
+            
+        if len(Girls) >= 2:
+            $ renpy.random.shuffle(Girls)                
+            while len(Girls) >= 2 and Girls[0] == Girls[1]:
+                    $ Girls.remove(Girls[1])    #removes duplicates
+                    #$ del Girls[1]     
+            while len(Girls) > 2:
+                    $ Girls.remove(Girls[2])    #removes any over 2
+                    
+        $ Partner = 0
+        if len(Girls) >= 2:        
+            #if there are two girls, it adds the second as a potential partner
+            if Girls[0] in P_Harem and Girls[1] in P_Harem:
+                    $ Partner = Girls[1]
+            elif GirlLikeCheck(Girls[0],Girls[1]) >= 800 and GirlLikeCheck(Girls[1],Girls[0]) >= 800:
+                    $ Partner = Girls[1]
+        
+        call Jumped #Launches the main event        
+        
+        if "nope" in P_RecentActions:
+                #if you refused sex. . .
+                while Girls:         #clears list           
+                    call Remove_Girl(Girls[0])
+                    $ Girls.remove(Girls[0])                        
+                jump Misplaced
+        elif Girls:
+                #if you had some sort of sexual encounter, it will hop you to the appropriate sex menu
+                if Zero_Loc(Girls[0]) == bg_current:
+                        call expression Girls[0] + "_SexMenu" #call Rogue_SexMenu 
+        
+        if bg_current == "bg player":
+                #if it jumped to your room. . .
+                jump Player_Room
+        return      
+#End Jumper_Check, checking to see if a girl wants to jump you
+
+label Jumped(Initial=0,Act=0):    
+        # called by JumperCheck if a girl jumps you
+        # Girl is the girl, Intitial is the first initial of her name        
+        # make sure that this puts people in the right rooms after they do stuff. . .
+        
+        if Girls[0] == "Emma" and Partner and "three" not in E_History:
+                    #if lead is Emma, there is a partner, but she doesn't share. . .
+                    $ Girls.remove(Partner) 
+                    $ Partner = 0  
+        elif "Emma" in Girls and ((Taboo and "taboo" not in E_History) or "three" not in E_History):
+                    #if partner is Emma and she doesn't share. . .
+                    $ Girls.remove("Emma") 
+                    $ Partner = 0        
+        
+        if not Girls:
+                return
+                
+        if Zero_Loc(Girls[0]) != bg_current and "locked" in P_Traits:
+            #if the girl is not in the room with you, and your door is locked. . .            
+            call Locked_Door(Girls[0])
+            if not Girls or Zero_Loc(Girls[0]) != bg_current:
+                    #if you refused her entry. . .
+                    $ P_RecentActions.append("nope")      
+                    return     
+                                        
+        #sets their location
+        if "Rogue" in Girls:
+                $ R_Loc = bg_current
+        if "Kitty" in Girls:
+                $ K_Loc = bg_current
+        if "Emma" in Girls:
+                $ E_Loc = bg_current
+        if "Laura" in Girls:
+                $ L_Loc = bg_current  
+                
+        call Taboo_Level #makes sure Taboo level is accurate
+        
+        if Taboo and (not ApprovalCheck(Girls[0], 1500, TabM=3) or (Girls[0] == "Emma" and Taboo and "taboo" not in E_History)):
+                #causes you to leave if the girl is not ready for public stuff                
+                $ Act = "leave"
+        
+        if bg_current in ("bg rogue","bg kitty","bg emma","bg laura"):             
+                #Causes the girl to pull you out if she doesn't live in the room you're in
+                if bg_current == "bg rogue" and "Rogue" not in Girls:
+                        $ Act = "leave"                        
+                elif bg_current == "bg kitty" and "Kitty" not in Girls:
+                        $ Act = "leave"
+                elif bg_current == "bg emma" and "Emma" not in Girls:
+                        $ Act = "leave"
+                elif bg_current == "bg laura" and "Laura" not in Girls:
+                        $ Act = "leave"
+        
+        call Set_The_Scene
+                      
+        call AnyFace(Girls[0],"sly",1)     
+        if Act == "leave":        
+                #if she's not supercool with public stuff. . .    
+                "Suddenly, [Girls[0]] grabs your arm with a miscevious smile, and starts to lead you back towards your room."                
+                menu:                
+                    "Go along with it":                      
+                        "You follow after her."
+                    "Pull away from her and head back.":                    
+                        call Statup(Girls[0], "Love", 90, -10) 
+                        call Statup(Girls[0], "Obed", 50, 10) 
+                        call Statup(Girls[0], "Obed", 95, 5) 
+                        call Statup(Girls[0], "Inbt", 95, -5) 
+                        call AnyFace(Girls[0],"sad",1)           
+                        "You tell her to cut it out, and head back to what you were doing."
+                        $ P_RecentActions.append("nope")      
+                        call AnyWord(Girls[0],1,"refused","refused") 
+                        if not ApprovalCheck(Girls[0], 500, "O"):                        
+                                call AnyWord(Girls[0],1,"angry","angry") 
+                        return  
+                        
+                if Partner:       
+                        "[Partner] also follows along behind you."
+                
+                $ bg_current = "bg player"                   
+                call CleartheRoom(Girls[0],1,1)  
+                if "Rogue" in Girls:
+                        $ R_Loc = bg_current
+                if "Kitty" in Girls:
+                        $ K_Loc = bg_current
+                if "Emma" in Girls:
+                        $ E_Loc = bg_current
+                if "Laura" in Girls:
+                        $ L_Loc = bg_current                 
+                call Set_The_Scene(Dress=0) 
+                        
+                call Taboo_Level #makes sure Taboo level is accurate                
+        else:                     
+            if Partner:  
+                    call AnyFace(Girls[1],"sly",1)                       
+                    "Suddenly, [Girls[0]] pulls you aside and [Partner] follows along."
+            else:
+                    "Suddenly, [Girls[0]] pulls you aside."
+        
+        call AnyWord(Girls[0],1,"jumped","jumped",0,"jumped") #adds jumped to recent, daily, and history
+        
+        if Girls[0] == "Rogue":
+                ch_r "You've been dodge'in me lately."
+                ch_r "Figured it was about time we did something about that."
+                $ Initial = "R"
+        elif Girls[0] == "Kitty":
+                ch_k "Why haven't you been coming by?"
+                ch_k "Wouldn't you enjoy some \"Kitty\" time?"
+                $ Initial = "K"
+        elif Girls[0] == "Emma":
+                ch_e "You haven't been coming around to visit lately."
+                ch_e "Is there any way I could tempt you?"
+                $ Initial = "E"
+        elif Girls[0] == "Laura":
+                ch_l "I'm horny, let's fuck."
+                $ Initial = "L"
+        else: 
+                return
+            
+        call Favorite_Actions(Girls[0],1) #returns a string of the action
+        $ Act = _return
+        $ Situation = Girls[0]
+        
+        if Act in ("anal","sex","blow","tit","hand","hotdog"):
+                # if cock needs to be out. . .
+                "[Girls[0]] reaches down and unzips your fly. . ."
+                call Seen_First_Peen(Girls[0],Partner,1)
+        
+        if Partner:
+                call expression Partner + "_Noticed" pass (Girls[0],1) #calls the "noticed check" for this girl. 
+                        
+        call AnyWord(Girls[0],1,0,0,0,"jumped")  #makes in History that this happened
+        
+        # launches the appropriate scene based on the sex act in question.
+        if Act == "anal":        
+                call expression Initial + "_AnalPrep" #call R_AnalPrep                
+        elif Act == "sex":
+                call expression Initial + "_SexPrep" #call R_SexPrep
+        elif Act ==  "lick pussy":
+                call expression Initial + "_LP_Prep" #call R_LP_Prep 
+        elif Act == "fondle pussy":
+                call expression Initial + "_FP_Prep" #call R_FP_Prep
+        elif Act == "blow":
+                call expression Initial + "_BJ_Prep" #call R_BJ_Prep
+        elif Act == "tit":
+                call expression Initial + "_TJ_Prep" #call R_TJ_Prep
+        elif Act == "hand":
+                call expression Initial + "_HJ_Prep" #call R_HJ_Prep 
+        elif Act == "hotdog":
+                call expression Initial + "_HotdogPrep" #call R_HotdogPrep
+        elif Act == "suck breasts":               
+                call expression Initial + "_SB_Prep" #call R_SB_Prep
+        elif Act == "fondle breasts":
+                call expression Initial + "_FB_Prep" #call R_FB_Prep
+        elif Act == "insert ass" or Act == "lick ass":
+                call expression Initial + "_IA_Prep" #call R_IA_Prep
+        else: #Act == "kiss you"
+                call expression Initial + "_KissPrep" #call R_KissPrep                 
+        return
+        
+#End Jumped, when a girl does try to jump you
+        
+ 
+# Start sex act escalation / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+label Escalation(Girl=0,Initial=0):
+        #call Escalation("Rogue","R")
+        # raises the level of the sexual activity if the girl would like that. 
+        if Cnt < 10 or ThreeCount <= Round:
+                #if things just started, or you recently made a change, return
+                return
+                
+        $ Situation = Girl
+        
+        if Trigger == "fondle breast" and ApprovalCheck(Girl,1050,TabM=4) and ApprovalCheck(Girl,30,"X") and HistoryCheck(Girl,"suck breasts"):
+                    #if you're fondling her breasts, she has over 30 Lust, and she's had her breasts sucked before. . .
+                    call expression Initial + "_SB_Prep" #call R_SB_Prep  
+                    if CheckWord(Girl,"Recent","suck breasts"):
+                            # If you went through with it, drop one phase back when returning to this point
+                            $ renpy.pop_call()
+        elif Trigger == "fondle thighs" and ApprovalCheck(Girl,1050,TabM=4) and ApprovalCheck(Girl,30,"X") and HistoryCheck(Girl,"fondle pussy"):
+                    #if you're fondling her thighs, she has over 30 Lust, and she's had her pussy fondled before. . .
+                    call expression Initial + "_FP_Prep" #call R_FP_Prep  
+                    if CheckWord(Girl,"Recent","fondle pussy"):
+                            # If you went through with it, drop one phase back when returning to this point
+                            $ renpy.pop_call()
+        elif Trigger == "handjob" and ApprovalCheck(Girl,1200,TabM=4) and ApprovalCheck(Girl,30,"X") and HistoryCheck(Girl,"blow"):
+                    #if she's giving a handy, she has over 30 Lust, and she's sucked cock before. . .
+                    call expression Initial + "_BJ_Prep" #call R_BJ_Prep  
+                    if CheckWord(Girl,"Recent","blow"):
+                            # If you went through with it, drop one phase back when returning to this point
+                            $ renpy.pop_call()                  
+        elif Trigger not in ("sex","anal") and ApprovalCheck(Girl,1400,TabM=5) and ApprovalCheck(Girl,60,"X") and HistoryCheck(Girl,"sex") >= 3:
+                    #if you're not having sex, she has over 60 Lust, and she's had sex before. . .
+                    call expression Initial + "_SexPrep" #call R_SexPrep  
+                    if CheckWord(Girl,"Recent","sex"):
+                            # If you went through with it, drop one phase back when returning to this point
+                            $ renpy.pop_call()  
+        elif Trigger != "anal" and ApprovalCheck(Girl,1400,TabM=5) and ApprovalCheck(Girl,70,"X") and HistoryCheck(Girl,"anal") >= 5:
+                    #if you're not having anal, she has over 70 Lust, and she's had anal before. . .
+                    call expression Initial + "_AnalPrep" #call R_AnalPrep  
+                    if CheckWord(Girl,"Recent","anal"):
+                            # If you went through with it, drop one phase back when returning to this point
+                            $ renpy.pop_call() 
+        
+        
+        
+        #if it falls through the options
+        $ ThreeCount = 0
+        $ Situation = 0
+        return
+#end Escalation / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+
+
 # Start Danger Room Historia / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / 
   
 label Danger_Room_Historia(Character="Rogue",Scenario="Meeting"):
@@ -5570,7 +6300,7 @@ label Sex_Dialog(Primary=Ch_Focus,Secondary=0,TempFocus=0,PrimaryLust=0,Secondar
         
         $ Line = 0
         
-        if Taboo:
+        if Taboo and Zero_Loc(Primary) == bg_current:
             if (D20S + (int(Taboo/10)) - Stealth) >= 10:        
                     #If there is a Taboo level, and your modified roll is over 10
                     call Girls_Taboo(Primary)
@@ -5579,14 +6309,16 @@ label Sex_Dialog(Primary=Ch_Focus,Secondary=0,TempFocus=0,PrimaryLust=0,Secondar
                     
         $ Secondary = Partner
         
-        if Primary == "Rogue":                                 
-                    call Rogue_SexDialog                                      
-        elif Primary == "Kitty":                  
-                    call Kitty_SexDialog                    
-        elif Primary == "Emma":
-                    call Emma_SexDialog                    
-        elif Primary == "Laura":
-                    call Laura_SexDialog
+        call expression Primary + "_SexDialog" #call Rogue_SexDialog
+        
+#        if Primary == "Rogue":                                 
+#                    call Rogue_SexDialog                                      
+#        elif Primary == "Kitty":                  
+#                    call Kitty_SexDialog                    
+#        elif Primary == "Emma":
+#                    call Emma_SexDialog                    
+#        elif Primary == "Laura":
+#                    call Laura_SexDialog
                     
         $ Line1 = Line #Set Line1 to the current state of the Line variable
         #End Primary Dialog
@@ -5595,14 +6327,17 @@ label Sex_Dialog(Primary=Ch_Focus,Secondary=0,TempFocus=0,PrimaryLust=0,Secondar
         if Trigger2 and D20S <= 15:
                     # If there is a player offhand Trigger set and the random value is 1-15, add an Offhand dialog
                     $ Line = ""
-                    if Primary == "Rogue":                        
-                            call Rogue_Offhand
-                    elif Primary == "Kitty":
-                            call Kitty_Offhand
-                    elif Primary == "Emma":
-                            call Emma_Offhand
-                    elif Primary == "Laura":
-                            call Laura_Offhand
+                    
+                    call expression Primary + "_Offhand" #call Rogue_Offhand
+                    
+#                    if Primary == "Rogue":                        
+#                            call Rogue_Offhand
+#                    elif Primary == "Kitty":
+#                            call Kitty_Offhand
+#                    elif Primary == "Emma":
+#                            call Emma_Offhand
+#                    elif Primary == "Laura":
+#                            call Laura_Offhand
                     
                     $ Line1 = Line1 + Line
         #End Offhand
@@ -5611,14 +6346,17 @@ label Sex_Dialog(Primary=Ch_Focus,Secondary=0,TempFocus=0,PrimaryLust=0,Secondar
         if D20S >= 7 and Trigger not in ("masturbation", "lesbian"):
                     # If there is a Primary offhand Trigger set and the random value is 1-10, add a self-directed dialog
                     $ Line = 0
-                    if Primary == "Rogue":
-                            call Rogue_Self_Lines("T3",Trigger3)      
-                    elif Primary == "Kitty":
-                            call Kitty_Self_Lines("T3",Trigger3)      
-                    elif Primary == "Emma":
-                            call Emma_Self_Lines("T3",Trigger3)     
-                    elif Primary == "Laura":
-                            call Laura_Self_Lines("T3",Trigger3) 
+                    
+                    call expression Primary + "_Self_Lines" pass ("T3",Trigger3) #call Rogue_Self_Lines("T3",Trigger3)  
+                    
+#                    if Primary == "Rogue":
+#                            call Rogue_Self_Lines("T3",Trigger3)      
+#                    elif Primary == "Kitty":
+#                            call Kitty_Self_Lines("T3",Trigger3)      
+#                    elif Primary == "Emma":
+#                            call Emma_Self_Lines("T3",Trigger3)     
+#                    elif Primary == "Laura":
+#                            call Laura_Self_Lines("T3",Trigger3) 
                     if Line:
                             $ Line3 = Line + "."
         #End Primary girl offhand
@@ -5627,14 +6365,17 @@ label Sex_Dialog(Primary=Ch_Focus,Secondary=0,TempFocus=0,PrimaryLust=0,Secondar
         if Secondary and (not Trigger4 or 7 <= D20S <= 17 or Trigger4 == "watch"):
                     # If there is a Secondary character and the random value is 5-15, add a threeway dialog
                     $ Line = 0
-                    if Secondary == "Rogue":
-                            call Rogue_SexDialog_Threeway
-                    elif Secondary == "Kitty":
-                            call Kitty_SexDialog_Threeway
-                    elif Secondary == "Emma":
-                            call Emma_SexDialog_Threeway
-                    elif Secondary == "Laura":
-                            call Laura_SexDialog_Threeway
+                    
+                    call expression Secondary + "_SexDialog_Threeway" #call Rogue_SexDialog_Threeway
+                    
+#                    if Secondary == "Rogue":
+#                            call Rogue_SexDialog_Threeway
+#                    elif Secondary == "Kitty":
+#                            call Kitty_SexDialog_Threeway
+#                    elif Secondary == "Emma":
+#                            call Emma_SexDialog_Threeway
+#                    elif Secondary == "Laura":
+#                            call Laura_SexDialog_Threeway
                     if Line:
                             $ Line4 = Line + "."
         #End Secondary Dialog
@@ -5644,26 +6385,33 @@ label Sex_Dialog(Primary=Ch_Focus,Secondary=0,TempFocus=0,PrimaryLust=0,Secondar
         
         #Applying primary girl's satisfaction
         call Statup(Primary, "Lust", 200, PrimaryLust) 
-        if Primary == "Rogue":
-                call RogueLust                         
-        elif Primary == "Kitty":
-                call KittyLust                          
-        elif Primary == "Emma":
-                call EmmaLust                           
-        elif Primary == "Laura":
-                call LauraLust       
         
-        #Applying secondary girl's satisfaction        
-        $ SecondaryLust += (int(PrimaryLust/10)) if GirlLikeCheck(Secondary,Primary) >= 700 else 0
-        call Statup(Secondary, "Lust", 200, SecondaryLust) 
-        if Secondary == "Rogue": 
-                call RogueLust
-        elif Secondary == "Kitty":
-                call KittyLust 
-        elif Secondary == "Emma":
-                call EmmaLust 
-        elif Secondary == "Laura":
-                call LauraLust 
+        call expression Primary + "Lust" #call RogueLust
+                    
+#        if Primary == "Rogue":
+#                call RogueLust                         
+#        elif Primary == "Kitty":
+#                call KittyLust                          
+#        elif Primary == "Emma":
+#                call EmmaLust                           
+#        elif Primary == "Laura":
+#                call LauraLust       
+        
+        #Applying secondary girl's satisfaction      
+        if Secondary:
+                $ SecondaryLust += (int(PrimaryLust/10)) if GirlLikeCheck(Secondary,Primary) >= 700 else 0
+                call Statup(Secondary, "Lust", 200, SecondaryLust) 
+                
+                call expression Secondary + "Lust" #call KittyLust
+                    
+#        if Secondary == "Rogue": 
+#                call RogueLust
+#        elif Secondary == "Kitty":
+#                call KittyLust 
+#        elif Secondary == "Emma":
+#                call EmmaLust 
+#        elif Secondary == "Laura":
+#                call LauraLust 
         
         
         # Dialog begins to play out. . . 
@@ -6245,10 +6993,10 @@ label SkipTo(Primary = 0):
 
 label Clear_Stack:
     #this empties the call stack of stray items, and is called when the player goes to his room
-    $ Count = renpy.call_stack_depth() #Count = number of items in the call stack
-    while Count > 0:
+    $ StackDepth = renpy.call_stack_depth() #Count = number of items in the call stack
+    while StackDepth > 0:
+        $ StackDepth -= 1
         $ renpy.pop_call()
-        $ Count -= 1
     jump Player_Room
     
     

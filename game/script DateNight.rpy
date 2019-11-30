@@ -164,7 +164,7 @@ label Date_Crossed(Girls=[],Check=0,CrossedP=0,CrossedS=0,Count=0):
             ch_l "Yeah, what's up?"
         else:
             ch_l "Hey."
-            ch_l "Why's [Party[1]] here?"
+            ch_l "Why's [Party[0]] here?"
         $ Girls.append("Laura")
             
     if not Girls:
@@ -1905,4 +1905,3 @@ label Readytogo(R=0):
                         ch_l "Ok, whatever."
                         $ L_DailyActions.remove("yesdate")
     return
-            

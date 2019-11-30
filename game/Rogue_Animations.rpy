@@ -15,13 +15,12 @@ image Rogue:
             #back of hair
             "renpy.showing('Rogue_BJ_Animation') or renpy.showing('BJ_NewTest') or renpy.showing('Rogue_TJ_Animation')", Null(),
             "R_Hair == 'evo' and R_Water", Null(),
-            # "R_Hair == 'evo'", "images/RogueSprite/Rogue_hair" + GetHairColor(R_HairColor) + "_evo_back.png",
+            "R_Hair == 'evo'", "images/RogueSprite/Rogue_hair_evo_back.png",
             "True", Null(),
             ),  
         (0,0), ConditionSwitch(                                                                         
             #shirt layer           
             "not R_Over", Null(),    
-            "'modded' in R_Over and 'hoodie' in R_Over", GetModdedString("images/RogueSprite/Rogue_Sprite_over_", R_Over, "B.png"),
             "R_Over == 'hoodie'", "images/RogueSprite/Rogue_over_hoodieB.png",         
             "R_Uptop", ConditionSwitch( 
                     #if the top's down. . .
@@ -48,7 +47,6 @@ image Rogue:
                     #if the top's up. . .
                     "Rogue_Arms == 1", ConditionSwitch( 
                             #if the arms are down. . .
-                            "'modded' in R_Over and 'mesh top' in R_Over", GetModdedString("images/RogueSprite/Rogue_Sprite_over_", R_Over, "1.png"),
                             "R_Over == 'mesh top'", "images/RogueSprite/Rogue_over_mesh1.png",           
 #                            "R_Over == 'pink top'", "images/RogueSprite/Rogue_over_pink1.png",
 #                            "R_Over == 'towel'", "images/RogueSprite/Rogue_over_towel1.png",
@@ -58,7 +56,6 @@ image Rogue:
                             ),  
                     "True", ConditionSwitch( 
                             #if the arms are up. . .
-                            "'modded' in R_Over and 'mesh top' in R_Over", GetModdedString("images/RogueSprite/Rogue_Sprite_over_", R_Over, "2.png"),
                             "R_Over == 'mesh top'", "images/RogueSprite/Rogue_over_mesh2.png", 
 #                            "R_Over == 'pink top'", "images/RogueSprite/Rogue_over_pink2.png",
 #                            "R_Over == 'hoodie'", "images/RogueSprite/Rogue_over_hoodie2.png",
@@ -70,74 +67,22 @@ image Rogue:
             ),
         (0,0), ConditionSwitch(                                                                         
             #body 
-            "R_DynamicTan[0]", "images/RogueSprite/Rogue_tbody_bare.png",   
+            "R_Pubes and R_Pierce == 'ring'", "images/RogueSprite/Rogue_bodyhaired_ring.png",
+            "R_Pubes and R_Pierce == 'barbell'", "images/RogueSprite/Rogue_bodyhaired_barbell.png",
+            "R_Pierce == 'ring'", "images/RogueSprite/Rogue_body_ring.png",            
+            "R_Pierce == 'barbell'", "images/RogueSprite/Rogue_body_barbell.png",
+            "R_Pubes", "images/RogueSprite/Rogue_bodyhaired_bare.png",   
             "True", "images/RogueSprite/Rogue_body_bare.png",         
-            ),
-        (0,0), ConditionSwitch(   
-            "not R_DynamicTan[1] or not R_DynamicTan[0]", Null(), #over
-            "Rogue_Arms", AlphaMask("images/RogueSprite/Rogue_body_bare.png", GetModdedStringTanRogue("1", "1.png")),
-            "True", AlphaMask("images/RogueSprite/Rogue_body_bare.png", GetModdedStringTanRogue("1", "2.png")),
-            ),
-        (0,0), ConditionSwitch(                                                                        
-            "not R_DynamicTan[3] or not R_DynamicTan[0]", Null(), #chest
-            "Rogue_Arms", AlphaMask("images/RogueSprite/Rogue_body_bare.png", GetModdedStringTanRogue("3", "1.png")),
-            "True", AlphaMask("images/RogueSprite/Rogue_body_bare.png", GetModdedStringTanRogue("3", "2.png")),
-            ),
-        (0,0), ConditionSwitch(   
-            "not R_DynamicTan[5] or not R_DynamicTan[0]", Null(),
-            "True", AlphaMask("images/RogueSprite/Rogue_body_bare.png", GetModdedStringTanRogue("5", ".png")),
-            ),
-        (0,0), ConditionSwitch(                                                                        
-            "not R_DynamicTan[2] or not R_DynamicTan[0]", Null(),
-            "True", AlphaMask("images/RogueSprite/Rogue_body_bare.png", GetModdedStringTanRogue("2", ".png")),
-            ),
-        
-        (0,0), ConditionSwitch(   
-            "not R_DynamicTan[4] or not R_DynamicTan[0]", Null(),
-            "True", AlphaMask("images/RogueSprite/Rogue_body_bare.png", GetModdedStringTanRogue("4", ".png")),
-            ),
-        (0,0), ConditionSwitch(                                                                         
-            #piercings 
-            "R_Pierce == 'ring'", "images/RogueSprite/Rogue_body_piercing_ring.png",            
-            "R_Pierce == 'barbell'", "images/RogueSprite/Rogue_body_piercing_barbell.png",
-            "True", Null(),         
-            ), 
-        (0,0), ConditionSwitch(                                                                         
-            #pubes 
-            "R_PubesColor", Null(),
-            "R_Pubes", "images/RogueSprite/Rogue_bodyhaired_pubes.png",   
-            "True", Null(),         
-            ),
-        (0,0), ConditionSwitch(                                                                         
-            #pubes 
-            "R_Pubes and R_PubesColor", im.MatrixColor("images/RogueSprite/Rogue_Sprite_Pubes_bottom.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "True", Null(),         
-            ),
-        (0,0), ConditionSwitch(                                                                         
-            #pubes 
-            "R_Pubes and R_PubesColor", im.MatrixColor("images/RogueSprite/Rogue_Sprite_Pubes_top.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
-            "True", Null(),         
-            ),
+            ),              
         (0,0), ConditionSwitch(                                                                         
             #head 
-            "R_DynamicTan[0]", Null(),
             "renpy.showing('Rogue_BJ_Animation') or renpy.showing('BJ_NewTest') or renpy.showing('Rogue_TJ_Animation')", Null(),
-            "R_Hair == 'evo' and R_Water", "images/RogueSprite/Rogue_head_evowet.png",
+#            "R_Hair == 'evo' and R_Water", "images/RogueSprite/Rogue_head_evowet.png",
             "R_Hair == 'evo' and R_Blush == 2", "images/RogueSprite/Rogue_head_evo_blush2.png",
             "R_Hair == 'evo' and R_Blush", "images/RogueSprite/Rogue_head_evo_blush.png",
             "R_Hair == 'evo'", "images/RogueSprite/Rogue_head_evo.png",
             "True", "images/RogueSprite/Rogue_head_evo.png",
             ),  
-        (0,0), ConditionSwitch(                                                                         #head 
-            #head 
-            "not R_DynamicTan[0]", Null(),
-            "renpy.showing('Rogue_BJ_Animation') or renpy.showing('BJ_NewTest') or renpy.showing('Rogue_TJ_Animation')", Null(),
-            "R_Hair == 'evo' and R_Water", "images/RogueSprite/Rogue_thead_evowet.png",
-            "R_Hair == 'evo' and R_Blush == 2", "images/RogueSprite/Rogue_thead_evo_blush2.png",
-            "R_Hair == 'evo' and R_Blush", "images/RogueSprite/Rogue_thead_evo_blush.png",
-            "R_Hair == 'evo'", "images/RogueSprite/Rogue_thead_evo.png",
-            "True", "images/RogueSprite/Rogue_thead_evo.png",
-            ), 
         (0,0), ConditionSwitch(                                                                         
             #pants backing/hose    
             "R_Hose == 'stockings'", "images/RogueSprite/Rogue_hose.png",     
@@ -168,7 +113,6 @@ image Rogue:
                     #if the panties's down. . .
                     "R_Wet > 1", ConditionSwitch( 
                             #if the panties's are wet. . .
-                            "'modded' in R_Panties", GetModdedString("images/RogueSprite/Rogue_Sprite_panties_", R_Panties, "_down_wet.png"),
                             "R_Panties == 'shorts'", "images/RogueSprite/Rogue_shorts_down_wet.png",
                             "R_Panties == 'green panties'", "images/RogueSprite/Rogue_undies_down_wet.png",
                             "R_Panties == 'bikini bottoms'", "images/RogueSprite/Rogue_panties_bikini_down.png",  
@@ -176,7 +120,6 @@ image Rogue:
                             ),    
                     "True", ConditionSwitch( 
                             #if the panties's are not wet. . .
-                            "'modded' in R_Panties", GetModdedString("images/RogueSprite/Rogue_Sprite_panties_", R_Panties, "_down.png"),
                             "R_Panties == 'shorts'", "images/RogueSprite/Rogue_shorts_down.png",  
                             "R_Panties == 'green panties'", "images/RogueSprite/Rogue_undies_down.png",  
                             "R_Panties == 'bikini bottoms'", "images/RogueSprite/Rogue_panties_bikini_down.png",  
@@ -187,7 +130,6 @@ image Rogue:
                     #if the panties's up. . .
                     "R_Wet > 1", ConditionSwitch( 
                             #if the panties's are wet. . .
-                            "'modded' in R_Panties", GetModdedString("images/RogueSprite/Rogue_Sprite_panties_", R_Panties, "_wet.png"),
                             "R_Panties == 'shorts' and R_Wet > 1", "images/RogueSprite/Rogue_shorts_wet.png",     
                             "R_Panties == 'green panties' and R_Wet > 1", "images/RogueSprite/Rogue_undies_wet.png",     
                             "R_Panties == 'lace panties'", "images/RogueSprite/Rogue_lacepanties.png",    
@@ -196,11 +138,6 @@ image Rogue:
                             ),    
                     "True", ConditionSwitch( 
                             #if the panties's are not wet. . .     
-                            #modded
-                            #"R_Panties[:6] == 'modded'", GetModdedString("images/RogueSprite/Rogue_Sprite_panties_", R_Panties, ".png"),
-                            "'modded' in R_Panties", GetModdedString("images/RogueSprite/Rogue_Sprite_panties_", R_Panties, ".png"),
-                            #"R_Panties[:6] == 'modded'", "images/RogueSprite/Rogue_panties_" + R_Panties + ".png",
-                            #"'modded' in R_Panties", "images/RogueSprite/Rogue_panties_" + R_Panties + ".png",
                             "R_Panties == 'shorts'", "images/RogueSprite/Rogue_shorts.png",       
                             "R_Panties == 'green panties'", "images/RogueSprite/Rogue_undies.png",   
                             "R_Panties == 'lace panties'", "images/RogueSprite/Rogue_lacepanties.png",   
@@ -211,8 +148,6 @@ image Rogue:
             ),
         (0,0), ConditionSwitch(                                                                         
             #full hose/tights              
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueSprite/Rogue_Sprite_hose_", R_Hose, ".png"),
             "R_Panties and R_PantiesDown", Null(), 
             "R_Hose == 'stockings and garterbelt'", "images/RogueSprite/Rogue_hose_garter.png",  
             "R_Hose == 'garterbelt'", "images/RogueSprite/Rogue_garters.png",                 
@@ -294,10 +229,8 @@ image Rogue:
             "'mouth' in R_Spunk and R_Mouth == 'kiss'", "images/RogueSprite/Rogue_mouth_sad_w.png",
             "'mouth' in R_Spunk and R_Mouth == 'smile'", "images/RogueSprite/Rogue_mouth_smile_w.png",
             "'mouth' in R_Spunk and R_Mouth == 'tongue'", "images/RogueSprite/Rogue_mouth_tongue_w.png",
-            "R_DynamicTan[0] and 'mouth' in R_Spunk", "images/RogueSprite/Rogue_tmouth_lipbite_w.png",
             "'mouth' in R_Spunk", "images/RogueSprite/Rogue_mouth_lipbite_w.png",
             "R_Mouth == 'normal'", "images/RogueSprite/Rogue_mouth_normal.png",
-            "R_DynamicTan[0] and R_Mouth == 'lipbite'", "images/RogueSprite/Rogue_tmouth_lipbite.png",
             "R_Mouth == 'lipbite'", "images/RogueSprite/Rogue_mouth_lipbite.png",
             "R_Mouth == 'sucking'", "images/RogueSprite/Rogue_mouth_sucking.png",            
             "R_Mouth == 'kiss'", "images/RogueSprite/Rogue_mouth_kiss.png",
@@ -310,12 +243,9 @@ image Rogue:
             ),            
         (0,0), "Rogue Blink",                                                                           
             #Eyes
-        (0,0), "images/RogueSprite/Rogue_Sprite_Glasses_[R_Glasses].png",
+            
         (0,0), ConditionSwitch(                                                                         
             #Pants and Skirts
-            "not R_Legs", Null(),
-            "'modded' in R_Legs and R_Upskirt", GetModdedString("images/RogueSprite/Rogue_Sprite_legs_", R_Legs, "_up.png"),
-            "'modded' in R_Legs", GetModdedString("images/RogueSprite/Rogue_Sprite_legs_", R_Legs, ".png"),
             "R_Legs == 'pants' and R_Upskirt", "images/RogueSprite/Rogue_legs_pants_down.png", 
             "R_Legs == 'pants'", "images/RogueSprite/Rogue_legs_pants.png",          
             "R_Legs == 'skirt' and R_Upskirt", "images/RogueSprite/Rogue_legs_skirt_up.png",
@@ -324,67 +254,21 @@ image Rogue:
             ),
         (0,0), ConditionSwitch(                                                                        
             #Arms and gloves
-            "R_DynamicTan[0] and Rogue_Arms == 1 and R_Arms == 'gloved' and R_Neck == 'spiked collar'", "images/RogueSprite/Rogue_tarms1a_gloved.png",       #Gloves and collar 
             "Rogue_Arms == 1 and R_Arms == 'gloved' and R_Neck == 'spiked collar'", "images/RogueSprite/Rogue_arms1a_gloved.png",       #Gloves and collar 
-            "R_DynamicTan[0] and Rogue_Arms == 1 and R_Arms == 'gloved'", "images/RogueSprite/Rogue_tarms1b_gloved.png",                                     #Gloves, no collar
             "Rogue_Arms == 1 and R_Arms == 'gloved'", "images/RogueSprite/Rogue_arms1b_gloved.png",                                     #Gloves, no collar
-            "R_DynamicTan[0] and Rogue_Arms == 1 and R_Neck == 'spiked collar'", "images/RogueSprite/Rogue_tarms1a_bare.png",                                #No Gloves, collar 
             "Rogue_Arms == 1 and R_Neck == 'spiked collar'", "images/RogueSprite/Rogue_arms1a_bare.png",                                #No Gloves, collar 
-            "R_DynamicTan[0] and Rogue_Arms == 1", "images/RogueSprite/Rogue_tarms1b_bare.png",                                                              #No gloves, no collar
             "Rogue_Arms == 1", "images/RogueSprite/Rogue_arms1b_bare.png",                                                              #No gloves, no collar
-            "R_DynamicTan[0] and R_Arms == 'gloved' and R_Neck == 'spiked collar'", "images/RogueSprite/Rogue_tarms2a_gloved.png",                           #Gloves and collar 
             "R_Arms == 'gloved' and R_Neck == 'spiked collar'", "images/RogueSprite/Rogue_arms2a_gloved.png",                           #Gloves and collar 
-            "R_DynamicTan[0] and R_Arms == 'gloved'", "images/RogueSprite/Rogue_tarms2b_gloved.png",                                                         #Gloved, no collar
             "R_Arms == 'gloved'", "images/RogueSprite/Rogue_arms2b_gloved.png",                                                         #Gloved, no collar
-            "R_DynamicTan[0] and R_Neck == 'spiked collar'", "images/RogueSprite/Rogue_tarms2a_bare.png",                                                    #No gloves, collar
             "R_Neck == 'spiked collar'", "images/RogueSprite/Rogue_arms2a_bare.png",                                                    #No gloves, collar
-            "R_DynamicTan[0]", "images/RogueSprite/Rogue_tarms2b_bare.png",                                                                         #No gloves, no collar
-            "True", "images/RogueSprite/Rogue_arms2b_bare.png",   
+            "True", "images/RogueSprite/Rogue_arms2b_bare.png",    
             ), 
-        (0,0), ConditionSwitch(   
-            "not R_DynamicTan[1] or not R_DynamicTan[0]", Null(),
-            "Rogue_Arms == 1 and R_Arms == 'gloved' and R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms1a_gloved.png", GetModdedStringTanRogue("1", "1.png")),       #Gloves and collar 
-            "Rogue_Arms == 1 and R_Arms == 'gloved'", AlphaMask("images/RogueSprite/Rogue_arms1b_gloved.png", GetModdedStringTanRogue("1", "1.png")),                                     #Gloves, no collar
-            "Rogue_Arms == 1 and R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms1a_bare.png", GetModdedStringTanRogue("1", "1.png")),                                #No Gloves, collar 
-            "Rogue_Arms == 1", AlphaMask("images/RogueSprite/Rogue_arms1b_bare.png", GetModdedStringTanRogue("1", "1.png")),                                                              #No gloves, no collar
-            "R_Arms == 'gloved' and R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms2a_gloved.png", GetModdedStringTanRogue("1", "2.png")),                           #Gloves and collar 
-            "R_Arms == 'gloved'", AlphaMask("images/RogueSprite/Rogue_arms2b_gloved.png", GetModdedStringTanRogue("1", "2.png")),                                                         #Gloved, no collar
-            "R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms2a_bare.png", GetModdedStringTanRogue("1", "2.png")),                                                    #No gloves, collar
-            "True", AlphaMask("images/RogueSprite/Rogue_arms2b_bare.png", GetModdedStringTanRogue("1", "2.png")),   
-            ),
-        (0,0), ConditionSwitch(                                                                        
-            "not R_DynamicTan[3] or not R_DynamicTan[0]", Null(),
-
-            "Rogue_Arms == 1 and R_Arms == 'gloved' and R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms1a_gloved.png", GetModdedStringTanRogue("3", "1.png")),       #Gloves and collar 
-            "Rogue_Arms == 1 and R_Arms == 'gloved'", AlphaMask("images/RogueSprite/Rogue_arms1b_gloved.png", GetModdedStringTanRogue("3", "1.png")),                                     #Gloves, no collar
-            "Rogue_Arms == 1 and R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms1a_bare.png", GetModdedStringTanRogue("3", "1.png")),                                #No Gloves, collar 
-            "Rogue_Arms == 1", AlphaMask("images/RogueSprite/Rogue_arms1b_bare.png", GetModdedStringTanRogue("3", "1.png")),                                                              #No gloves, no collar
-            "R_Arms == 'gloved' and R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms2a_gloved.png", GetModdedStringTanRogue("3", "2.png")),                           #Gloves and collar 
-            "R_Arms == 'gloved'", AlphaMask("images/RogueSprite/Rogue_arms2b_gloved.png", GetModdedStringTanRogue("3", "2.png")),                                                         #Gloved, no collar
-            "R_Neck == 'spiked collar'", AlphaMask("images/RogueSprite/Rogue_arms2a_bare.png", GetModdedStringTanRogue("3", "2.png")),                                                    #No gloves, collar
-            "True", AlphaMask("images/RogueSprite/Rogue_arms2b_bare.png", GetModdedStringTanRogue("3", "2.png")),   
-            ),
         (0,0), ConditionSwitch(                                                                         
             #chest layer
-            "R_DynamicTan[0] and R_Pierce == 'barbell'", "images/RogueSprite/Rogue_tchest_barbell.png",            
             "R_Pierce == 'barbell'", "images/RogueSprite/Rogue_chest_barbell.png",            
-            "R_DynamicTan[0] and R_Pierce == 'ring'", "images/RogueSprite/Rogue_tchest_rings.png",      
             "R_Pierce == 'ring'", "images/RogueSprite/Rogue_chest_rings.png",      
-            "R_DynamicTan[0]", "images/RogueSprite/Rogue_tchest_bare.png",     
-            "True", "images/RogueSprite/Rogue_chest_bare.png",     
+            "True", "images/RogueSprite/Rogue_chest_bare.png",    
             ),   
-        (0,0), ConditionSwitch(   
-            "not R_DynamicTan[1] or not R_DynamicTan[0]", Null(),
-            "R_Pierce == 'barbell'", AlphaMask("images/RogueSprite/Rogue_chest_barbell.png", GetModdedStringTanRogue("1", "1.png")),            
-            "R_Pierce == 'ring'", AlphaMask("images/RogueSprite/Rogue_chest_rings.png", GetModdedStringTanRogue("1", "1.png")),      
-            "True", AlphaMask("images/RogueSprite/Rogue_chest_bare.png", GetModdedStringTanRogue("1", "1.png")),     
-            ),  
-        (0,0), ConditionSwitch(                                                                        
-            "not R_DynamicTan[3] or not R_DynamicTan[0]", Null(),
-            "R_Pierce == 'barbell'", AlphaMask("images/RogueSprite/Rogue_chest_barbell.png", GetModdedStringTanRogue("3", "1.png")),            
-            "R_Pierce == 'ring'", AlphaMask("images/RogueSprite/Rogue_chest_rings.png", GetModdedStringTanRogue("3", "1.png")),      
-            "True", AlphaMask("images/RogueSprite/Rogue_chest_bare.png", GetModdedStringTanRogue("3", "1.png")),     
-            ),  
 #        (0,0), ConditionSwitch(                                                                         
 #            #chest clothes layer
 #            "R_Chest == 'tank'", "images/RogueSprite/Rogue_chest_tank.png",
@@ -399,27 +283,15 @@ image Rogue:
             "not R_Chest", Null(),             
             "R_Uptop", ConditionSwitch( 
                     #if the top's down. . .
-                    "'modded' in R_Chest and 'crop top' in R_Chest", ConditionSwitch(
-                        "Rogue_Arms == 1", GetModdedString("images/RogueSprite/Rogue_Sprite_chest_", R_Chest, "1_Up.png"),
-                        "True", GetModdedString("images/RogueSprite/Rogue_Sprite_chest_", R_Chest, "2_Up.png"),
-                        ),
                     "R_Chest == 'tank'", "images/RogueSprite/Rogue_chest_tank_Up.png",
                     "R_Chest == 'buttoned tank'", "images/RogueSprite/Rogue_chest_tank2_Up.png",            
                     "R_Chest == 'bra'", "images/RogueSprite/Rogue_chest_bra_Up.png",                         
                     "R_Chest == 'sports bra'", "images/RogueSprite/Rogue_chest_sportsbra_Up.png",
                     "R_Chest == 'lace bra'", "images/RogueSprite/Rogue_chest_lacebra_Up.png",            
                     "R_Chest == 'bikini top'", "images/RogueSprite/Rogue_chest_bikini_Up.png",     
-                    "True", Null(),    
                     ),            
             "True", ConditionSwitch(
                     #if the top's up. . .
-                    "'modded' in R_Chest and ('crop top' in R_Chest or 'classic uniform' in R_Chest or 'dress' in R_Chest)", ConditionSwitch(
-                        "'dress' in R_Chest and Rogue_Arms == 1 and R_Upskirt", GetModdedString("images/RogueSprite/Rogue_Sprite_chest_", R_Chest, "_up1.png"),
-                        "'dress' in R_Chest and R_Upskirt", GetModdedString("images/RogueSprite/Rogue_Sprite_chest_", R_Chest, "_up2.png"),
-                        "Rogue_Arms == 1", GetModdedString("images/RogueSprite/Rogue_Sprite_chest_", R_Chest, "1.png"),
-                        "True", GetModdedString("images/RogueSprite/Rogue_Sprite_chest_", R_Chest, "2.png"),
-                        ),
-                    "'modded' in R_Chest", GetModdedString("images/RogueSprite/Rogue_Sprite_chest_", R_Chest, ".png"),
                     "R_Chest == 'tank'", "images/RogueSprite/Rogue_chest_tank.png",
                     "R_Chest == 'buttoned tank'", "images/RogueSprite/Rogue_chest_tank2.png",            
                     "R_Chest == 'bra'", "images/RogueSprite/Rogue_chest_bra.png",                         
@@ -483,7 +355,6 @@ image Rogue:
                     #if the top's up. . .
                     "Rogue_Arms == 1", ConditionSwitch( 
                             #if the arms are down. . .
-                            "'modded' in R_Over", GetModdedString("images/RogueSprite/Rogue_Sprite_over_", R_Over, "1.png"),
                             "R_Over == 'mesh top'", "images/RogueSprite/Rogue_over_mesh1.png",           
                             "R_Over == 'pink top'", "images/RogueSprite/Rogue_over_pink1.png",
                             "R_Over == 'towel'", "images/RogueSprite/Rogue_over_towel1.png",
@@ -493,7 +364,6 @@ image Rogue:
                             ),  
                     "True", ConditionSwitch( 
                             #if the arms are up. . .
-                            "'modded' in R_Over", GetModdedString("images/RogueSprite/Rogue_Sprite_over_", R_Over, "2.png"),
                             "R_Over == 'mesh top'", "images/RogueSprite/Rogue_over_mesh2.png", 
                             "R_Over == 'pink top'", "images/RogueSprite/Rogue_over_pink2.png",
                             "R_Over == 'hoodie'", "images/RogueSprite/Rogue_over_hoodie2.png",
@@ -503,26 +373,13 @@ image Rogue:
                             ),       
                     ),       
             ),
-        (0,0), "images/RogueSprite/Rogue_Sprite_Headband_[R_Headband].png",
         (0,0), ConditionSwitch(                                                                         
             #Hair
             "renpy.showing('Rogue_BJ_Animation') or renpy.showing('BJ_NewTest') or renpy.showing('Rogue_TJ_Animation')", Null(),
-            "R_Hair == 'evo' and R_Water and R_HairColor == 'custom'", im.MatrixColor("images/RogueSprite/Rogue_hairWhite_wet.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "R_Hair == 'evo' and R_Water", "images/RogueSprite/Rogue_hair" + GetHairColor(R_HairColor) + "_wet.png",
-            "R_Hair == 'evo' and R_HairColor == 'custom'", im.MatrixColor("images/RogueSprite/Rogue_hairWhite_evo.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "R_Hair == 'evo'", "images/RogueSprite/Rogue_hair" + GetHairColor(R_HairColor) + "_evo.png",
-            "True", Null(), 
-            ),
-        (0,0), ConditionSwitch(                                                                         
-            #Hair just bangs
-            "renpy.showing('Rogue_BJ_Animation') or renpy.showing('BJ_NewTest') or renpy.showing('Rogue_TJ_Animation')", Null(),
-            "R_Hair == 'newhair' and R_Water", "images/RogueSprite/Rogue_hair_wet_newhair.png",
-            "R_Hair == 'newhair'", "images/RogueSprite/Rogue_hair_evo_newhair.png",
-            "R_HairColorBangs != 'custom2'", Null(),
-            "R_Hair == 'evo' and R_Water", im.MatrixColor("images/RogueSprite/Rogue_hairWhite_wet1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
-            "R_Hair == 'evo'", im.MatrixColor("images/RogueSprite/Rogue_hairWhite_evo1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
-            "True", Null(), 
-            ), 
+            "R_Hair == 'evo' and R_Water", "images/RogueSprite/Rogue_hair_wet.png",
+            "R_Hair == 'wet'", "images/RogueSprite/Rogue_hair_wet.png",
+            "True", "images/RogueSprite/Rogue_hair_evo.png",
+            ),                           
         (0,0), ConditionSwitch(                                                                         
             #hand spunk
             "'hand' in R_Spunk and Rogue_Arms == 2", "images/RogueSprite/Rogue_spunkhand.png",                
@@ -972,39 +829,17 @@ image Rogue_Doggy:
     align (0.6,0.0)
     
             
-image Rogue_Doggy_Body:
-    LiveComposite(                                                                                         #Upper body
+image Rogue_Doggy_Body = LiveComposite(                                                                                         #Upper body
         (420,750),
         (0,0), ConditionSwitch(
             #Hair underlayer
             "R_Water", Null(), 
-            "R_Hair == 'newhair'", "images/RogueDoggy/Rogue_Doggy_HairB.png",   
-            "R_HairColor == 'custom' and R_Hair == 'evo'", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_HairWhiteB.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "R_Hair == 'evo'", "images/RogueDoggy/Rogue_Doggy_Hair" + GetHairColor(R_HairColor) + "B.png",   
+            "R_Hair == 'evo'", "images/RogueDoggy/Rogue_Doggy_HairB.png",   
             "True", Null(), 
-            ),
-        (0,0), ConditionSwitch(
-            #Hair underlayer
-            "R_HairColorBangs != 'custom2'", Null(), 
-            "R_Water", Null(), 
-            "R_Hair == 'evo'", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_HairWhiteB1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
-            "True", Null(), 
-            ),
-        (0,0), ConditionSwitch(          
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Body.png",
-            "True", "images/RogueDoggy/Rogue_Doggy_Body.png",
-            ),
-        (0,0), ConditionSwitch(   
-            "not R_DynamicTan[0] or not R_DynamicTan[1]", Null(),
-            "True", AlphaMask("images/RogueDoggy/Rogue_Doggy_Body.png", GetModdedStringTanRogue("1", "Top.png", "Doggy")),
-            ),  
-        (0,0), ConditionSwitch(   
-            "not R_DynamicTan[0] or not R_DynamicTan[3]", Null(),
-            "True", AlphaMask("images/RogueDoggy/Rogue_Doggy_Body.png", GetModdedStringTanRogue("3", ".png", "Doggy")),
-            ),  
+            ),   
+        (0,0), "images/RogueDoggy/Rogue_Doggy_Body.png", #Body base
         (0,0), ConditionSwitch(             
             #Mouth
-            "R_DynamicTan[0]", Null(),
             "'mouth' in R_Spunk", ConditionSwitch( 
                     "R_Mouth == 'lipbite'", "images/RogueDoggy/Rogue_Doggy_Mouth_LipbiteW.png",
                     "R_Mouth == 'surprised'", "images/RogueDoggy/Rogue_Doggy_Mouth_SurprisedW.png",
@@ -1025,32 +860,8 @@ image Rogue_Doggy_Body:
             "R_Mouth == 'tongue'", "images/RogueDoggy/Rogue_Doggy_Mouth_Tongue.png", 
             "True", "images/RogueDoggy/Rogue_Doggy_Mouth_Smile.png", 
             ),
-        (0,0), ConditionSwitch(             
-            #Mouth
-            "not R_DynamicTan[0]", Null(),
-            "'mouth' in R_Spunk", ConditionSwitch( 
-                    "R_Mouth == 'lipbite'", "images/RogueDoggy/Rogue_tDoggy_Mouth_LipbiteW.png",
-                    "R_Mouth == 'surprised'", "images/RogueDoggy/Rogue_tDoggy_Mouth_SurprisedW.png",
-                    "R_Mouth == 'sucking'", "images/RogueDoggy/Rogue_tDoggy_Mouth_BlowW.png",
-                    "R_Mouth == 'sad'", "images/RogueDoggy/Rogue_tDoggy_Mouth_SadW.png",
-                    "R_Mouth == 'smile'", "images/RogueDoggy/Rogue_tDoggy_Mouth_SmileW.png",   
-                    "R_Mouth == 'tongue'", "images/RogueDoggy/Rogue_tDoggy_Mouth_TongueW.png",  
-                    "True", "images/RogueDoggy/Rogue_tDoggy_Mouth_NormalW.png",   
-                    ),
-            "R_Mouth == 'normal'", "images/RogueDoggy/Rogue_tDoggy_Mouth_Normal.png",
-            "R_Mouth == 'lipbite'", "images/RogueDoggy/Rogue_tDoggy_Mouth_Lipbite.png",
-            "R_Mouth == 'sucking'", "images/RogueDoggy/Rogue_tDoggy_Mouth_Blow.png",            
-            "R_Mouth == 'kiss'", "images/RogueDoggy/Rogue_tDoggy_Mouth_Surprised.png",
-            "R_Mouth == 'sad'", "images/RogueDoggy/Rogue_tDoggy_Mouth_Sad.png",
-            "R_Mouth == 'smile'", "images/RogueDoggy/Rogue_tDoggy_Mouth_Smile.png",
-            "R_Mouth == 'grimace'", "images/RogueDoggy/Rogue_tDoggy_Mouth_Smile.png",
-            "R_Mouth == 'surprised'", "images/RogueDoggy/Rogue_tDoggy_Mouth_Surprised.png",       
-            "R_Mouth == 'tongue'", "images/RogueDoggy/Rogue_tDoggy_Mouth_Tongue.png", 
-            "True", "images/RogueDoggy/Rogue_tDoggy_Mouth_Smile.png", 
-            ),
         (0,0), ConditionSwitch( 
             #Blush
-            "R_DynamicTan[0] and R_Blush", "images/RogueDoggy/Rogue_tDoggy_BlushEvo.png",
             "R_Blush", "images/RogueDoggy/Rogue_Doggy_BlushEvo.png",
             "True", Null(), 
             ),
@@ -1064,7 +875,6 @@ image Rogue_Doggy_Body:
             "True", "images/RogueDoggy/Rogue_Doggy_Brows_Normal.png",
             ),     
         (0,0), "Rogue Doggy Blink",#Eyes
-        (0,0), "images/RogueDoggy/Rogue_Doggy_Glasses_[R_Glasses].png",
         (0,0), ConditionSwitch( 
             #Collar
             "R_Neck == 'spiked collar'", "images/RogueDoggy/Rogue_Doggy_Collar.png",   
@@ -1072,9 +882,7 @@ image Rogue_Doggy_Body:
             ),  
         (0,0), ConditionSwitch(   
             #tanktop
-            "not R_Chest", Null(),  
-            "'modded' in R_Chest and 'dress' in R_Chest", GetModdedString("images/RogueDoggy/Rogue_Doggy_Chest_", R_Chest, "Top.png"),
-            "'modded' in R_Chest", GetModdedString("images/RogueDoggy/Rogue_Doggy_chest_" ,R_Chest, ".png"),
+            "not R_Chest", Null(),        
             "R_Chest == 'tank'", "images/RogueDoggy/Rogue_Doggy_Chest_Tank.png",
             "R_Chest == 'buttoned tank'", "images/RogueDoggy/Rogue_Doggy_Chest_ButtonTank.png",
             "R_Chest == 'sports bra'", "images/RogueDoggy/Rogue_Doggy_Chest_SportsBra.png",
@@ -1090,7 +898,6 @@ image Rogue_Doggy_Body:
         (0,0), ConditionSwitch(                     
             #Overshirt
             "not R_Over", Null(),
-            "'modded' in R_Over", GetModdedString("images/RogueDoggy/Rogue_Doggy_over_", R_Over, ".png"),
             "R_Over == 'mesh top'", "images/RogueDoggy/Rogue_Doggy_Over_Mesh.png",           
             "R_Over == 'pink top'", "images/RogueDoggy/Rogue_Doggy_Over_Pink.png",            
             "R_Over == 'hoodie'", "images/RogueDoggy/Rogue_Doggy_Over_Hoodie.png",           
@@ -1100,23 +907,10 @@ image Rogue_Doggy_Body:
             ),  
         (0,0), ConditionSwitch(                                   
             #Hair
-            "R_Hair == 'newhair'", "images/RogueDoggy/Rogue_Doggy_Hair_newhair.png",   
-            "R_HairColor == 'custom' and R_Water", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_HairWhiteWet.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "R_HairColor == 'custom' and R_Hair == 'evo'", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_HairWhiteF.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "R_HairColor == 'custom'", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_HairWhiteF.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "R_Water", "images/RogueDoggy/Rogue_Doggy_Hair" + GetHairColor(R_HairColor) + "Wet.png",   
-            "R_Hair == 'evo'", "images/RogueDoggy/Rogue_Doggy_Hair" + GetHairColor(R_HairColor) + "F.png",   
-            "True", "images/RogueDoggy/Rogue_Doggy_Hair" + GetHairColor(R_HairColor) + "F.png",                     
-            ),
-        (0,0), ConditionSwitch(                                   
-            #Hair
-            "R_Hair == 'newhair'", "images/RogueDoggy/Rogue_Doggy_Hair_newhair.png",   
-            "R_HairColorBangs != 'custom2'", Null(),
-            "R_HairColor == 'custom' and R_Water", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_HairWhiteWet1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
-            "R_HairColor == 'custom' and R_Hair == 'evo'", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_HairWhiteF1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
-            "R_HairColor == 'custom'", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_HairWhiteF1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
-            "True", Null(),
-            ),
+            "R_Water", "images/RogueDoggy/Rogue_Doggy_HairWet.png",   
+            "R_Hair == 'evo'", "images/RogueDoggy/Rogue_Doggy_HairF.png",   
+            "True", "images/RogueDoggy/Rogue_Doggy_HairF.png",                     
+            ),  
         (0,0), ConditionSwitch(                                       
             #face spunk
             "not R_Spunk", Null(),
@@ -1124,49 +918,24 @@ image Rogue_Doggy_Body:
             "True", Null(), 
             ),
         (0,0), ConditionSwitch(                                                                             
-            #Hair       
-            "not R_Over", Null(),     
-            "'modded' in R_Over and 'hoodie' in R_Over", GetModdedString("images/RogueDoggy/Rogue_Doggy_over_", R_Over, "_Hood.png"),
+            #Hair            
             "R_Over == 'hoodie'", "images/RogueDoggy/Rogue_Doggy_Over_Hood.png", 
             "True", Null(),    
             ),  
         )
 
-image Rogue_Doggy_Ass:
-    LiveComposite(                                                                                          #Lower body
+image Rogue_Doggy_Ass = LiveComposite(                                                                                          #Lower body
         (420,750), #(210,375), #(419,750), 
         (0,0), ConditionSwitch(                                                                               
             #Panties back
             "not R_PantiesDown or (R_Legs == 'pants' and not R_Upskirt)", Null(),  
-            "not R_Panties", Null(),
-            "'modded' in R_Panties", GetModdedString("images/RogueDoggy/Rogue_Doggy_panties_", R_Panties, "_Back.png"),
             "R_Panties == 'shorts'", "images/RogueDoggy/Rogue_Doggy_Shorts_Back.png",    
             "R_Panties == 'green panties'", "images/RogueDoggy/Rogue_Doggy_Undies_Back.png",  
             "R_Panties == 'bikini bottoms'", "images/RogueDoggy/Rogue_Doggy_Panties_Bikini_Back.png",   
             "R_Panties", "images/RogueDoggy/Rogue_Doggy_Panties_Back.png",  
             "True", Null(),  
             ),  
-        (0,0), ConditionSwitch(                                                                                 #Pussy Composite           
-            #Ass Base
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Ass.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Ass.png", 
-            ),
-        (0,0), ConditionSwitch(   
-            "not R_DynamicTan[0] or not R_DynamicTan[1]", Null(),
-            "True", AlphaMask("images/RogueDoggy/Rogue_Doggy_Ass.png", GetModdedStringTanRogue("1", "Ass.png", "Doggy")),
-            ), 
-        (0,0), ConditionSwitch(   
-            "not R_DynamicTan[0] or not R_DynamicTan[5]", Null(),
-            "True", AlphaMask("images/RogueDoggy/Rogue_Doggy_Ass.png", GetModdedStringTanRogue("5", ".png", "Doggy")),
-            ),   
-        (0,0), ConditionSwitch(   
-            "not R_DynamicTan[0] or not R_DynamicTan[4]", Null(),
-            "True", AlphaMask("images/RogueDoggy/Rogue_Doggy_Ass.png", GetModdedStringTanRogue("4", ".png", "Doggy")),
-            ),  
-        (0,0), ConditionSwitch(   
-            "not R_DynamicTan[0] or not R_DynamicTan[2]", Null(),
-            "True", AlphaMask("images/RogueDoggy/Rogue_Doggy_Ass.png", GetModdedStringTanRogue("2", ".png", "Doggy")),
-            ),  
+        (0,0), "images/RogueDoggy/Rogue_Doggy_Ass.png", #Ass Base
         (0,0), ConditionSwitch(
             #Wet look
             "R_Water", "images/RogueDoggy/Rogue_Doggy_WetAss.png",   
@@ -1174,17 +943,12 @@ image Rogue_Doggy_Ass:
             ),  
         (0,0), ConditionSwitch(        
             #Hose
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
             "R_Hose == 'stockings'", "images/RogueDoggy/Rogue_Doggy_Hose.png",
             "True", Null(),
             ),             
         (0,0), ConditionSwitch(          
             #Panties if Down
             "not R_PantiesDown or (R_Legs == 'pants' and not R_Upskirt)", Null(),
-            "not R_Panties", Null(),
-            "'modded' in R_Panties and R_Wet > 1", GetModdedString("images/RogueDoggy/Rogue_Doggy_panties_", R_Panties, "_Down_Wet.png"),
-            "'modded' in R_Panties", GetModdedString("images/RogueDoggy/Rogue_Doggy_panties_", R_Panties, "_Down.png"),
             "R_Panties == 'shorts' and R_Wet > 1", "images/RogueDoggy/Rogue_Doggy_Shorts_Down_Wet.png", #fix turn this on when graphics fixed
             "R_Panties == 'shorts'", "images/RogueDoggy/Rogue_Doggy_Shorts_Down.png", 
             "R_Panties == 'green panties' and R_Wet > 1", "images/RogueDoggy/Rogue_Doggy_Undies_Down_Wet.png",
@@ -1203,89 +967,10 @@ image Rogue_Doggy_Ass:
                     "Speed", "Rogue_Pussy_Heading",      #Speed 1
                     "True", "Rogue_Pussy_Static",              #Speed 0
                     ),   
-            # "R_DynamicTan[0] and Trigger == 'lick pussy'", "images/RogueDoggy/Rogue_tDoggy_Pussy_Open.png",   
             "Trigger == 'lick pussy'", "images/RogueDoggy/Rogue_Doggy_Pussy_Open.png",   
-            # "R_DynamicTan[0] and True", "images/RogueDoggy/Rogue_tDoggy_Pussy_Closed.png", 
             "True", "images/RogueDoggy/Rogue_Doggy_Pussy_Closed.png", 
             ),   
-        
-        (0,0), ConditionSwitch(   
-            # "P_Sprite and P_Cock == 'in'", Null(),
-            "not R_DynamicTan[0]", Null(),
-            "P_Sprite and P_Cock == 'in' and Speed > 2", ConditionSwitch(
-                                                            "not R_DynamicTan[4]", Null(),
-                                                            "True", AlphaMask("Rogue_Pussy_Fucking3_White", GetModdedStringTanRogue("4", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'in' and Speed > 1", ConditionSwitch(
-                                                            "not R_DynamicTan[4]", Null(),
-                                                            "True", AlphaMask("Rogue_Pussy_Fucking2_White", GetModdedStringTanRogue("4", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'in' and Speed", ConditionSwitch(
-                                                            "not R_DynamicTan[4]", Null(),
-                                                            "True", AlphaMask("Rogue_Pussy_Heading_White", GetModdedStringTanRogue("4", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'in'", ConditionSwitch(
-                                                            "not R_DynamicTan[4]", Null(),
-                                                            "True", AlphaMask("Rogue_Pussy_Static_White", GetModdedStringTanRogue("4", ".png", "Doggy")),
-                                                            ),
-
-            "True", Null(),
-            ),  
-
-        (0,0), ConditionSwitch(   
-            # "P_Sprite and P_Cock == 'in'", Null(),
-            "not R_DynamicTan[0]", Null(),
-            "P_Sprite and P_Cock == 'in' and Speed > 2", ConditionSwitch(
-                                                            "not R_DynamicTan[5]", Null(),
-                                                            "True", AlphaMask("Rogue_Pussy_Fucking3_White", GetModdedStringTanRogue("5", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'in' and Speed > 1", ConditionSwitch(
-                                                            "not R_DynamicTan[5]", Null(),
-                                                            "True", AlphaMask("Rogue_Pussy_Fucking2_White", GetModdedStringTanRogue("5", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'in' and Speed", ConditionSwitch(
-                                                            "not R_DynamicTan[5]", Null(),
-                                                            "True", AlphaMask("Rogue_Pussy_Heading_White", GetModdedStringTanRogue("5", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'in'", ConditionSwitch(
-                                                            "not R_DynamicTan[5]", Null(),
-                                                            "True", AlphaMask("Rogue_Pussy_Static_White", GetModdedStringTanRogue("5", ".png", "Doggy")),
-                                                            ),
-
-            "True", Null(),
-            ),  
-
-        (0,0), ConditionSwitch(   
-            # "P_Sprite and P_Cock == 'in'", Null(),
-            "not R_DynamicTan[0]", Null(),
-            "P_Sprite and P_Cock == 'in' and Speed > 2", ConditionSwitch(
-                                                            "not R_DynamicTan[2]", Null(),
-                                                            "True", AlphaMask("Rogue_Pussy_Fucking3_White", GetModdedStringTanRogue("2", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'in' and Speed > 1", ConditionSwitch(
-                                                            "not R_DynamicTan[2]", Null(),
-                                                            "True", AlphaMask("Rogue_Pussy_Fucking2_White", GetModdedStringTanRogue("2", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'in' and Speed", ConditionSwitch(
-                                                            "not R_DynamicTan[2]", Null(),
-                                                            "True", AlphaMask("Rogue_Pussy_Heading_White", GetModdedStringTanRogue("2", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'in'", ConditionSwitch(
-                                                            "not R_DynamicTan[2]", Null(),
-                                                            "True", AlphaMask("Rogue_Pussy_Static_White", GetModdedStringTanRogue("2", ".png", "Doggy")),
-                                                            ),
-
-            "True", Null(),
-            ),  
+            
             
 #        (0,0), ConditionSwitch(                                                                                 #spunkpussy Layer
 #            "R_Spunk == 'in' and P_Cock == 'in'", "images/RogueDoggy/Rogue_Doggy_SpunkPussyOpen.png",  #fix for R_Spunk is used later
@@ -1296,24 +981,14 @@ image Rogue_Doggy_Ass:
 #            ),   
         (0,0), ConditionSwitch(  
             #pubes              
-            "not R_Pubes or R_PubesColor", Null(),         
+            "not R_Pubes", Null(),         
             "P_Sprite and P_Cock == 'in'", Null(),
             "R_Legs == 'pants' and not R_Upskirt", "images/RogueDoggy/Rogue_Doggy_Pubes_Panties.png",   
             "R_PantiesDown", "images/RogueDoggy/Rogue_Doggy_Pubes.png",  
             "R_Panties", "images/RogueDoggy/Rogue_Doggy_Pubes_Panties.png",
             "R_Hose and R_Hose != 'stockings'", "images/RogueDoggy/Rogue_Doggy_Pubes_Panties.png",   
             "True", "images/RogueDoggy/Rogue_Doggy_Pubes.png",  
-            ),
-        (0,0), ConditionSwitch(  
-            #pubes              
-            "not R_Pubes or not R_PubesColor", Null(),         
-            "P_Sprite and P_Cock == 'in'", Null(),
-            "PantsNum('Rogue') > 5 and not R_Upskirt", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite_Panties.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "R_PantiesDown", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "R_Panties", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite_Panties.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "HoseNum('Rogue') > 4", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite_Panties.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "True", im.MatrixColor("images/RogueDoggy/Rogue_Doggy_PubesWhite.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            ),
+            ),  
         (0,0), ConditionSwitch(   
             #Pussy Piercings          
             "P_Sprite", Null(),             
@@ -1335,82 +1010,7 @@ image Rogue_Doggy_Ass:
 #            "Action == 'plug'", "test_case",
             "R_Loose", "images/RogueDoggy/Rogue_Doggy_Asshole_Loose.png",   
             "True", "images/RogueDoggy/Rogue_Doggy_Asshole_Tight.png", 
-            ),  
-
-        (0,0), ConditionSwitch(   
-            # "P_Sprite and P_Cock == 'in'", Null(),
-            "not R_DynamicTan[0]", Null(),
-            "P_Sprite and P_Cock == 'anal' and Speed > 2", ConditionSwitch(
-                                                            "not R_DynamicTan[4]", Null(),
-                                                            "True", AlphaMask("Rogue_Anal_Fucking2_White", GetModdedStringTanRogue("4", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'anal' and Speed > 1", ConditionSwitch(
-                                                            "not R_DynamicTan[4]", Null(),
-                                                            "True", AlphaMask("Rogue_Anal_Fucking_White", GetModdedStringTanRogue("4", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'anal' and Speed", ConditionSwitch(
-                                                            "not R_DynamicTan[4]", Null(),
-                                                            "True", AlphaMask("Rogue_Anal_Heading_White", GetModdedStringTanRogue("4", ".png", "Doggy")),
-                                                            ),
-
-            # "P_Sprite and P_Cock == 'anal'", ConditionSwitch(
-            #                                                 "not R_DynamicTan[4]", Null(),
-            #                                                 "True", AlphaMask("Rogue_Anal_White", GetModdedStringTanRogue("4", ".png", "Doggy")),
-            #                                                 ),
-            "True", Null(),
-            ), 
-
-        (0,0), ConditionSwitch(   
-            # "P_Sprite and P_Cock == 'in'", Null(),
-            "not R_DynamicTan[0]", Null(),
-            "P_Sprite and P_Cock == 'anal' and Speed > 2", ConditionSwitch(
-                                                            "not R_DynamicTan[5]", Null(),
-                                                            "True", AlphaMask("Rogue_Anal_Fucking2_White", GetModdedStringTanRogue("5", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'anal' and Speed > 1", ConditionSwitch(
-                                                            "not R_DynamicTan[5]", Null(),
-                                                            "True", AlphaMask("Rogue_Anal_Fucking_White", GetModdedStringTanRogue("5", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'anal' and Speed", ConditionSwitch(
-                                                            "not R_DynamicTan[5]", Null(),
-                                                            "True", AlphaMask("Rogue_Anal_Heading_White", GetModdedStringTanRogue("5", ".png", "Doggy")),
-                                                            ),
-
-            # "P_Sprite and P_Cock == 'anal'", ConditionSwitch(
-            #                                                 "not R_DynamicTan[5]", Null(),
-            #                                                 "True", AlphaMask("Rogue_Anal_White", GetModdedStringTanRogue("5", ".png", "Doggy")),
-            #                                                 ),
-            "True", Null(),
-            ),  
-
-        (0,0), ConditionSwitch(   
-            # "P_Sprite and P_Cock == 'in'", Null(),
-            "not R_DynamicTan[0]", Null(),
-            "P_Sprite and P_Cock == 'anal' and Speed > 2", ConditionSwitch(
-                                                            "not R_DynamicTan[2]", Null(),
-                                                            "True", AlphaMask("Rogue_Anal_Fucking2_White", GetModdedStringTanRogue("2", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'anal' and Speed > 1", ConditionSwitch(
-                                                            "not R_DynamicTan[2]", Null(),
-                                                            "True", AlphaMask("Rogue_Anal_Fucking_White", GetModdedStringTanRogue("2", ".png", "Doggy")),
-                                                            ),
-
-            "P_Sprite and P_Cock == 'anal' and Speed", ConditionSwitch(
-                                                            "not R_DynamicTan[2]", Null(),
-                                                            "True", AlphaMask("Rogue_Anal_Heading_White", GetModdedStringTanRogue("2", ".png", "Doggy")),
-                                                            ),
-
-            # "P_Sprite and P_Cock == 'anal'", ConditionSwitch(
-            #                                                 "not R_DynamicTan[2]", Null(),
-            #                                                 "True", AlphaMask("Rogue_Anal_White", GetModdedStringTanRogue("2", ".png", "Doggy")),
-            #                                                 ),
-            "True", Null(),
-            ), 
+            ),    
             
             
         (0,0), ConditionSwitch( 
@@ -1424,9 +1024,6 @@ image Rogue_Doggy_Ass:
             #Panties if up
             "R_PantiesDown or not R_Panties", Null(),     
             "P_Sprite and (P_Cock == 'in' or P_Cock == 'anal')", Null(),
-            "not R_Panties", Null(),
-            "'modded' in R_Panties and R_Wet > 1", GetModdedString("images/RogueDoggy/Rogue_Doggy_panties_", R_Panties, "_Wet.png"),
-            "'modded' in R_Panties", GetModdedString("images/RogueDoggy/Rogue_Doggy_panties_", R_Panties, ".png"),
             "R_Panties == 'shorts' and R_Wet", "images/RogueDoggy/Rogue_Doggy_Shorts_Wet.png",          
             "R_Panties == 'shorts'", "images/RogueDoggy/Rogue_Doggy_Shorts.png",
             "R_Panties == 'green panties' and R_Wet", "images/RogueDoggy/Rogue_Doggy_Undies_Wet.png",          
@@ -1442,8 +1039,6 @@ image Rogue_Doggy_Ass:
             "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png", 
             "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
             "R_Panties and R_PantiesDown", Null(),    
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
             "R_Hose == 'tights' and R_Wet", "images/RogueDoggy/Rogue_Doggy_Tights_Wet.png",
             "R_Hose == 'tights'", "images/RogueDoggy/Rogue_Doggy_Tights.png",
             "R_Hose == 'pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose.png",   
@@ -1453,12 +1048,6 @@ image Rogue_Doggy_Ass:
             ),
         (0,0), ConditionSwitch( 
             #Legs Layer 
-            "not R_Legs", Null(),
-            "'modded' in R_Legs and ModPantsNum('Rogue') == 5 and R_Upskirt and P_Sprite and P_Cock == 'anal' and Speed", GetModdedString("images/RogueDoggy/Rogue_Doggy_legs_", R_Legs, "_upanal.png"),
-            "'modded' in R_Legs and ModPantsNum('Rogue') == 5 and R_Upskirt", GetModdedString("images/RogueDoggy/Rogue_Doggy_legs_", R_Legs, "_up.png"),
-            "'modded' in R_Legs and R_Upskirt", GetModdedString("images/RogueDoggy/Rogue_Doggy_legs_", R_Legs, "_down.png"),
-            "'modded' in R_Legs and R_Wet > 1", GetModdedString("images/RogueDoggy/Rogue_Doggy_legs_", R_Legs, "_wet.png"),
-            "'modded' in R_Legs", GetModdedString("images/RogueDoggy/Rogue_Doggy_legs_", R_Legs, ".png"),
             "R_Legs == 'pants'", ConditionSwitch(    
                     "R_Upskirt", "images/RogueDoggy/Rogue_Doggy_Legs_Pants_Down.png",            
                     "R_Wet > 1", "images/RogueDoggy/Rogue_Doggy_Legs_Pants_Wet.png",
@@ -1472,16 +1061,7 @@ image Rogue_Doggy_Ass:
             "True", Null(),                      
             ),   
         (0,0), ConditionSwitch(              
-            #Chest Layer
-            "not R_Chest", Null(),
-            "'modded' in R_Chest and 'dress' in R_Chest and R_Upskirt and P_Sprite and P_Cock == 'anal' and Speed", GetModdedString("images/RogueDoggy/Rogue_Doggy_Chest_", R_Chest, "Ass_UpAnal.png"),
-            "'modded' in R_Chest and 'dress' in R_Chest and R_Upskirt", GetModdedString("images/RogueDoggy/Rogue_Doggy_Chest_", R_Chest, "Ass_Up.png"),
-            "'modded' in R_Chest and 'dress' in R_Chest", GetModdedString("images/RogueDoggy/Rogue_Doggy_Chest_", R_Chest, "Ass.png"),
-            "True", Null(),                    
-            ),
-        (0,0), ConditionSwitch(              
             #Over Layer
-            "not R_Over", Null(),
             "R_Over == 'nighty' and R_Upskirt", "images/RogueDoggy/Rogue_Doggy_Over_NightyAss_Up.png",            
             "R_Over == 'nighty'", "images/RogueDoggy/Rogue_Doggy_Over_NightyAss.png",
             "R_Over == 'towel' and R_Upskirt", "images/RogueDoggy/Rogue_Doggy_Over_TowelAss_Up.png",            
@@ -1496,7 +1076,7 @@ image Rogue_Doggy_Ass:
         (0,0), ConditionSwitch(  
             #Hotdogging underlayer
             "not P_Sprite or P_Cock != 'out'", Null(),   
-            # "R_Legs == 'skirt' and R_Upskirt", "images/RogueDoggy/Rogue_Doggy_HotdogUpskirtBack.png",  
+            "R_Legs == 'skirt' and R_Upskirt", "images/RogueDoggy/Rogue_Doggy_HotdogUpskirtBack.png",  
             "True", "images/RogueDoggy/Rogue_Doggy_HotdogBack.png", 
             ),    
         (0,0), ConditionSwitch( 
@@ -1744,10 +1324,7 @@ image Rogue_Pussy_Mask_Static:
 #    #Full Animation for speed 0    
 #    contains:                                                                                   
 #        #Base
-#        ConditionSwitch(                                                                                 #Pussy Composite           
-            # "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Pussy_FBase.png", 
-            # "True", "images/RogueDoggy/Rogue_Doggy_Pussy_FBase.png", 
-            # ),   
+#        "images/RogueDoggy/Rogue_Doggy_Pussy_FBase.png"  
 #    contains:
 #        ConditionSwitch( 
 #            #full hose/tights  
@@ -1773,28 +1350,19 @@ image Rogue_Pussy_Mask_Static:
 #        #Cock        
 #        AlphaMask("Zero_Doggy_Insert", "images/RogueDoggy/Rogue_Doggy_SexMask.png")
 
-image Rogue_Doggy_Pussy_FHole_Mod:
-    contains:
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Pussy_FHole.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Pussy_FHole.png", 
-            ),  
 
 image Rogue_Pussy_Static:     
     #Full Animation for speed 0
     subpixel True
     contains:                                                                                   
         #Base
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Pussy_FBase.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Pussy_FBase.png", 
-            ),     
+        "images/RogueDoggy/Rogue_Doggy_Pussy_FBase.png"    
         anchor (0.52,0.69)
         pos (220,518) 
         xzoom 1
     contains:                                                                                   
         #moving hole
-        "Rogue_Doggy_Pussy_FHole_Mod"    
+        "images/RogueDoggy/Rogue_Doggy_Pussy_FHole.png"    
         subpixel True
         anchor (0.52,0.69)
         pos (217,518) 
@@ -1806,53 +1374,10 @@ image Rogue_Pussy_Static:
             repeat 
     contains:
         ConditionSwitch( 
-            #full hose/tights    
+            #full hose/tights              
             "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
             "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
             "R_Panties and R_PantiesDown", Null(), 
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
-            "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
-            "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
-            "True", Null(), 
-            ),
-    contains:                                                                                  
-        #Cock
-        AlphaMask("Zero_Doggy_Static", "Rogue_Pussy_Mask_Static")
-    
-    contains:                                                                                   
-        # expanding pussy flap
-        AlphaMask("Rogue_PussyHole_Static", "Rogue_Pussy_Hole_Mask_Static")  
-
-image Rogue_Pussy_Static_White:     
-    #Full Animation for speed 0
-    subpixel True
-    contains:                                                                                   
-        #Base
-        "images/RogueDoggy/Rogue_Doggy_Pussy_FBase.png", 
-        anchor (0.52,0.69)
-        pos (220,518) 
-        xzoom 1
-    contains:                                                                                   
-        #moving hole
-        "images/RogueDoggy/Rogue_Doggy_Pussy_FHole.png"
-        subpixel True
-        anchor (0.52,0.69)
-        pos (217,518) 
-        xzoom .6
-        block:
-            ease 1 xzoom .65
-            pause 1
-            ease 3 xzoom .6
-            repeat 
-    contains:
-        ConditionSwitch( 
-            #full hose/tights    
-            "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
-            "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
-            "R_Panties and R_PantiesDown", Null(), 
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
             "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
             "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
             "True", Null(), 
@@ -1869,7 +1394,7 @@ image Rogue_Pussy_Hole_Mask_Static:
     # This is the alpha used for the little flap in the heading animation "Rogue_Pussy_Moving"
     contains:                                                                                 
         #Base
-        AlphaMask("Rogue_Doggy_Pussy_FHole_Mod", "images/RogueDoggy/Rogue_Doggy_SexMask.png")
+        AlphaMask("images/RogueDoggy/Rogue_Doggy_Pussy_FHole.png", "images/RogueDoggy/Rogue_Doggy_SexMask.png")
         subpixel True
         anchor (0.52,0.69)
         pos (217,518) 
@@ -1901,16 +1426,13 @@ image Rogue_Pussy_Heading:
     subpixel True
     contains:                                                                                   
         #Base
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Pussy_FBase.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Pussy_FBase.png", 
-            ),     
+        "images/RogueDoggy/Rogue_Doggy_Pussy_FBase.png"    
         anchor (0.52,0.69)
         pos (220,518) # fix this back once re-exported(217,518) 
         xzoom 1
     contains:                                                                                   
         #moving hole
-        "Rogue_Doggy_Pussy_FHole_Mod"    
+        "images/RogueDoggy/Rogue_Doggy_Pussy_FHole.png"    
         subpixel True
         anchor (0.52,0.69)
         pos (217,518) 
@@ -1926,49 +1448,6 @@ image Rogue_Pussy_Heading:
             "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
             "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
             "R_Panties and R_PantiesDown", Null(), 
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
-            "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
-            "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
-            "True", Null(), 
-            ),
-    contains:                                                                                  
-        #Cock
-        AlphaMask("Zero_Doggy_Heading", "Rogue_Pussy_Mask")
-    
-    contains:                                                                                   
-        # expanding pussy flap
-        AlphaMask("Rogue_Pussy_Heading_Flap", "Rogue_Pussy_Hole_Mask")  
-
-image Rogue_Pussy_Heading_White:     
-    #Full Animation for speed 1
-    subpixel True
-    contains:                                                                                   
-        #Base
-        "images/RogueDoggy/Rogue_Doggy_Pussy_FBase.png", 
-        anchor (0.52,0.69)
-        pos (220,518) # fix this back once re-exported(217,518) 
-        xzoom 1
-    contains:                                                                                   
-        #moving hole
-        "images/RogueDoggy/Rogue_Doggy_Pussy_FHole.png"
-        subpixel True
-        anchor (0.52,0.69)
-        pos (217,518) 
-        xzoom .6
-        block:
-            ease 1 xzoom 1
-            pause 1
-            ease 3 xzoom .6
-            repeat 
-    contains:
-        ConditionSwitch( 
-            #full hose/tights  
-            "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
-            "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
-            "R_Panties and R_PantiesDown", Null(), 
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
             "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
             "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
             "True", Null(), 
@@ -1986,7 +1465,7 @@ image Rogue_Pussy_Hole_Mask:
     # This is the alpha used for the little flap in the heading animation "Rogue_Pussy_Heading"
     contains:                                                                                 
         #Base
-        AlphaMask("Rogue_Doggy_Pussy_FHole_Mod", "images/RogueDoggy/Rogue_Doggy_SexMask.png")
+        AlphaMask("images/RogueDoggy/Rogue_Doggy_Pussy_FHole.png", "images/RogueDoggy/Rogue_Doggy_SexMask.png")
         subpixel True
         anchor (0.52,0.69)
         pos (217,518) 
@@ -2018,45 +1497,16 @@ image Rogue_Pussy_Fucking2:
     #Full Animation for speed 2
     contains:                                                                                   
         #Base
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Pussy_FBase.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Pussy_FBase.png", 
-            ),     
+        "images/RogueDoggy/Rogue_Doggy_Pussy_FBase.png"    
     contains:                                                                                 
         #Base
-        "Rogue_Doggy_Pussy_FHole_Mod"  
+        "images/RogueDoggy/Rogue_Doggy_Pussy_FHole.png"  
     contains:
         ConditionSwitch( 
             #full hose/tights  
             "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
             "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
             "R_Panties and R_PantiesDown", Null(), 
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
-            "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
-            "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
-            "True", Null(), 
-            ),
-    contains:                                                                                  
-        #Cock        
-        AlphaMask("Zero_Doggy_Fucking2", "images/RogueDoggy/Rogue_Doggy_SexMask.png")
-
-image Rogue_Pussy_Fucking2_White:                                                                                      
-    #Full Animation for speed 2
-    contains:                                                                                   
-        #Base
-        "images/RogueDoggy/Rogue_Doggy_Pussy_FBase.png", 
-    contains:                                                                                 
-        #Base
-        "images/RogueDoggy/Rogue_Doggy_Pussy_FHole.png"
-    contains:
-        ConditionSwitch( 
-            #full hose/tights  
-            "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
-            "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
-            "R_Panties and R_PantiesDown", Null(), 
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
             "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
             "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
             "True", Null(), 
@@ -2070,45 +1520,16 @@ image Rogue_Pussy_Fucking3:
     #Full Animation for speed 3
     contains:                                                                                   
         #Base
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Pussy_FBase.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Pussy_FBase.png", 
-            ),     
+        "images/RogueDoggy/Rogue_Doggy_Pussy_FBase.png"    
     contains:                                                                                 
         #Base
-        "Rogue_Doggy_Pussy_FHole_Mod"  
+        "images/RogueDoggy/Rogue_Doggy_Pussy_FHole.png"  
     contains:
         ConditionSwitch( 
             #full hose/tights  
             "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
             "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
             "R_Panties and R_PantiesDown", Null(),   
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
-            "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
-            "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
-            "True", Null(), 
-            ),
-    contains:                                                                                   
-        #Cock        
-        AlphaMask("Zero_Doggy_Fucking3", "images/RogueDoggy/Rogue_Doggy_SexMask.png")
-
-image Rogue_Pussy_Fucking3_White:                                                                                     
-    #Full Animation for speed 3
-    contains:                                                                                   
-        #Base
-        "images/RogueDoggy/Rogue_Doggy_Pussy_FBase.png", 
-    contains:                                                                                 
-        #Base
-        "images/RogueDoggy/Rogue_Doggy_Pussy_FHole.png"
-    contains:
-        ConditionSwitch( 
-            #full hose/tights  
-            "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
-            "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
-            "R_Panties and R_PantiesDown", Null(),   
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
             "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
             "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
             "True", Null(), 
@@ -2135,8 +1556,6 @@ image Rogue_Anal:
             "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
             "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",   
             "R_Panties and R_PantiesDown", Null(),  
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
             "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
             "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
             "True", Null(), 
@@ -2152,16 +1571,10 @@ image Rogue_Anal_Heading:
     #Animation for speed 1   
     contains:                                                                                 
         #Base
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Anal_FullBase.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Anal_FullBase.png", 
-            ),    
+        "images/RogueDoggy/Rogue_Doggy_Anal_FullBase.png"    
     contains:                                
         #Hole
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Anal_FullHole.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Anal_FullHole.png", 
-            ),     
+        "images/RogueDoggy/Rogue_Doggy_Anal_FullHole.png"     
         anchor (0.52,0.69)
         pos (218,518)
         zoom .5
@@ -2176,43 +1589,6 @@ image Rogue_Anal_Heading:
             "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
             "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
             "R_Panties and R_PantiesDown", Null(),   
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
-            "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
-            "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
-            "True", Null(), 
-            )
-    contains:                                                                                   
-        #Cock masking fixer (for when the bottom part tries to cut off)
-        AlphaMask("Zero_Doggy_Anal_Heading", "Zero_Doggy_Anal_HeadingJunk")
-    contains:                                                                                   
-        #Cock with mask
-        AlphaMask("Zero_Doggy_Anal_Heading", "Rogue_Doggy_Anal_Heading_Mask")
-
-image Rogue_Anal_Heading_White:                                                                                      
-    #Animation for speed 1   
-    contains:                                                                                 
-        #Base
-        "images/RogueDoggy/Rogue_Doggy_Anal_FullBase.png", 
-    contains:                                
-        #Hole
-        "images/RogueDoggy/Rogue_Doggy_Anal_FullHole.png", 
-        anchor (0.52,0.69)
-        pos (218,518)
-        zoom .5
-        block:
-            ease .5 zoom 1
-            pause .5
-            ease 1.5 zoom .5
-            repeat 
-    contains:
-        ConditionSwitch( 
-            #full hose/tights  
-            "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
-            "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
-            "R_Panties and R_PantiesDown", Null(),   
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
             "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
             "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
             "True", Null(), 
@@ -2302,57 +1678,19 @@ image Rogue_Anal_Fucking:
     #Animation for speed 2 Ass
     contains:                                                                                   
         #Base
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Anal_FullBase.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Anal_FullBase.png", 
-            ),    
+        "images/RogueDoggy/Rogue_Doggy_Anal_FullBase.png"    
     contains:                                                                                  
         #Hole
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Anal_FullHole.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Anal_FullHole.png", 
-            ), 
+        "images/RogueDoggy/Rogue_Doggy_Anal_FullHole.png" 
     contains:                                                                                   
         #Cheeks
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Anal_FullCheeks.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Anal_FullCheeks.png", 
-            ),
+        "images/RogueDoggy/Rogue_Doggy_Anal_FullCheeks.png"
     contains:
         ConditionSwitch( 
             #full hose/tights  
             "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
             "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
             "R_Panties and R_PantiesDown", Null(),  
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
-            "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
-            "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
-            "True", Null(), 
-            ),    
-    contains:                                                                                   
-        #Cock
-        AlphaMask("Zero_Doggy_Anal1", "images/RogueDoggy/Rogue_Doggy_Anal_CockMask.png")
-
-image Rogue_Anal_Fucking_White:                                                                                       
-    #Animation for speed 2 Ass
-    contains:                                                                                   
-        #Base
-        "images/RogueDoggy/Rogue_Doggy_Anal_FullBase.png", 
-    contains:                                                                                  
-        #Hole
-        "images/RogueDoggy/Rogue_Doggy_Anal_FullHole.png", 
-    contains:                                                                                   
-        #Cheeks
-        "images/RogueDoggy/Rogue_Doggy_Anal_FullCheeks.png", 
-    contains:
-        ConditionSwitch( 
-            #full hose/tights  
-            "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
-            "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
-            "R_Panties and R_PantiesDown", Null(),  
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
             "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
             "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
             "True", Null(), 
@@ -2364,24 +1702,16 @@ image Rogue_Anal_Fucking_White:
 image Rogue_Doggy_Anal_FullMask:    
     contains:                                                                                 
         #Mask
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Anal_FullMask.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Anal_FullMask.png", 
-            ),
+        "images/RogueDoggy/Rogue_Doggy_Anal_FullMask.png"
     contains:                                                                                   
         #Cheeks
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Anal_FullCheeks.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Anal_FullCheeks.png", 
-            ),
+        "images/RogueDoggy/Rogue_Doggy_Anal_FullCheeks.png"
     contains:
         ConditionSwitch( 
             #full hose/tights  
             "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
             "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
             "R_Panties and R_PantiesDown", Null(), 
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
             "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
             "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
             "True", Null(), 
@@ -2431,63 +1761,22 @@ image Rogue_Anal_Fucking2:
     #Animation for speed 3 Ass
     contains:                                                                                   
         #Base
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Anal_FullBase.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Anal_FullBase.png", 
-            ),    
+        "images/RogueDoggy/Rogue_Doggy_Anal_FullBase.png"    
     contains:                                                                                  
         #Hole
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Anal_FullHole.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Anal_FullHole.png", 
-            ),        
+        "images/RogueDoggy/Rogue_Doggy_Anal_FullHole.png"        
 #    contains:                                                                                  
 #        #Mask
 #        "images/RogueDoggy/Rogue_Doggy_Anal_FullMask.png"
     contains:                                                                                  
         #Cheeks
-        ConditionSwitch(                                                                                 #Pussy Composite           
-            "R_DynamicTan[0]", "images/RogueDoggy/Rogue_tDoggy_Anal_FullCheeks.png", 
-            "True", "images/RogueDoggy/Rogue_Doggy_Anal_FullCheeks.png", 
-            ),
+        "images/RogueDoggy/Rogue_Doggy_Anal_FullCheeks.png"
     contains:
         ConditionSwitch( 
             #full hose/tights  
             "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
             "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
             "R_Panties and R_PantiesDown", Null(), 
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
-            "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
-            "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
-            "True", Null(), 
-            )
-    contains:                                                                                  
-        #Cock
-        AlphaMask("Zero_Doggy_Anal2", "images/RogueDoggy/Rogue_Doggy_Anal_CockMask.png") 
-
-image Rogue_Anal_Fucking2_White:                                                                                   
-    #Animation for speed 3 Ass
-    contains:                                                                                   
-        #Base
-        "images/RogueDoggy/Rogue_Doggy_Anal_FullBase.png", 
-    contains:                                                                                  
-        #Hole
-        "images/RogueDoggy/Rogue_Doggy_Anal_FullHole.png", 
-#    contains:                                                                                  
-#        #Mask
-#        "images/RogueDoggy/Rogue_Doggy_Anal_FullMask.png"
-    contains:                                                                                  
-        #Cheeks
-        "images/RogueDoggy/Rogue_Doggy_Anal_FullCheeks.png", 
-    contains:
-        ConditionSwitch( 
-            #full hose/tights  
-            "R_Hose == 'garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings_Loose.png",    
-            "R_Hose == 'stockings and garterbelt'", "images/RogueDoggy/Rogue_Doggy_Stockings.png",  
-            "R_Panties and R_PantiesDown", Null(), 
-            "not R_Hose", Null(),
-            "'modded' in R_Hose", GetModdedString("images/RogueDoggy/Rogue_Doggy_hose_", R_Hose, ".png"),
             "R_Hose == 'ripped pantyhose'", "images/RogueDoggy/Rogue_Doggy_FullHose_Holed.png", 
             "R_Hose == 'ripped tights'", "images/RogueDoggy/Rogue_Doggy_Tights_Holed.png",            
             "True", Null(), 
@@ -2782,22 +2071,11 @@ image Rogue_BJ_Animation:#BJ_NewTest:                                           
     anchor (.5,.5)
     
 image BJ_HairBack:
-    contains:
-        ConditionSwitch(                                                                            #Hair underlay
-            "R_Hair == 'newhair'", Null(),
-            "R_HairColor == 'custom' and R_Water and R_Hair == 'evo'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back_wet.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "R_HairColor == 'custom' and R_Hair == 'evo'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "R_Water and R_Hair == 'evo'", "images/RogueBJFace/Rogue_bj_hair" + GetHairColor(R_HairColor) + "_back_wet.png",
-            "R_Hair == 'evo'", "images/RogueBJFace/Rogue_bj_hair" + GetHairColor(R_HairColor) + "_back.png",
-            "True", Null(),
+    ConditionSwitch(                                                                            #Hair underlay
+            "R_Water and R_Hair == 'evo'", "images/RogueBJFace/Rogue_bj_hair_back_wet.png",
+            "R_Hair == 'wet'", "images/RogueBJFace/Rogue_bj_hair_back_wet.png",
+            "True", "images/RogueBJFace/Rogue_bj_hair_back.png",
             ),
-    contains:
-        ConditionSwitch(                                                                            #Hair underlay
-            "R_Hair == 'newhair'", Null(),
-            "R_HairColorBangs == 'custom2' and R_Water and R_Hair == 'evo'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back_wet1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
-            "R_HairColorBangs == 'custom2' and R_Hair == 'evo'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
-            "True", Null(),
-            ), 
     
 image BJ_Backdrop:                                                                        #Her Body under the head
     "Rogue"
@@ -2809,24 +2087,13 @@ image BJ_Head:                                                                  
     LiveComposite(    
         (787,913),     
         (0,0), ConditionSwitch(                                                                 #Hair back
-            "R_Hair == 'newhair'", Null(),
-            "R_HairColor == 'custom' and R_Water and R_Hair == 'evo'", AlphaMask(im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back_wet.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)), "BJ_Backdrop"),
-            "R_HairColor == 'custom' and R_Hair == 'evo'", AlphaMask(im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)), "BJ_Backdrop"),
-            "R_Water and R_Hair == 'evo'", AlphaMask("images/RogueBJFace/Rogue_bj_hair" + GetHairColor(R_HairColor) + "_back_wet.png", "BJ_Backdrop"),
-            "R_Hair == 'evo'", AlphaMask("images/RogueBJFace/Rogue_bj_hair" + GetHairColor(R_HairColor) + "_back.png", "BJ_Backdrop"),
-            "True", Null(),
-            ),
-        (0,0), ConditionSwitch(                                                                 #Hair back
-            "R_Hair == 'newhair'", Null(),
-            "R_HairColorBangs == 'custom2' and R_Water and R_Hair == 'evo'", AlphaMask(im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back_wet1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)), "BJ_Backdrop"),
-            "R_HairColorBangs == 'custom2' and R_Hair == 'evo'", AlphaMask(im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)), "BJ_Backdrop"),
-            "True", Null(),
-            ),
+            "R_Water and R_Hair == 'evo'", AlphaMask("images/RogueBJFace/Rogue_bj_hair_back_wet.png", "BJ_Backdrop"),
+            "R_Hair == 'wet'", AlphaMask("images/RogueBJFace/Rogue_bj_hair_back_wet.png", "BJ_Backdrop"),
+            "True", AlphaMask("images/RogueBJFace/Rogue_bj_hair_back.png", "BJ_Backdrop"),
+            ),   
         (0,0), ConditionSwitch(                     
-            "not Speed and R_DynamicTan[0]", "images/RogueBJFace/Rogue_tbj_face_base.png",    
             "not Speed", "images/RogueBJFace/Rogue_bj_face_base.png",    
-            "R_DynamicTan[0]", "images/RogueBJFace/Rogue_tbj_face_base_s.png",
-            "True", "images/RogueBJFace/Rogue_bj_face_base_s.png",
+            "True", "images/RogueBJFace/Rogue_bj_face_base_s.png"
             ),   
         (0,0), ConditionSwitch(                                                                                 #Mouth for under layer
             "renpy.showing('Rogue_BJ_Animation') and Speed", ConditionSwitch(   
@@ -2906,7 +2173,6 @@ image BJ_Head:                                                                  
             "True", "images/RogueBJFace/Rogue_bj_face_brows_normal.png",
             ),
         (0,0), "BJ Blink",                                                                #Eyes
-        (0,0), "images/RogueBJFace/Rogue_BJFace_Glasses_[R_Glasses].png",
         (0,0), ConditionSwitch(                                                                 #cum on the face
                 "'facial' in R_Spunk", "images/RogueBJFace/Rogue_bj_facial_over.png",
                 "not R_Spunk or Trigger != 'blow' or 'mouth' not in R_Spunk", Null(),
@@ -2915,22 +2181,10 @@ image BJ_Head:                                                                  
                 "Speed == 4", "images/RogueBJFace/Rogue_bj_face_over_sucking_cum.png",  
                 "True", Null(),
                 ),
-        (0,0), "images/RogueBJFace/Rogue_BJFace_Headband_[R_Headband].png",
         (0,0), ConditionSwitch(                                                                 #Hair overlay
-            "R_Water and R_Hair == 'newhair'", "images/RogueBJFace/Rogue_bj_hair_back_wet_newhair.png",
-            "R_Hair == 'newhair'", "images/RogueBJFace/Rogue_bj_hair_newhair.png",
-            "R_HairColor == 'custom' and R_Water and R_Hair == 'evo'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairwhite_wet.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "R_HairColor == 'custom' and R_Hair == 'evo'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairwhite.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "R_Water and R_Hair == 'evo'", "images/RogueBJFace/Rogue_bj_hair" + GetHairColor(R_HairColor) + "_wet.png",
-            "R_Hair == 'evo'", "images/RogueBJFace/Rogue_bj_hair" + GetHairColor(R_HairColor) + ".png",
-            "True", Null(),
-            ),
-        (0,0), ConditionSwitch(                                                                 #Hair overlay
-            "R_Water and R_Hair == 'newhair'", "images/RogueBJFace/Rogue_bj_hair_back_wet_newhair.png",
-            "R_Hair == 'newhair'", "images/RogueBJFace/Rogue_bj_hair_newhair.png",
-            "R_HairColorBangs == 'custom2' and R_Water and R_Hair == 'evo'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairwhite_wet1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
-            "R_HairColorBangs == 'custom2' and R_Hair == 'evo'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairwhite1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
-            "True", Null(),
+            "R_Water and R_Hair == 'evo'", "images/RogueBJFace/Rogue_bj_hair_wet.png",
+            "R_Hair == 'wet'", "images/RogueBJFace/Rogue_bj_hair_wet.png",
+            "True", "images/RogueBJFace/Rogue_bj_hair.png",
             ),
         )
 
@@ -3225,7 +2479,6 @@ image Rogue_BJFace:
     LiveComposite(    
         (787,912),     
         (0,0), ConditionSwitch(
-            "R_DynamicTan[0]", Null(),
             "R_Blush and Trigger != 'blow'", "images/RogueBJFace/Rogue_bj_face_over_blush.png",
             "Trigger != 'blow'", Null(),
             "Speed == 3 and R_Blush", "images/RogueBJFace/Rogue_bj_face_over_suckingB.png",
@@ -3235,19 +2488,6 @@ image Rogue_BJFace:
             "Speed == 4 and R_Blush", "images/RogueBJFace/Rogue_bj_face_over_suckingB.png",
             "Speed == 4 and not R_Blush", "images/RogueBJFace/Rogue_bj_face_over_sucking.png",
             "R_Blush", "images/RogueBJFace/Rogue_bj_face_over_blush.png",
-            "True", Null(),
-            ),
-        (0,0), ConditionSwitch(
-            "not R_DynamicTan[0]", Null(),
-            "R_Blush and Trigger != 'blow'", "images/RogueBJFace/Rogue_tbj_face_over_blush.png",
-            "Trigger != 'blow'", Null(),
-            "Speed == 3 and R_Blush", "images/RogueBJFace/Rogue_tbj_face_over_suckingB.png",
-            "Speed == 3 and not R_Blush", "images/RogueBJFace/Rogue_tbj_face_over_sucking.png",
-            "Speed == 2 and R_Blush", "images/RogueBJFace/Rogue_tbj_face_over_headingB.png",
-            "Speed == 2 and not R_Blush", "images/RogueBJFace/Rogue_tbj_face_over_heading.png",
-            "Speed == 4 and R_Blush", "images/RogueBJFace/Rogue_tbj_face_over_suckingB.png",
-            "Speed == 4 and not R_Blush", "images/RogueBJFace/Rogue_tbj_face_over_sucking.png",
-            "R_Blush", "images/RogueBJFace/Rogue_tbj_face_over_blush.png",
             "True", Null(),
             ),       
         (0,0), ConditionSwitch(
@@ -3259,7 +2499,6 @@ image Rogue_BJFace:
             "True", "images/RogueBJFace/Rogue_bj_face_brows_normal.png",
             ),
         (0,0), "Rogue_BJ Blink",  
-        (0,0), "images/RogueBJFace/Rogue_BJFace_Glasses_[R_Glasses].png",
         (0,0), ConditionSwitch(
                 "not R_Spunk", Null(),
                 "'mouth' in R_Spunk and Speed == 2 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_face_over_heading_cum.png", 
@@ -3272,16 +2511,9 @@ image Rogue_BJFace:
                 "'facial' in R_Spunk", "images/RogueBJFace/Rogue_bj_facial_over.png", 
                 "True", Null(),
                 ),
-        (0,0), "images/RogueBJFace/Rogue_BJFace_Headband_[R_Headband].png",
         (0,0), ConditionSwitch(
-            "R_Hair == 'newhair'", "images/RogueBJFace/Rogue_bj_hair_newhair.png",
-            "R_HairColor == 'custom' and R_Hair == 'evo'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairwhite.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "R_Hair == 'evo'", "images/RogueBJFace/Rogue_bj_hair" + GetHairColor(R_HairColor) + ".png",
-            "True", Null(),
-            ),
-        (0,0), ConditionSwitch(
-            "R_HairColorBangs == 'custom2' and R_Hair == 'evo'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairwhite1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
-            "True", Null(),
+            "R_Hair == 'evo'", "images/RogueBJFace/Rogue_bj_hair.png",
+            "True", "images/RogueBJFace/Rogue_bj_hair.png",
             ),              
         )
 
@@ -3289,13 +2521,9 @@ image Rogue_BJFace:
 image Rogue_BJChin:
     LiveComposite(
         (787,912),     
-        (0,0), ConditionSwitch(
-            "R_DynamicTan[0]", "images/RogueBJFace/Rogue_tbj_face_under.png",
-            "True", "images/RogueBJFace/Rogue_bj_face_under.png",
-            ),
+        (0,0), "images/RogueBJFace/Rogue_bj_face_under.png", 
         (0,0), ConditionSwitch(    
             "Speed == 1 and Trigger == 'blow' and 'mouth' in R_Spunk", "images/RogueBJFace/Rogue_bj_mouth_lickingS.png",
-            "Speed and Trigger == 'blow' and R_DynamicTan[0]", "images/RogueBJFace/Rogue_tbj_mouth_licking.png",
             "Speed == 1 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_mouth_licking.png",
             "Speed == 2 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_mouth_heading.png", 
             "Speed == 3 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_mouth_sucking.png",
@@ -3304,13 +2532,10 @@ image Rogue_BJChin:
             "'mouth' in R_Spunk and R_Mouth == 'surprised'", "images/RogueBJFace/Rogue_bj_mouth_surprisedS.png",
             "'mouth' in R_Spunk and R_Mouth == 'sad'", "images/RogueBJFace/Rogue_bj_mouth_sadS.png",
             "'mouth' in R_Spunk and R_Mouth == 'kiss'", "images/RogueBJFace/Rogue_bj_mouth_sadS.png",
-            "'mouth' in R_Spunk and R_Mouth == 'smile' and R_DynamicTan[0]", "images/RogueBJFace/Rogue_tbj_mouth_lipbiteS.png",              
             "'mouth' in R_Spunk and R_Mouth == 'smile'", "images/RogueBJFace/Rogue_bj_mouth_lipbiteS.png",              
             "'mouth' in R_Spunk and R_Mouth == 'tongue'", "images/RogueBJFace/Rogue_bj_mouth_lickingS.png",
-            "'mouth' in R_Spunk and R_DynamicTan[0]", "images/RogueBJFace/Rogue_tbj_mouth_lipbiteS.png",
             "'mouth' in R_Spunk", "images/RogueBJFace/Rogue_bj_mouth_lipbiteS.png",
             "R_Mouth == 'normal'", "images/RogueBJFace/Rogue_bj_mouth_normal.png",
-            "R_Mouth == 'lipbite' and R_DynamicTan[0]", "images/RogueBJFace/Rogue_tbj_mouth_lipbite.png",
             "R_Mouth == 'lipbite'", "images/RogueBJFace/Rogue_bj_mouth_lipbite.png",
             "R_Mouth == 'sucking'", "images/RogueBJFace/Rogue_bj_mouth_surprised.png",            
             "R_Mouth == 'kiss'", "images/RogueBJFace/Rogue_bj_mouth_kiss.png",
@@ -3323,7 +2548,7 @@ image Rogue_BJChin:
             ),       
         (0,0), ConditionSwitch(
                 "not R_Spunk", Null(),
-                "'mouth' in R_Spunk and Speed == 2 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_face_under_heading_cum.png", 
+                "'mouth' in R_Spunk and Speed == 2 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_face_under_heading_cum..png", 
                 "'mouth' in R_Spunk and Speed == 3 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_face_under_sucking_cum.png",
                 "'mouth' in R_Spunk and Speed == 4 and Trigger == 'blow'", "images/RogueBJFace/Rogue_bj_face_under_sucking_cum.png",  
                 "True", Null(),
@@ -3391,7 +2616,7 @@ image Zero_Blowcock:
             "True", Null(),
             ),       
         (0,0), ConditionSwitch(    
-            "P_Spunk", "images/RogueBJFace/Zero_Cock_Spunk.png", 
+            "P_Spunk", "images/RogueBJFace/Zero_Cock_S.png", 
             "True", Null(),
             ),       
         )
@@ -3405,26 +2630,11 @@ image Zero_Blowcock:
 
 image Rogue_TJ_Under: 
     contains:
-        ConditionSwitch( 
-            "R_Hair == 'newhair'", Null(),
-            "R_HairColor == 'custom'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back.png",im.matrix.tint(float(R_HairCustomColor.red)/255.0, float(R_HairCustomColor.green)/255.0, float(R_HairCustomColor.blue)/255.0)),
-            "True", "images/RogueBJFace/Rogue_bj_hair" + GetHairColor(R_HairColor) + "_back.png",
-            ),
+        "images/RogueBJFace/Rogue_bj_hair_back.png"
         pos (150, -560)
         zoom .95
     contains:
-        ConditionSwitch( 
-            "R_Hair == 'newhair'", Null(),
-            "R_HairColorBangs == 'custom2'", im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back1.png",im.matrix.tint(float(R_HairCustomColorBangs.red)/255.0, float(R_HairCustomColorBangs.green)/255.0, float(R_HairCustomColorBangs.blue)/255.0)),
-            "True", Null(),
-            ),
-        pos (150, -560)
-        zoom .95
-    contains:
-        ConditionSwitch(
-            "R_DynamicTan[0]", "images/RogueBJFace/Rogue_ttj_base.png",
-            "True", "images/RogueBJFace/Rogue_tj_base.png",
-            ),
+        "images/RogueBJFace/Rogue_tj_base.png" 
     contains:
         ConditionSwitch( 
             "'tits' in R_Spunk", "images/RogueBJFace/Rogue_tj_spunkU.png",
@@ -3443,11 +2653,8 @@ image Rogue_TJ_Under:
 image Rogue_TJ_Over:     
     contains:
         ConditionSwitch( 
-            "R_DynamicTan[0] and R_Pierce == 'barbell'", "images/RogueBJFace/Rogue_ttj_tits_b.png", 
             "R_Pierce == 'barbell'", "images/RogueBJFace/Rogue_tj_tits_b.png", 
-            "R_DynamicTan[0] and R_Pierce == 'ring'", "images/RogueBJFace/Rogue_ttj_tits_r.png",
             "R_Pierce == 'ring'", "images/RogueBJFace/Rogue_tj_tits_r.png",
-            "R_DynamicTan[0] and R_Pierce != 'barbell'", "images/RogueBJFace/Rogue_ttj_tits.png",
             "R_Pierce != 'barbell'", "images/RogueBJFace/Rogue_tj_tits.png",
             ),
     contains:
@@ -3640,19 +2847,13 @@ image Zero_Handcock:
     pos (200,400)#(200,400)
         
 image Rogue_Hand_Under:
-    ConditionSwitch(    # Zero cock sucking
-            "R_DynamicTan[0]", "images/RogueBJFace/thand2.png",
-            "True", "images/RogueBJFace/hand2.png",
-            ),
+    "images/RogueBJFace/hand2.png"
     anchor (0.5,0.5)
     pos (0,0)
     
     
 image Rogue_Hand_Over:
-    ConditionSwitch(    # Zero cock sucking
-            "R_DynamicTan[0]", "images/RogueBJFace/thand1.png",
-            "True", "images/RogueBJFace/hand1.png",
-            ),   
+    "images/RogueBJFace/hand1.png"    
     anchor (0.5,0.5)
     pos (0,0)
 
@@ -4669,7 +3870,9 @@ label R_Pussy_Launch(T = Trigger):
         ease 0.5 pos (700,-400) zoom 2 offset (0,0) alpha 1 #ease 0.5 offset (-100,-550) zoom 2
     return
         
-label R_Pos_Reset(Pose = 0):    
+label R_Pos_Reset(Pose = 0):  
+    if R_Loc != bg_current:
+            return   
     call Rogue_Hide 
     show Rogue at SpriteLoc(R_SpriteLoc) zorder RogueLayer:
         ease .5 offset (0,0) anchor (0.6, 0.0) zoom 1 alpha 1 xzoom 1 yzoom 1
@@ -4700,7 +3903,190 @@ image Cellphone:
     yoffset 100
 
 
+image PhoneSex:
+    #this is the phone displayed during phone sex
+    contains:
+        #base
+        "images/PhoneFrame.png"
+    contains:
+        #screen        
+        AlphaMask("PhoneScreen", "images/PhoneMask.png")
+    offset (300,50)
 
+image PhoneRG:
+    #Rogue's room for the phone (to make sure the bed is framed properly)
+    "bg_rogue"
+    xoffset 500
+    
+image PhoneScreen:
+    #this is the screen displayed on "PhoneSex", alpha-masked
+    contains:
+        #backdrop
+        ConditionSwitch(      
+            "Zero_Loc(Ch_Focus) == 'bg rogue'","PhoneRG",
+            "Zero_Loc(Ch_Focus) == 'bg kitty'", "bg_kitty",
+            "Zero_Loc(Ch_Focus) == 'bg laura'", "bg_laura",
+            "Zero_Loc(Ch_Focus) == 'bg emma'", "bg_emma",
+            "Zero_Loc(Ch_Focus) == 'bg classroom'", "bg_class",
+            "True", "bg_shower", 
+            ) 
+        offset (-800,-300)
+        zoom 1.5
+    contains:
+        #girl
+        ConditionSwitch(
+            "Ch_Focus == 'Rogue'", "Rogue",
+            "Ch_Focus == 'Kitty'", "Kitty_Sprite",
+            "Ch_Focus == 'Emma'", "Emma_Sprite",
+            "Ch_Focus == 'Laura'", "Laura_Sprite",
+            "True", Null(),        
+            ) 
+        offset (290,50)
+        zoom 1.1
+
+
+image DressScreen:
+    #this is dressing screen displayed during wardrobe
+    contains:
+        #base
+        "images/DressScreen.png"
+    contains:
+        #screen        
+        AlphaMask("images/DressScreenShadow.png","DressShadow")
+    zoom 1
+    offset (375,225)
+    
+image DressShadow:
+    #this is the shadow projected on that screen
+    contains:
+        #girl
+        ConditionSwitch(
+            "RogueLayer == 100", "Rogue",
+            "KittyLayer == 100", "Kitty_Sprite",
+            "EmmaLayer == 100", "Emma_Sprite",
+            "LauraLayer == 100", "Laura_Sprite",
+#            "Ch_Focus == 'Rogue'", "Rogue",
+#            "Ch_Focus == 'Kitty'", "Kitty_Sprite",
+#            "Ch_Focus == 'Emma'", "Emma_Sprite",
+#            "Ch_Focus == 'Laura'", "Laura_Sprite",
+            "True", Null(),        
+            ) 
+        offset (210,-170)
+        zoom 1
+
+    
+# Rogue's Faces //////////////////////////////////////////////
+label RogueFace(Emote = R_Emote, B = R_Blush, M = 0, Mouth = 0, Eyes = 0, Brows = 0):
+        # Emote is the chosen emote, B is the lush state, 
+        # M is whether the character is in a  manic state         
+        $ Emote = R_Emote if Emote == 5 else Emote
+        $ B = R_Blush if B == 5 else B
+        
+        if (R_Forced or "angry" in R_RecentActions) and Emote in ("normal", "bemused", "sexy", "sly", "smile", "startled"):
+                $ Emote = "angry"   
+        elif R_ForcedCount > 0 and Emote in ("normal", "bemused", "sexy", "sly", "smile", "startled"):
+                $ Emote = "sad" 
+                
+        if Emote == "normal":
+                $ R_Mouth = "normal"
+                $ R_Brows = "normal"
+                $ R_Eyes = "normal"
+        elif Emote == "angry":
+                $ R_Mouth = "sad"
+                $ R_Brows = "angry"
+                $ R_Eyes = "sexy"
+        elif Emote == "bemused":
+                $ R_Mouth = "lipbite"
+                $ R_Brows = "sad"
+                $ R_Eyes = "squint"
+        elif Emote == "closed":
+                $ R_Mouth = "lipbite"
+                $ R_Brows = "sad"
+                $ R_Eyes = "closed"  
+        elif Emote == "confused":
+                $ R_Mouth = "kiss"
+                $ R_Brows = "confused"
+                $ R_Eyes = "surprised"
+        elif Emote == "kiss":
+                $ R_Mouth = "kiss"
+                $ R_Brows = "normal"
+                $ R_Eyes = "closed"
+        elif Emote == "tongue":
+                $ R_Mouth = "tongue"
+                $ R_Brows = "sad"
+                $ R_Eyes = "sexy"
+        elif Emote == "manic":
+                $ R_Mouth = "grimace"
+                $ R_Brows = "sad"
+                $ R_Eyes = "manic"
+                $ R_Blush = 1
+        elif Emote == "sad":
+                $ R_Mouth = "sad"
+                $ R_Brows = "sad"
+                $ R_Eyes = "sexy"
+        elif Emote == "sadside":
+                $ R_Mouth = "sad"
+                $ R_Brows = "sad"
+                $ R_Eyes = "side"
+        elif Emote == "sexy":
+                $ R_Mouth = "lipbite"
+                $ R_Brows = "normal"
+                $ R_Eyes = "sexy"
+        elif Emote == "smile":
+                $ R_Mouth = "smile"
+                $ R_Brows = "normal"
+                $ R_Eyes = "normal"
+        elif Emote == "sucking":
+                $ R_Mouth = "sucking"
+                $ R_Brows = "normal"
+                $ R_Eyes = "closed"
+        elif Emote == "surprised":
+                $ R_Mouth = "surprised"
+                $ R_Brows = "surprised"
+                $ R_Eyes = "surprised"
+        elif Emote == "oh":
+                $ R_Mouth = "kiss"
+                $ R_Brows = "surprised"
+                $ R_Eyes = "surprised"
+        elif Emote == "startled":
+                $ R_Mouth = "grimace"
+                $ R_Brows = "surprised"
+                $ R_Eyes = "surprised"
+        elif Emote == "down":
+                $ R_Mouth = "surprised"
+                $ R_Brows = "sad"
+                $ R_Eyes = "down"  
+        elif Emote == "perplexed":
+                $ R_Mouth = "sad"
+                $ R_Brows = "confused"
+                $ R_Eyes = "normal"
+        elif Emote == "sly":
+                $ R_Mouth = "grimace"
+                $ R_Brows = "normal"
+                $ R_Eyes = "squint" 
+            
+        if M:
+                $ R_Eyes = "manic"        
+        if B > 1:
+                $ R_Blush = 2
+        elif B:
+                $ R_Blush = 1
+        else:
+                $ R_Blush = 0
+                
+        if Mouth:
+                $ R_Mouth = Mouth
+        if Eyes:
+                $ R_Eyes = Eyes
+        if Brows:
+                $ R_Brows = Brows
+                
+        return
+# End Rogue Faces / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+
+
+# Gwenpool sprites Start / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /        
 image Gwen_Sprite:
     LiveComposite(        
         (574,964),
@@ -5038,6 +4424,8 @@ label Les_Launch(Girl=0,XLoc=0,YLoc=0,XZoom=0):
                 #If Rogue is lead
                 if "unseen" not in R_RecentActions:
                     $ R_Eyes = "side"
+                else:     
+                    $ R_Eyes = "closed"
                 $ Rogue_Arms = 2
                 $ RogueLayer = 50
                 $ XLoc = 550
@@ -5047,6 +4435,8 @@ label Les_Launch(Girl=0,XLoc=0,YLoc=0,XZoom=0):
                 #If the other girl is lead
                 if "unseen" not in R_RecentActions:
                     $ R_Eyes = "side"
+                else:     
+                    $ R_Eyes = "closed"
                 $ Rogue_Arms = 2
                 $ RogueLayer = 75
                 $ XLoc = 715
@@ -5069,6 +4459,8 @@ label Les_Launch(Girl=0,XLoc=0,YLoc=0,XZoom=0):
             if Girl == "Kitty":
                 if "unseen" not in K_RecentActions:
                     $ K_Eyes = "leftside"
+                else:     
+                    $ K_Eyes = "closed"
                 $ Kitty_Arms = 1
                 $ KittyLayer = 100               
                 $ XLoc = 450
@@ -5077,6 +4469,8 @@ label Les_Launch(Girl=0,XLoc=0,YLoc=0,XZoom=0):
             else:
                 if "unseen" not in K_RecentActions:
                     $ K_Eyes = "side"
+                else:     
+                    $ K_Eyes = "closed"
                 $ Kitty_Arms = 1
                 if Girl == "Rogue" or Partner == "Rogue":
                         $ KittyLayer = 100
@@ -5102,6 +4496,8 @@ label Les_Launch(Girl=0,XLoc=0,YLoc=0,XZoom=0):
             if Girl == "Emma":
                 if "unseen" not in E_RecentActions:
                     $ E_Eyes = "sly"
+                else:     
+                    $ E_Eyes = "closed"
                 $ Emma_Arms = 2
                 $ EmmaLayer = 75
                 $ XLoc = 500
@@ -5110,6 +4506,8 @@ label Les_Launch(Girl=0,XLoc=0,YLoc=0,XZoom=0):
             else:
                 if "unseen" not in E_RecentActions:
                     $ E_Eyes = "side"
+                else:     
+                    $ E_Eyes = "closed"
                 $ Emma_Arms = 2
                 $ EmmaLayer = 50
                 $ XLoc = 700
@@ -5132,6 +4530,8 @@ label Les_Launch(Girl=0,XLoc=0,YLoc=0,XZoom=0):
             if Girl == "Laura":
                 if "unseen" not in L_RecentActions:
                     $ L_Eyes = "leftside"
+                else:     
+                    $ L_Eyes = "closed"
                 $ Laura_Arms = 1
                 $ LauraLayer = 75
                 $ XLoc = 500
@@ -5140,6 +4540,8 @@ label Les_Launch(Girl=0,XLoc=0,YLoc=0,XZoom=0):
             else:
                 if "unseen" not in L_RecentActions:
                     $ L_Eyes = "side"
+                else:     
+                    $ L_Eyes = "closed"
                 $ Laura_Arms = 1
                 $ LauraLayer = 50
                 $ XLoc = 700
@@ -5196,3 +4598,4 @@ image ClockRed:
         anchor (0.5,0.5)
         rotate -(int(Round *3.6-180))
         
+    

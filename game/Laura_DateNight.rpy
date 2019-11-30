@@ -868,27 +868,15 @@ label L_Date_End:
                 "Just leave and head back to yours.":
                     call Date_Ditched
                     jump Date_Over    
-            
-            #until her room is ready. . .
-            ch_l "You know, my room's. . . a mess. Let's head for yours."
-            
-            $ bg_current = "bg player"
-            $ L_Loc = "bg player"
+                            
+            $ bg_current = "bg laura"
+            $ L_Loc = "bg laura"
             if "Rogue" in Party:
-                $ R_Loc = "bg player"
+                $ R_Loc = "bg laura"
             if "Emma" in Party:
-                $ E_Loc = "bg player"
+                $ E_Loc = "bg laura"
             if "Kitty" in Party:
-                $ K_Loc = "bg player"
-                
-#            $ bg_current = "bg laura"
-#            $ L_Loc = "bg laura"
-#            if "Rogue" in Party:
-#                $ R_Loc = "bg laura"
-#            if "Emma" in Party:
-#                $ E_Loc = "bg laura"
-#            if "Kitty" in Party:
-#                $ K_Loc = "bg laura"
+                $ K_Loc = "bg laura"
             call Set_The_Scene(Dress=0)
             call Taboo_Level    
     

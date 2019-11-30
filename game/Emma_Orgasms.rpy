@@ -1,6 +1,12 @@
 ﻿# Start You Cumming //////////////////////////////////////////////////////////////////////////////////
 
 label PE_Cumming:
+    if "phonesex" in P_RecentActions:        
+            $ P_Semen -= 1
+            $ P_Focus = 0
+            "You spray jizz across the room."
+            return 
+        
     call Shift_Focus("Emma")
     if "classcaught" in E_RecentActions and bg_current == "bg classroom":
             #if you're in the classcaught scenario
@@ -1015,8 +1021,9 @@ label E_SpunkBack:
         jump E_Orgasm_After
 ###ANON MOD CODE BLOCK STOP ######
 ###ANON MOD CODE BLOCK STOP ######
-label E_SpunkBelly:   
-    
+label E_SpunkBelly:  
+    if renpy.showing("Emma_FJ_Animation"): 
+        jump E_Foot_Finish    
     call Emma_Sex_Launch("hotdog")
     if E_Addict >= 60 and ApprovalCheck("Emma", 1000, "I", Bonus = ((E_Addict*10)- E_Obed))  and E_Swallow:
             $ E_Eyes = "manic"
@@ -1181,7 +1188,8 @@ label E_Orgasm_After:
             $ Emma_Arms = 1
         $ P_Semen -= 1
         $ P_Focus = 0
-        $ Speed = 0  
+        $ Speed = 0          
+        $ E_Thirst -= 10 if E_Thirst > 50 else 5
         menu:
                 "Want her to clean you off?"
                 "Yes":
@@ -1254,6 +1262,10 @@ label E_CleanCock:
 
 # Emma Lusty face check ////////////////////////////////////////////////////////////////////////////////
 label EmmaLust(Extreme = 0, Kissing = 0):
+    if E_Thirst >= 80:
+            $ E_Lust += 2
+    elif E_Thirst >= 50:
+            $ E_Lust += 1
                 
     if E_Lust >= 90:        
             $ E_Blush = 2
@@ -1323,7 +1335,10 @@ label EmmaLust(Extreme = 0, Kissing = 0):
     if E_OCount >= 10:   
             #If you've fucked her senseless
             $ E_Eyes = "stunned"
-            $ E_Mouth = "tongue"   
+            $ E_Mouth = "tongue"       
+    if "unseen" in E_RecentActions:
+            $ E_Eyes = "closed"
+
                 
     return
 
@@ -1332,13 +1347,21 @@ label EmmaLust(Extreme = 0, Kissing = 0):
 #  Emma Orgasm //////////////////////////
 
 label E_Cumming(Quick=0):
+    if E_Loc != bg_current and "phonesex" not in P_RecentActions:
+            #if she's not even in the room. . .
+            $ E_Lust = 25
+            return
+        
     $ E_Eyes = "surprised"
     $ E_Brows = "sad"
     $ E_Mouth = "tongue"
     $ E_Blush = 1
     ch_e ". . . !"
     $ Speed = 0
-    if renpy.showing("Emma_SexSprite"):
+    if renpy.showing("Emma_Sprite"):
+            show Emma_Sprite
+            with vpunch
+    elif renpy.showing("Emma_SexSprite"):
             show Emma_SexSprite #fix, test this
             with vpunch
     elif renpy.showing("Emma_BJ_Animation"):           #fix, make this animation work better when paused for this effect.
@@ -1350,15 +1373,14 @@ label E_Cumming(Quick=0):
     elif renpy.showing("Emma_HJ_Animation"):
             show Emma_HJ_Animation  
             with vpunch
-    else:
-            show Emma_Sprite
-            with vpunch
     $ Speed = 1
     $ Line = renpy.random.choice(["Emma is suddenly rocked with spasms, holding back a muffled scream.", 
                 "Emma grabs on tightly as her body shakes with pleasure.", 
                 "Emma stiffens and lets out a low moan.",
                 "Emma's body quivers and suddenly goes still."])
     "[Line]"    
+    $ E_Thirst = int(E_Thirst/2)
+    $ E_Thirst -= 5
     if Quick:
             call AnyFace("Emma","sexy",2)  
             $ E_Lust = 20
@@ -1383,8 +1405,8 @@ label E_Cumming(Quick=0):
             call Statup("Emma", "Love", 70, 2)
             call Statup("Emma", "Love", 90, 1)
             if "unsatisfied" in E_DailyActions:
-                ch_e "Making up for past mistakes, [E_Petname]?"
-            call DrainWord("Emma","unsatisfied")
+                    ch_e "Making up for past mistakes, [E_Petname]?"
+                    call DrainWord("Emma","unsatisfied")
     $ E_OCount += 1        
     $ E_Org += 1
     $ Line = 0
@@ -1481,6 +1503,7 @@ label Emma_Cleanup(Choice = "random",Options=[],Cnt=0,Cleaned=0,Original="Emma")
                 $ E_Wet = 0
                 return    
             $ Cnt = 1  
+            $ Tempmod = 0
         
     if E_Addict > 80 and E_Swallow:
         #if she likes cum, she prefers to eat it. 

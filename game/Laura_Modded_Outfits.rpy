@@ -1,5 +1,5 @@
 ﻿## Laura's Clothes ///////////////////
-label Laura_Modded_Clothes:
+label Laura_Modded_Clothes_Menu:
     menu:
         "Poses":
                 jump Laura_Posing
@@ -10,7 +10,7 @@ label Laura_Modded_Clothes:
                 call SetHairColorLaura("custom")
             else:
                 ch_l "I don't know, it's fine like this."
-            jump Laura_Modded_Clothes
+            jump Laura_Modded_Clothes_Menu
 
         "Apply color to pubes as well" if L_HairColor == "custom" and not L_PubesColor:
             $ L_PubesColor = 1
@@ -62,7 +62,7 @@ label Laura_Modded_Clothes:
         "Nevermind":
             jump Laura_Clothes
             # return
-    jump Laura_Modded_Clothes
+    jump Laura_Modded_Clothes_Menu
 
 # label Laura_Modded_Clothes_Misc_Hair:
 #                     if ApprovalCheck("Laura", 700):
@@ -158,7 +158,7 @@ label Laura_Posing:
             call Laura_Hide
             call L_Pos_Reset
             $ P_Sprite = TempP_Sprite
-            jump Laura_Modded_Clothes
+            jump Laura_Modded_Clothes_Menu
 
     jump Laura_Posing_Menu
     

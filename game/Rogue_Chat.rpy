@@ -23,7 +23,8 @@ label Rogue_Chat_Set(Preset=0):
                     $ renpy.pop_call() #this removes the callback to the previous settings menu
                     $ renpy.pop_call() #this removes the callback to the previous settings menu testing. . .
                     ch_p "I wanted to talk about your outfit. . ."
-                    if Taboo:
+                    call Taboo_Level
+                    if R_Taboo:
                             if "exhibitionist" in R_Traits:
                                 ch_r "Oooh, naughty. . ."  
                             elif ApprovalCheck("Rogue", 900, TabM=4) or ApprovalCheck("Rogue", 400, "I", TabM=3): 
@@ -54,6 +55,12 @@ label Rogue_Chat:
     if "angry" in R_RecentActions:
                 ch_r "I really don't want to talk to you right now."
                 return
+    if "les" in R_RecentActions:
+            #if she's with a girl. . .
+            ch_r "Ooof. . . gimme a minute. . ."
+            "You hear some shifting around. . ."
+            ch_r "Ok, just um, never mind. . ."
+            "You hear some muffled giggles in the background."
     menu:
         ch_r "So what did you want to talk about, [R_Petname]?"
         "Come on over." if R_Loc != bg_current:
@@ -67,60 +74,91 @@ label Rogue_Chat:
         "Ask Rogue to leave" if R_Loc == bg_current:
                     call Rogue_Dismissed   
                     return
-        
-        "Flirt with her" if not R_Chat[5]:
-                    call Rogue_Flirt               
-        "Flirt with her (locked)" if R_Chat[5]:  
-                    pass
-            
-        "Sex Menu" if R_Loc == bg_current:
-                    if R_Love >= R_Obed:
-                        ch_p "Did you want to fool around?"
-                    else:
-                        ch_p "I'd like to get naughty."
-                    if "angry" in R_RecentActions:  
-                        ch_r "I don't want to deal with you right now."
-                    elif ApprovalCheck("Rogue", 600, "LI"):
-                        call RogueFace("sexy")
-                        ch_r "Heh, all right, [R_Petname]."
-                        call Rogue_SexMenu
-                        return
-                    elif ApprovalCheck("Rogue", 400, "OI"):
-                        ch_r "If that's what you want, [R_Petname]."
-                        call Rogue_SexMenu
-                        return
-                    else:
-                        ch_r "I'm not really interested, [R_Petname]."          
+        "Romance her":      
+                menu:
+                    "Flirt with her (locked)" if R_Chat[5]:  
+                                pass
+                    "Flirt with her" if not R_Chat[5]:
+                                call Rogue_Flirt    
+                        
+                    "Sex Menu (locked)" if R_Loc != bg_current:
+                                pass
+                    "Sex Menu" if R_Loc == bg_current:
+                                if R_Love >= R_Obed:
+                                    ch_p "Did you want to fool around?"
+                                else:
+                                    ch_p "I'd like to get naughty."
+                                if "angry" in R_RecentActions:  
+                                    ch_r "I don't want to deal with you right now."
+                                elif ApprovalCheck("Rogue", 600, "LI"):
+                                    call RogueFace("sexy")
+                                    ch_r "Heh, all right, [R_Petname]."
+                                    call Rogue_SexMenu
+                                    return
+                                elif ApprovalCheck("Rogue", 400, "OI"):
+                                    ch_r "If that's what you want, [R_Petname]."
+                                    call Rogue_SexMenu
+                                    return
+                                else:
+                                    ch_r "I'm not really interested, [R_Petname]." 
+                               
+                    "Dirty Talk (locked)" if R_SEXP < 10:
+                                pass
+                    "Dirty Talk" if R_SEXP >= 10:
+                                ch_p "About when we get together. . ."
+                                call Rogue_SexChat
+                    "Date":
+                                ch_p "Do you want to go on a date tonight?"
+                                call Rogue_Date_Ask          
+                    "Gifts (locked)" if R_Loc != bg_current:
+                                pass
+                    "Gifts" if R_Loc == bg_current:
+                                ch_p "I'd like to give you something."
+                                call Rogue_Gifts
+                    "Back":
+                                pass        
+                                          
+        "Talk with her": 
+                menu:
+                    "I just wanted to talk. . .":
+                                call Rogue_Chitchat   
+                    "Relationship status":
+                                ch_p "Could we talk about us?"
+                                if R_Loc == bg_current:
+                                    call Rogue_Relationship
+                                else:
+                                    ch_r "That sounds like it might be a little heavy to do over the phone."
+                                    ch_r "Maybe later?"
+                          
+                    "Other girls":
+                                menu:
+                                    "How do you feel about Kitty?" if "met" in K_History:
+                                            call Rogue_About("Kitty")
+                                    "How do you feel about Emma?" if "met" in E_History:
+                                            call Rogue_About("Emma")
+                                    "How do you feel about Laura?" if "met" in L_History:
+                                            call Rogue_About("Laura")
+                                    "About hooking up with other girls. . .":
+                                            call Rogue_Monogamy
+                                    "Never mind.":
+                                            pass
+                                            
+                    "Could I get your number?" if "Rogue" not in Digits:
+                                if ApprovalCheck("Rogue", 400, "L") or ApprovalCheck("Rogue", 200, "I"):
+                                    ch_r "Sure, I suppose."
+                                    $ Digits.append("Rogue") 
+                                elif ApprovalCheck("Rogue", 200, "O"):
+                                    ch_r "If you want it, I guess."             
+                                    $ Digits.append("Rogue")
+                                else:
+                                    ch_r "I don't really want you calling me."                     
                                 
-        "I just wanted to talk. . .":
-                    call Rogue_Chitchat   
+                    "Back":
+                                pass
                     
-        "Rogue's settings":
-                    ch_p "Let's talk about you."
+        "Change Rogue":
                     call Rogue_Settings   
-        
-        "Relationship status":
-                    ch_p "Could we talk about us?"
-                    if R_Loc == bg_current:
-                        call Rogue_Relationship
-                    else:
-                        ch_r "That sounds like it might be a little heavy to do over the phone."
-                        ch_r "Maybe later?"
-                    
-        "Could I get your number?" if "Rogue" not in Digits:
-                    if ApprovalCheck("Rogue", 400, "L") or ApprovalCheck("Rogue", 200, "I"):
-                        ch_r "Sure, I suppose."
-                        $ Digits.append("Rogue") 
-                    elif ApprovalCheck("Rogue", 200, "O"):
-                        ch_r "If you want it, I guess."             
-                        $ Digits.append("Rogue")
-                    else:
-                        ch_r "I don't really want you calling me."  
-                        
-        "Gifts" if R_Loc == bg_current:
-                    ch_p "I'd like to give you something."
-                    call Rogue_Gifts
-                        
+         
         "Add her to party" if "Rogue" not in Party and R_Loc == bg_current:
                     ch_p "Could you follow me for a bit?"
                     if ApprovalCheck("Rogue", 550):
@@ -144,11 +182,6 @@ label Rogue_Chat:
                         call Set_The_Scene   
                     return
                 
-        
-        "Date":
-                    ch_p "Do you want to go on a date tonight?"
-                    call Rogue_Date_Ask
-            
         "Switch to. . .":
                 menu:
                     "Kitty":
@@ -161,8 +194,7 @@ label Rogue_Chat:
                         pass
                         
         "Never mind.":
-                    if R_Loc != bg_current:
-                        ch_r "Ok, later then."
+                    ch_r "Ok, later then."
                     return
     jump Rogue_Chat
 
@@ -170,695 +202,711 @@ label Rogue_Chat:
 #Rogue Relationship ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
 label Rogue_Relationship:
-    menu:
-        ch_r "What did you want to ask me about?"
-        
-        "Do you want to be my girlfriend?" if "dating" not in R_Traits and "ex" not in R_Traits:
-                if "asked boyfriend" in R_DailyActions and "angry" in R_DailyActions:
-                    call RogueFace("angry", 1)
-                    ch_r "Seriously, stop bugging me."
-                    return
-                elif "asked boyfriend" in R_DailyActions:
-                    call RogueFace("angry", 1)
-                    ch_r "You already asked about that, the answer's still no."
-                    return
-                elif R_Break[0]:                    
-                    call RogueFace("angry", 1)                    
-                    ch_r "I already told you, not while you're with her."
-                    if "dating" in K_Traits:   
-                        $ R_DailyActions.append("asked boyfriend")                     
-                        return
-                    elif "ex" in K_Traits:
-                        ch_p "I'm not anymore."
-                     
-                $ R_DailyActions.append("asked boyfriend")
-                
-                if P_Harem and "RogueYes" not in P_Traits: 
-                    if len(P_Harem) >= 2:
-                        ch_r "That wouldn't be fair to the others, [R_Petname]."
-                    else:
-                        ch_r "That wouldn't be fair to [P_Harem[0]], [R_Petname]."
-                    return                    
-                
-                if R_Event[5]:
-                    call RogueFace("bemused", 1)
-                    ch_r "I mean, I asked you about this before. . ."
-                else:
-                    call RogueFace("surprised", 2)
-                    ch_r "Wow, this is unexpected, [R_Petname]. . ." 
-                    call RogueFace("smile", 1)
-                
-                call Rogue_OtherWoman
-                
-                if R_Love >= 800:
-                    call RogueFace("surprised", 1)
-                    $ R_Mouth = "grimace"
-                    call Statup("Rogue", "Love", 200, 40)
-                    ch_r "I'd love to!"
-                    if "boyfriend" not in R_Petnames:
-                        $ R_Petnames.append("boyfriend")                
-                    $ R_Traits.append("dating")
-                    if "RogueYes" in P_Traits:       
-                                $ P_Traits.remove("RogueYes")
-                                $ P_Harem.append("Rogue")
-                                call Harem_Initiation
-                    "Rogue leaps in and kisses you deeply."
-                    call RogueFace("kiss", 1) 
-                    $ R_Kissed += 1
-                elif R_Obed >= 500:
-                    call RogueFace("perplexed")
-                    ch_r "I'm not sure I'd call what we have \"dating.\""
-                elif R_Inbt >= 500:
-                    call RogueFace("smile")                
-                    ch_r "I don't really want to be tied down like that."
-                else:
-                    call RogueFace("perplexed", 1)
-                    ch_r "I don't really feel that way about you right now, [R_Petname]."
+    while True:
+        menu:
+            ch_r "What did you want to ask me about?"
             
-        
-        "Do you want to get back together?" if "ex" in R_Traits:
-                if "asked boyfriend" in R_DailyActions and "angry" in R_DailyActions:
-                    call RogueFace("angry", 1)
-                    ch_r "Seriously, stop bugging me."
-                    return
-                elif "asked boyfriend" in R_DailyActions:
-                    call RogueFace("angry", 1)
-                    ch_r "You already asked about that, the answer's still no."
-                    return
-                elif R_Break[0]: 
-                    call RogueFace("angry", 1)                    
-                    if "dating" in K_Traits:   
-                        ch_r "I alredy told you, not while you're with her."
-                        return
-                    elif "ex" in K_Traits:
-                        ch_r "I alredy told you, not while you're with her."
-                        ch_p "I'm not anymore."
-                        $ R_Break[0] = 0
-                    else:    
-                        if not ApprovalCheck("Rogue", 1500) or R_Break[1] > 5:
-                            ch_r "We are never, ever, ever getting back together."
-                        else:
-                            call RogueFace("sad", 1)
-                            ch_r "Sorry, it's just still too fresh. I can't even think of getting back together yet."
-                    $ R_DailyActions.append("asked boyfriend")
-                    return
-                
-                $ R_DailyActions.append("asked boyfriend")
-                
-                if P_Harem and "RogueYes" not in P_Traits: 
-                    if len(P_Harem) >= 2:
-                        ch_r "That wouldn't be fair to the others, [R_Petname]."
-                    else:
-                        ch_r "That wouldn't be fair to [P_Harem[0]], [R_Petname]."
-                    return
-                
-                $ Cnt = 0
-                call Rogue_OtherWoman
-                                        
-                if R_Love >= 800:
-                    call RogueFace("surprised", 1)
-                    $ R_Mouth = "grimace"
-                    call Statup("Rogue", "Love", 90, 5)
-                    ch_r "If you're in, I'm in!"
-                    if "boyfriend" not in R_Petnames:
-                        $ R_Petnames.append("boyfriend")                
-                    $ R_Traits.append("dating")          
-                    $ R_Traits.remove("ex")
-                    if "RogueYes" in P_Traits:       
-                                $ P_Traits.remove("RogueYes")
-                                $ P_Harem.append("Rogue")
-                                call Harem_Initiation
-                    "Rogue leaps in and kisses you deeply."
-                    call RogueFace("kiss", 1) 
-                    $ R_Kissed += 1
-                elif R_Love >= 600 and ApprovalCheck("Rogue", 1500):
-                    call RogueFace("smile", 1)
-                    $ R_Mouth = "grimace"
-                    call Statup("Rogue", "Love", 90, 5)
-                    ch_r "We can give this another try."
-                    if "boyfriend" not in R_Petnames:
-                        $ R_Petnames.append("boyfriend")                
-                    $ R_Traits.append("dating")             
-                    $ R_Traits.remove("ex")
-                    if "RogueYes" in P_Traits:       
-                                $ P_Traits.remove("RogueYes")
-                                $ P_Harem.append("Rogue")
-                                call Harem_Initiation
-                    "Rogue gives you a quick kiss."
-                    call RogueFace("kiss", 1) 
-                    $ R_Kissed += 1
-                elif R_Obed >= 500:
-                    call RogueFace("sad")
-                    ch_r "Whatever we had, whatever we have right now, that's not it."
-                elif R_Inbt >= 500:
-                    call RogueFace("perplexed")                
-                    ch_r "We tried that, it didn't work out."
-                else:
-                    call RogueFace("perplexed", 1)
-                    ch_r "I'm not ready for more heartbreak, [R_Petname]."
-                
-                # End Back Together
-                    
-        "I wanted to ask about [[another girl]" if "Rogue" in P_Harem:
-                menu:
-                    "Have you reconsidered letting me date. . ."
-                    "Kitty" if "Kitty" not in P_Harem:
-                            call Poly_Start("Kitty",1)
-                    "Emma" if "Emma" not in P_Harem:
-                            call Poly_Start("Emma",1)
-                    "Laura" if "Laura" not in P_Harem:
-                            call Poly_Start("Laura",1)
-                    "Never mind":
-                            pass
-                            
-        "I think we should break up." if "dating" in R_Traits: #ApprovalCheck("Rogue", 950, "L", Bonus = (B/3)):
-            if "breakup talk" in R_RecentActions:
-                ch_r "We were {i}just{/i} over this, not even funny."
-            elif "breakup talk" in R_DailyActions:
-                ch_r "Tired of me again that quick?" 
-                ch_r "We're not having this talk today, [R_Petname]."
-            else:
-                call Rogue_Breakup                
-            
-            
-#        "I'd like to bring Kitty into this." if "poly Kitty" not in R_Traits and not K_Break[0]:    #fix nonfunctional yet
-            
-#            if "asked threesome" in R_RecentActions:
-#                ch_r "Persistence will NOT be rewarded here."
-#                return
-#            elif "asked threesome" in R_DailyActions:
-#                ch_r "I don't think my answer's changing any time soon." 
-#                return
-#            else:
-#                $ R_DailyActions.append("asked threesome")                
-#                $Cnt = int((R_LikeKitty - 500)/2)
-#                menu:
-#                    ch_r "What does she think about this?"
-                        
-#                    "She said I can be with you too." if "poly Rogue" in K_Traits:
-#                        if ApprovalCheck("Rogue", 1800, Bonus = Cnt):
-#                            call RogueFace("smile", 1)
-#                            if R_Love >= R_Obed:
-#                                ch_r "Just so long as we can be together, I can share."
-#                            elif R_Obed >= R_Inbt:
-#                                ch_r "I'm ok with that if she is."
-#                            else:
-#                                ch_r "Yeah, I mean I guess so."
-#                                $ R_Traits.append("poly Kitty")
-#                        else:
-#                            call RogueFace("angry", 1)
-#                            ch_r "Well maybe she did, but I don't want to share."  
-                    
-#                    "I could ask if she'd be ok with me dating you both." if "poly Rogue" not in K_Traits:
-#                        if ApprovalCheck("Rogue", 1800, Bonus = Cnt) or :
-#                            call RogueFace("smile", 1)
-#                            if R_Love >= R_Obed:
-#                                ch_r "Just so long as we can be together, I can share."
-#                            elif R_Obed >= R_Inbt:
-#                                ch_r "I'm ok with that if she is."
-#                            else:
-#                                ch_r "Yeah, I mean I guess so."                        
-#                            ch_r "Go ask her, give me the night to think about it, and then come back tomorrow with her answer."
-#                        else:
-#                            call RogueFace("angry", 1)
-#                            ch_r "Well maybe she would, but I don't want to share."  
-                    
-#                    "Could you ask?":
-#                        if R_LikeKitty >= 700:
-#                            ch_r "I have to say I've kind of been thinking about it myself."  
-#                            call Statup("Rogue", "Love", 90, 5)
-#                            call Statup("Rogue", "Obed", 70, 1)
-#                            call Statup("Rogue", "Inbt", 80, 5)
-#                        elif R_LikeKitty >= 500:
-#                            ch_r "I guess, if that's what you want. . ." 
-#                        elif R_Obed >= 700:
-#                            ch_r "If that's what you want. . ." 
-#                        else:
-#                            ch_r "I can't really stand her, I don't think so."  
-                            
-                        
-#                    "You're right, I was dumb to ask.":
-#                        call RogueFace("sad")
-#                        ch_r "Yeah, you were."  
-                        
-            #end Kitty Threesome
-                
-        
-        "You weren't a virgin?" if R_Sex and not R_Chat[0]:
-            call Rogue_Not_Virgin   
-        
-               
-        "You said you wanted me to be your Master?" if R_Event[8] and "master" not in R_Petnames:
-            menu:
-                ch_r "Yes?"
-                "I'm ok with that now.":
-                    if ApprovalCheck("Rogue", 800, "O"):     
-                        call RogueFace("sexy", 1)
-                        ch_r "I hope to serve well, Master."
-                        call Statup("Rogue", "Obed", 200, 100) 
-                        $ R_Petnames.append("master")
-                        $ R_Event[8] = 2
-                    else:
-                        ch_r "Well, I'm not really interested in that sort of thing anymore."
-                        ch_r "I mean, maybe later." 
-                "Never mind.":
-                    call RogueFace("sad")
-                    ch_r "Oh."
-                    call Statup("Rogue", "Obed", 200, -5)
-                    call Statup("Rogue", "Love", 90, -5)
-                        
-        "Never Mind":
-            return
-              
-    return
-
-label Rogue_Breakup(Anger = 0):  
-    $ R_RecentActions.append("breakup talk")  
-    $ R_DailyActions.append("breakup talk")
-    if R_Break[1] > 3:       
-        call RogueFace("angry")
-        call Statup("Rogue", "Love", 50, -5, 1)
-        call Statup("Rogue", "Love", 80, -10, 1)
-        call Statup("Rogue", "Obed", 30, -5, 1)
-        call Statup("Rogue", "Obed", 50, -10, 1)
-        call Statup("Rogue", "Inbt", 50, 3)
-        call Statup("Rogue", "Inbt", 80, 1)
-        ch_r "This is getting old, [R_Petname]."       
-        $ Anger += 2
-    elif R_Break[1]:
-        call RogueFace("surprised")
-        call Statup("Rogue", "Love", 50, -5, 1)
-        call Statup("Rogue", "Obed", 30, -5, 1)
-        call Statup("Rogue", "Inbt", 80, 1)
-        ch_r "What, again?"   
-        call RogueFace("angry")
-        $ Anger += 1
-    else:
-        call RogueFace("surprised")
-        ch_r "What?! Why?"    
-    
-    $ Line = "denial"
-    menu:
-        "It's not you, it's me.":  
-            call Statup("Rogue", "Love", 200, -5)
-            call Statup("Rogue", "Obed", 80, -5)
-            call Statup("Rogue", "Inbt", 50, 3) 
-            call Statup("Rogue", "Inbt", 70, 1) 
-            call RogueFace("confused")
-            
-        "I just think we need a break.":
-            call Statup("Rogue", "Love", 200, -5)
-            call RogueFace("sad")
-            
-        "I've found someone else.":      
-            $ Anger += 1
-            call Statup("Rogue", "Love", 200, -10)
-            call Statup("Rogue", "Obed", 50, 3)
-            call Statup("Rogue", "Obed", 80, 3)
-            call Statup("Rogue", "Inbt", 50, -5)  
-            call RogueFace("angry")
-            menu:
-                ch_r "Who is it?"
-                "Kitty":           
-                    $ Line = "kitty"
-                "I won't say.":
-                    call Statup("Rogue", "Love", 200, -5)
-                    ch_r "It's Kitty, isn't it."
-                    $ Line = "kitty"
-                "I was kidding.":  
-                    call Statup("Rogue", "Love", 200, -5)
-                    call Statup("Rogue", "Obed", 50, 3)
-                    ch_r "That was a pretty rude way to deflect there."
-                    $ Line = "denial"
-                    
-        "I'm just done with you.":  
-            call RogueFace("angry")
-            call Statup("Rogue", "Love", 50, 3)
-            call Statup("Rogue", "Love", 200, -15)
-            call Statup("Rogue", "Obed", 50, 5)
-            call Statup("Rogue", "Obed", 80, 5)
-            call Statup("Rogue", "Obed", 200,5)
-            call Statup("Rogue", "Inbt", 50, -5)                
-            $ Anger += 1
-            
-    if Line == "denial":
-        call RogueFace("sad")
-        if ApprovalCheck("Rogue", 900, "O"):
-            ch_r "If that's really what you want. . ."           
-        elif ApprovalCheck("Rogue", 900, "L"):
-            ch_r "But I love you so much!"
-        elif ApprovalCheck("Rogue", 900, "I"):
-            ch_r "I guess if that's what you want. . ."    
-        elif ApprovalCheck("Rogue", 1500):
-            ch_r "But we mean so much to each other!"
-        else: 
-            ch_r "Are you sure this is what you want?" 
-        $ Line = "bargaining"
-            
-    elif Line == "kitty":
-        $Cnt = int((R_LikeKitty - 500)/2)       
-        if R_LikeKitty >= 800: 
-            call Statup("Rogue", "Lust", 70, 5)
-            call Statup("Rogue", "Obed", 50, 5)
-            call Statup("Rogue", "Obed", 200, 5)
-            call Statup("Rogue", "Inbt", 50, 1)
-            call Statup("Rogue", "Inbt", 200, 5) 
-            $ R_Blush = 1
-            ch_r "Well, you have good tastes, at least."
-        elif R_LikeKitty >= 600:
-            call Statup("Rogue", "Love", 50, -5, 1)
-            call Statup("Rogue", "Love", 80, -10, 1)
-            call Statup("Rogue", "Obed", 50, 5)
-            call Statup("Rogue", "Obed", 200, 3)
-            ch_r "With one of my closest friends?!"
-            $ Anger += 1
-        elif R_LikeKitty >= 400:
-            call Statup("Rogue", "Love", 50, -3, 1)
-            call Statup("Rogue", "Love", 80, -5, 1)
-            call Statup("Rogue", "Obed", 80, 5)
-            call Statup("Rogue", "Inbt", 50, 1)
-            call Statup("Rogue", "Inbt", 80, 3) 
-            ch_r "You know you can do better."
-        else: #R_LikeKitty < 400
-            call Statup("Rogue", "Love", 50, -5, 1)
-            call Statup("Rogue", "Obed", 80, 3)
-            call Statup("Rogue", "Inbt", 50, 2)
-            call Statup("Rogue", "Inbt", 80, 5) 
-            call RogueFace("angry")
-            ch_r "With that skank?!"
-            $ Anger += 2
-            
-        if ApprovalCheck("Rogue", 2000, Bonus = Cnt):
-            call Statup("Rogue", "Lust", 70, 5)
-            call RogueFace("sexy")
-            ch_r "Why not both of us?"
-            $ Line = "threeway kitty"
-        else:
-            call RogueFace("sad")
-            menu:
-                ch_r "You would rather be with her than with me?"
-                "Yes, I would.":    
-                    call Statup("Rogue", "Love", 50, -3, 1)
-                    call Statup("Rogue", "Love", 80, -5, 1)
-                    call Statup("Rogue", "Obed", 30, 1)
-                    call Statup("Rogue", "Obed", 50, 1)                   
-                    $ Anger += 1
-                    ch_r "Well then I don't think I can help you." 
-                    $ Line = "bargaining"
-                    
-                "I'd rather be with both of you.":      
-                    $ Line = "threeway kitty"
-                    
-                "No, I'm sorry, never mind that.": 
-                    call Statup("Rogue", "Love", 50, -3, 1)
-                    call Statup("Rogue", "Obed", 80, -5)
-                    $ Line = "bargaining"
-    
-    
-    if Line == "threeway kitty":
-            menu Rogue_Breakup_Kitty:
-                ch_r "Like date us both at once? What does she think about that?"
-                "She said it would be ok with her." if "poly Rogue" in K_Traits:
-                    if ApprovalCheck("Rogue", 1800, Bonus = Cnt):
-                        call RogueFace("smile", 1)
-                        call Statup("Rogue", "Lust", 70, 5)     
-                        call Statup("Rogue", "Obed", 50, 5)
-                        call Statup("Rogue", "Obed", 80, 3)  
-                        call Statup("Rogue", "Inbt", 50, 3)
-                        call Statup("Rogue", "Inbt", 80, 1)
-                        if R_LikeKitty < 400:
-                            call RogueFace("angry")
-                            ch_r "I can't stand that bitch, but for you I'll put up with her."     
-                        elif R_LikeKitty >= 700:
-                            call RogueFace("sexy")
-                            ch_r "I have to say I've kind of been thinking about it myself."                         
-                        elif R_Love >= R_Obed:
-                            call RogueFace("sad")
-                            ch_r "Just so long as we can be together, I can share."
-                        elif R_Obed >= R_Inbt:
-                            ch_r "I'm ok with that if she is."
-                        else:
-                            ch_r "Yeah, I mean I guess so."    
-                        $ R_Traits.append("poly Kitty")
-                        
-                    else:      
-                        $ Anger += 2
-                        call Statup("Rogue", "Love", 50, -10, 1)
-                        call Statup("Rogue", "Love", 80, -15, 1)
-                        call Statup("Rogue", "Obed", 50, 3)
-                        call Statup("Rogue", "Obed", 80, 3) 
-                        call Statup("Rogue", "Inbt", 50, 5)
-                        call Statup("Rogue", "Inbt", 80, 3)
+            "Do you want to be my girlfriend?" if "dating" not in R_Traits and "ex" not in R_Traits:
+                    if "asked boyfriend" in R_DailyActions and "angry" in R_DailyActions:
                         call RogueFace("angry", 1)
-                        ch_r "Well maybe she did, but I don't want to share."  
-                        $ Line = "bargaining"
-                        
-                "I have no idea." if not K_Break[0]:
-                    $ Line = "ask Kitty"
-                
-                "She's not into it." if K_Break[0]:
-                    if R_LikeKitty >= 700:
-                        call Statup("Rogue", "Love", 200, -5)
-                    elif R_LikeKitty <= 400:
-                        call Statup("Rogue", "Love", 90, 5)
-                                    
-                "She doesn't need to know.": 
-                    $ Line = "ask Kitty"  
-                    if R_LikeKitty >= 700:
-                        call RogueFace("angry")
-                        call Statup("Rogue", "Love", 200, -5)
-                    elif R_LikeKitty <= 400:
-                        call Statup("Rogue", "Love", 90, 5)
-            
-            if Line == "ask Kitty" and R_LikeKitty >= 700:
-                call RogueFace("sexy")
-                ch_r "I have to say I've kind of been thinking about it myself."  
-                menu:                         
-                    ch_r "Would you like me to ask her for you?" 
-                    "Yes, that'd be a good idea.":
-                        call Statup("Rogue", "Love", 90, 5)
-                        call Statup("Rogue", "Obed", 70, 1)
-                        call Statup("Rogue", "Inbt", 80, 5)
-                        $ R_Traits.append("ask Kitty")
-                    "No, let's just keep it under cover.":   
-                        call Statup("Rogue", "Love", 50, -5, 1)
-                        call Statup("Rogue", "Love", 80, -5, 1)
-                        call Statup("Rogue", "Obed", 80, 5)
-                        call Statup("Rogue", "Inbt", 50, 3)     
+                        ch_r "Seriously, stop bugging me."
+                        return
+                    elif "asked boyfriend" in R_DailyActions:
+                        call RogueFace("angry", 1)
+                        ch_r "You already asked about that, the answer's still no."
+                        return
+                    elif R_Break[0]:                    
+                        call RogueFace("angry", 1)                    
+                        ch_r "I already told you, not while you're with her."
+                        if "dating" in K_Traits:   
+                            $ R_DailyActions.append("asked boyfriend")                     
+                            return
+                        elif "ex" in K_Traits:
+                            ch_p "I'm not anymore."
+                         
+                    $ R_DailyActions.append("asked boyfriend")
                     
-        
-            if Line != "bargaining" and "poly Kitty" not in R_Traits:               
-                        
-                if "ask Kitty" not in R_Traits and not ApprovalCheck("Rogue", 1800, Bonus = -(int((R_LikeKitty - 600)/2))): #checks if Rogue likes you more than Kitty
-                    call Statup("Rogue", "Love", 50, -5, 1)
-                    call Statup("Rogue", "Obed", 80, -10, 1)
-                    call Statup("Rogue", "Inbt", 50, 5)
-                    call RogueFace("angry", 1)
-                    if not ApprovalCheck("Rogue", 1800):                        
-                        ch_r "Well I don't like you that much either."
-                    else:
-                        call Statup("Rogue", "Love", 80, -10, 1)
-                        call Statup("Rogue", "Obed", 50, -5, 1)
-                        ch_r "Well then I'm not cool with that, Kitty's a friend of mine."       
-                    $ Anger += 1
-                    $ Line = "bargaining"                                 
-                else:                
-                    call Statup("Rogue", "Obed", 30, 5)
-                    call Statup("Rogue", "Obed", 50, 3)
-                    call Statup("Rogue", "Inbt", 50, 5)
-                    call Statup("Rogue", "Inbt", 80, 1)
-                    call RogueFace("sad")                      
-                    if R_LikeKitty < 400:
-                        call RogueFace("angry")
-                        ch_r "I can't stand that bitch, but for you I'll put up with her."    
-                    elif R_Love >= R_Obed:
-                        ch_r "I really do want to be together with you."
-                    elif R_Obed >= R_Inbt:
-                        ch_r "If that's how you want it to be."
-                    else:
-                        ch_r "I suppose that's ok."
-                    $ R_Traits.append("poly Kitty")
-                    if "ask Kitty" in R_Traits:
-                        ch_r "I'll talk to Kitty about it."
-                    else:
-                        call RogueFace("sad")
-                        $ R_Traits.append("downlow")
-                        ch_r "I guess we can keep this on the downlow, for now at least."
-                    
-                        if R_LikeKitty >= 800:
-                            ch_r "Please talk to Kitty about sharing you openly though."
-                        elif R_LikeKitty >= 500:
-                            ch_r "I really don't like going behind Kitty's back though."
+                    if P_Harem and "RogueYes" not in P_Traits: 
+                        if len(P_Harem) >= 2:
+                            ch_r "That wouldn't be fair to the others, [R_Petname]."
                         else:
-                            ch_r "Might be kind of fun sneaking around behind her back."
-            #End Threeway Kitty
-    
-    if Line == "bargaining" and Anger < 3: 
-        call RogueFace("sad")
-        menu Rogue_Breakup_Bargaining:            
-            ch_r "Are you sure there's no way I could convince you to stay?"
-            "My Mind's made up.":
-                call Statup("Rogue", "Obed", 80, 5)
-                $ Line = "breakup"
-            "Well, you could do something for me. . .[[sex menu]":
-                call Statup("Rogue", "Obed", 80, 3)
-                $ Tempmod = 50
-                $ MultiAction = 0
-                call Rogue_SexMenu
-                $ MultiAction = 1
-                menu:
-                    "Ok, I guess we can give it another shot.":
-                        call Statup("Rogue", "Love", 80, 3)
-                        call Statup("Rogue", "Obed", 80, 5)
-                        $ Line = "makeup"
-                        call RogueFace("smile")
+                            ch_r "That wouldn't be fair to [P_Harem[0]], [R_Petname]."
+                        return                    
                     
-                    "That was nice, but we're still over.":
-                        call RogueFace("angry")
-                        call Statup("Rogue", "Love", 50, -5, 1)
-                        call Statup("Rogue", "Love", 80, -10, 1)
-                        call Statup("Rogue", "Obed", 50, 15)
-                        call Statup("Rogue", "Obed", 80, 10)
-                        $ Line = "breakup"                              
-                        $ Anger += 4
+                    if R_Event[5]:
+                        call RogueFace("bemused", 1)
+                        ch_r "I mean, I asked you about this before. . ."
+                    else:
+                        call RogueFace("surprised", 2)
+                        ch_r "Wow, this is unexpected, [R_Petname]. . ." 
+                        call RogueFace("smile", 1)
+                    
+                    call Rogue_OtherWoman
+                    
+                    if R_Love >= 800:
+                        call RogueFace("surprised", 1)
+                        $ R_Mouth = "grimace"
+                        call Statup("Rogue", "Love", 200, 40)
+                        ch_r "I'd love to!"
+                        if "boyfriend" not in R_Petnames:
+                            $ R_Petnames.append("boyfriend")                
+                        $ R_Traits.append("dating")
+                        if "RogueYes" in P_Traits:       
+                                    $ P_Traits.remove("RogueYes")
+                                    $ P_Harem.append("Rogue")
+                                    call Harem_Initiation
+                        "Rogue leaps in and kisses you deeply."
+                        call RogueFace("kiss", 1) 
+                        $ R_Kissed += 1
+                    elif R_Obed >= 500:
+                        call RogueFace("perplexed")
+                        ch_r "I'm not sure I'd call what we have \"dating.\""
+                    elif R_Inbt >= 500:
+                        call RogueFace("smile")                
+                        ch_r "I don't really want to be tied down like that."
+                    else:
+                        call RogueFace("perplexed", 1)
+                        ch_r "I don't really feel that way about you right now, [R_Petname]."
                 
-            "Maybe if we brought someone else into this relationship?" if "bargainthreeway" not in R_RecentActions:
-                $ R_RecentActions.append("bargainthreeway")
+            
+            "Do you want to get back together?" if "ex" in R_Traits:
+                    if "asked boyfriend" in R_DailyActions and "angry" in R_DailyActions:
+                        call RogueFace("angry", 1)
+                        ch_r "Seriously, stop bugging me."
+                        return
+                    elif "asked boyfriend" in R_DailyActions:
+                        call RogueFace("angry", 1)
+                        ch_r "You already asked about that, the answer's still no."
+                        return
+                    elif R_Break[0]: 
+                        call RogueFace("angry", 1)                    
+                        if "dating" in K_Traits:   
+                            ch_r "I alredy told you, not while you're with her."
+                            return
+                        elif "ex" in K_Traits:
+                            ch_r "I alredy told you, not while you're with her."
+                            ch_p "I'm not anymore."
+                            $ R_Break[0] = 0
+                        else:    
+                            if not ApprovalCheck("Rogue", 1500) or R_Break[1] > 5:
+                                ch_r "We are never, ever, ever getting back together."
+                            else:
+                                call RogueFace("sad", 1)
+                                ch_r "Sorry, it's just still too fresh. I can't even think of getting back together yet."
+                        $ R_DailyActions.append("asked boyfriend")
+                        return
+                    
+                    $ R_DailyActions.append("asked boyfriend")
+                    
+                    if P_Harem and "RogueYes" not in P_Traits: 
+                        if len(P_Harem) >= 2:
+                            ch_r "That wouldn't be fair to the others, [R_Petname]."
+                        else:
+                            ch_r "That wouldn't be fair to [P_Harem[0]], [R_Petname]."
+                        return
+                    
+                    $ Cnt = 0
+                    call Rogue_OtherWoman
+                                            
+                    if R_Love >= 800:
+                        call RogueFace("surprised", 1)
+                        $ R_Mouth = "grimace"
+                        call Statup("Rogue", "Love", 90, 5)
+                        ch_r "If you're in, I'm in!"
+                        if "boyfriend" not in R_Petnames:
+                            $ R_Petnames.append("boyfriend")                
+                        $ R_Traits.append("dating")          
+                        $ R_Traits.remove("ex")
+                        if "RogueYes" in P_Traits:       
+                                    $ P_Traits.remove("RogueYes")
+                                    $ P_Harem.append("Rogue")
+                                    call Harem_Initiation
+                        "Rogue leaps in and kisses you deeply."
+                        call RogueFace("kiss", 1) 
+                        $ R_Kissed += 1
+                    elif R_Love >= 600 and ApprovalCheck("Rogue", 1500):
+                        call RogueFace("smile", 1)
+                        $ R_Mouth = "grimace"
+                        call Statup("Rogue", "Love", 90, 5)
+                        ch_r "We can give this another try."
+                        if "boyfriend" not in R_Petnames:
+                            $ R_Petnames.append("boyfriend")                
+                        $ R_Traits.append("dating")             
+                        $ R_Traits.remove("ex")
+                        if "RogueYes" in P_Traits:       
+                                    $ P_Traits.remove("RogueYes")
+                                    $ P_Harem.append("Rogue")
+                                    call Harem_Initiation
+                        "Rogue gives you a quick kiss."
+                        call RogueFace("kiss", 1) 
+                        $ R_Kissed += 1
+                    elif R_Obed >= 500:
+                        call RogueFace("sad")
+                        ch_r "Whatever we had, whatever we have right now, that's not it."
+                    elif R_Inbt >= 500:
+                        call RogueFace("perplexed")                
+                        ch_r "We tried that, it didn't work out."
+                    else:
+                        call RogueFace("perplexed", 1)
+                        ch_r "I'm not ready for more heartbreak, [R_Petname]."
+                    
+                    # End Back Together
+                        
+            "I wanted to ask about [[another girl]" if "Rogue" in P_Harem:
+                    menu:
+                        "Have you reconsidered letting me date. . ."
+                        "Kitty" if "Kitty" not in P_Harem and "met" in K_History:
+                                call Poly_Start("Kitty",1)
+                        "Emma" if "Emma" not in P_Harem and "met" in E_History:
+                                call Poly_Start("Emma",1)
+                        "Laura" if "Laura" not in P_Harem and "met" in L_History:
+                                call Poly_Start("Laura",1)
+                        "Never mind":
+                                pass
+                                
+            "I think we should break up." if "dating" in R_Traits or "Rogue" in P_Harem:
+                if "breakup talk" in R_RecentActions:
+                    ch_r "We were {i}just{/i} over this, not even funny."
+                elif "breakup talk" in R_DailyActions:
+                    ch_r "Tired of me again that quick?" 
+                    ch_r "We're not having this talk today, [R_Petname]."
+                else:
+                    call Breakup("Rogue")                
+                
+                
+    #        "I'd like to bring Kitty into this." if "poly Kitty" not in R_Traits and not K_Break[0]:    #fix nonfunctional yet
+                
+    #            if "asked threesome" in R_RecentActions:
+    #                ch_r "Persistence will NOT be rewarded here."
+    #                return
+    #            elif "asked threesome" in R_DailyActions:
+    #                ch_r "I don't think my answer's changing any time soon." 
+    #                return
+    #            else:
+    #                $ R_DailyActions.append("asked threesome")                
+    #                $Cnt = int((R_LikeKitty - 500)/2)
+    #                menu:
+    #                    ch_r "What does she think about this?"
+                            
+    #                    "She said I can be with you too." if "poly Rogue" in K_Traits:
+    #                        if ApprovalCheck("Rogue", 1800, Bonus = Cnt):
+    #                            call RogueFace("smile", 1)
+    #                            if R_Love >= R_Obed:
+    #                                ch_r "Just so long as we can be together, I can share."
+    #                            elif R_Obed >= R_Inbt:
+    #                                ch_r "I'm ok with that if she is."
+    #                            else:
+    #                                ch_r "Yeah, I mean I guess so."
+    #                                $ R_Traits.append("poly Kitty")
+    #                        else:
+    #                            call RogueFace("angry", 1)
+    #                            ch_r "Well maybe she did, but I don't want to share."  
+                        
+    #                    "I could ask if she'd be ok with me dating you both." if "poly Rogue" not in K_Traits:
+    #                        if ApprovalCheck("Rogue", 1800, Bonus = Cnt) or :
+    #                            call RogueFace("smile", 1)
+    #                            if R_Love >= R_Obed:
+    #                                ch_r "Just so long as we can be together, I can share."
+    #                            elif R_Obed >= R_Inbt:
+    #                                ch_r "I'm ok with that if she is."
+    #                            else:
+    #                                ch_r "Yeah, I mean I guess so."                        
+    #                            ch_r "Go ask her, give me the night to think about it, and then come back tomorrow with her answer."
+    #                        else:
+    #                            call RogueFace("angry", 1)
+    #                            ch_r "Well maybe she would, but I don't want to share."  
+                        
+    #                    "Could you ask?":
+    #                        if R_LikeKitty >= 700:
+    #                            ch_r "I have to say I've kind of been thinking about it myself."  
+    #                            call Statup("Rogue", "Love", 90, 5)
+    #                            call Statup("Rogue", "Obed", 70, 1)
+    #                            call Statup("Rogue", "Inbt", 80, 5)
+    #                        elif R_LikeKitty >= 500:
+    #                            ch_r "I guess, if that's what you want. . ." 
+    #                        elif R_Obed >= 700:
+    #                            ch_r "If that's what you want. . ." 
+    #                        else:
+    #                            ch_r "I can't really stand her, I don't think so."  
+                                
+                            
+    #                    "You're right, I was dumb to ask.":
+    #                        call RogueFace("sad")
+    #                        ch_r "Yeah, you were."  
+                            
+                #end Kitty Threesome
+                    
+            
+            "About that talk we had before. . .":
                 menu:
-                    ch_r "Who?"
-                    "Kitty?":
-                        call RogueFace("confused")
-                        $ Line = "threeway kitty"
-                        jump Rogue_Breakup_Kitty
-                    #"Your pick.": #add this later when there are more girls
-                    "Never mind, silly question.":                            
-                        call Statup("Rogue", "Love", 200, -10)
-                        call Statup("Rogue", "Obed", 50, -10, 1)
-                        $ Anger += 1
-                        call RogueFace("angry")
-                        jump Rogue_Breakup_Bargaining
-                        
-        if Anger < 3 and Line != "breakup" and Line != "makeup":
-            jump Rogue_Breakup_Bargaining
-                        
-                        
-        # End Bargaining
-            
-    if Line == "breakup" or Anger >= 4: #add anger stat to track how mad she's getting.
-        if Anger >= 4:
-            call RogueFace("angry")
-            call Statup("Rogue", "Love", 60, -10, 1)
-            call Statup("Rogue", "Obed", 50, -5)
-            call Statup("Rogue", "Inbt", 70, 5)
-            ch_r "Well fuck you then!"
-            if R_Love >= R_Obed:
-                ch_r "You broke my fucking heart, asshole."
-            elif R_Obed >= R_Inbt:
-                call Statup("Rogue", "Obed", 200, -20)
-                call RogueFace("sad")
-                ch_r "You're abandoning me."
-            else:
-                ch_r "Now who'll I fuck?"  
-        else:
-            call Statup("Rogue", "Inbt", 70, 5)
-            call RogueFace("sad")
-            ch_r "I'm sad we couldn't work something out."
-            if R_Love >= R_Obed:
-                ch_r "I'll really miss you."
-            elif R_Obed >= R_Inbt:
-                call Statup("Rogue", "Obed", 200, -10)
-                ch_r "You're abandoning me."
-            else:
-                ch_r "Now who'll I fuck?"  
-            
-        $ R_Traits.remove("dating")
-        $ R_Traits.append("ex")
-        $ R_Break[0] = 5 + R_Break[1] + R_Cheated
-        
-    else: #Stay together.
-        call RogueFace("smile")
-        ch_r "I really am glad we could work things out."
-        if R_Love >= R_Obed:
-            call Statup("Rogue", "Love", 200, 3)
-            ch_r "I'd really miss you."
-        elif R_Obed >= R_Inbt:
-            ch_r "I need you with me."
-        else:
-            ch_r "We have fun together."   
-        
-    $ Line = 0
+                    "You weren't a virgin?" if R_Sex and not R_Chat[0]:
+                        call Rogue_Not_Virgin   
+                    
+                    "You said you wanted me to be your Master?" if R_Event[8] and "master" not in R_Petnames:
+                        menu:
+                            ch_r "Yes?"
+                            "I'm ok with that now.":
+                                if ApprovalCheck("Rogue", 800, "O"):     
+                                    call RogueFace("sexy", 1)
+                                    ch_r "I hope to serve well, Master."
+                                    call Statup("Rogue", "Obed", 200, 100) 
+                                    $ R_Petnames.append("master")
+                                    $ R_Event[8] = 2
+                                else:
+                                    ch_r "Well, I'm not really interested in that sort of thing anymore."
+                                    ch_r "I mean, maybe later." 
+                            "Never mind.":
+                                call RogueFace("sad")
+                                ch_r "Oh."
+                                call Statup("Rogue", "Obed", 200, -5)
+                                call Statup("Rogue", "Love", 90, -5)  
+                    "Never Mind":
+                        pass
+                            
+            "Never Mind":
+                return
+                  
+        return
+
+#label Rogue_Breakup(Anger = 0):  
+#    $ R_RecentActions.append("breakup talk")  
+#    $ R_DailyActions.append("breakup talk")
+#    if R_Break[1] > 3:       
+#            call RogueFace("angry")
+#            call Statup("Rogue", "Love", 50, -5, 1)
+#            call Statup("Rogue", "Love", 80, -10, 1)
+#            call Statup("Rogue", "Obed", 30, -5, 1)
+#            call Statup("Rogue", "Obed", 50, -10, 1)
+#            call Statup("Rogue", "Inbt", 50, 3)
+#            call Statup("Rogue", "Inbt", 80, 1)
+#            ch_r "This is getting old, [R_Petname]."       
+#            $ Anger += 2
+#    elif R_Break[1]:
+#            call RogueFace("surprised")
+#            call Statup("Rogue", "Love", 50, -5, 1)
+#            call Statup("Rogue", "Obed", 30, -5, 1)
+#            call Statup("Rogue", "Inbt", 80, 1)
+#            ch_r "What, again?"   
+#            call RogueFace("angry")
+#            $ Anger += 1
+#    else:
+#            call RogueFace("surprised")
+#            ch_r "What?! Why?"    
     
-    return
-    #End Break-up
+#    $ Line = "denial"
+#    menu:
+#        "It's not you, it's me.":  
+#                call Statup("Rogue", "Love", 200, -5)
+#                call Statup("Rogue", "Obed", 80, -5)
+#                call Statup("Rogue", "Inbt", 50, 3) 
+#                call Statup("Rogue", "Inbt", 70, 1) 
+#                call RogueFace("confused")
+            
+#        "I just think we need a break.":
+#                call Statup("Rogue", "Love", 200, -5)
+#                call RogueFace("sad")
+            
+#        "I've found someone else.":      
+#                $ Anger += 1
+#                call Statup("Rogue", "Love", 200, -10)
+#                call Statup("Rogue", "Obed", 50, 3)
+#                call Statup("Rogue", "Obed", 80, 3)
+#                call Statup("Rogue", "Inbt", 50, -5)  
+#                call RogueFace("angry")
+#                menu:
+#                    ch_r "Who is it?"
+#                    "Kitty":           
+#                        $ Line = "kitty"
+#                    "I won't say.":
+#                        call Statup("Rogue", "Love", 200, -5)
+#                        ch_r "It's Kitty, isn't it."
+#                        $ Line = "kitty"
+#                    "I was kidding.":  
+#                        call Statup("Rogue", "Love", 200, -5)
+#                        call Statup("Rogue", "Obed", 50, 3)
+#                        ch_r "That was a pretty rude way to deflect there."
+#                        $ Line = "denial"
+                    
+#        "I'm just done with you.":  
+#                call RogueFace("angry")
+#                call Statup("Rogue", "Love", 50, 3)
+#                call Statup("Rogue", "Love", 200, -15)
+#                call Statup("Rogue", "Obed", 50, 5)
+#                call Statup("Rogue", "Obed", 80, 5)
+#                call Statup("Rogue", "Obed", 200,5)
+#                call Statup("Rogue", "Inbt", 50, -5)                
+#                $ Anger += 1
+            
+#    if Line == "denial":
+#            call RogueFace("sad")
+#            if ApprovalCheck("Rogue", 900, "O"):
+#                ch_r "If that's really what you want. . ."           
+#            elif ApprovalCheck("Rogue", 900, "L"):
+#                ch_r "But I love you so much!"
+#            elif ApprovalCheck("Rogue", 900, "I"):
+#                ch_r "I guess if that's what you want. . ."    
+#            elif ApprovalCheck("Rogue", 1500):
+#                ch_r "But we mean so much to each other!"
+#            else: 
+#                ch_r "Are you sure this is what you want?" 
+#            $ Line = "bargaining"
+            
+#    elif Line == "kitty":
+#        $Cnt = int((R_LikeKitty - 500)/2)       
+#        if R_LikeKitty >= 800: 
+#                call Statup("Rogue", "Lust", 70, 5)
+#                call Statup("Rogue", "Obed", 50, 5)
+#                call Statup("Rogue", "Obed", 200, 5)
+#                call Statup("Rogue", "Inbt", 50, 1)
+#                call Statup("Rogue", "Inbt", 200, 5) 
+#                $ R_Blush = 1
+#                ch_r "Well, you have good tastes, at least."
+#        elif R_LikeKitty >= 600:
+#                call Statup("Rogue", "Love", 50, -5, 1)
+#                call Statup("Rogue", "Love", 80, -10, 1)
+#                call Statup("Rogue", "Obed", 50, 5)
+#                call Statup("Rogue", "Obed", 200, 3)
+#                ch_r "With one of my closest friends?!"
+#                $ Anger += 1
+#        elif R_LikeKitty >= 400:
+#                call Statup("Rogue", "Love", 50, -3, 1)
+#                call Statup("Rogue", "Love", 80, -5, 1)
+#                call Statup("Rogue", "Obed", 80, 5)
+#                call Statup("Rogue", "Inbt", 50, 1)
+#                call Statup("Rogue", "Inbt", 80, 3) 
+#                ch_r "You know you can do better."
+#        else: #R_LikeKitty < 400
+#                call Statup("Rogue", "Love", 50, -5, 1)
+#                call Statup("Rogue", "Obed", 80, 3)
+#                call Statup("Rogue", "Inbt", 50, 2)
+#                call Statup("Rogue", "Inbt", 80, 5) 
+#                call RogueFace("angry")
+#                ch_r "With that skank?!"
+#                $ Anger += 2
+            
+#        if ApprovalCheck("Rogue", 2000, Bonus = Cnt):
+#                call Statup("Rogue", "Lust", 70, 5)
+#                call RogueFace("sexy")
+#                ch_r "Why not both of us?"
+#                $ Line = "threeway kitty"
+#        else:
+#                call RogueFace("sad")
+#                menu:
+#                    ch_r "You would rather be with her than with me?"
+#                    "Yes, I would.":    
+#                        call Statup("Rogue", "Love", 50, -3, 1)
+#                        call Statup("Rogue", "Love", 80, -5, 1)
+#                        call Statup("Rogue", "Obed", 30, 1)
+#                        call Statup("Rogue", "Obed", 50, 1)                   
+#                        $ Anger += 1
+#                        ch_r "Well then I don't think I can help you." 
+#                        $ Line = "bargaining"
+                        
+#                    "I'd rather be with both of you.":      
+#                        $ Line = "threeway kitty"
+                        
+#                    "No, I'm sorry, never mind that.": 
+#                        call Statup("Rogue", "Love", 50, -3, 1)
+#                        call Statup("Rogue", "Obed", 80, -5)
+#                        $ Line = "bargaining"
+    
+    
+#    if Line == "threeway kitty":
+#            menu Rogue_Breakup_Kitty:
+#                ch_r "Like date us both at once? What does she think about that?"
+#                "She said it would be ok with her." if "poly Rogue" in K_Traits:
+#                            if ApprovalCheck("Rogue", 1800, Bonus = Cnt):
+#                                call RogueFace("smile", 1)
+#                                call Statup("Rogue", "Lust", 70, 5)     
+#                                call Statup("Rogue", "Obed", 50, 5)
+#                                call Statup("Rogue", "Obed", 80, 3)  
+#                                call Statup("Rogue", "Inbt", 50, 3)
+#                                call Statup("Rogue", "Inbt", 80, 1)
+#                                if R_LikeKitty < 400:
+#                                    call RogueFace("angry")
+#                                    ch_r "I can't stand that bitch, but for you I'll put up with her."     
+#                                elif R_LikeKitty >= 700:
+#                                    call RogueFace("sexy")
+#                                    ch_r "I have to say I've kind of been thinking about it myself."                         
+#                                elif R_Love >= R_Obed:
+#                                    call RogueFace("sad")
+#                                    ch_r "Just so long as we can be together, I can share."
+#                                elif R_Obed >= R_Inbt:
+#                                    ch_r "I'm ok with that if she is."
+#                                else:
+#                                    ch_r "Yeah, I mean I guess so."    
+#                                $ R_Traits.append("poly Kitty")
+                                
+#                            else:      
+#                                $ Anger += 2
+#                                call Statup("Rogue", "Love", 50, -10, 1)
+#                                call Statup("Rogue", "Love", 80, -15, 1)
+#                                call Statup("Rogue", "Obed", 50, 3)
+#                                call Statup("Rogue", "Obed", 80, 3) 
+#                                call Statup("Rogue", "Inbt", 50, 5)
+#                                call Statup("Rogue", "Inbt", 80, 3)
+#                                call RogueFace("angry", 1)
+#                                ch_r "Well maybe she did, but I don't want to share."  
+#                                $ Line = "bargaining"
+#                #End "she said it'd be ok.
+                        
+#                "I have no idea." if not K_Break[0]:
+#                            $ Line = "ask Kitty"
                 
-label Rogue_OtherWoman:
-    $ Cnt = 0
-    if "dating" in K_Traits:
-        call RogueFace("perplexed")
-        menu: 
-            ch_r "But you're with Kitty right now."
-            "She said I can be with you too." if "poly Rogue" in K_Traits:
-                $Cnt = int((R_LikeKitty - 500)/2)
-                if ApprovalCheck("Rogue", 1800, Bonus = Cnt):
-                    call RogueFace("smile", 1)
-                    if R_Love >= R_Obed:
-                        ch_r "Just so long as we can be together, I can share."
-                    elif R_Obed >= R_Inbt:
-                        ch_r "I'm ok with that if she is."
-                    else:
-                        ch_r "Yeah, I mean I guess so."
-                        $ R_Traits.append("poly Kitty")
-                else:
-                    call RogueFace("angry", 1)
-                    ch_r "Well maybe she did, but I don't want to share."  
-                    $ renpy.pop_call()                                          #This causes it to jump past the previous menu on the return
+#                "She's not into it." if K_Break[0]:
+#                            if R_LikeKitty >= 700:
+#                                call Statup("Rogue", "Love", 200, -5)
+#                            elif R_LikeKitty <= 400:
+#                                call Statup("Rogue", "Love", 90, 5)
+                                    
+#                "She doesn't need to know.": 
+#                            $ Line = "ask Kitty"  
+#                            if R_LikeKitty >= 700:
+#                                call RogueFace("angry")
+#                                call Statup("Rogue", "Love", 200, -5)
+#                            elif R_LikeKitty <= 400:
+#                                call Statup("Rogue", "Love", 90, 5)
             
-            "I could ask if she'd be ok with me dating you both." if "poly Rogue" not in K_Traits:
-                $Cnt = int((R_LikeKitty - 500)/2)
+#            if Line == "ask Kitty" and R_LikeKitty >= 700:
+#                            call RogueFace("sexy")
+#                            ch_r "I have to say I've kind of been thinking about it myself."  
+#                            menu:                         
+#                                ch_r "Would you like me to ask her for you?" 
+#                                "Yes, that'd be a good idea.":
+#                                    call Statup("Rogue", "Love", 90, 5)
+#                                    call Statup("Rogue", "Obed", 70, 1)
+#                                    call Statup("Rogue", "Inbt", 80, 5)
+#                                    $ R_Traits.append("ask Kitty")
+#                                "No, let's just keep it under cover.":   
+#                                    call Statup("Rogue", "Love", 50, -5, 1)
+#                                    call Statup("Rogue", "Love", 80, -5, 1)
+#                                    call Statup("Rogue", "Obed", 80, 5)
+#                                    call Statup("Rogue", "Inbt", 50, 3)     
+                    
+        
+#            if Line != "bargaining" and "poly Kitty" not in R_Traits:               
+                        
+#                if "ask Kitty" not in R_Traits and not ApprovalCheck("Rogue", 1800, Bonus = -(int((R_LikeKitty - 600)/2))): #checks if Rogue likes you more than Kitty
+#                            call Statup("Rogue", "Love", 50, -5, 1)
+#                            call Statup("Rogue", "Obed", 80, -10, 1)
+#                            call Statup("Rogue", "Inbt", 50, 5)
+#                            call RogueFace("angry", 1)
+#                            if not ApprovalCheck("Rogue", 1800):                        
+#                                    ch_r "Well I don't like you that much either."
+#                            else:
+#                                    call Statup("Rogue", "Love", 80, -10, 1)
+#                                    call Statup("Rogue", "Obed", 50, -5, 1)
+#                                    ch_r "Well then I'm not cool with that, Kitty's a friend of mine."       
+#                            $ Anger += 1
+#                            $ Line = "bargaining"                                 
+#                else:                
+#                            call Statup("Rogue", "Obed", 30, 5)
+#                            call Statup("Rogue", "Obed", 50, 3)
+#                            call Statup("Rogue", "Inbt", 50, 5)
+#                            call Statup("Rogue", "Inbt", 80, 1)
+#                            call RogueFace("sad")                      
+#                            if R_LikeKitty < 400:
+#                                    call RogueFace("angry")
+#                                    ch_r "I can't stand that bitch, but for you I'll put up with her."    
+#                            elif R_Love >= R_Obed:
+#                                    ch_r "I really do want to be together with you."
+#                            elif R_Obed >= R_Inbt:
+#                                    ch_r "If that's how you want it to be."
+#                            else:
+#                                    ch_r "I suppose that's ok."
+#                            $ R_Traits.append("poly Kitty")
+#                            if "ask Kitty" in R_Traits:
+#                                    ch_r "I'll talk to Kitty about it."
+#                            else:
+#                                    call RogueFace("sad")
+#                                    $ R_Traits.append("downlow")
+#                                    ch_r "I guess we can keep this on the downlow, for now at least."
+                                
+#                                    if R_LikeKitty >= 800:
+#                                        ch_r "Please talk to Kitty about sharing you openly though."
+#                                    elif R_LikeKitty >= 500:
+#                                        ch_r "I really don't like going behind Kitty's back though."
+#                                    else:
+#                                        ch_r "Might be kind of fun sneaking around behind her back."
+#            #End Threeway Kitty
+    
+#    if Line == "bargaining" and Anger < 3: 
+#        call RogueFace("sad")
+#        menu Rogue_Breakup_Bargaining:            
+#            ch_r "Are you sure there's no way I could convince you to stay?"
+#            "My Mind's made up.":
+#                    call Statup("Rogue", "Obed", 80, 5)
+#                    $ Line = "breakup"
+#            "Well, you could do something for me. . .[[sex menu]":
+#                    call Statup("Rogue", "Obed", 80, 3)
+#                    $ Tempmod = 50
+#                    $ MultiAction = 0
+#                    call Rogue_SexMenu
+#                    $ MultiAction = 1
+#                    menu:
+#                        "Ok, I guess we can give it another shot.":
+#                            call Statup("Rogue", "Love", 80, 3)
+#                            call Statup("Rogue", "Obed", 80, 5)
+#                            $ Line = "makeup"
+#                            call RogueFace("smile")
+                        
+#                        "That was nice, but we're still over.":
+#                            call RogueFace("angry")
+#                            call Statup("Rogue", "Love", 50, -5, 1)
+#                            call Statup("Rogue", "Love", 80, -10, 1)
+#                            call Statup("Rogue", "Obed", 50, 15)
+#                            call Statup("Rogue", "Obed", 80, 10)
+#                            $ Line = "breakup"                              
+#                            $ Anger += 4
+                
+#            "Maybe if we brought someone else into this relationship?" if "bargainthreeway" not in R_RecentActions:
+#                    $ R_RecentActions.append("bargainthreeway")
+#                    menu:
+#                        ch_r "Who?"
+#                        "Kitty?":
+#                                call RogueFace("confused")
+#                                $ Line = "threeway kitty"
+#                                jump Rogue_Breakup_Kitty
+#                        #"Your pick.": #add this later when there are more girls
+#                        "Never mind, silly question.":                            
+#                                call Statup("Rogue", "Love", 200, -10)
+#                                call Statup("Rogue", "Obed", 50, -10, 1)
+#                                $ Anger += 1
+#                                call RogueFace("angry")
+#                                jump Rogue_Breakup_Bargaining
+                        
+#        if Anger < 3 and Line != "breakup" and Line != "makeup":
+#                jump Rogue_Breakup_Bargaining
+                        
+                        
+#        # End Bargaining
+            
+#    if Line == "breakup" or Anger >= 4: #add anger stat to track how mad she's getting.
+#        if Anger >= 4:
+#                call RogueFace("angry")
+#                call Statup("Rogue", "Love", 60, -10, 1)
+#                call Statup("Rogue", "Obed", 50, -5)
+#                call Statup("Rogue", "Inbt", 70, 5)
+#                ch_r "Well fuck you then!"
+#                if R_Love >= R_Obed:
+#                    ch_r "You broke my fucking heart, asshole."
+#                elif R_Obed >= R_Inbt:
+#                    call Statup("Rogue", "Obed", 200, -20)
+#                    call RogueFace("sad")
+#                    ch_r "You're abandoning me."
+#                else:
+#                    ch_r "Now who'll I fuck?"  
+#        else:
+#                call Statup("Rogue", "Inbt", 70, 5)
+#                call RogueFace("sad")
+#                ch_r "I'm sad we couldn't work something out."
+#                if R_Love >= R_Obed:
+#                    ch_r "I'll really miss you."
+#                elif R_Obed >= R_Inbt:
+#                    call Statup("Rogue", "Obed", 200, -10)
+#                    ch_r "You're abandoning me."
+#                else:
+#                    ch_r "Now who'll I fuck?"  
+            
+#        $ R_Traits.remove("dating")
+#        $ R_Traits.append("ex")
+#        $ R_Break[0] = 5 + R_Break[1] + R_Cheated
+        
+#    else: #Stay together.
+#            call RogueFace("smile")
+#            ch_r "I really am glad we could work things out."
+#            if R_Love >= R_Obed:
+#                call Statup("Rogue", "Love", 200, 3)
+#                ch_r "I'd really miss you."
+#            elif R_Obed >= R_Inbt:
+#                ch_r "I need you with me."
+#            else:
+#                ch_r "We have fun together."   
+        
+#    $ Line = 0
+    
+#    return
+#    #End Break-up
+                
+label Rogue_OtherWoman(Cnt = 0):
+    #Other is the other woman, Poly is whether she'd be cool with a threesome
+    if not P_Harem:
+            return            
+            
+    if "Kitty" == P_Harem[0]:           
+            $Cnt = int((R_LikeKitty - 500)/2)
+    elif "Emma" == P_Harem[0]:     
+            $Cnt = int((R_LikeEmma - 500)/2)
+    elif "Laura" == P_Harem[0]:           
+            $Cnt = int((R_LikeLaura - 500)/2)
+    else:
+            $Cnt = 100     
+        
+    call RogueFace("perplexed")
+    if len(P_Harem) >= 2:
+        ch_r "But you're with [P_Harem[0]] right now, and a whole mess'a other girls!"
+    else:    
+        ch_r "But you're with [P_Harem[0]]!"
+    menu: 
+        extend ""
+        "She said I can be with you too." if "RogueYes" in P_Traits:
                 if ApprovalCheck("Rogue", 1800, Bonus = Cnt):
                     call RogueFace("smile", 1)
                     if R_Love >= R_Obed:
-                        ch_r "Just so long as we can be together, I can share."
+                        ch_r "I s'pose I can learn ta share."
                     elif R_Obed >= R_Inbt:
-                        ch_r "I'm ok with that if she is."
+                        ch_r "Well I won't be the one to get in the way a this."
                     else:
-                        ch_r "Yeah, I mean I guess so."                        
-                    ch_r "Go ask her, give me the night to think about it, and then come back tomorrow with her answer."
+                        ch_r "Ok, sure."
                 else:
                     call RogueFace("angry", 1)
-                    ch_r "Well maybe she would, but I don't want to share."      
+                    ch_r "Well that harlot!"  
+                    $ renpy.pop_call()                                          
+                    #This causes it to jump past the previous menu on the return
+        
+        "I could ask if she'd be ok with me dating you both." if "RogueYes" not in P_Traits:
+                if ApprovalCheck("Rogue", 1800, Bonus = Cnt):
+                    call RogueFace("smile", 1)
+                    if R_Love >= R_Obed:
+                        ch_r "I s'pose I can learn ta share."
+                    elif R_Obed >= R_Inbt:
+                        ch_r "Well I won't be the one to get in the way a this."
+                    else:
+                        ch_r "Ok, sure."               
+                    ch_r "You go ask her if she's inta that, then get back to me tomorrow."
+                else:
+                    call RogueFace("angry", 1)
+                    ch_r "Well that harlot!"     
                 $ renpy.pop_call()
-            
-            "What she doesn't know won't hurt her.":
-                $Cnt = int((R_LikeKitty - 500)/2)
-                if not ApprovalCheck("Rogue", 1800, Bonus = -(int((R_LikeKitty - 600)/2))): #checks if Rogue likes you more than Kitty
+        
+        "What she doesn't know won't hurt her.":
+                if not ApprovalCheck("Rogue", 1800, Bonus = -Cnt): #checks if Rogue likes you more than Rogue
                     call RogueFace("angry", 1)
                     if not ApprovalCheck("Rogue", 1800):
-                        ch_r "Well I don't like you that much either."
+                        ch_r "Well now I don't wantcha."
                     else:
-                        ch_r "Well I'm not cool with that, Kitty's a friend of mine."                    
+                        ch_r "I ain't in a sharin mood."                    
                     $ renpy.pop_call() 
-                    
+                
                 else:
                     call RogueFace("smile", 1)
                     if R_Love >= R_Obed:
-                        ch_r "I really do want to be together with you."
+                        ch_r "I s'pose somethin could be arranged. . ."
                     elif R_Obed >= R_Inbt:
-                        ch_r "If that's how you want it to be."
+                        ch_r "If you insist."
                     else:
-                        ch_r "I suppose that's true."
-                    $ R_Traits.append("poly Kitty")
+                        ch_r "Don't see why not."
                     $ R_Traits.append("downlow")
                 
-            "I can break it off with her.":
-                call RogueFace("sad")
-                ch_r "Well then I'll see you tomorrow after you have."                                   
-                $ renpy.pop_call()
-                
-            "You're right, I was dumb to ask.":
-                call RogueFace("sad")
-                ch_r "We had a good thing there. Maybe some day. . ."                    
-                $ renpy.pop_call()                     
+        "I can break it off with her.":
+                    call RogueFace("sad")
+                    ch_r "Well then talk to me after you have."                                   
+                    $ renpy.pop_call()
+            
+        "You're right, I was dumb to ask.":
+                    call RogueFace("sad")
+                    ch_r "Yeah. . ."                    
+                    $ renpy.pop_call()                   
                 
     return
     
@@ -870,8 +918,8 @@ label Rogue_Settings:
         ch_p "Let's talk about you."
         "Wardrobe":
                     ch_p "I wanted to talk about your style."
-                    if R_Loc != "bg player" and R_Loc != "bg rogue":  
-                        if Taboo:
+                    call Taboo_Level
+                    if R_Taboo:
                             if "exhibitionist" in R_Traits:
                                 ch_r "Oooh, naughty. . ."  
                             elif ApprovalCheck("Rogue", 900, TabM=4) or ApprovalCheck("Rogue", 400, "I", TabM=3): 
@@ -880,22 +928,17 @@ label Rogue_Settings:
                                 ch_r "This is a pretty public place for that, don't you think?"
                                 ch_r "We can talk about that back in our rooms."
                                 return
-                        call Rogue_Clothes
+                            call Rogue_Clothes
                     elif ApprovalCheck("Rogue", 900, TabM=4) or ApprovalCheck("Rogue", 600, "L") or ApprovalCheck("Rogue", 300, "O"):
                         ch_r "Ok, what did you want?"
                         call Rogue_Clothes
                     else:
                         ch_r "I'm not really interested in your fashion opinions."
-                        
-                        
+                                                
         "Shift her Personality" if ApprovalCheck("Rogue", 900, "L", TabM=0) or ApprovalCheck("Rogue", 900, "O", TabM=0)or ApprovalCheck("Rogue", 900, "I", TabM=0):
                     ch_p "Could we talk about us?"
                     call Rogue_Personality
         
-        "Dirty Talk":
-                    ch_p "About when we have sex. . ."
-                    call Rogue_SexChat
-             
         "Pet names":
             menu:       
                 "Your Petname":
@@ -917,19 +960,7 @@ label Rogue_Settings:
                             call Rogue_Pet   
                 "Back":
                         pass
-                    
-        "Other girls":
-                    menu:
-                        ch_p "How do you feel about. . ."
-                        "Kitty?":
-                            call Rogue_AboutKitty   
-                        "Emma?":
-                            call Rogue_AboutEmma   
-                        "Laura?":
-                            call Rogue_AboutLaura  
-                        "Never mind.":
-                            pass
-                
+                                    
         "Follow options" if "follow" in R_Traits:
                     ch_p "You know how you ask if I want to follow you sometimes?"
                     $ Line = 0
@@ -984,33 +1015,10 @@ label Rogue_Settings:
                         elif Line == "lock":
                             $ R_Traits.append("lockedtravels")    
                         $ Line = 0
-       
-        "Gym clothes" if "asked gym" in R_DailyActions and "no ask gym" not in R_Traits:
-                    ch_p "You asked me about your gym clothes?"
-                    ch_p "Don't worry about that, your gym clothes are cute."   
-                    ch_r "Ok, thanks."
-                    $ R_Traits.append("no ask gym")
-        "Gym clothes" if "no ask gym" in R_Traits:
-                    ch_p "You asked me about your gym clothes?"
-                    ch_p "Forget about that, I changed my mind."   
-                    ch_r "Ok, fine."
-                    $ R_Traits.remove("no ask gym")
-             
-        "Private outfit" if R_Schedule[9]:
-                    #if comfy is in R_Traits, she won't ask before changing
-                    ch_p "You know that outfit you wear in private?"
-                    menu:
-                        ch_e "Yeah, what about it?"
-                        "Just put them on without asking me about it." if "comfy" not in R_Traits:
-                            $ R_Traits.append("comfy")
-                        "Ask before changing into that." if "comfy" in R_Traits:
-                            $ R_Traits.remove("comfy")
-                        "Never Mind":
-                            pass
-                            
-        "Tasks" if "sir" in R_Petnames:
-                    ch_p "I have some tasks for you."
-                    call Rogue_Controls
+                                   
+#        "Tasks" if "sir" in R_Petnames:
+#                    ch_p "I have some tasks for you."
+#                    call Rogue_Controls
             
         "Switch to. . .":
                 menu:
@@ -1028,6 +1036,178 @@ label Rogue_Settings:
     jump Rogue_Settings
 
 # End Rogue Chat
+
+label Rogue_Monogamy:
+        #called from Rogue_Settings to ask her not to hook up wiht other girls    
+        menu:
+            "Could you not hook up with other girls?" if "mono" not in R_Traits:
+                    if R_Thirst >= 60 and not ApprovalCheck("Rogue", 1700, "LO", TabM=0):
+                            #she's too thirsty
+                            call AnyFace("Rogue","sly",1) 
+                            if "mono" not in R_DailyActions:                                                         
+                                    call Statup("Rogue", "Obed", 90, -2) 
+                            ch_r "I might consider that, but you don't exactly make yourself available. . ."
+                            return
+                    elif ApprovalCheck("Rogue", 1200, "LO", TabM=0) and R_Love >= L_Obed:
+                            #she cares
+                            call AnyFace("Rogue","sly",1) 
+                            if "mono" not in R_DailyActions:                                                         
+                                    call Statup("Rogue", "Love", 90, 1) 
+                            ch_r "Aw, would that make you jealous?" 
+                            ch_r "I suppose I could restain myself. . ."
+                    elif ApprovalCheck("Rogue", 700, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Rogue","sly",1,Eyes="side") 
+                            ch_r "If that's what you really want. . ."
+                    else:   
+                            #she doesn't care
+                            call AnyFace("Rogue","sly",1,Brows="confused") 
+                            ch_r "Who I \"hook up\" with is my own damned business." 
+                            return                    
+                    if "mono" not in R_DailyActions:                                                         
+                            call Statup("Rogue", "Obed", 90, 3) 
+                    call AnyWord("Rogue",1,0,"mono") #Daily
+                    $ R_Traits.append("mono")   
+            "Don't hook up with other girls." if "mono" not in R_Traits:
+                    if ApprovalCheck("Rogue", 900, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Rogue","sly",1,Eyes="side") 
+                            ch_r "Ok."
+                    elif R_Thirst >= 60 and not ApprovalCheck("Rogue", 1700, "LO", TabM=0):
+                            #she's too thirsty
+                            call AnyFace("Rogue","sly",1) 
+                            if "mono" not in R_DailyActions:                                                         
+                                    call Statup("Rogue", "Obed", 90, -2) 
+                            ch_r "I might consider that, but you don't exactly make yourself available. . ."
+                            return
+                    elif ApprovalCheck("Rogue", 550, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Rogue","sly",1,Eyes="side") 
+                            ch_r "If that's what you really want. . ."
+                    elif ApprovalCheck("Rogue", 1400, "LO", TabM=0):
+                            #she cares
+                            call AnyFace("Rogue","sly",1) 
+                            ch_r "Is that any way to ask a girl?" 
+                            ch_r "Still, I'll do it for you. . ."
+                    else:   
+                            #she doesn't care
+                            call AnyFace("Rogue","sly",1,Brows="confused") 
+                            ch_r "Who I \"hook up\" with is my own damned business." 
+                            return                     
+                    if "mono" not in R_DailyActions:                                                         
+                            call Statup("Rogue", "Obed", 90, 3) 
+                    call AnyWord("Rogue",1,0,"mono") #Daily
+                    $ R_Traits.append("mono")   
+            "It's ok if you hook up with other girls." if "mono" in R_Traits:
+                    if ApprovalCheck("Rogue", 700, "O", TabM=0):
+                            call AnyFace("Rogue","sly",1,Eyes="side") 
+                            ch_r "As you wish."
+                    elif ApprovalCheck("Rogue", 800, "L", TabM=0):
+                            call AnyFace("Rogue","sly",1) 
+                            ch_r "I hope you don't give me any reasons to want to. . ." 
+                    else:
+                            call AnyFace("Rogue","sly",1,Brows="confused") 
+                            if "mono" not in R_DailyActions:                                                         
+                                    call Statup("Rogue", "Love", 90, -2)
+                            ch_r "Oh? Well, glad I got your permission there." 
+                    if "mono" not in R_DailyActions:                                                         
+                            call Statup("Rogue", "Obed", 90, 3) 
+                    if "mono" in R_Traits:
+                            $ R_Traits.remove("mono")  
+                    call AnyWord("Rogue",1,0,"mono") #Daily 
+            "Never mind.":
+                pass
+        return
+        
+# end Rogue monogamy <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+   
+   
+label Rogue_Jumped:
+        #called from Rogue_Settings to ask her not to jump you  
+        ch_p "Hey, Remember that time you threw yourself at me?" 
+        call AnyFace("Rogue","sly",1,Brows="confused") 
+        menu:
+            ch_r "Yeah?"
+            "Could you maybe just ask instead?" if "chill" not in R_Traits:
+                    if R_Thirst >= 60 and not ApprovalCheck("Rogue", 1500, "LO", TabM=0):
+                            #she's too thirsty
+                            call AnyFace("Rogue","sly",1) 
+                            if "chill" not in R_DailyActions:                                                         
+                                    call Statup("Rogue", "Obed", 90, -2) 
+                            ch_r "Maybe don't keep me waiting then. . ."
+                            return
+                    elif ApprovalCheck("Rogue", 1000, "LO", TabM=0) and R_Love >= L_Obed:
+                            #she cares
+                            call AnyFace("Rogue","sly",1) 
+                            if "chill" not in R_DailyActions:                                                         
+                                    call Statup("Rogue", "Love", 90, 1) 
+                            ch_r "Sorry, [R_Petname], I just got a little lonely. . ." 
+                            ch_r "I'll be good. . ."
+                    elif ApprovalCheck("Rogue", 500, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Rogue","sly",1,Eyes="side") 
+                            ch_r "If that's what you really want. . ."
+                    else:   
+                            #she doesn't care
+                            call AnyFace("Rogue","sly",1,Brows="confused") 
+                            ch_r "I can't make any promises." 
+                            return                    
+                    if "chill" not in R_DailyActions:                                                         
+                            call Statup("Rogue", "Obed", 90, 3) 
+                    call AnyWord("Rogue",1,0,"chill") #Daily
+                    $ R_Traits.append("chill")   
+            "Don't bother me like that." if "chill" not in R_Traits:
+                    if ApprovalCheck("Rogue", 900, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Rogue","sly",1,Eyes="side") 
+                            ch_r "Ok."
+                    elif R_Thirst >= 60 and not ApprovalCheck("Rogue", 600, "O", TabM=0):
+                            #she's too thirsty
+                            call AnyFace("Rogue","sly",1) 
+                            if "chill" not in R_DailyActions:                                                         
+                                    call Statup("Rogue", "Obed", 90, -2) 
+                            ch_r "Maybe don't keep me waiting then. . ."
+                            return
+                    elif ApprovalCheck("Rogue", 450, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Rogue","sly",1,Eyes="side") 
+                            ch_r "If that's what you really want. . ."
+                    elif ApprovalCheck("Rogue", 500, "LO", TabM=0) and not ApprovalCheck("Rogue", 500, "I", TabM=0):
+                            #she cares
+                            call AnyFace("Rogue","sly",1) 
+                            ch_r "You might want to watch your mouth." 
+                            ch_r "Still, I'll try to keep to myself. . ."
+                    else:   
+                            #she doesn't care
+                            call AnyFace("Rogue","sly",1,Brows="confused") 
+                            ch_r "No promises." 
+                            return                     
+                    if "chill" not in R_DailyActions:                                                         
+                            call Statup("Rogue", "Obed", 90, 3) 
+                    call AnyWord("Rogue",1,0,"chill") #Daily
+                    $ R_Traits.append("chill")   
+            "Knock yourself out.":
+                    if ApprovalCheck("Rogue", 800, "L", TabM=0):
+                            call AnyFace("Rogue","sly",1) 
+                            ch_r "Will do. . ." 
+                    elif ApprovalCheck("Rogue", 700, "O", TabM=0):
+                            call AnyFace("Rogue","sly",1,Eyes="side") 
+                            ch_r "Yes sir."
+                    else:
+                            call AnyFace("Rogue","sly",1,Brows="confused") 
+                            if "chill" not in R_DailyActions:                                                         
+                                    call Statup("Rogue", "Love", 90, -2)
+                            ch_r "Maybe. If I've got nothing better to do." 
+                    if "chill" not in R_DailyActions:                                                         
+                            call Statup("Rogue", "Obed", 90, 3) 
+                    if "chill" in R_Traits:
+                            $ R_Traits.remove("chill")  
+                    call AnyWord("Rogue",1,0,"chill") #Daily 
+            "Um, never mind.":
+                pass
+        return
+        
+# end Rogue jumped <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Rogue Sexchat <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 label Rogue_SexChat(Line = "Yeah, what did you want to talk about?"):
@@ -1225,8 +1405,7 @@ label Rogue_SexChat(Line = "Yeah, what did you want to talk about?"):
                                                 ch_r "I don't really know. . ."    
                                                 
                                 # End Rogue's favorite things.
-                    
-                    
+                                        
                 "Don't talk as much during sex." if "vocal" in R_Traits:
                         if "setvocal" in R_DailyActions:
                             call RogueFace("perplexed")
@@ -1283,8 +1462,7 @@ label Rogue_SexChat(Line = "Yeah, what did you want to talk about?"):
                                 
                             $ R_DailyActions.append("setvocal")  
                         # End Rogue Dirty Talk
-                    
-                    
+                                        
                 "Don't do your own thing as much during sex." if "passive" not in R_Traits:
                         if "initiative" in R_DailyActions:
                             call RogueFace("perplexed")
@@ -1340,6 +1518,12 @@ label Rogue_SexChat(Line = "Yeah, what did you want to talk about?"):
                                 ch_r "If I want to, I will, but not because you say so."  
                                 
                             $ R_DailyActions.append("initiative")   
+                            
+                "About getting Jumped" if "jumped" in R_History:
+                    call Rogue_Jumped
+                "About when you masturbate":
+                    call NoFap("Rogue")
+                    
                 "Never Mind" if Line == "Yeah, what did you want to talk about?":
                     return
                 "That's all." if Line != "Yeah, what did you want to talk about?":
@@ -1631,15 +1815,19 @@ label Rogue_Flirt:
         
     $ R_Chat[5] = 1                                         #can only flirt once per cycle. 
     menu:        
-#            "Compliment her":
-            
+        "Compliment her":
+                    call Compliment("Rogue")
+                
         "Say you love her":
                     call Love_You("Rogue")
             
-        "Touch her cheek.":                                                                                 #Touch her cheek 
+        "Touch her cheek":                                                                              
                     call R_TouchCheek
+        
+        "Hold hands":
+                    call Hold_Hands("Rogue")        
                         
-        "Kiss her cheek":                                                                                   #Kiss her cheek
+        "Kiss her cheek":                                                                          
                     "You lean over, brush her hair aside and kiss her on the cheek."                
                     if ApprovalCheck("Rogue", 650, "L", TabM=1):
                         call RogueFace("sexy", 1) 
@@ -1885,7 +2073,7 @@ label Rogue_Flirt:
                         ch_r "Ow! Lay off."  
                         #End pinch her ass
                     
-        "Flip her skirt up" if (PantsNum("Rogue") == 5 or WearingDress("Rogue")) and not R_Upskirt:                                         #Flip her skirt           
+        "Flip her skirt up" if R_Legs == "skirt" and not R_Upskirt:                                         #Flip her skirt           
                     call RogueFace("surprised", 1)
                     $ R_Upskirt = 1
                     pause 0.5            
@@ -2645,7 +2833,10 @@ label Rogue_Controls:
             return
         "I want you to stop taking your own initiative." if "sub" not in R_Traits:
             $ R_Traits.append("sub")
-            ch_r "Very well, I will only do as ordered from now on."                
+            ch_r "Very well, I will only do as ordered from now on."           
+        "You can take your own initiative if you like." if "sub" in R_Traits:
+            $ R_Traits.remove("sub")
+            ch_r "Great, I'll do that."   
         "Exit.":
             return
     jump Rogue_Controls
@@ -2653,7 +2844,7 @@ return
 
 # start Rogue_Gifts//////////////////////////////////////////////////////////
 label Rogue_Gifts:  
-    if P_Inventory == []:
+    if not P_Inventory:
         "You don't have anything to give her."
         return
     menu:
@@ -3003,6 +3194,8 @@ label Rogue_Gifts:
                             "She hands it back to you."
                             $ R_RecentActions.append("no gift bra")                      
                             $ R_DailyActions.append("no gift bra") 
+                        if "bikini top" in R_Inventory and "bikini bottoms" in R_Inventory:
+                                $ R_Swim[0] = 1
                     else: 
                         ch_r "I already have one of those."
                         
@@ -3057,6 +3250,8 @@ label Rogue_Gifts:
                             "She hands them back to you."
                             $ R_RecentActions.append("no gift panties")                      
                             $ R_DailyActions.append("no gift panties") 
+                        if "bikini top" in R_Inventory and "bikini bottoms" in R_Inventory:
+                                $ R_Swim[0] = 1
                     else: 
                         ch_r "I already have one of those."
                               
@@ -3072,8 +3267,9 @@ label Rogue_Gifts:
 #                "She already has enough of those."
 #            
         "Exit":
-            pass
+            return
     
+    jump Rogue_Gifts
     return
 
 
@@ -3536,8 +3732,36 @@ label Rogue_Summon(Tempmod = Tempmod):
                 ch_r "I told you I was busy."   
             $ R_RecentActions.append("no summon")
             return
+                        
+    $ D20 = renpy.random.randint(1, 20) 
+    $ Line = 0
+    if R_Loc == "bg classroom": #fix change these if changed function
+        $ Tempmod = -10
+    elif R_Loc == "bg dangerroom":    
+        $ Tempmod = -20
+    elif R_Loc == "bg showerroom":    
+        $ Tempmod = -40
         
-    if Current_Time == "Night": 
+    if D20 <= 3:                                                                        
+        #unlucky refusal
+        $ Line = "no"    
+    elif "les" in R_RecentActions:
+            #if she's with another girl. . .
+            if ApprovalCheck("Rogue", 2000):
+                    ch_r "I'm enjoying some company right now, [R_Petname], care to join us?"
+                    menu:
+                        extend ""
+                        "Sure":
+                            $ Line = "go to"
+                        "No thanks.":
+                            ch_r "Suit yourself."
+                            return
+            else:            
+                    ch_r "What? Um, no, um, not right now."   
+                    ch_r "Maybe we could touch base later."      
+                    $ R_RecentActions.append("no summon") 
+                    return  
+    elif Current_Time == "Night": 
             if ApprovalCheck("Rogue", 700, "L") or ApprovalCheck("Rogue", 300, "O"):                              
                     #It's night time but she likes you.
                     ch_r "Ok, it's getting late but I can hang out for a bit."
@@ -3547,20 +3771,7 @@ label Rogue_Summon(Tempmod = Tempmod):
                     #It's night time and she isn't into you
                     ch_r "It's a bit late, [R_Petname], maybe tomorrow."     
                     $ R_RecentActions.append("no summon") 
-            return
-                
-    $ D20 = renpy.random.randint(1, 20) 
-    $ Line = 0
-    if R_Loc == "bg classroom": #fix change these if changed function
-        $ Tempmod = 10
-    elif R_Loc == "bg dangerroom":    
-        $ Tempmod = 20
-    elif R_Loc == "bg showerroom":    
-        $ Tempmod = 40
-        
-    if D20 <= 3:                                                                        
-        #unlucky refusal
-        $ Line = "no"       
+            return            
     elif not ApprovalCheck("Rogue", 700, "L") or not ApprovalCheck("Rogue", 600, "O"):                       
         #It's not night time, but she's busy 
         if not ApprovalCheck("Rogue", 300):
@@ -3570,7 +3781,7 @@ label Rogue_Summon(Tempmod = Tempmod):
         
         
         if "summoned" in R_RecentActions:
-                pass
+                pass              
         elif "goto" in R_RecentActions:
                 ch_r "You were just over here and then you took off. Why not just head back?"
         elif R_Loc == "bg classroom":
@@ -3694,7 +3905,9 @@ label Rogue_Summon(Tempmod = Tempmod):
         else:
                 ch_r "Ok, I'll be right over, [R_Petname]."
         $ Line = "yes" 
-        
+       
+    $ Tempmod = 0
+    
     if not Line:                                                                        
             #You end the dialog neutrally              
             $ R_RecentActions.append("no summon") 
@@ -3735,6 +3948,15 @@ label Rogue_Summon(Tempmod = Tempmod):
             elif R_Loc == "bg campus": 
                     ch_r "I'll keep an eye out for you."
                     jump Campus
+            elif R_Loc == "bg kitty": 
+                    ch_r "I'll see you there."
+                    jump Kitty_Room
+            elif R_Loc == "bg emma": 
+                    ch_r "I'll see you there."
+                    jump Emma_Room
+            elif R_Loc == "bg laura": 
+                    ch_r "I'll see you there."
+                    jump Laura_Room
             else:
                     ch_r "You know, I'll just meet you in my room."
                     $ R_Loc = "bg rogue"
@@ -3749,7 +3971,7 @@ label Rogue_Summon(Tempmod = Tempmod):
     $ R_RecentActions.append("summoned") 
     $ Line = 0
     ch_r "I'll be right over."  
-    if "locked" in P_RecentActions:
+    if "locked" in P_Traits:
             call Locked_Door("Rogue")
             return                              
     $ R_Loc = bg_current 
@@ -4085,23 +4307,125 @@ label Rogue_Dismissed(Leaving = 0):
     return
     #end "you can leave"
 
-# Rogue's Clothes ///////////////////
-label Rogue_Clothes:    
+# Rogue's Clothes  // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+label Rogue_Clothes:   
+    $ Trigger = 1 # to prevent Focus swapping. . .    
     call RogueFace
     menu:
         ch_r "So what did you want to tell me about my clothes again?"
-        "Let's talk about your modded clothes.":
-                    jump Rogue_Modded_Clothes_Menu
-        "Let's talk about your outfits.":
-                jump Rogue_Clothes_Outfits        
-        "Let's talk about your over shirts.":
+        "Overshirts":
                 jump Rogue_Clothes_Over        
-        "Let's talk about your legwear.":
+        "Legwear":
                 jump Rogue_Clothes_Legs
-        "Let's talk about your underwear.":
+        "Underwear":
                 jump Rogue_Clothes_Under
-        "Let's talk about the other stuff.":
+        "Accessories":
                 jump Rogue_Clothes_Misc
+        "Outfit Management":
+                jump Rogue_Clothes_Outfits  
+        "Let's talk about what you wear around.":
+                call Rogue_Clothes_Schedule
+                           
+        "Could I get a look at it?" if R_Loc != bg_current:
+                # checks to see if she'll drop the screen
+                call Rogue_OutfitShame(0,2) 
+                if _return:                    
+                    show PhoneSex zorder 150
+                    ch_r "How's that? . ."
+                hide PhoneSex
+        "Could I get a look at it?" if renpy.showing('DressScreen'):
+                # checks to see if she'll drop the screen
+                call Rogue_OutfitShame(0,2) 
+                if _return:
+                    hide DressScreen
+        "Would you be more comfortable behind a screen? (locked)" if R_Taboo:
+                pass
+        "Would you be more comfortable behind a screen?" if R_Loc == bg_current and not R_Taboo and not renpy.showing('DressScreen'):
+                # checks to see if she'll drop the screen
+                if ApprovalCheck("Rogue", 1500) or (R_SeenChest and R_SeenPussy):
+                        ch_r "Don't really need that, thanks."
+                else:
+                        show DressScreen zorder 150
+                        ch_r "This is more comfortable, thanks."
+                        
+        "Switch to. . .":
+                if renpy.showing('DressScreen'):
+                        call Rogue_OutfitShame(0,2) 
+                        if _return:
+                            hide DressScreen
+                        else:
+                            call RogueOutfit 
+                $ R_TempClothes[1] = R_Arms  
+                $ R_TempClothes[2] = R_Legs 
+                $ R_TempClothes[3] = R_Over
+                $ R_TempClothes[4] = R_Neck 
+                $ R_TempClothes[5] = R_Chest 
+                $ R_TempClothes[6] = R_Panties
+#                $ R_TempClothes[7] = R_Boots
+                $ R_TempClothes[8] = R_Hair
+                $ R_TempClothes[9] = R_Hose
+                $ R_TempClothes[0] = 1 
+                $ R_Outfit = "temporary"
+                $ R_OutfitDay = "temporary"  
+                $ Trigger = 0
+                menu:
+                    "Kitty":
+                        call Kitty_Chat_Set("wardrobe")                    
+                    "Emma":
+                        call Emma_Chat_Set("wardrobe") 
+                    "Laura":
+                        call Laura_Chat_Set("wardrobe") 
+                    "Never mind":
+                        pass  
+                        
+        "Never mind, you look good like that. [[return]":            
+                if "wardrobe" not in R_RecentActions:  
+                        #Apply stat boosts only if it's the first time this turn
+                        if R_Chat[1] <= 1:                
+                                call Statup("Rogue", "Love", 70, 10)
+                                call Statup("Rogue", "Obed", 20, 10)
+                                ch_r "Aw, that's sweet."
+                        elif R_Chat[1] <= 10:
+                                call Statup("Rogue", "Love", 70, 5)
+                                call Statup("Rogue", "Obed", 20, 5)
+                                ch_r "Thanks." 
+                        elif R_Chat[1] <= 50:
+                                call Statup("Rogue", "Love", 70, 1)
+                                call Statup("Rogue", "Obed", 20, 1) 
+                                ch_r "Ok."
+                        else:
+                                ch_r "Ok."
+                        $ R_RecentActions.append("wardrobe")  
+                if renpy.showing('DressScreen'):
+                        call Rogue_OutfitShame(0,2) 
+                        if _return:
+                            hide DressScreen
+                        else:
+                            call RogueOutfit 
+                #sets up a temporary outfit
+                $ R_TempClothes[1] = R_Arms  
+                $ R_TempClothes[2] = R_Legs 
+                $ R_TempClothes[3] = R_Over
+                $ R_TempClothes[4] = R_Neck 
+                $ R_TempClothes[5] = R_Chest 
+                $ R_TempClothes[6] = R_Panties
+#                $ R_TempClothes[7] = R_Boots
+                $ R_TempClothes[8] = R_Hair
+                $ R_TempClothes[9] = R_Hose
+                $ R_TempClothes[0] = 1 
+                $ R_Outfit = "temporary"
+                $ R_OutfitDay = "temporary"  
+                $ R_Chat[1] += 1
+                $ Trigger = 0
+                return
+                
+    jump Rogue_Clothes
+    #End of Rogue Wardrobe Main Menu
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
+
+    menu Rogue_Clothes_Outfits:                                                                               
+        # Outfits
         "That looks really good on you, you should remember that one. [[Set Custom]":
                 menu:
                     "Which slot would you like this saved in?"
@@ -4124,83 +4448,35 @@ label Rogue_Clothes:
                     "Custom 9":
                                 call Rogue_OutfitShame(20,1)
                     "Gym Clothes":
-                                call Rogue_OutfitShame(7,1)                    
+                                call Rogue_OutfitShame(4,1)                    
                     "Sleepwear":
-                                call Rogue_OutfitShame(9,1)                      
+                                call Rogue_OutfitShame(7,1)                      
                     "Swimwear":
                                 call Rogue_OutfitShame(10,1)   
                     "Never mind":
-                                pass                           
-        "Switch to. . .":
+                                pass   
+                                
+        "I really like that green top and skirt outfit you have.":                  
+                #Green
+                call RogueOutfit("evo_green")   
                 menu:
-                    "Kitty":
-                        call Kitty_Chat_Set("wardrobe")                    
-                    "Emma":
-                        call Emma_Chat_Set("wardrobe") 
-                    "Laura":
-                        call Laura_Chat_Set("wardrobe") 
-                    "Never mind":
-                        pass     
-        "Never mind, you look good like that. [[return]":            
-                if "wardrobe" not in R_RecentActions:  
-                        #Apply stat boosts only if it's the first time this turn
-                        if R_Chat[1] <= 1:                
-                                call Statup("Rogue", "Love", 70, 10)
-                                call Statup("Rogue", "Obed", 20, 10)
-                                ch_r "Aw, that's sweet."
-                        elif R_Chat[1] <= 10:
-                                call Statup("Rogue", "Love", 70, 5)
-                                call Statup("Rogue", "Obed", 20, 5)
-                                ch_r "Thanks." 
-                        elif R_Chat[1] <= 50:
-                                call Statup("Rogue", "Love", 70, 1)
-                                call Statup("Rogue", "Obed", 20, 1) 
-                                ch_r "Ok."
-                        else:
-                                ch_r "Ok."
-                        $ R_RecentActions.append("wardrobe")  
-                #sets up a temporary outfit
-                $ R_TempClothes[1] = R_Arms  
-                $ R_TempClothes[2] = R_Legs 
-                $ R_TempClothes[3] = R_Over
-                $ R_TempClothes[4] = R_Neck 
-                $ R_TempClothes[5] = R_Chest 
-                $ R_TempClothes[6] = R_Panties
-#                $ R_TempClothes[7] = R_Boots
-                $ R_TempClothes[8] = R_Hair
-                $ R_TempClothes[9] = R_Hose
-                $ R_TempClothes[0] = 1 
-                $ R_Outfit = "temporary"
-                $ R_OutfitDay = "temporary"  
-                $ R_Chat[1] += 1
-                return
-            
+                    "You should wear this one out. [[set current outfit]":
+                        $ R_Outfit = "evo_green"
+                        $ R_Shame = R_OutfitShame[1]
+                        ch_r "Ok, [R_Petname], I like this one too."
+                    "Let's try something else though.":
+                        ch_r "Sure."            
                     
-    jump Rogue_Clothes
-    #End of Rogue Wardrobe Main Menu
-
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
-
-    menu Rogue_Clothes_Outfits:                                                                                 # Outfits
-        "I really like that green top and skirt outfit you have.":                   #Green
-                        call RogueOutfit("evo_green")   
-                        menu:
-                            "You should wear this one out. [[set current outfit]":
-                                $ R_Outfit = "evo_green"
-                                $ R_Shame = R_OutfitShame[1]
-                                ch_r "Ok, [R_Petname], I like this one too."
-                            "Let's try something else though.":
-                                ch_r "Sure."            
-                    
-        "That pink top and pants look really nice on you.":                           #Pink  
-                        call RogueOutfit("evo_pink")
-                        menu:
-                            "You should wear this one out. [[set current outfit]":
-                                $ R_Outfit = "evo_pink"
-                                $ R_Shame = R_OutfitShame[2]
-                                ch_r "Sure, [R_Petname], that one's nice."
-                            "Let's try something else though.":
-                                ch_r "Ok."            
+        "That pink top and pants look really nice on you.":                        
+                #Pink  
+                call RogueOutfit("evo_pink")
+                menu:
+                    "You should wear this one out. [[set current outfit]":
+                        $ R_Outfit = "evo_pink"
+                        $ R_Shame = R_OutfitShame[2]
+                        ch_r "Sure, [R_Petname], that one's nice."
+                    "Let's try something else though.":
+                        ch_r "Ok."            
                     
         "Remember that outfit we put together? [[Set a custom outfit] (locked)" if not R_Custom[0] and not R_Custom2[0] and not R_Custom3[0] and not R_Custom4[0] and not R_Custom5[0] and not R_Custom6[0] and not R_Custom7[0] and not R_Custom8[0] and not R_Custom9[0]:
                         pass       
@@ -4210,124 +4486,94 @@ label Rogue_Clothes:
                         while 1:
                             menu:                
                                 "Throw on Custom 1 (locked)" if not R_Custom[0]:
-                                    pass
+                                        pass
                                 "Throw on Custom 1" if R_Custom[0]:
-                                    call RogueOutfit("custom1")
-                                    $ Cnt = 3
+                                        call RogueOutfit("custom1")
+                                        $ Cnt = 3
                                 "Throw on Custom 2 (locked)" if not R_Custom2[0]:
-                                    pass
+                                        pass
                                 "Throw on Custom 2" if R_Custom2[0]:
-                                    call RogueOutfit("custom2")
-                                    $ Cnt = 5
+                                        call RogueOutfit("custom2")
+                                        $ Cnt = 5
                                 "Throw on Custom 3 (locked)" if not R_Custom3[0]:
-                                    pass
+                                        pass
                                 "Throw on Custom 3" if R_Custom3[0]:
-                                    call RogueOutfit("custom3")
-                                    $ Cnt = 6
+                                        call RogueOutfit("custom3")
+                                        $ Cnt = 6
                                 
-                                "Throw on Custom 4 (locked)" if not R_Custom4[0]:
-                                    pass
-                                "Throw on Custom 4" if R_Custom4[0]:
-                                    call RogueOutfit("custom4")
-                                    $ Cnt = 15
-                                "Throw on Custom 5 (locked)" if not R_Custom5[0]:
-                                    pass
-                                "Throw on Custom 5" if R_Custom5[0]:
-                                    call RogueOutfit("custom5")
-                                    $ Cnt = 16
-                                "Throw on Custom 6 (locked)" if not R_Custom6[0]:
-                                    pass
-                                "Throw on Custom 6" if R_Custom6[0]:
-                                    call RogueOutfit("custom6")
-                                    $ Cnt = 17
-                                "Throw on Custom 7 (locked)" if not R_Custom7[0]:
-                                    pass
-                                "Throw on Custom 7" if R_Custom7[0]:
-                                    call RogueOutfit("custom7")
-                                    $ Cnt = 18
-                                "Throw on Custom 8 (locked)" if not R_Custom8[0]:
-                                    pass
-                                "Throw on Custom 8" if R_Custom8[0]:
-                                    call RogueOutfit("custom8")
-                                    $ Cnt = 19
-                                "Throw on Custom 9 (locked)" if not R_Custom9[0]:
-                                    pass
-                                "Throw on Custom 9" if R_Custom9[0]:
-                                    call RogueOutfit("custom9")
-                                    $ Cnt = 20
-                                "You should wear this one in our rooms. (locked)" if not Cnt:
-                                    pass
-                                "You should wear this one in our rooms." if Cnt:
-                                    if Cnt == 5:
-                                        $ R_Schedule[9] = "custom2"
-                                    elif Cnt == 15:
-                                        $ R_Schedule[9] = "custom4"
-                                    elif Cnt == 16:
-                                        $ R_Schedule[9] = "custom5"
-                                    elif Cnt == 17:
-                                        $ R_Schedule[9] = "custom6"
-                                    elif Cnt == 18:
-                                        $ R_Schedule[9] = "custom7"
-                                    elif Cnt == 19:
-                                        $ R_Schedule[9] = "custom8"
-                                    elif Cnt == 20:
-                                        $ R_Schedule[9] = "custom9"
-                                    elif Cnt == 6:
-                                        $ R_Schedule[9] = "custom3"
-                                    else:
-                                        $ R_Schedule[9] = "custom"
-                                    ch_r "Ok, sure."
+                                "You should wear this one in private. (locked)" if not Cnt:
+                                        pass
+                                "You should wear this one in private." if Cnt:
+                                        if Cnt == 5:
+                                            $ R_Schedule[9] = "custom2"
+                                        elif Cnt == 15:
+                                            $ R_Schedule[9] = "custom4"
+                                        elif Cnt == 16:
+                                            $ R_Schedule[9] = "custom5"
+                                        elif Cnt == 17:
+                                            $ R_Schedule[9] = "custom6"
+                                        elif Cnt == 18:
+                                            $ R_Schedule[9] = "custom7"
+                                        elif Cnt == 19:
+                                            $ R_Schedule[9] = "custom8"
+                                        elif Cnt == 20:
+                                            $ R_Schedule[9] = "custom9"
+                                        elif Cnt == 6:
+                                            $ R_Schedule[9] = "custom3"
+                                        else:
+                                            $ R_Schedule[9] = "custom"
+                                        ch_r "Ok, sure."
                                 
                                 "On second thought, forget about that one outfit. . .":
-                                    menu:
-                                        ch_r "Which one did you mean?"
-                                        "Custom 1 [[clear custom 1]" if R_Custom[0]:
-                                            ch_r "Ok, no problem."
-                                            $ R_Custom[0] = 0
-                                        "Custom 1 [[clear custom 1] (locked)" if not R_Custom[0]:
-                                            pass
-                                        "Custom 2 [[clear custom 2]" if R_Custom2[0]:
-                                            ch_r "Ok, no problem."
-                                            $ R_Custom2[0] = 0
-                                        "Custom 2 [[clear custom 1] (locked)" if not R_Custom2[0]:
-                                            pass
-                                        "Custom 3 [[clear custom 3]" if R_Custom3[0]:
-                                            ch_r "Ok, no problem."
-                                            $ R_Custom3[0] = 0
-                                        "Custom 3 [[clear custom 3] (locked)" if not R_Custom3[0]:
-                                            pass
-                                        "Custom 4 [[clear custom 4]" if R_Custom4[0]:
-                                            ch_r "Ok, no problem."
-                                            $ R_Custom4[0] = 0
-                                        "Custom 4 [[clear custom 4] (locked)" if not R_Custom4[0]:
-                                            pass
-                                        "Custom 5 [[clear custom 5]" if R_Custom5[0]:
-                                            ch_r "Ok, no problem."
-                                            $ R_Custom5[0] = 0
-                                        "Custom 5 [[clear custom 5] (locked)" if not R_Custom5[0]:
-                                            pass
-                                        "Custom 6 [[clear custom 6]" if R_Custom6[0]:
-                                            ch_r "Ok, no problem."
-                                            $ R_Custom6[0] = 0
-                                        "Custom 6 [[clear custom 6] (locked)" if not R_Custom6[0]:
-                                            pass
-                                        "Custom 7 [[clear custom 7]" if R_Custom7[0]:
-                                            ch_r "Ok, no problem."
-                                            $ R_Custom7[0] = 0
-                                        "Custom 7 [[clear custom 7] (locked)" if not R_Custom7[0]:
-                                            pass
-                                        "Custom 8 [[clear custom 8]" if R_Custom8[0]:
-                                            ch_r "Ok, no problem."
-                                            $ R_Custom8[0] = 0
-                                        "Custom 8 [[clear custom 8] (locked)" if not R_Custom8[0]:
-                                            pass
-                                        "Custom 9 [[clear custom 9]" if R_Custom9[0]:
-                                            ch_r "Ok, no problem."
-                                            $ R_Custom9[0] = 0
-                                        "Custom 9 [[clear custom 9] (locked)" if not R_Custom9[0]:
-                                            pass
-                                        "Never mind, [[back].":
-                                            pass            
+                                        menu:
+                                            ch_r "Which one did you mean?"
+                                            "Custom 1 [[clear custom 1]" if R_Custom[0]:
+                                                ch_r "Ok, no problem."
+                                                $ R_Custom[0] = 0
+                                            "Custom 1 [[clear custom 1] (locked)" if not R_Custom[0]:
+                                                pass
+                                            "Custom 2 [[clear custom 2]" if R_Custom2[0]:
+                                                ch_r "Ok, no problem."
+                                                $ R_Custom2[0] = 0
+                                            "Custom 2 [[clear custom 2] (locked)" if not R_Custom2[0]:
+                                                pass
+                                            "Custom 3 [[clear custom 3]" if R_Custom3[0]:
+                                                ch_r "Ok, no problem."
+                                                $ R_Custom3[0] = 0
+                                            "Custom 3 [[clear custom 3] (locked)" if not R_Custom3[0]:
+                                                pass
+                                            "Custom 4 [[clear custom 4]" if R_Custom4[0]:
+                                                ch_r "Ok, no problem."
+                                                $ R_Custom4[0] = 0
+                                            "Custom 3 [[clear custom 3] (locked)" if not R_Custom3[0]:
+                                                pass
+                                            "Custom 5 [[clear custom 5]" if R_Custom5[0]:
+                                                ch_r "Ok, no problem."
+                                                $ R_Custom5[0] = 0
+                                            "Custom 3 [[clear custom 3] (locked)" if not R_Custom3[0]:
+                                                pass
+                                            "Custom 6 [[clear custom 6]" if R_Custom6[0]:
+                                                ch_r "Ok, no problem."
+                                                $ R_Custom6[0] = 0
+                                            "Custom 3 [[clear custom 3] (locked)" if not R_Custom3[0]:
+                                                pass
+                                            "Custom 7 [[clear custom 7]" if R_Custom7[0]:
+                                                ch_r "Ok, no problem."
+                                                $ R_Custom7[0] = 0
+                                            "Custom 3 [[clear custom 3] (locked)" if not R_Custom3[0]:
+                                                pass
+                                            "Custom 8 [[clear custom 8]" if R_Custom8[0]:
+                                                ch_r "Ok, no problem."
+                                                $ R_Custom8[0] = 0
+                                            "Custom 3 [[clear custom 3] (locked)" if not R_Custom3[0]:
+                                                pass
+                                            "Custom 9 [[clear custom 9]" if R_Custom9[0]:
+                                                ch_r "Ok, no problem."
+                                                $ R_Custom9[0] = 0
+                                            "Custom 3 [[clear custom 3] (locked)" if not R_Custom3[0]:
+                                                pass
+                                            "Never mind, [[back].":
+                                                pass            
                                         
                                 "You should wear this one out. [[choose outfit first](locked)" if not Cnt:
                                     pass
@@ -4335,73 +4581,77 @@ label Rogue_Clothes:
                                     call Rogue_Custom_Out(Cnt)
                                 "Ok, back to what we were talking about. . .":
                                     $ Cnt = 0
-                                    jump Rogue_Clothes_Outfits                                 
+                                    jump Rogue_Clothes                               
         
-        "Your birthday suit looks really great. . .":                                     #Nude
-                        call RogueFace("sexy", 1)
-                        $ Line = 0                        
-                        if not R_Chest and not R_Panties and not R_Over and not R_Legs and not R_Hose:                
-                            ch_r "Can't get much more naked than this."  
-                        elif R_SeenChest and R_SeenPussy and ApprovalCheck("Rogue", 1000, TabM=5):
-                            ch_r "Naughty boy. . ."  
-                            $ Line = 1
-                        elif ApprovalCheck("Rogue", 2000, TabM=5):
-                            ch_r "Hmm. . . you move fast, but I suppose for you. . ."    
-                            $ Line = 1
-                        elif R_SeenChest and R_SeenPussy and ApprovalCheck("Rogue", 1000, TabM=0):
-                            ch_r "Well, maybe if it weren't quite so. . . public here."  
-                        elif ApprovalCheck("Rogue", 2000, TabM=0):
-                            ch_r "I might consider it if we had some privacy. . ."  
-                        elif ApprovalCheck("Rogue", 1000, TabM=0):                
-                            call RogueFace("surprised", 1)
-                            ch_r "Hmm. . . you're getting a bit ahead of yourself, [R_Petname]."
-                        else:
-                            call RogueFace("angry", 1)
-                            ch_r "What sort of common strumpet do you take me for?"  
-                            
-                        if Line:                                                            #If she got nude. . .                            
-                            call RogueOutfit("nude")
-                            "She pulls all her clothes off and throws them in a heap on the floor."
-                            call Rogue_First_Topless
-                            call Rogue_First_Bottomless(1)
-                            call RogueFace("sexy")
-                            menu:
-                                "You know, you should wear this one out. [[set current outfit]":
-                                    if "exhibitionist" in R_Traits:
-                                        ch_r "You sure know how to rev my engines. . ." 
-                                        $ R_Outfit = "nude"
-                                        $ R_Shame = R_OutfitShame[0]
-                                    elif ApprovalCheck("Rogue", 750, "I") or ApprovalCheck("Rogue", 2500, TabM=0):                    
-                                        ch_r "Heh, all right [R_Petname]."
-                                        $ R_Outfit = "nude"
-                                        $ R_Shame = R_OutfitShame[0]
-                                    else:
-                                        call RogueFace("sexy", 1)
-                                        $ R_Eyes = "surprised"
-                                        ch_r "I'm afraid not, [R_Petname], this is just for between you and me." 
-                                "Let's try something else though.":
-                                    if "exhibitionist" in R_Traits:
-                                        ch_r "Hmm, too bad you didn't want me to wear this out. . ."                         
-                                    elif ApprovalCheck("Rogue", 750, "I") or ApprovalCheck("Rogue", 2500, TabM=0):       
-                                        call RogueFace("bemused", 1)             
-                                        ch_r "You know, for a second there I thought you might want me to wear this out. . ."
-                                        ch_r "Hehe, um. . ."
-                                    else:
-                                        call RogueFace("confused", 1)
-                                        ch_r "Well obviously. It's not like I'd ever go out like this."   
-                        $ Line = 0
+        "Gym Clothes?" if not R_Taboo or bg_current == "bg dangerroom":
+                call RogueOutfit("gym")
                 
-        "How about throwing on your sleepwear?" if not Taboo:
-                        #fix add conditions
+        "Sleepwear?" if not R_Taboo:
+                if ApprovalCheck("Rogue", 1200):
                         call RogueOutfit("sleep")
-                        
-        "How about throwing on your swimwear?" if not Taboo or bg_current == "bg pool":
-            #fix add conditions
-            call RogueOutfit("swimwear")
-            
-        "Let's talk about what you wear outside.":
-                        call Rogue_Clothes_Schedule
-            
+                else:
+                        call Display_DressScreen("Rogue")
+                        if _return:
+                            call RogueOutfit("sleep")
+                                        
+        "Swimwear?" if not R_Taboo or bg_current == "bg pool":
+                call RogueOutfit("swimwear")
+                            
+        "Your birthday suit looks really great. . .":                                 
+                #Nude
+                call RogueFace("sexy", 1)
+                $ Line = 0                        
+                if not R_Chest and not R_Panties and not R_Over and not R_Legs and not R_Hose:                
+                    ch_r "Can't get much more naked than this."  
+                elif R_SeenChest and R_SeenPussy and ApprovalCheck("Rogue", 1000, TabM=5):
+                    ch_r "Naughty boy. . ."  
+                    $ Line = 1
+                elif ApprovalCheck("Rogue", 2000, TabM=5):
+                    ch_r "Hmm. . . you move fast, but I suppose for you. . ."    
+                    $ Line = 1
+                elif R_SeenChest and R_SeenPussy and ApprovalCheck("Rogue", 1000, TabM=0):
+                    ch_r "Well, maybe if it weren't quite so. . . public here."  
+                elif ApprovalCheck("Rogue", 2000, TabM=0):
+                    ch_r "I might consider it if we had some privacy. . ."  
+                elif ApprovalCheck("Rogue", 1000, TabM=0):                
+                    call RogueFace("surprised", 1)
+                    ch_r "Hmm. . . you're getting a bit ahead of yourself, [R_Petname]."
+                else:
+                    call RogueFace("angry", 1)
+                    ch_r "What sort of common strumpet do you take me for?"  
+                    
+                if Line:                                                            #If she got nude. . .                            
+                    call RogueOutfit("nude")
+                    "She pulls all her clothes off and throws them in a heap on the floor."
+                    call Rogue_First_Topless
+                    call Rogue_First_Bottomless(1)
+                    call RogueFace("sexy")
+                    menu:
+                        "You know, you should wear this one out. [[set current outfit]":
+                            if "exhibitionist" in R_Traits:
+                                ch_r "You sure know how to rev my engines. . ." 
+                                $ R_Outfit = "nude"
+                                $ R_Shame = R_OutfitShame[0]
+                            elif ApprovalCheck("Rogue", 750, "I") or ApprovalCheck("Rogue", 2500, TabM=0):                    
+                                ch_r "Heh, all right [R_Petname]."
+                                $ R_Outfit = "nude"
+                                $ R_Shame = R_OutfitShame[0]
+                            else:
+                                call RogueFace("sexy", 1)
+                                $ R_Eyes = "surprised"
+                                ch_r "I'm afraid not, [R_Petname], this is just for between you and me." 
+                        "Let's try something else though.":
+                            if "exhibitionist" in R_Traits:
+                                ch_r "Hmm, too bad you didn't want me to wear this out. . ."                         
+                            elif ApprovalCheck("Rogue", 750, "I") or ApprovalCheck("Rogue", 2500, TabM=0):       
+                                call RogueFace("bemused", 1)             
+                                ch_r "You know, for a second there I thought you might want me to wear this out. . ."
+                                ch_r "Hehe, um. . ."
+                            else:
+                                call RogueFace("confused", 1)
+                                ch_r "Well obviously. It's not like I'd ever go out like this."   
+                $ Line = 0
+                
         "Never mind":    
                         jump Rogue_Clothes     
             
@@ -4410,450 +4660,581 @@ label Rogue_Clothes:
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
 
-    menu Rogue_Clothes_Over:                                                                                            # Overshirts    
+    menu Rogue_Clothes_Over:                                                                                         
+        # Overshirts    
         "Why don't you go with no [R_Over]?" if R_Over:
-                        call RogueFace("bemused", 1)
-                        if R_Chest or (R_SeenChest and ApprovalCheck("Rogue", 600)):
-                            ch_r "Sure."
-                        elif ApprovalCheck("Rogue", 1100, TabM=0):
-                            ch_r "I guess I don't really mind if you see them. . ."                
-                            call Rogue_First_Topless      
+                call RogueFace("bemused", 1)
+                if R_Chest or (R_SeenChest and ApprovalCheck("Rogue", 600)):
+                    ch_r "Sure."
+                elif ApprovalCheck("Rogue", 600, TabM=0):
+                    call Rogue_NoBra
+                    if not _return:
+                        if not ApprovalCheck("Rogue", 1200):
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                jump Rogue_Clothes
                         else:
-                            ch_r "I'm afraid I don't have anything on under this."
-                            jump Rogue_Clothes    
-                        $ R_Over = 0
-                        if not R_Chest:
-                            call Rogue_First_Topless
+                                jump Rogue_Clothes
+                else:
+                    call Display_DressScreen("Rogue")
+                    if not _return:
+                            ch_r "I'd rather not. . ."
+                            if not R_Chest:
+                                ch_r "I'm afraid I don't have anything on under this."
+                            jump Rogue_Clothes
+                $ R_Over = 0
+                if not R_Chest and not renpy.showing('DressScreen'):
+                        call Rogue_First_Topless
                         
         "Try on the green mesh top." if R_Over != "mesh top":
-                        call RogueFace("bemused", 1)
-                        if R_Chest or (R_SeenChest and ApprovalCheck("Rogue", 500)):
-                            ch_r "Sure."
-                        elif ApprovalCheck("Rogue", 1100, TabM=0):
-                            ch_r "I guess I don't really mind if you see them. . ."    
+                call RogueFace("bemused", 1)
+                if R_Chest or (R_SeenChest and ApprovalCheck("Rogue", 500, TabM=2)):
+                    ch_r "Sure."  
+                elif ApprovalCheck("Rogue", 600, TabM=0):
+                    call Rogue_NoBra
+                    if not _return:
+                        if not ApprovalCheck("Rogue", 1200):
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                jump Rogue_Clothes
                         else:
+                                jump Rogue_Clothes
+                else:
+                    call Display_DressScreen("Rogue")
+                    if not _return:
                             ch_r "I'm afraid that top is a bit sheer to have nothing under it."
-                            jump Rogue_Clothes    
-                        $ R_Over = "mesh top"    
-                        menu:
-                            ch_r "With the collar?"
-                            "Yes":
-                                $ R_Neck = "spiked collar"
-                            "No":
-                                $ R_Neck = 0
-                        if R_Chest == "buttoned tank":
-                            $ R_Chest = "tank"   
-                        if not R_Chest:
-                            call Rogue_First_Topless 
+                            if not R_Chest:
+                                ch_r "I don't have anything on under this."
+                            jump Rogue_Clothes
+                            
+                $ R_Over = "mesh top"    
+                menu:
+                    ch_r "With the collar?"
+                    "Yes":
+                        $ R_Neck = "spiked collar"
+                    "No":
+                        $ R_Neck = 0
+                if R_Chest == "buttoned tank":
+                    $ R_Chest = "tank"   
+                if not R_Chest and not renpy.showing('DressScreen'):
+                    call Rogue_First_Topless 
                             
         "How about that pink top?" if R_Over != "pink top":
-                        $ R_Over = "pink top"  
-                        $ R_Neck = 0
+                $ R_Over = "pink top"  
+                $ R_Neck = 0
                         
         "How about that green hoodie?" if R_Over != "hoodie":
-                        $ R_Over = "hoodie"  
+                $ R_Over = "hoodie"  
                         
         "Maybe just throw on a towel?" if R_Over != "towel":
-            call RogueFace("bemused", 1)
-            if R_Chest or R_SeenChest:
-                ch_r "Fresh."
-            elif ApprovalCheck("Rogue", 900, TabM=0):
-                call RogueFace("perplexed", 1)
-                ch_r "I suppose? . ."          
-            else:
-                ch_r "That don't leave much to the imagination. . ."
-                jump Rogue_Clothes   
-            $ R_Over = "towel"  
+                call RogueFace("bemused", 1)
+                if R_Chest or R_SeenChest:
+                    ch_r "Fresh."
+                elif ApprovalCheck("Rogue", 900, TabM=0):
+                    call RogueFace("perplexed", 1)
+                    ch_r "I suppose? . ."          
+                else:
+                    call Display_DressScreen("Rogue")
+                    if not _return:
+                            ch_r "That don't leave much to the imagination. . ."
+                            jump Rogue_Clothes
+                $ R_Over = "towel"  
             
         "How about that green nighty I got you?" if R_Over != "nighty" and "nighty" in R_Inventory:
-                        if R_Legs:
-                            ch_r "I can't really wear that with my [R_Legs] on."
-                        elif ApprovalCheck("Rogue", 1100, TabM=3):
-                            ch_r "Sure. . ."
-                            if "lace bra" in R_Inventory:
-                                $ R_Chest = "lace bra"
+                if R_Legs:
+                    ch_r "I can't really wear that with my [R_Legs] on."
+                elif ApprovalCheck("Rogue", 1100, TabM=3):
+                    ch_r "Sure. . ."
+                    if "lace bra" in R_Inventory:
+                        $ R_Chest = "lace bra"
+                    else:
+                        $ R_Chest = "bra"
+                    if "lace panties" in R_Inventory:
+                        $ R_Panties = "lace panties"
+                    else:
+                        $ R_Panties = "black panties"
+                    $ R_Over = "nighty"   
+                    menu:
+                        extend ""
+                        "Nice.":
+                            pass
+                        "I meant {i}just{/i} the nighty.":
+                            if ApprovalCheck("Rogue", 1400, TabM=3):
+                                "She shrugs off her bra and then pulls the nighty back up."
+                                $ R_Panties = 0
+                                $ R_Chest = 0
+                                ch_r "Hmmm, alright. . ."
+                            elif ApprovalCheck("Rogue", 1200, TabM=3):
+                                $ R_Chest = 0
+                                ch_r "I'll keep my panties on, thanks."
                             else:
-                                $ R_Chest = "bra"
-                            if "lace panties" in R_Inventory:
-                                $ R_Panties = "lace panties"
-                            else:
-                                $ R_Panties = "black panties"
-                            $ R_Over = "nighty"   
-                            menu:
-                                extend ""
-                                "Nice.":
-                                    pass
-                                "I meant {i}just{/i} the nighty.":
-                                    if ApprovalCheck("Rogue", 1400, TabM=3):
-                                        "She shrugs off her bra and then pulls the nighty back up."
-                                        $ R_Panties = 0
-                                        $ R_Chest = 0
-                                        ch_r "Hmmm, alright. . ."
-                                    elif ApprovalCheck("Rogue", 1200, TabM=3):
-                                        $ R_Chest = 0
-                                        ch_r "I'll keep my panties on, thanks."
-                                    else:
-                                        ch_r "Be happy with what you get."
-                        else:
+                                ch_r "Be happy with what you get."
+                else:
+                    call Display_DressScreen("Rogue")
+                    if not _return:
                             ch_r "That's a bit . . . revealing."
-                        if not R_Chest:
-                            call Rogue_First_Topless
+                            jump Rogue_Clothes
+                if not R_Chest and not renpy.showing('DressScreen'):
+                    call Rogue_First_Topless
                 
         "Never mind":
             pass           
     jump Rogue_Clothes
     #End of Rogue Top
                        
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                        
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
+
+    label Rogue_NoBra:
+        menu:
+            ch_r "I don't have anything under this. . ."
+            "Then you could slip something on under it. . .":   
+                        if R_SeenChest and ApprovalCheck("Rogue", 1000, TabM=3) or ApprovalCheck("Rogue", 1200, TabM=4):
+                                $ R_Blush = 2
+                                ch_r "'course, I don't exactly need something under it either. . ."
+                                $ R_Blush = 1                
+                        elif ApprovalCheck("Rogue", 900, TabM=2) and "lace bra" in R_Inventory:
+                                ch_r "I suppose this would work. . ."
+                                $ R_Chest  = "lace bra"    
+                                "She pulls out her lace bra and slips it on under her [R_Over]."
+                        elif ApprovalCheck("Rogue", 800, TabM=2):
+                                ch_r "Yeah, I guess."
+                                $ R_Chest = "bra"
+                                "She pulls out her bra and slips it on under her [R_Over]."
+                        elif ApprovalCheck("Rogue", 600, TabM=2):
+                                ch_r "Yeah, I guess."
+                                $ R_Chest = "tank"
+                                "She pulls out her tanktop and slips it on under her [R_Over]."
+                        else:
+                                ch_r "Yeah, I don't think so."
+                                return 0
+                        
+            "You could always just wear nothing at all. . .":
+                        if ApprovalCheck("Rogue", 1100, "LI", TabM=2) and R_Love > R_Inbt:               
+                                ch_r "I suppose I could. . ."
+                        elif ApprovalCheck("Rogue", 700, "OI", TabM=2) and R_Obed > R_Inbt:
+                                ch_r "Sure. . ."
+                        elif ApprovalCheck("Rogue", 600, "I", TabM=2):
+                                ch_r "Yeah. . ."
+                        elif ApprovalCheck("Rogue", 1300, TabM=2):
+                                ch_r "Okay, fine."
+                        else: 
+                                call RogueFace("surprised")
+                                $ R_Brows = "angry"
+                                if R_Taboo > 20:
+                                    ch_r "Not in public, [R_Petname]!"
+                                else:
+                                    ch_r "Don't push it, [R_Petname]."
+                                return 0
+                                
+                    
+            "Never mind.":
+                        ch_r "Ok. . ."
+                        return 0
+        return 1
+        #End of Rogue bra check
+       
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                      
                        
-    menu Rogue_Clothes_Legs:                                                                                                    # Leggings   
-        "Lose the skirt. . ." if R_Legs == "skirt": 
-                        call RogueFace("sexy", 1)
-                        if R_SeenPanties and R_Panties and ApprovalCheck("Rogue", 500, TabM=5):
-                            ch_r "Sure."             
-                            $ R_Legs = 0
-                        elif R_SeenPussy and ApprovalCheck("Rogue", 800, TabM=4):
-                            ch_r "Sure, why not?"             
-                            $ R_Legs = 0
-                        elif ApprovalCheck("Rogue", 1100, TabM=2) and R_Panties: 
-                            ch_r "Well, I suppose if it's for you. . ."
-                            $ R_SeenPanties = 1             
-                            $ R_Legs = 0
-                        elif ApprovalCheck("Rogue", 1400, TabM=3): #No panties
-                            ch_r "Well, I suppose if it's for you. . ."                
-                            $ R_Legs = 0
-                            call Rogue_First_Bottomless
-                        elif Taboo:
-                            ch_r "Not in public, [R_Petname]."
+    menu Rogue_Clothes_Legs:                                                                                                   
+        # Leggings   
+        "Maybe go without the [R_Legs]." if R_Legs:
+                call RogueFace("sexy", 1)
+                if R_SeenPanties and R_Panties and ApprovalCheck("Rogue", 500, TabM=5):
+                    ch_r "Sure."
+                elif R_SeenPussy and ApprovalCheck("Rogue", 900, TabM=4):
+                    ch_r "Sure, why not?"             
+                elif ApprovalCheck("Rogue", 1300, TabM=2) and R_Panties:
+                    ch_r "Well, I suppose if it's for you. . ."                         
+                elif ApprovalCheck("Rogue", 700) and not R_Panties:
+                    call Rogue_NoPantiesOn
+                    if not _return and not R_Panties:
+                        if not ApprovalCheck("Rogue", 1500):
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                jump Rogue_Clothes
                         else:
-                            ch_r "Not in front of you, [R_Petname]."
-                            if not R_Panties:
-                                ch_r "Maybe if I put some panties on first. . ."
-                                
+                                jump Rogue_Clothes
+                else:
+                    call Display_DressScreen("Rogue")
+                    if not _return:
+                        ch_r "Not in front of you, [R_Petname]."
+                        if not R_Panties:
+                            ch_r "Maybe if I put some panties on first. . ."
+                        jump Rogue_Clothes
+                if R_Legs == "leather pants" or R_Legs == "mesh pants":
+                        $ R_Legs = 0    
+                        "She tugs her pants off and drops them to the ground."
+                else:
+                        $ R_Legs = 0    
+                        "She tugs her skirt off and drops it to the ground."
+                if renpy.showing('DressScreen'):
+                    pass
+                elif R_Panties:                
+                    $ R_SeenPanties = 1
+                else:
+                    call Rogue_First_Bottomless
+                                                    
         "How about that skirt?" if R_Legs != "skirt":  
-                        $ R_Legs = "skirt"
-                        $ R_Upskirt = 0
-            
-        "Maybe go without the jeans." if R_Legs == "pants":
-                        call RogueFace("sexy", 1)
-                        if R_SeenPanties and R_Panties and ApprovalCheck("Rogue", 500, TabM=5):
-                            $ R_Legs = 0    
-                            ch_r "Sure."
-                        elif R_SeenPussy and ApprovalCheck("Rogue", 900, TabM=4):
-                            $ R_Legs = 0    
-                            ch_r "Sure, why not?"
-                        elif ApprovalCheck("Rogue", 1100, TabM=2) and R_Panties:
-                            ch_r "Well, I suppose if it's for you. . ."
-                            $ R_SeenPanties = 1
-                            $ R_Legs = 0    
-                        elif ApprovalCheck("Rogue", 1400, TabM=3) and not R_Panties:
-                            ch_r "Well, I suppose if it's for you. . ."
-                            $ R_Legs = 0    
-                            call Rogue_First_Bottomless
-                        else:
-                            ch_r "Not in front of you, [R_Petname]."
-                            if not R_Panties:
-                                ch_r "Maybe if I put some panties on first. . ."
-                                
+                $ R_Legs = "skirt"
+                $ R_Upskirt = 0
+                                            
         "Your ass looks tight in those jeans." if R_Legs != "pants":
-                        $ R_Legs = "pants"
-                        $ R_Hose = 0
+                $ R_Legs = "pants"
+                $ R_Hose = 0
                 
         "The tights would look good with that." if R_Hose != 'tights' and R_Legs != "pants":     
-                        $ R_Hose = "tights"                   
+                $ R_Hose = "tights"                   
         "Your ripped tights would look good with that." if R_Hose != 'ripped tights' and "ripped tights" in R_Inventory and R_Legs != "pants":     
-                        $ R_Hose = "ripped tights"           
+                $ R_Hose = "ripped tights"           
         "You could lose the tights." if R_Hose == 'ripped tights' or R_Hose == 'tights':     
-                        $ R_Hose = 0  
+                $ R_Hose = 0  
             
         "What about wearing your shorts?" if R_Panties != "shorts":
-                        ch_r "Alright."
-                        $ R_Panties = "shorts"            
+                ch_r "Alright."
+                $ R_Panties = "shorts"            
         "Why don't you lose the shorts?" if R_Panties == "shorts":
-                        call RogueFace("sexy", 1)
-                        
-                        if R_SeenPussy and ApprovalCheck("Rogue", 500, TabM=4): # You've seen her pussy
-                            if ApprovalCheck("Rogue", 800, "L"):               
-                                ch_r "Well aren't you cheeky. . ."
-                            elif ApprovalCheck("Rogue", 500, "O"):
-                                ch_r "Fine by me."
-                            elif ApprovalCheck("Rogue", 350, "I"):
-                                ch_r "Oooh, naughty."
-                            else:
-                                ch_r "Oh, I guess I could."    
-                                
-                        elif not R_Legs:                       #she's not wearing anything over them
-                            ch_r "I'm not wearing anything under these, you know. . ."
-                            menu:
-                                "Then you could slip on the green panties. . .":
-                                            if ApprovalCheck("Rogue", 1100, TabM=3):
-                                                $ R_SeenPanties = 1
-                                                ch_r "Sure, ok."
-                                                $ R_Panties = "green panties"
-                                            else:
-                                                ch_r "You'll have to wait, [R_Petname]."
-                                                jump Rogue_Clothes_Legs
-                                        
-                                "Then you could wear the black panties. . .":
-                                            if ApprovalCheck("Rogue", 1200, TabM=3):
-                                                $ R_SeenPanties = 1
-                                                ch_r "Alright."                
-                                                $ R_Panties  = "black panties"                        
-                                            else:
-                                                ch_r "Maybe some other time, [R_Petname]."  
-                                                jump Rogue_Clothes_Legs                                      
-                                        
-                                "Then you could wear the lace panties. . .":
-                                            if ApprovalCheck("Rogue", 1200, TabM=3):
-                                                $ R_SeenPanties = 1
-                                                ch_r "Alright."                
-                                                $ R_Panties  = "lace panties"                        
-                                            else:
-                                                ch_r "Maybe some other time, [R_Petname]."
-                                                jump Rogue_Clothes_Legs
-                                                
-                                "You could always just wear nothing at all. . .":
-                                            if ApprovalCheck("Rogue", 1100, "LI", TabM=3) and R_Love > R_Inbt:               
-                                                ch_r "Well aren't you cheeky. . . I suppose I could give you a show. . ."
-                                            elif ApprovalCheck("Rogue", 750, "OI", TabM=3) and R_Obed > R_Inbt:
-                                                ch_r "If that's what you want."
-                                            elif ApprovalCheck("Rogue", 500, "I", TabM=3):
-                                                ch_r "Oooh, naughty."
-                                            elif ApprovalCheck("Rogue", 1400, TabM=3):
-                                                ch_r "Oh, fine. You've been a good boy."
-                                            else: 
-                                                call RogueFace("surprised")
-                                                $ R_Brows = "angry"
-                                                if Taboo:
-                                                    ch_r "Not here,[R_Petname]!"
-                                                else:
-                                                    ch_r "Not with you around,[R_Petname]!"
-                                                jump Rogue_Clothes
-                                            "She slips off her [R_Panties]."
-                                            $ R_Panties  = 0
-                                            call Rogue_First_Bottomless
-                                            call Statup("Rogue", "Inbt", 50, 2)  #fix add regular check    
-                                            jump Rogue_Clothes_Legs
-                                        
-                                "Never mind.":
-                                            ch_r "Ok. . ."  
-                                            jump Rogue_Clothes_Legs
-                                            
-                        else:                                                       #she's wearing legs
-                            if not ApprovalCheck("Rogue", 700, TabM=3): #700+1200
-                                ch_r "I'm not really comfortable with that right now. . ."
-                                jump Rogue_Clothes_Legs                    
-                            elif ApprovalCheck("Rogue", 800, "L", TabM=3):               
-                                ch_r "Well aren't you cheeky. . ."
-                            elif ApprovalCheck("Rogue", 500, "O", TabM=3): #500+400
-                                ch_r "Fine by me."
-                            elif ApprovalCheck("Rogue", 350, "I", TabM=3):
-                                ch_r "Oooh, naughty."
-                            else:
-                                ch_r "Oh, I guess I could."  
-                                
-                        $ R_Panties  = 0   
-                        "She pulls her shorts off."
-                                
+                call RogueFace("sexy", 1)
+                if R_SeenPanties and R_Panties and ApprovalCheck("Rogue", 500, TabM=5):
+                    ch_r "Sure."
+                elif R_SeenPussy and ApprovalCheck("Rogue", 900, TabM=4):
+                    ch_r "Sure, why not?"             
+                elif ApprovalCheck("Rogue", 1300, TabM=2) and R_Panties:
+                    ch_r "Well, I suppose if it's for you. . ."   
+                elif ApprovalCheck("Rogue", 700) and not R_Panties:
+                    call Rogue_NoPantiesOn
+                    if not _return and not R_Panties:
+                        if not ApprovalCheck("Rogue", 1500):
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                jump Rogue_Clothes
+                        else:
+                                jump Rogue_Clothes
+                else:
+                    call Display_DressScreen("Rogue")
+                    if not _return:
+                        ch_r "Not in front of you, [R_Petname]."
+                        if not R_Panties:
+                            ch_r "Maybe if I put some panties on first. . ."
+                        jump Rogue_Clothes
+                if R_Panties == "shorts":
+                        $ R_Panties = 0
+                "She tugs her shorts off and drops them to the ground."
+                if renpy.showing('DressScreen'):
+                    pass
+                elif R_Panties:                
+                    $ R_SeenPanties = 1
+                else:
+                    call Rogue_First_Bottomless
+                    
         "Never mind":
             pass
     jump Rogue_Clothes
     #End of Rogue Pants
-        
+   
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
-        
-    menu Rogue_Clothes_Under:                                                                                                 # Tops    
+    
+    label Rogue_NoPantiesOn:
+        menu:
+            ch_r "I'm not wearing anything under these, you know. . ."
+            "Then you could slip on a pair of panties. . .":   
+                        if R_SeenPussy and ApprovalCheck("Rogue", 1100, TabM=4):
+                                $ R_Blush = 1
+                                ch_r "Alright."       
+                                $ R_Blush = 0                        
+                        elif ApprovalCheck("Rogue", 1500, TabM=4):
+                                $ R_Blush = 1
+                                ch_r "Alright."       
+                                $ R_Blush = 0                
+                        elif ApprovalCheck("Rogue", 800, TabM=4) and "lace panties" in R_Inventory:
+                                ch_r "I like how you think."
+                                $ R_Panties  = "lace panties"  
+                                if ApprovalCheck("Rogue", 1200, TabM=4) and R_Legs:   
+                                    $ Line = R_Legs
+                                    $ R_Legs = 0
+                                    "She pulls off her [R_Legs] and slips on the lace panties."                                    
+                                elif R_Legs == "skirt":
+                                    "She pulls out her lace panties and pulls them up under her skirt."
+                                    $ R_Legs = 0
+                                    "Then she drops the skirt to the floor."
+                                else:
+                                    $ Line = R_Legs
+                                    $ R_Legs = 0
+                                    "She steps away a moment and then comes back wearing only the lace panties."                                     
+                                jump Rogue_Clothes
+                        elif ApprovalCheck("Rogue", 700, TabM=4):
+                                ch_r "Yeah, I guess."
+                                $ R_Panties = "black panties"
+                                if ApprovalCheck("Rogue", 1200, TabM=4) and R_Legs:   
+                                    $ Line = R_Legs
+                                    $ R_Legs = 0
+                                    "She pulls off her [R_Legs] and slips on the black panties."                                    
+                                elif R_Legs == "skirt":
+                                    "She pulls out her black panties and pulls them up under her skirt."
+                                    $ R_Legs = 0
+                                    "Then she drops the skirt to the floor."
+                                else:
+                                    $ Line = R_Legs
+                                    $ R_Legs = 0
+                                    "She steps away a moment and then comes back wearing only the black panties."                                     
+                                jump Rogue_Clothes
+                        else:
+                                ch_r "Nope."
+                                return 0
+                        
+            "You could always just wear nothing at all. . .":
+                    if ApprovalCheck("Rogue", 1100, "LI", TabM=3) and R_Love > R_Inbt:               
+                            ch_r "Well aren't you cheeky. . . I suppose I could give you a show. . ."
+                    elif ApprovalCheck("Rogue", 750, "OI", TabM=3) and R_Obed > R_Inbt:
+                            ch_r "If that's what you want."
+                    elif ApprovalCheck("Rogue", 500, "I", TabM=3):
+                            ch_r "Oooh, naughty."
+                    elif ApprovalCheck("Rogue", 1400, TabM=3):
+                            ch_r "Oh, fine. You've been a good boy."
+                    else: 
+                            call RogueFace("surprised")
+                            $ R_Brows = "angry"
+                            if R_Taboo:
+                                ch_r "Not here,[R_Petname]!"
+                            else:
+                                ch_r "Not with you around,[R_Petname]!"
+                            return 0
+                                                        
+            "Never mind.":
+                ch_r "Ok. . ."
+                return 0
+        return 1
+        #End of Rogue Panties check
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
+    menu Rogue_Clothes_Under:
         "Tops":
             menu:
                 "How about you lose the [R_Chest]?" if R_Chest:
-                                call RogueFace("bemused", 1)
-                                if R_SeenChest and ApprovalCheck("Rogue", 1100, TabM=2):
-                                    ch_r "Sure."    
-                                elif ApprovalCheck("Rogue", 1100, TabM=2):
-                                    ch_r "I guess I don't really mind if you see them. . ."
-                                elif R_Over == "hoodie" and ApprovalCheck("Rogue", 500, TabM=2):
-                                    ch_r "I guess this covers enough. . ."  
-                                elif R_Over == "pink top" and ApprovalCheck("Rogue", 950, TabM=2):
-                                    ch_r "This look is a bit revealing. . ."  
-                                    call Rogue_First_Topless      
-                                elif R_Over == "mesh top":
-                                    ch_r "In this top? That would leave nothing to the imagination!" 
-                                    jump Rogue_Clothes
-                                elif not R_Over:
-                                    ch_r "Not without a little coverage, for modesty."
-                                    jump Rogue_Clothes                            
-                                else:
-                                    ch_r "I don't think so, [R_Petname]."
+                        call RogueFace("bemused", 1)                        
+                        if R_SeenChest and ApprovalCheck("Rogue", 1100, TabM=2):
+                            ch_r "Sure."    
+                        elif ApprovalCheck("Rogue", 1100, TabM=2):
+                            ch_r "I guess I don't really mind if you see them. . ."
+                        elif R_Over == "hoodie" and ApprovalCheck("Rogue", 500, TabM=2):
+                            ch_r "I guess this covers enough. . ."  
+                        elif not R_SeenChest and not ApprovalCheck("Rogue", 1100):
+                                call Display_DressScreen("Rogue")
+                                if not _return:
+                                    if R_Over == "pink top" and ApprovalCheck("Rogue", 950, TabM=2):
+                                        ch_r "This look is a bit revealing. . ."  
+                                    elif R_Over == "mesh top":
+                                        ch_r "In this top? That would leave nothing to the imagination!" 
+                                    elif not R_Over:
+                                        ch_r "Not without a little coverage, for modesty."
+                                    else:
+                                        ch_r "I don't think so, [R_Petname]."
                                     jump Rogue_Clothes 
-                                $ R_Chest = 0
-                                if not R_Over or R_Over == "mesh top":
-                                    call Rogue_First_Topless
+                        $ Line = R_Chest
+                        $ R_Chest = 0
+                        if R_Over:
+                            "She reaches into her [R_Over] grabs her [Line], and pulls it out, dropping it to the ground."
+                        else:
+                            "She lets her [Line] fall to the ground."
+                        if (not R_Over or R_Over == "mesh top") and not renpy.showing('DressScreen'):
+                            call Rogue_First_Topless
 
                 "Try on that black tank top." if R_Chest != "tank":
-                                $ R_Chest = "tank"            
+                        $ R_Chest = "tank"            
                 "I like that buttoned tank top." if R_Chest != "buttoned tank" and R_Over != "mesh top":
-                                $ R_Chest = "buttoned tank"  
+                        $ R_Chest = "buttoned tank"  
                     
                 "I like that sports bra." if R_Chest != "sports bra":
-                                if (R_SeenChest and ApprovalCheck("Rogue", 600)) or ApprovalCheck("Rogue", 900, TabM=2):
-                                    ch_r "Sure."   
-                                    $ R_Chest = "sports bra"         
-                                else:                
-                                    ch_r "I don't know about wearing it with this. . ."  
+                        if (R_SeenChest and ApprovalCheck("Rogue", 600)) or ApprovalCheck("Rogue", 900, TabM=2):
+                            ch_r "Sure."   
+                            $ R_Chest = "sports bra"         
+                        else:                
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                ch_r "I don't know about wearing it with this. . ." 
+                                jump Rogue_Clothes 
                                     
                 "I like that black bra." if R_Chest != "bra":
-                                if (R_SeenChest and ApprovalCheck("Rogue", 600)) or ApprovalCheck("Rogue", 1100, TabM=2):
-                                    ch_r "Sure."   
-                                    $ R_Chest = "bra"         
-                                else:                
-                                    ch_r "That's a bit too revealing. . ."  
+                        if (R_SeenChest and ApprovalCheck("Rogue", 600)) or ApprovalCheck("Rogue", 1100, TabM=2):
+                            ch_r "Sure."   
+                            $ R_Chest = "bra"         
+                        else:          
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                ch_r "That's a bit too revealing. . ." 
+                                jump Rogue_Clothes      
                                 
                 "I like that lace bra." if "lace bra" in R_Inventory and R_Chest != "lace bra":
-                                if (R_SeenChest and ApprovalCheck("Rogue", 800)) or ApprovalCheck("Rogue", 1100, TabM=2):
-                                    ch_r "Sure."   
-                                    $ R_Chest = "lace bra"         
-                                else:                
-                                    ch_r "That's a bit too revealing. . ."  
+                        if (R_SeenChest and ApprovalCheck("Rogue", 800)) or ApprovalCheck("Rogue", 1100, TabM=2):
+                            ch_r "Sure."   
+                            $ R_Chest = "lace bra"         
+                        else:                
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                ch_r "That's a bit too revealing. . ." 
+                                jump Rogue_Clothes   
                 
                 "I like that bikini top." if R_Chest != "bikini top" and "bikini top" in R_Inventory:
-                    if bg_current == "bg pool":
-                            ch_r "Sure."   
-                            $ R_Chest = "bikini top"         
-                    else:                
-                            if R_SeenChest or ApprovalCheck("Rogue", 1000, TabM=2):
+                        if bg_current == "bg pool":
                                 ch_r "Sure."   
                                 $ R_Chest = "bikini top"         
-                            else:                
-                                ch_r "I kinda don't feel right about that. . ."  
+                        else:                
+                                if R_SeenChest or ApprovalCheck("Rogue", 1000, TabM=2):
+                                    ch_r "Sure."   
+                                    $ R_Chest = "bikini top"         
+                                else:             
+                                    call Display_DressScreen("Rogue")
+                                    if not _return:
+                                        ch_r "I kinda don't feel right about that. . ." 
+                                        jump Rogue_Clothes       
                         
                 "Never mind":
-                        pass
+                            pass
+            jump Rogue_Clothes_Under
                                     
                                     
         "Hose and stockings options":
             menu:          
                 "You could lose the hose." if R_Hose and R_Hose != 'ripped tights' and R_Hose != 'tights':     
-                                $ R_Hose = 0  
+                        $ R_Hose = 0  
                 "The thigh-high hose would look good with that." if R_Hose != "stockings" and R_Legs != "pants":     
-                                $ R_Hose = "stockings"  
+                        $ R_Hose = "stockings"  
                 "The pantyhose would look good with that." if R_Hose != "pantyhose" and R_Legs != "pants":     
-                                $ R_Hose = "pantyhose" 
+                        $ R_Hose = "pantyhose" 
                 "The stockings would look good with that." if R_Hose != "stockings and garterbelt" and "stockings and garterbelt" in R_Inventory and R_Legs != "pants":     
-                                $ R_Hose = "stockings and garterbelt"  
+                        $ R_Hose = "stockings and garterbelt"  
                 "Maybe just the garterbelt?" if R_Hose != "garterbelt" and "stockings and garterbelt" in R_Inventory and R_Legs != "pants":     
-                                $ R_Hose = "garterbelt"  
+                        $ R_Hose = "garterbelt"  
                 "Your ripped pantyhose would look good with that." if R_Hose != "ripped pantyhose" and "ripped pantyhose" in R_Inventory and R_Legs != "pants":     
-                                $ R_Hose = "ripped pantyhose"    
+                        $ R_Hose = "ripped pantyhose"    
                 "Never mind":
                         pass  
+            jump Rogue_Clothes_Under
         
         "Panties":
             menu:
                 
                 "You could lose those panties. . ." if R_Panties and R_Panties != "shorts":
-                                call RogueFace("bemused", 1)
-                                if (R_SeenPussy and ApprovalCheck("Rogue", 900)) and not Taboo: # You've seen her pussy
-                                    if ApprovalCheck("Rogue", 850, "L", TabM=2):               
-                                        ch_r "Well aren't you cheeky. . ."
-                                    elif ApprovalCheck("Rogue", 500, "O", TabM=2):
-                                        ch_r "Fine by me."
-                                    elif ApprovalCheck("Rogue", 350, "I", TabM=2):
-                                        ch_r "Oooh, naughty."                            
+                        call RogueFace("bemused", 1)
+                        if (R_SeenPussy and ApprovalCheck("Rogue", 900)) and not R_Taboo: # You've seen her pussy
+                            if ApprovalCheck("Rogue", 850, "L", TabM=2):               
+                                ch_r "Well aren't you cheeky. . ."
+                            elif ApprovalCheck("Rogue", 500, "O", TabM=2):
+                                ch_r "Fine by me."
+                            elif ApprovalCheck("Rogue", 350, "I", TabM=2):
+                                ch_r "Oooh, naughty."                            
+                            else:
+                                ch_r "Oh, I guess I could."         
+                        else:                       #You've never seen it
+                            if ApprovalCheck("Rogue", 1100, "LI", TabM=2):               
+                                ch_r "Well aren't you cheeky. . . I suppose I could give you a show. . ."
+                            elif ApprovalCheck("Rogue", 750, "OI", TabM=2):
+                                ch_r "If that's what you want."
+                            elif ApprovalCheck("Rogue", 500, "I", TabM=2):
+                                ch_r "Oooh, naughty."
+                            elif ApprovalCheck("Rogue", 1400, TabM=3):
+                                ch_r "Oh, fine. You've been a good boy."
+                            else: 
+                                call Display_DressScreen("Rogue")
+                                if not _return:
+                                    call RogueFace("surprised")
+                                    $ R_Brows = "angry" 
+                                    if R_Taboo > 20:
+                                        ch_r "Not in public, [R_Petname]!"
                                     else:
-                                        ch_r "Oh, I guess I could."         
-                                else:                       #You've never seen it
-                                    if ApprovalCheck("Rogue", 1100, "LI", TabM=2):               
-                                        ch_r "Well aren't you cheeky. . . I suppose I could give you a show. . ."
-                                    elif ApprovalCheck("Rogue", 750, "OI", TabM=2):
-                                        ch_r "If that's what you want."
-                                    elif ApprovalCheck("Rogue", 500, "I", TabM=2):
-                                        ch_r "Oooh, naughty."
-                                    elif ApprovalCheck("Rogue", 1400, TabM=3):
-                                        ch_r "Oh, fine. You've been a good boy."
-                                    else: 
-                                        call RogueFace("surprised")
-                                        $ R_Brows = "angry"
                                         ch_r "Not with you around,[R_Petname]!"
-                                        jump Rogue_Clothes  
-                                
-                                $ R_Panties = 0              
-                                call Rogue_First_Bottomless
-                                call Statup("Rogue", "Inbt", 50, 2)  
-                "You know, you could wear some panties with that. . ." if not R_Panties:
-                                call RogueFace("bemused", 1)
-                                if (R_Love+R_Obed) <= (1.5 * R_Inbt):
-                                    $ R_Mouth = "smile"
-                                    ch_r "No thanks, [R_Petname]."
-                                    call Statup("Rogue", "Inbt", 70, 2)
                                     jump Rogue_Clothes
-                                    menu:
-                                        "Fine by me":
-                                            call Statup("Rogue", "Love", 90, 2)
-                                            call Statup("Rogue", "Inbt", 70, 2)
-                                            jump Rogue_Clothes
-                                        "I insist, put some on.":
-                                            if (R_Love+R_Obed) <= R_Inbt:
-                                                call RogueFace("angry")
-                                                call Statup("Rogue", "Inbt", 99, 5)
-                                                call Statup("Rogue", "Obed", 80, -5)
-                                                ch_r "Well too bad."
-                                                jump Rogue_Clothes
-                                            else:
-                                                call RogueFace("sadside")
-                                                call Statup("Rogue", "Inbt", 200, -5)
-                                                call Statup("Rogue", "Obed", 80, 5)
-                                                ch_r "Well! Fine." 
-                                menu:
-                                    extend ""
-                                    "How about the green ones?":
-                                        ch_r "Sure, ok."
-                                        $ R_Panties = "green panties"
-                                    "How about the black ones?":
-                                        ch_r "Alright."                
-                                        $ R_Panties  = "black panties"
-                                    "How about the lace ones?" if "lace panties" in R_Inventory:
-                                        ch_r "Alright."                
-                                        $ R_Panties  = "lace panties"
+                        $ Line = R_Panties
+                        $ R_Panties = 0  
+                        if R_Legs == "skirt":
+                            "She reaches under her skirt and pulls her [Line] out, droping them to the ground." 
+                        elif R_Legs:
+                            if renpy.showing('DressScreen') or ApprovalCheck("Rogue", 1400, TabM=3):
+                                    "She pulls down her [R_Legs], removes her [Line], and then pulls them back on."
+                            else:
+                                    "She steps away for a moment."
+                        else:
+                            "She pulls her [Line] off and drops them to the ground."
+                        if not R_Legs and not renpy.showing('DressScreen'):
+                            call Rogue_First_Bottomless
+                            call Statup("Rogue", "Inbt", 50, 2)  
+                                
                                         
                 "Why don't you wear the green panties instead?" if R_Panties and R_Panties != "green panties":
-                                if ApprovalCheck("Rogue", 1000, TabM=3):
-                                    ch_r "Sure, ok."
-                                    $ R_Panties = "green panties"  
-                                elif R_Panties == "shorts":
-                                    ch_r "Heh, no, I think I'll stick with these, thanks."
-                                else:
-                                    ch_r "I think I'll choose my own underwear, thank you."
+                        if ApprovalCheck("Rogue", 1000, TabM=3):
+                            ch_r "Sure, ok."
+                            $ R_Panties = "green panties"  
+                        elif R_Panties == "shorts":
+                            ch_r "Heh, no, I think I'll stick with these, thanks."
+                        else:
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                ch_r "I think I'll choose my own underwear, thank you."
                         
                 "Why don't you wear the black panties instead?" if R_Panties and R_Panties != "black panties":
-                                if ApprovalCheck("Rogue", 1100, TabM=3):
-                                    ch_r "Sure."
-                                    $ R_Panties = "black panties"
-                                elif R_Panties == "shorts":
-                                    ch_r "Heh, no, I think I'll stick with these, thanks."
-                                else:
-                                    ch_r "I don't see how that's any business of yours, [R_Petname]."
+                        if ApprovalCheck("Rogue", 1100, TabM=3):
+                            ch_r "Sure."
+                            $ R_Panties = "black panties"
+                        elif R_Panties == "shorts":
+                            ch_r "Heh, no, I think I'll stick with these, thanks."
+                        else:
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                ch_r "I don't see how that's any business of yours, [R_Petname]."
                                     
                 "Why don't you wear the lace panties instead?" if "lace panties" in R_Inventory and R_Panties and R_Panties != "lace panties":
-                                if ApprovalCheck("Rogue", 1200, TabM=3):
-                                    ch_r "Sure."
-                                    $ R_Panties = "lace panties"
-                                elif R_Panties == "shorts":
-                                    ch_r "Heh, no, I think I'll stick with these, thanks."
-                                else:
-                                    ch_r "I don't see how that's any business of yours, [R_Petname]."
+                        if ApprovalCheck("Rogue", 1200, TabM=3):
+                            ch_r "Sure."
+                            $ R_Panties = "lace panties"
+                        elif R_Panties == "shorts":
+                            ch_r "Heh, no, I think I'll stick with these, thanks."
+                        else:
+                            call Display_DressScreen("Rogue")
+                            if not _return:
+                                ch_r "I don't see how that's any business of yours, [R_Petname]."
                                     
                 "I like those bikini bottoms." if R_Panties != "bikini bottoms" and "bikini bottoms" in R_Inventory:
-                    if bg_current == "bg pool":
+                        if bg_current == "bg pool":
                             ch_r "Sure."   
                             $ R_Panties = "bikini bottoms"         
-                    else:                
+                        else:                
                             if ApprovalCheck("Rogue", 1000, TabM=2):
                                 ch_r "Sure."   
                                 $ R_Panties = "bikini bottoms"         
-                            else:                
-                                ch_r "I kinda don't feel right about that. . ."  
+                            else:        
+                                call Display_DressScreen("Rogue")
+                                if not _return:        
+                                    ch_r "I kinda don't feel right about that. . ."  
+                "You know, you could wear some panties with that. . ." if not R_Panties:
+                        call RogueFace("bemused", 1)
+                        if (R_Love+R_Obed) <= (1.5 * R_Inbt):
+                            $ R_Mouth = "smile"
+                            ch_r "No thanks, [R_Petname]."
+                            menu:
+                                "Fine by me":
+                                    jump Rogue_Clothes
+                                "I insist, put some on.":
+                                    if (R_Love+R_Obed) <= R_Inbt:
+                                        call RogueFace("angry")
+                                        ch_r "Well too bad."
+                                        jump Rogue_Clothes
+                                    else:
+                                        call RogueFace("sadside")
+                                        ch_r "Well! Fine." 
+                        menu:
+                            extend ""
+                            "How about the green ones?":
+                                ch_r "Sure, ok."
+                                $ R_Panties = "green panties"
+                            "How about the black ones?":
+                                ch_r "Alright."                
+                                $ R_Panties  = "black panties"
+                            "How about the lace ones?" if "lace panties" in R_Inventory:
+                                ch_r "Alright."                
+                                $ R_Panties  = "lace panties"
+                                
                 "Never mind":
                         pass
+            jump Rogue_Clothes_Under
         "Never mind":
                         pass
     jump Rogue_Clothes
@@ -4861,21 +5242,30 @@ label Rogue_Clothes:
     
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<    
             
-    menu Rogue_Clothes_Misc:                                                                                                                    #Misc
-        "Throw the gloves on." if not R_Arms:
-                        $ R_Arms = "gloved"
-        "Take a little risk, no gloves." if R_Arms:
-                        $ R_Arms = 0
-                        
-        "I like that spiked collar." if R_Neck != "spiked collar":
-                        $ R_Neck = "spiked collar"
-        "You could lose that spiked collar." if R_Neck == "spiked collar":
-                        $ R_Neck = 0
+    menu Rogue_Clothes_Misc:                                                                                                                    
+        #Misc
         
-        "You know, I like some nice hair down there. Maybe grow it out." if not R_Pubes and "pubes" in R_Todo:
+        "Maybe dry out your hair." if R_Hair == "wet":
+                if ApprovalCheck("Rogue", 600):
+                    ch_r "Ok."
+                    $ R_Hair = "evo"
+                else:
+                    ch_r "I kinda prefer this look."
+                
+        "You should go for that wet look with your hair." if R_Hair != "wet":
+                if ApprovalCheck("Rogue", 800):
+                    ch_r "Hmm?"
+                    $ R_Hair = "wet"
+                    "She wanders off for a minute and comes back."
+                    ch_r "Like this?"
+                else:
+                    ch_r "Not really into that."
+                    
+        "You know, I like some nice hair down there. Maybe grow it out." if not R_Pubes:
+                if "pubes" in R_Todo:
                         call RogueFace("bemused", 1)
                         ch_r "Yeah, I know, [R_Petname]. It doesn't grow out overnight!"
-        "You know, I like some nice hair down there. Maybe grow it out." if not R_Pubes:
+                else:                
                         call RogueFace("bemused", 1)
                         $ Approval = ApprovalCheck("Rogue", 1150, TabM=0)
                         
@@ -4894,74 +5284,90 @@ label Rogue_Clothes:
                         $ R_PubeC = 6
         
         "I like it waxed clean down there." if R_Pubes == 1:
-                        call RogueFace("bemused", 1)
-                        if "shave" in R_Todo:
-                            ch_r "I know, I'll get on that. Not right this second, obviously."
-                        else:
-                            $ Approval = ApprovalCheck("Rogue", 1150, TabM=0)
-                            if ApprovalCheck("Rogue", 850, "L", TabM=0) or (Approval and R_Love > R_Obed):             
-                                ch_r "I can keep it tidy if you like. . ."
-                            elif ApprovalCheck("Rogue", 500, "O", TabM=0) or (Approval and R_Obed > R_Inbt):
-                                ch_r "I'll take care of it."
-                            elif ApprovalCheck("Rogue", 500, "I", TabM=0) or Approval:
-                                ch_r "You better earn it, [R_Petname]."
-                            else: 
-                                call RogueFace("surprised")
-                                $ R_Brows = "angry"
-                                ch_r "I don't see how that's any of your beeswax, [R_Petname]."
-                                jump Rogue_Clothes
-                            $ R_Todo.append("shave")        
+                call RogueFace("bemused", 1)
+                if "shave" in R_Todo:
+                        ch_r "I know, I'll get on that. Not right this second, obviously."
+                else:
+                        $ Approval = ApprovalCheck("Rogue", 1150, TabM=0)
+                        if ApprovalCheck("Rogue", 850, "L", TabM=0) or (Approval and R_Love > R_Obed):             
+                            ch_r "I can keep it tidy if you like. . ."
+                        elif ApprovalCheck("Rogue", 500, "O", TabM=0) or (Approval and R_Obed > R_Inbt):
+                            ch_r "I'll take care of it."
+                        elif ApprovalCheck("Rogue", 500, "I", TabM=0) or Approval:
+                            ch_r "You better earn it, [R_Petname]."
+                        else: 
+                            call RogueFace("surprised")
+                            $ R_Brows = "angry"
+                            ch_r "I don't see how that's any of your beeswax, [R_Petname]."
+                            jump Rogue_Clothes
+                        $ R_Todo.append("shave")        
         "Piercings. [[See what she looks like without them first] (locked)" if not R_SeenPussy and not R_SeenChest:
                         pass
             
-        "You know, you'd look really nice with some ring body piercings." if R_Pierce != "ring" and (R_SeenPussy or R_SeenChest) and "ring" not in R_Todo:
-                        call RogueFace("bemused", 1)
-                        $ Approval = ApprovalCheck("Rogue", 1350, TabM=0)
-                        if ApprovalCheck("Rogue", 950, "L", TabM=0) or (Approval and R_Love > R_Obed):   
-                            ch_r "You really like those? Well, I suppose. . ."
-                        elif ApprovalCheck("Rogue", 600, "O", TabM=0) or (Approval and R_Obed > R_Inbt):
-                            ch_r "I'll go get that taken care of."
-                        elif ApprovalCheck("Rogue", 600, "I", TabM=0) or Approval:
-                            ch_r "I've always kind of liked the look of those. . ."
-                        else: 
-                            call RogueFace("surprised")
-                            $ R_Brows = "angry"
-                            ch_r "I don't see how that's any of your beeswax, [R_Petname]."
-                            jump Rogue_Clothes            
-                        $ R_Todo.append("ring")
+        "You know, you'd look really nice with some ring body piercings." if R_Pierce != "ring" and (R_SeenPussy or R_SeenChest):             
+                if "ring" in R_Todo:
+                    ch_r "Yeah, I know, I'll get to it."
+                else:                    
+                    call RogueFace("bemused", 1)
+                    $ Approval = ApprovalCheck("Rogue", 1350, TabM=0)
+                    if ApprovalCheck("Rogue", 950, "L", TabM=0) or (Approval and R_Love > R_Obed):   
+                        ch_r "You really like those? Well, I suppose. . ."
+                    elif ApprovalCheck("Rogue", 600, "O", TabM=0) or (Approval and R_Obed > R_Inbt):
+                        ch_r "I'll go get that taken care of."
+                    elif ApprovalCheck("Rogue", 600, "I", TabM=0) or Approval:
+                        ch_r "I've always kind of liked the look of those. . ."
+                    else: 
+                        call RogueFace("surprised")
+                        $ R_Brows = "angry"
+                        ch_r "I don't see how that's any of your beeswax, [R_Petname]."
+                        jump Rogue_Clothes            
+                    $ R_Todo.append("ring")
         
-        "You know, you'd look really nice with some barbell body piercings." if R_Pierce != "barbell" and (R_SeenPussy or R_SeenChest)and "barbell" not in R_Todo:
-                        call RogueFace("bemused", 1)
-                        $ Approval = ApprovalCheck("Rogue", 1350, TabM=0)
-                        if ApprovalCheck("Rogue", 900, "L", TabM=0) or (Approval and R_Love > R_Obed):   
-                            ch_r "You really like those? Well, I suppose. . ."
-                        elif ApprovalCheck("Rogue", 600, "O", TabM=0) or (Approval and R_Obed > R_Inbt):
-                            ch_r "I'll go get that taken care of."
-                        elif ApprovalCheck("Rogue", 600, "I", TabM=0) or Approval:
-                            ch_r "I've always kind of liked the look of those. . ."
-                        else: 
-                            call RogueFace("surprised")
-                            $ R_Brows = "angry"
-                            ch_r "I don't see how that's any of your beeswax, [R_Petname]."
-                            jump Rogue_Clothes                
-                        $ R_Todo.append("barbell")
-                        $ R_Pierce = "barbell"
+        "You know, you'd look really nice with some barbell body piercings." if R_Pierce != "barbell" and (R_SeenPussy or R_SeenChest):                
+                if "barbell" in R_Todo:
+                    ch_r "Yeah, I know, I'll get to it."
+                else:                    
+                    call RogueFace("bemused", 1)
+                    $ Approval = ApprovalCheck("Rogue", 1350, TabM=0)
+                    if ApprovalCheck("Rogue", 900, "L", TabM=0) or (Approval and R_Love > R_Obed):   
+                        ch_r "You really like those? Well, I suppose. . ."
+                    elif ApprovalCheck("Rogue", 600, "O", TabM=0) or (Approval and R_Obed > R_Inbt):
+                        ch_r "I'll go get that taken care of."
+                    elif ApprovalCheck("Rogue", 600, "I", TabM=0) or Approval:
+                        ch_r "I've always kind of liked the look of those. . ."
+                    else: 
+                        call RogueFace("surprised")
+                        $ R_Brows = "angry"
+                        ch_r "I don't see how that's any of your beeswax, [R_Petname]."
+                        jump Rogue_Clothes                
+                    $ R_Todo.append("barbell")
+                    $ R_Pierce = "barbell"
                         
         "You know, you'd look better without those piercings." if R_Pierce:
-                        call RogueFace("bemused", 1)
-                        $ Approval = ApprovalCheck("Rogue", 1350, TabM=0)
-                        if ApprovalCheck("Rogue", 950, "L", TabM=0) or (Approval and R_Love > R_Obed):   
-                            ch_r "You really think so? I guess I could lose them. . ."
-                        elif ApprovalCheck("Rogue", 600, "O", TabM=0) or (Approval and R_Obed > R_Inbt):
-                            ch_r "I'll take them out then."
-                        elif ApprovalCheck("Rogue", 600, "I", TabM=0) or Approval:
-                            ch_r "I guess I prefered not having them in. . ."                
-                        else: 
-                            call RogueFace("surprised")
-                            $ R_Brows = "angry"
-                            ch_r "I'll keep them, if you don't mind."
-                            jump Rogue_Clothes            
-                        $ R_Pierce = 0 
+                call RogueFace("bemused", 1)
+                $ Approval = ApprovalCheck("Rogue", 1350, TabM=0)
+                if ApprovalCheck("Rogue", 950, "L", TabM=0) or (Approval and R_Love > R_Obed):   
+                    ch_r "You really think so? I guess I could lose them. . ."
+                elif ApprovalCheck("Rogue", 600, "O", TabM=0) or (Approval and R_Obed > R_Inbt):
+                    ch_r "I'll take them out then."
+                elif ApprovalCheck("Rogue", 600, "I", TabM=0) or Approval:
+                    ch_r "I guess I prefered not having them in. . ."                
+                else: 
+                    call RogueFace("surprised")
+                    $ R_Brows = "angry"
+                    ch_r "I'll keep them, if you don't mind."
+                    jump Rogue_Clothes            
+                $ R_Pierce = 0 
+                        
+        "I like that spiked collar." if R_Neck != "spiked collar":
+                        $ R_Neck = "spiked collar"
+        "You could lose that spiked collar." if R_Neck == "spiked collar":
+                        $ R_Neck = 0
+                        
+        "Throw the gloves on." if not R_Arms:
+                        $ R_Arms = "gloved"
+        "Take a little risk, no gloves." if R_Arms:
+                        $ R_Arms = 0                        
                         
         "Never mind":
             pass      
@@ -4981,6 +5387,8 @@ return
 
 label Rogue_Clothes_Schedule(Cnt = 0):
         #Sets clothing for different days, if Cnt is 3 it's all days, 2 is TuThu, 1 is only weekends
+        #Schedule 0-6= mon-fri, Schedule 7 is dates, 9 is private
+        
         if ApprovalCheck("Rogue", 1500, "LO"):
                 ch_r "So, you'd like to choose what I wear for the week? Ok, shoot."
                 $ Cnt = 3
@@ -4992,87 +5400,132 @@ label Rogue_Clothes_Schedule(Cnt = 0):
                 $ Cnt = 1
         else:
                 ch_r "You know, I don't really need fashion advice from you."
-                return
-            
-        
-        menu:
-                extend ""
-                "Weekdays":
-                    menu:
-                        "On Monday you should wear. . ." if Cnt > 1:
-                            call Rogue_Clothes_ScheduleB
-                            $ R_Schedule[0] = _return
-                        "On Monday you should wear. . . (locked)" if Cnt <= 1:
-                            pass
+                return                        
+        while True:    
+            menu:
+                    extend ""
+                    "Every Day":
+                        "This sets her outfit for every day of the week in one go."
+                        "This overwrites the default schedule, and any scheduling you've already made."
+                        "Any choices you make later will overwrite this choice."
+                        menu:
+                            "Pick an outfit to wear":                                
+                                call Rogue_Clothes_ScheduleB
+                                if Cnt > 1:
+                                        $ R_Schedule[0] = _return
+                                if Cnt > 2:
+                                        $ R_Schedule[1] = _return
+                                if Cnt > 1:
+                                        $ R_Schedule[2] = _return
+                                if Cnt > 2:
+                                        $ R_Schedule[3] = _return
+                                if Cnt > 1:
+                                        $ R_Schedule[4] = _return
+                                $ R_Schedule[5] = _return
+                                $ R_Schedule[6] = _return
+                            "Never mind.":
+                                pass
+                    "Weekdays":
+                        menu:
+                            "On Monday you should wear. . ." if Cnt > 1:
+                                call Rogue_Clothes_ScheduleB
+                                $ R_Schedule[0] = _return
+                            "On Monday you should wear. . . (locked)" if Cnt <= 1:
+                                pass
+                                
+                            "On Tuesday you should wear. . ." if Cnt > 2:
+                                call Rogue_Clothes_ScheduleB
+                                $ R_Schedule[1] = _return        
+                            "On Tuesday you should wear. . . (locked)" if Cnt <= 2:
+                                pass
+                                
+                            "On Wednesday you should wear. . ." if Cnt > 1:
+                                call Rogue_Clothes_ScheduleB
+                                $ R_Schedule[2] = _return
+                            "On Wednesday you should wear. . . (locked)" if Cnt <= 1:
+                                pass        
+                                
+                            "On Thursday you should wear. . ." if Cnt > 2:
+                                call Rogue_Clothes_ScheduleB
+                                $ R_Schedule[3] = _return
+                            "On Thursday you should wear. . . (locked)" if Cnt <= 2:
+                                pass
+                                
+                            "On Friday you should wear. . ." if Cnt > 1:
+                                call Rogue_Clothes_ScheduleB
+                                $ R_Schedule[4] = _return
+                            "On Friday you should wear. . . (locked)" if Cnt <= 1:
+                                pass
+                            "Back":
+                                pass 
+                    "Other":
+                        menu:
+                            "On Saturday you should wear. . . (locked)" if Cnt < 1:
+                                pass
+                            "On Saturday you should wear. . ." if Cnt >= 1:
+                                call Rogue_Clothes_ScheduleB
+                                $ R_Schedule[5] = _return
+                                
+                            "On Sunday you should wear. . . (locked)" if Cnt < 1:
+                                pass
+                            "On Sunday you should wear. . ." if Cnt >= 1:
+                                call Rogue_Clothes_ScheduleB
+                                $ R_Schedule[6] = _return
+                                
+                            "In our rooms you should wear. . . (locked)" if Cnt < 1:
+                                pass  
+                            "In our rooms you should wear. . ." if Cnt >= 1:
+                                call Rogue_Clothes_ScheduleB(99)
+                                $ R_Schedule[9] = _return   
+                                
+                            "On dates you should wear. . . (locked)" if Cnt < 1:
+                                pass
+                            "On dates you should wear. . ." if Cnt >= 1:
+                                call Rogue_Clothes_ScheduleB
+                                $ R_Schedule[7] = _return  
+                            "Back":
+                                pass 
+                                
+                    "About Gym clothes":
+                        menu:
+                            ch_p "You asked me before about your gym clothes?"
+                            "Don't ask before changing into gym clothes" if "no ask gym" not in R_Traits:
+                                        ch_r "Sure."
+                                        $ R_Traits.append("no ask gym")
+                            "Ask me before changing into gym clothes" if "no ask gym" in R_Traits:
+                                        ch_r "Sure."
+                                        $ R_Traits.remove("no ask gym")    
+                            "Never Mind":
+                                pass                              
+                                
+                    "Private outfit" if R_Schedule[9]:
+                                #if comfy is in L_Traits, she won't ask before changing
+                                ch_p "You know that outfit you wear in private?"
+                                menu:
+                                    ch_r "Yeah?"
+                                    "Just put them on without asking me about it." if "comfy" not in R_Traits:
+                                        ch_r "Sure."
+                                        $ R_Traits.append("comfy")
+                                    "Ask before changing into that." if "comfy" in R_Traits:
+                                        ch_r "Sure."
+                                        $ R_Traits.remove("comfy")
+                                    "Never Mind":
+                                        pass       
                             
-                        "On Tuesday you should wear. . ." if Cnt > 2:
-                            call Rogue_Clothes_ScheduleB
-                            $ R_Schedule[1] = _return        
-                        "On Tuesday you should wear. . . (locked)" if Cnt <= 2:
-                            pass
-                            
-                        "On Wednesday you should wear. . ." if Cnt > 1:
-                            call Rogue_Clothes_ScheduleB
-                            $ R_Schedule[2] = _return
-                        "On Wednesday you should wear. . . (locked)" if Cnt <= 1:
-                            pass        
-                            
-                        "On Thursday you should wear. . ." if Cnt > 2:
-                            call Rogue_Clothes_ScheduleB
-                            $ R_Schedule[3] = _return
-                        "On Thursday you should wear. . . (locked)" if Cnt <= 2:
-                            pass
-                            
-                        "On Friday you should wear. . ." if Cnt > 1:
-                            call Rogue_Clothes_ScheduleB
-                            $ R_Schedule[4] = _return
-                        "On Friday you should wear. . . (locked)" if Cnt <= 1:
-                            pass
-                        "Back":
-                            pass 
-                "Other":
-                    menu:
-                        "On Saturday you should wear. . . (locked)" if Cnt < 1:
-                            pass
-                        "On Saturday you should wear. . ." if Cnt >= 1:
-                            call Rogue_Clothes_ScheduleB
-                            $ R_Schedule[5] = _return
-                            
-                        "On Sunday you should wear. . . (locked)" if Cnt < 1:
-                            pass
-                        "On Sunday you should wear. . ." if Cnt >= 1:
-                            call Rogue_Clothes_ScheduleB
-                            $ R_Schedule[6] = _return
-                            
-                        "In our rooms you should wear. . . (locked)" if Cnt < 1:
-                            pass  
-                        "In our rooms you should wear. . ." if Cnt >= 1:
-                            call Rogue_Clothes_ScheduleB(99)
-                            $ R_Schedule[9] = _return   
-                            
-                        "On dates you should wear. . . (locked)" if Cnt < 1:
-                            pass
-                        "On dates you should wear. . ." if Cnt >= 1:
-                            call Rogue_Clothes_ScheduleB
-                            $ R_Schedule[7] = _return  
-                        "Back":
-                            pass     
-                            
-                "Never mind":
-                    return        
+                    "Never mind [[Done]":
+                        return        
         jump Rogue_Clothes_Schedule
         
-    
-    
 label Rogue_Clothes_ScheduleB(Count = 0):
 #This is called by Rogue_Clothes_Schedule when setting her outfit for a given day
 #If Count by the end, yes, if not count, no. If count is 99 then it's an auto-yes
+
             menu:
                 "Your green outfit.":
                     $ Count = 1
                 "That pink outfit, with the jeans.":
                     $ Count = 2
-                "That outfit we put together [[custom]" if R_Custom[0] or R_Custom2[0] or R_Custom3[0] or R_Custom4[0] or R_Custom5[0] or R_Custom6[0] or R_Custom7[0] or R_Custom8[0] or R_Custom9[0]:
+                "That outfit we put together [[custom]":
                             menu:
                                 ch_r "Which one again?"
                                 "The first one. (locked)" if not R_Custom[0]:
@@ -5205,6 +5658,11 @@ label R_AltClothes(Outfit=8):
   
 label R_Private_Outfit:
     #sets Rogue's private outfit in private
+    if R_Break[0] or "angry" in R_DailyActions:
+            return
+    if R_Outfit == "temporary":
+            #if you manually set a different option, keep it
+            return
     if "comfy" in R_RecentActions or "comfy" in R_Traits or R_Outfit == R_Schedule[9]:
             call R_AltClothes(9)
             call RogueOutfit(Changed=1)
@@ -5314,14 +5772,13 @@ label Rogue_Custom_Out(Custom = 3, Shame = 0, Agree = 1):
 # End Rogue Custom Out
                                 
                                 
-label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree = 1):                                                                             #sets custom outfit    
+label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree = 1):
             #Custom determines which custom outfit is being checked against.    
-            #If Custom1 = 3, if custom2 = 5, if custom3 = 6, if gym = 7, if private = 9, if swimwear = 10
-            # Custom == 20 adjusts her current shame level
+            #If Custom1 = 3, if custom2 = 5, if custom3 = 6, if gym = 4, if sleepwear 7, if private = 9, if swimsuit = 10
             #if not a check, then it is only applied if it's in a taboo area
             # Tempshame is a throwaway value, 0-50, Agree is whether she will wear it out, 2 if yes, 1 if only around you.
             
-            if not Check and not Taboo and Custom != 20:
+            if not Check and not R_Taboo and Custom != 20:
                     #if this is not a custom check and you're in a safe space,
                     if R_Schedule[9]:
                             #if there is a "private outfit" set, ask to change.
@@ -5331,8 +5788,8 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             #If she's wearing a bra of some kind
             if Custom == 20 and R_Uptop: 
                 $ Count = 0
-            elif IsOutfitModdedRogue("Chest"):
-                $ Count = Mod_Rogue_OutfitShame("Chest")
+            elif IsOutfitModdedRogue("Chest"):                                              
+                $ Count = Mod_Rogue_OutfitShame("Chest")                                              
             elif R_Chest == "tank":                                              
                 $ Count = 20
             elif R_Chest == "buttoned tank":
@@ -5354,8 +5811,8 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             #If she's wearing an overshirt
             if Custom == 20 and R_Uptop: 
                 $ Count = 0
-            elif IsOutfitModdedRogue("Over"):
-                $ Count += Mod_Rogue_OutfitShame("Over")
+            elif IsOutfitModdedRogue("Over"):                                             
+                $ Count += Mod_Rogue_OutfitShame("Over")                                             
             elif R_Over == "pink top":                                             
                 $ Count += 15
             elif R_Over == "hoodie":      
@@ -5367,7 +5824,7 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             #else: nothing    
             
             call RogueFace("sexy", 0)
-            if Custom == 9:
+            if Custom == 9 or Custom == 7:
                 pass
             elif Count >= 20:
                 $ Count = 20
@@ -5402,10 +5859,10 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                             $ Count = Mod_Rogue_OutfitShame("Legs")
                         elif R_Legs:                            #If wearing a skirt commando
                             $ Count = 20
-                        elif IsOutfitModdedRogue("Panties"):
-                            $ Count = Mod_Rogue_OutfitShame("Panties")
                         elif R_Panties == "shorts":             #If wearing shorts
                             $ Count = 25  
+                        elif IsOutfitModdedRogue("Panties"):      #If wearing only bikini bottoms
+                            $ Count = Mod_Rogue_OutfitShame("Panties")      #If wearing only bikini bottoms
                         elif R_Panties == "bikini bottoms":      #If wearing only bikini bottoms
                             $ Count = 15
                         elif R_Panties == "green panties":      #If wearing only green panties
@@ -5426,8 +5883,8 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             
             if not Check:
                         #If this isn't a custom check, skip this dialog stuff
-                        pass        
-            elif Custom == 9:
+                        pass      
+            elif Custom == 9 or Custom == 7:
                 pass
             elif Count >= 20:
                         if R_Legs == "pants":
@@ -5461,22 +5918,66 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             $ Tempshame -= Count                  #Set Outfit shame for the lower half
             
             if Check:
-                    #if this is a custom outfit check
-                    if Custom == 7:
+                    #if this is a custom outfit check                    
+                    if Check == 2:
+                        ch_p "So can I see it then?"
+                    elif Custom == 4:
                         ch_p "So would you work out in that?"
-                    elif Custom == 9:
+                    elif Custom == 7:
                         ch_p "So would you sleep in that?"
                     else:
                         ch_p "So would you wear that outside?"  
                     call RogueFace("sexy", 0)
-                    if Taboo >= 40: 
+                    if PantsNum("Rogue") > 2:  
+                        pass        #if she's wearing pants
+                    elif PantiesNum("Rogue") > 2 and (R_SeenPanties or ApprovalCheck("Rogue", 900, TabM=0)):
+                        pass        #no pants, but panties
+                    elif R_SeenPussy or ApprovalCheck("Rogue", 1200, TabM=0):
+                        pass        #no panties, but she's fine with that
+                    else:
+                        $ Agree = 0 #not fine with it
+                        
+                    if not Agree:
+                        pass
+                    elif OverNum("Rogue") > 2:    
+                        pass        #if she's wearing a top
+                    elif ChestNum("Rogue") > 2 and (R_SeenChest or ApprovalCheck("Rogue", 900, TabM=0)):
+                        pass        #no top, but bra
+                    elif R_SeenChest or ApprovalCheck("Rogue", 1200, TabM=0):
+                        pass        #no bra, but she's fine with that
+                    else:
+                        $ Agree = 0 #not fine with it
+                    
+                    if Check == 2 and Agree:
+                                #if checking to see if she'll drop the dressing screen. . .                                
+                                $ R_Shame = Tempshame
+                                call RogueFace("sly")
+                                ch_r "This ain't a bad look, I guess. . ."
+                                hide DressScreen
+                                return 1   
+                    if not Agree:
+                                #she isn't even comfortable with you seeing it
+                                call RogueFace("bemused", 2,Eyes="side")
+                                ch_r "I don't really feel comfortable in this. . ."
+                                        
+                                menu:
+                                    extend ""
+                                    "Ok then, you can put your normal clothes back on.":
+                                                call RogueOutfit(Changed=1)  
+                                                hide DressScreen
+                                    "Ok, we can keep tweaking it.":
+                                                pass
+                                call RogueFace("smile", 1)
+                                ch_r "Thanks, [R_Petname]."
+                                return
+                    if R_Taboo >= 40: 
                         call RogueFace("confused",1)
                         $ R_Mouth = "smile"
                         ch_r "It's a little late to worry about that, right?" 
                     elif "exhibitionist" in R_Traits:        
                         ch_r "Hmm. . . yeah, I'd love to. . ."
                         call Statup("Rogue", "Lust", 80, 10)
-                    elif Custom == 9: 
+                    elif Custom == 7: 
                         #Sleepwear
                         call RogueFace("bemused", 1)
                         if Tempshame >= 30:
@@ -5604,7 +6105,7 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                         $ R_Custom3[9] = R_Hose
                         $ R_Custom3[0] = 2 if Agree else 1
                         call Clothing_Schedule_Check("Rogue",6,1)   
-                    elif Custom == 7 and Agree:
+                    elif Custom == 4 and Agree:
                         $ R_Gym[1] = R_Arms  
                         $ R_Gym[2] = R_Legs 
                         $ R_Gym[3] = R_Over
@@ -5615,7 +6116,7 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                         $ R_Gym[9] = R_Hose
                         $ R_Gym[0] = 2     
                         call Clothing_Schedule_Check("Rogue",4,1)   
-                    elif Custom == 9:
+                    elif Custom == 7:
                         $ R_Sleepwear[1] = R_Arms  
                         $ R_Sleepwear[2] = R_Legs 
                         $ R_Sleepwear[3] = R_Over
@@ -5646,7 +6147,7 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                         $ R_Custom[9] = R_Hose
                         $ R_Custom[0] = 2 if Agree else 1
                         call Clothing_Schedule_Check("Rogue",3,1)   
-            elif Taboo <= 20:
+            elif R_Taboo <= 20:
                 # halves shame level if she's comfortable
                 $ Tempshame /= 2
                 
@@ -5670,7 +6171,7 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             elif Tempshame <= 15 and (ApprovalCheck("Rogue", 1500) or ApprovalCheck("Rogue", 500, "I")):
                     #If the outfit is hot but she's ok     
                     pass
-            elif Tempshame <= 20 and R_Loc == "bg dangerroom": 
+            elif Tempshame <= 20 and (R_Loc == "bg dangerroom" or R_Loc == "bg pool"): 
                     #If the outfit is light but she's in the gym
                     pass
             elif Tempshame <= 20 and (ApprovalCheck("Rogue", 1800) or ApprovalCheck("Rogue", 650, "I")):
@@ -5682,11 +6183,17 @@ label Rogue_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             elif (ApprovalCheck("Rogue", 2500) or ApprovalCheck("Rogue", 800, "I")):
                     #If the outfit is very scandelous but she's ok with that      
                     pass
-            elif Custom == 9 and not Taboo:
+            elif not R_Taboo:
                     pass
             else:
-                    ch_r "I'll be right back, I've got to change out of this."
-                    $ R_Outfit = renpy.random.choice(["evo_green", "evo_pink"])
+                    if R_Loc == bg_current:
+                            ch_r "I'll be right back, I've got to change out of this."
+                    if R_Loc == "bg dangerroom":
+                            $ R_Outfit =  "gym"
+                    elif R_Loc == "bg pool" and R_Swim[0]:
+                            $ R_Outfit =  "swimwear"                        
+                    else:
+                            $ R_Outfit = renpy.random.choice(["evo_green", "evo_pink"])
                     $ R_Water = 0
                     call RogueOutfit(Changed=1) 
                     ch_r "That wasn't really \"outdoor ready\"."
@@ -5740,74 +6247,64 @@ return
 
 # end rogue hungry //////////////////////////////////////////////////////////
 
-label Rogue_AboutKitty:
+
+label Rogue_About(Girl="Kitty"):
     ch_r "What do I think about her? Well. . ."
-    
-    if "poly Kitty" in R_Traits:  
-        ch_r "I think you know the answer to that one. . ."    
-    elif R_LikeKitty >= 900:
-        ch_r "I think she's really . . . hot?"
-    elif R_LikeKitty >= 800:
-        ch_r "I feel really close to her, best friends, maybe more."    
-    elif R_LikeKitty >= 700:
-        ch_r "She's one of my best friends."
-    elif R_LikeKitty >= 600:
-        ch_r "We're good friends."
-    elif R_LikeKitty >= 500:
-        ch_r "I don't know, she's ok."
-    elif R_LikeKitty >= 400:
-        ch_r "We're. . . kind of off right now."
-    elif R_LikeKitty >= 300:
-        ch_r "I don't want to talk about it." 
-    else:
-        ch_r "That ho-bag skank?"
-          
-    return
-    
-label Rogue_AboutEmma:
-    ch_r "What do I think about her? Well. . ."
-    
-    if "poly Emma" in R_Traits:  
-        ch_r "Well, I sure don't kick her out of bed. . ."    
-    elif R_LikeEmma >= 900:
-        ch_r "I'm kinda hot for teacher."
-    elif R_LikeEmma >= 800:
-        ch_r "She's pretty amaz'in, right? Sometimes I wonder. . ."    
-    elif R_LikeEmma >= 700:
-        ch_r "We hang out sometimes after class, she's fun to talk to."
-    elif R_LikeEmma >= 600:
-        ch_r "She's a really great teach, I love her lectures."
-    elif R_LikeEmma >= 500:
-        ch_r "I don't know, she's ok."
-    elif R_LikeEmma >= 400:
-        ch_r "I don't really like the way she looks at you in class."
-    elif R_LikeEmma >= 300:
-        ch_r "I hate her  class." 
-    else:
-        ch_r "Ugh, that WITCH!"           
-    return   
-    
-    
-label Rogue_AboutLaura:
-    ch_r "What do I think about her? Well. . ."
-    
-    if "poly Laura" in R_Traits:  
-        ch_r "We hook up from time to time. . ."    
-    elif R_LikeLaura >= 900:
-        ch_r "She's got an animal magnetism to her. . ."
-    elif R_LikeLaura >= 800:
-        ch_r "We really seem to get along. . ."    
-    elif R_LikeLaura >= 700:
-        ch_r "She's a good friend."
-    elif R_LikeLaura >= 600:
-        ch_r "She's a good teammate."
-    elif R_LikeLaura >= 500:
-        ch_r "I don't know, she's ok in a fight."
-    elif R_LikeLaura >= 400:
-        ch_r "We're. . . not in a good place."
-    elif R_LikeLaura >= 300:
-        ch_r "I don't want to talk about it." 
-    else:
-        ch_r "That ho-bag skank?"
-          
+    if Girl == "Kitty":
+            if "poly Kitty" in R_Traits:  
+                ch_r "I think you know the answer to that one. . ."    
+            elif R_LikeKitty >= 900:
+                ch_r "I think she's really . . . hot?"
+            elif R_LikeKitty >= 800:
+                ch_r "I feel really close to her, best friends, maybe more."    
+            elif R_LikeKitty >= 700:
+                ch_r "She's one of my best friends."
+            elif R_LikeKitty >= 600:
+                ch_r "We're good friends."
+            elif R_LikeKitty >= 500:
+                ch_r "I don't know, she's ok."
+            elif R_LikeKitty >= 400:
+                ch_r "We're. . . kind of off right now."
+            elif R_LikeKitty >= 300:
+                ch_r "I don't want to talk about it." 
+            else:
+                ch_r "That ho-bag skank?"
+    elif Girl == "Emma":
+            if "poly Emma" in R_Traits:  
+                ch_r "Well, I sure don't kick her out of bed. . ."    
+            elif R_LikeEmma >= 900:
+                ch_r "I'm kinda hot for teacher."
+            elif R_LikeEmma >= 800:
+                ch_r "She's pretty amaz'in, right? Sometimes I wonder. . ."    
+            elif R_LikeEmma >= 700:
+                ch_r "We hang out sometimes after class, she's fun to talk to."
+            elif R_LikeEmma >= 600:
+                ch_r "She's a really great teach, I love her lectures."
+            elif R_LikeEmma >= 500:
+                ch_r "I don't know, she's ok."
+            elif R_LikeEmma >= 400:
+                ch_r "I don't really like the way she looks at you in class."
+            elif R_LikeEmma >= 300:
+                ch_r "I hate her  class." 
+            else:
+                ch_r "Ugh, that WITCH!"    
+    elif Girl == "Laura":
+            if "poly Laura" in R_Traits:  
+                ch_r "We hook up from time to time. . ."    
+            elif R_LikeLaura >= 900:
+                ch_r "She's got an animal magnetism to her. . ."
+            elif R_LikeLaura >= 800:
+                ch_r "We really seem to get along. . ."    
+            elif R_LikeLaura >= 700:
+                ch_r "She's a good friend."
+            elif R_LikeLaura >= 600:
+                ch_r "She's a good teammate."
+            elif R_LikeLaura >= 500:
+                ch_r "I don't know, she's ok in a fight."
+            elif R_LikeLaura >= 400:
+                ch_r "We're. . . not in a good place."
+            elif R_LikeLaura >= 300:
+                ch_r "I don't want to talk about it." 
+            else:
+                ch_r "That ho-bag skank?"          
     return

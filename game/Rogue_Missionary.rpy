@@ -44,56 +44,6 @@ label R_Sex_P:
 
     $ Approval = ApprovalCheck("Rogue", 1400, TabM = 5) # 135, 150, 165, Taboo -200(335)
 
-    if Situation == "Rogue":                                                                  #Rogue auto-starts
-                if Approval > 2:                                                      # fix, add Rogue auto stuff here
-                    call Rogue_Sex_Launch("L")
-                    if R_Legs == "blue skirt":
-                        "Rogue slides onto her back and pulls you against her, sliding her skirt up as she does so."
-                        $ R_Upskirt = 1
-                    elif R_Legs == "capris" or R_Legs == "black jeans":
-                        "Rogue slides onto her back and pulls you against her, sliding her pants off as she does so."
-                        $ R_Upskirt = 1
-                    elif R_Legs == "shorts":
-                        "Rogue slides onto her back and pulls you against her, sliding her shorts off as she does so."
-                        $ R_Upskirt = 1
-                    else:
-                        "Rogue slides onto her back and pulls you against her."
-                    $ R_SeenPanties = 1
-                    "She slides the tip along her pussy and seems to want you to insert it."
-                    menu:
-                        "What do you do?"
-                        "Nothing.":
-                            call Statup("Rogue", "Inbt", 80, 3)
-                            call Statup("Rogue", "Inbt", 50, 2)
-                            "Rogue slides it in."
-                        "Praise her.":
-                            call RogueFace("sexy", 1)
-                            call Statup("Rogue", "Inbt", 80, 3)
-                            ch_p "Oh yeah, [R_Pet], let's do this."
-                            call Rogue_Namecheck
-                            "Rogue slides it in."
-                            call Statup("Rogue", "Love", 85, 1)
-                            call Statup("Rogue", "Obed", 90, 1)
-                            call Statup("Rogue", "Obed", 50, 2)
-                        "Ask her to stop.":
-                            call RogueFace("surprised")
-                            call Statup("Rogue", "Inbt", 70, 1)
-                            ch_p "Let's not do that right now, [R_Pet]."
-                            call Rogue_Namecheck
-                            "Rogue pulls back."
-                            call RogueOutfit
-                            call Statup("Rogue", "Obed", 90, 1)
-                            call Statup("Rogue", "Obed", 50, 1)
-                            call Statup("Rogue", "Obed", 30, 2)
-                            return
-                    jump R_Missionary_SexPrep
-                    # End high approval
-                else:
-                    $ Tempmod = 0                               # fix, add Rogue auto stuff here
-                    $ Trigger2 = 0
-                return
-    #End Rogue's lead
-
     if Situation == "auto":
                 call Rogue_Sex_Launch("L")
                 if R_Legs == "blue skirt":
@@ -359,10 +309,56 @@ label R_Sex_P:
     return
 
 label R_Missionary_SexPrep:
-    call Seen_First_Peen("Rogue",Partner)
+    call Seen_First_Peen("Rogue",Partner,React=Situation)
     call Rogue_Sex_Launch("hotdog")
 
-    if Situation != "auto":
+    if Situation == "Rogue":
+            #Rogue auto-starts
+            $ Situation = 0
+            if R_Legs == "blue skirt":
+                "Rogue rolls back and pulls you toward her, sliding her skirt up as she does so."
+                $ R_Upskirt = 1
+            elif R_Legs == "capris" or R_Legs == "black jeans":
+                "Rogue rolls back and pulls you against her, sliding her pants off as she does so."
+                $ R_Upskirt = 1
+            elif R_Legs == "shorts":
+                "Rogue rolls onto her back and pulls you against her, sliding her shorts off as she does so."
+                $ R_Upskirt = 1
+            else:
+                "Rogue rolls back and pulls you toward her."
+            $ R_SeenPanties = 1
+            "She slides the tip along her pussy and seems to want you to insert it."
+            menu:
+                "What do you do?"
+                "Go with it.":
+                    call Statup("Rogue", "Inbt", 80, 3)
+                    call Statup("Rogue", "Inbt", 50, 2)
+                    "Rogue slides it in."
+                "Praise her.":
+                    call RogueFace("sexy", 1)
+                    call Statup("Rogue", "Inbt", 80, 3)
+                    ch_p "Oh yeah, [R_Pet], let's do this."
+                    call Rogue_Namecheck
+                    "Rogue slides it in."
+                    call Statup("Rogue", "Love", 85, 1)
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call RogueFace("surprised")
+                    call Statup("Rogue", "Inbt", 70, 1)
+                    ch_p "Let's not do that right now, [R_Pet]."
+                    call Rogue_Namecheck
+                    "Rogue pulls back."
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 1)
+                    call Statup("Rogue", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")
+                    call AnyWord("Rogue",1,"refused","refused")
+                    return
+            $ R_PantiesDown = 1
+            call Rogue_First_Bottomless(1)
+
+    elif Situation != "auto":
         call Rogue_Bottoms_Off
 
 
@@ -679,6 +675,8 @@ label R_Missionary_Sex_Cycle: #Repeating strokes
                                     jump R_Missionary_SexAfter
         #End Count check
 
+        call Escalation("Rogue","K") #sees if she wants to escalate things
+
         if Round == 10:
             ch_r "You might want to wrap this up, it's getting late."
         elif Round == 5:
@@ -789,56 +787,6 @@ label R_Sex_A:
         $ Tempmod -= 10 if "no anal" in R_RecentActions else 0
 
     $ Approval = ApprovalCheck("Rogue", 1550, TabM = 5) # 155, 170, 185, Taboo -200(355)
-
-    if Situation == "Rogue":
-            #Rogue auto-starts
-            if Approval > 2:                                                      # fix, add Rogue auto stuff here
-                call Rogue_Sex_Launch("L")
-                if R_Legs == "blue skirt":
-                    "Rogue slides onto her back and pulls you against her, sliding her skirt up as she does so."
-                    $ R_Upskirt = 1
-                elif R_Legs == "capris" or R_Legs == "black jeans":
-                    "Rogue slides onto her back and pulls you against her, sliding her pants off as she does so."
-                    $ R_Upskirt = 1
-                elif R_Legs == "shorts":
-                    "Rogue slides onto her back and pulls you against her, sliding her shorts off as she does so."
-                    $ R_Upskirt = 1
-                else:
-                    "Rogue slides onto her back and pulls you against her."
-                $ R_SeenPanties = 1
-                "She slides the tip up to her back door, and presses against it."
-                menu:
-                    "What do you do?"
-                    "Nothing.":
-                        call Statup("Rogue", "Inbt", 80, 3)
-                        call Statup("Rogue", "Inbt", 50, 2)
-                        "Rogue slides it in."
-                    "Praise her.":
-                        call RogueFace("sexy", 1)
-                        call Statup("Rogue", "Inbt", 80, 3)
-                        ch_p "Ooo, dirty girl, [R_Pet], let's do this."
-                        call Rogue_Namecheck
-                        "Rogue slides it in."
-                        call Statup("Rogue", "Love", 85, 1)
-                        call Statup("Rogue", "Obed", 90, 1)
-                        call Statup("Rogue", "Obed", 50, 2)
-                    "Ask her to stop.":
-                        call RogueFace("surprised")
-                        call Statup("Rogue", "Inbt", 70, 1)
-                        ch_p "Let's not do that right now, [R_Pet]."
-                        call Rogue_Namecheck
-                        "Rogue pulls back."
-                        call RogueOutfit
-                        call Statup("Rogue", "Obed", 90, 1)
-                        call Statup("Rogue", "Obed", 50, 1)
-                        call Statup("Rogue", "Obed", 30, 2)
-                        return
-                jump R_Missionary_AnalPrep
-            else:
-                $ Tempmod = 0                               # fix, add Rogue auto stuff here
-                $ Trigger2 = 0
-            return
-            #end if Rogue initiates
 
     if Situation == "auto":
             call Rogue_Sex_Launch("L")
@@ -1124,10 +1072,57 @@ label R_Sex_A:
     return
 
 label R_Missionary_AnalPrep:
-    call Seen_First_Peen("Rogue",Partner)
+    call Seen_First_Peen("Rogue",Partner,React=Situation)
     call Rogue_Sex_Launch("hotdog")
 
-    if Situation != "auto":
+    if Situation == "Rogue":
+            #Rogue auto-starts
+            $ Situation = 0
+
+            if R_Legs == "blue skirt":
+                "Rogue rolls back and pulls you toward her, sliding her skirt up as she does so."
+                $ R_Upskirt = 1
+            elif R_Legs == "capris" or R_Legs == "black jeans":
+                "Rogue rolls back and pulls you against her, sliding her pants off as she does so."
+                $ R_Upskirt = 1
+            elif R_Legs == "shorts":
+                "Rogue rolls onto her back and pulls you against her, sliding her shorts off as she does so."
+                $ R_Upskirt = 1
+            else:
+                "Rogue rolls back and pulls you toward her."
+            $ R_SeenPanties = 1
+            "She slides the tip along her ass and seems to want you to insert it."
+            menu:
+                "What do you do?"
+                "Go with it.":
+                    call Statup("Rogue", "Inbt", 80, 3)
+                    call Statup("Rogue", "Inbt", 50, 2)
+                    "Rogue slides it in."
+                "Praise her.":
+                    call RogueFace("sexy", 1)
+                    call Statup("Rogue", "Inbt", 80, 3)
+                    ch_p "Oh yeah, [R_Pet], let's do this."
+                    call Rogue_Namecheck
+                    "Rogue slides it in."
+                    call Statup("Rogue", "Love", 85, 1)
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call RogueFace("surprised")
+                    call Statup("Rogue", "Inbt", 70, 1)
+                    ch_p "Let's not do that right now, [R_Pet]."
+                    call Rogue_Namecheck
+                    "Rogue pulls back."
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 1)
+                    call Statup("Rogue", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")
+                    call AnyWord("Rogue",1,"refused","refused")
+                    return
+            $ R_PantiesDown = 1
+            call Rogue_First_Bottomless(1)
+
+    elif Situation != "auto":
         call Rogue_Bottoms_Off
         if (R_Panties and not R_PantiesDown) or (R_Legs and not R_Upskirt) or HoseNum("Rogue") >= 6: #If she refuses to take off her pants but agreed to anal
             ch_r "We can't exactly do much like this, huh."
@@ -1564,41 +1559,6 @@ label R_Sex_H:
 
     $ Approval = ApprovalCheck("Rogue", 1000, TabM = 3) # 100, 115, 130, Taboo -120(220)
 
-    if Situation == "Rogue":
-            #Rogue auto-starts
-            if Approval > 2:                                                      # fix, add Rogue auto stuff here
-                call Rogue_Sex_Launch("L")
-                "Rogue slides onto her back and pulls you against her, rubbing it against her mound."
-                menu:
-                    "What do you do?"
-                    "Nothing.":
-                        call Statup("Rogue", "Inbt", 50, 3)
-                        "Rogue starts to grind against you."
-                    "Praise her.":
-                        call RogueFace("sexy", 1)
-                        call Statup("Rogue", "Inbt", 80, 2)
-                        ch_p "Hmmm, that's good, [R_Pet]."
-                        call Rogue_Namecheck
-                        "Rogue starts to grind against you."
-                        call Statup("Rogue", "Love", 85, 1)
-                        call Statup("Rogue", "Obed", 60, 2)
-                    "Ask her to stop.":
-                        call RogueFace("surprised")
-                        call Statup("Rogue", "Inbt", 70, 1)
-                        ch_p "Let's not do that right now, [R_Pet]."
-                        call Rogue_Namecheck
-                        "Rogue pulls back."
-                        call RogueOutfit
-                        call Statup("Rogue", "Obed", 80, 1)
-                        call Statup("Rogue", "Obed", 30, 2)
-                        return
-                jump R_Missionary_HotdogPrep
-            else:
-                $ Tempmod = 0                               # fix, add Rogue auto stuff here
-                $ Trigger2 = 0
-            return
-            #end Rogue initates
-
     if Situation == "auto":
             call Rogue_Sex_Launch("L")
             "You press Rogue down onto her back and press your cock against her."
@@ -1841,10 +1801,42 @@ label R_Sex_H:
     return
 
 label R_Missionary_HotdogPrep:
-    call Seen_First_Peen("Rogue",Partner)
+    call Seen_First_Peen("Rogue",Partner,React=Situation)
     call Rogue_Sex_Launch("hotdog")
 
-    if Situation != "auto":
+
+    if Situation == "Rogue":
+            #Rogue auto-starts
+            $ Situation = 0
+            "Rogue rolls back and pulls you toward her, rubbing her pussy against your cock."
+            menu:
+                "What do you do?"
+                "Go with it.":
+                    call Statup("Rogue", "Inbt", 80, 3)
+                    call Statup("Rogue", "Inbt", 50, 2)
+                    "Rogue keeps grinding."
+                "Praise her.":
+                    call RogueFace("sexy", 1)
+                    call Statup("Rogue", "Inbt", 80, 3)
+                    ch_p "Oh yeah, [R_Pet], let's do this."
+                    call Rogue_Namecheck
+                    "Rogue keeps grinding."
+                    call Statup("Rogue", "Love", 85, 1)
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call RogueFace("surprised")
+                    call Statup("Rogue", "Inbt", 70, 1)
+                    ch_p "Let's not do that right now, [R_Pet]."
+                    call Rogue_Namecheck
+                    "Rogue pulls back."
+                    call Statup("Rogue", "Obed", 90, 1)
+                    call Statup("Rogue", "Obed", 50, 1)
+                    call Statup("Rogue", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")
+                    call AnyWord("Rogue",1,"refused","refused")
+                    return
+    elif Situation != "auto":
 #        call Rogue_Bottoms_Off
 
         if Taboo: # Rogue gets started. . .
@@ -2122,6 +2114,8 @@ label R_Missionary_Hotdog_Cycle: #Repeating strokes
                                     $ R_DailyActions.append("angry")
                                     jump R_Missionary_HotdogAfter
         #End Count check
+
+        call Escalation("Rogue","K") #sees if she wants to escalate things
 
         if Round == 10:
             ch_r "You might want to wrap this up, it's getting late."

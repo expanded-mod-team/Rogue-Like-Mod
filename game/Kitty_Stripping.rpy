@@ -1265,7 +1265,9 @@ label Kitty_ToplessorNothing:
 label Kitty_First_Topless(Silent = 0, TempLine = 0):  
     if ChestNum("Kitty") > 1 or OverNum("Kitty") > 2:
         #if she's wearing substantial clothing. . .
-        return        
+        return          
+    if K_Loc != bg_current:
+            return
     $ K_RecentActions.append("topless")                      
     $ K_DailyActions.append("topless")
     call DrainWord("Kitty","no topless")    
@@ -1696,34 +1698,34 @@ label Kitty_Bottoms_Off_Legs:
                         return   
                     call Kitty_First_Bottomless    
                     
-            "Lose the [K_Hose]." if K_Hose:                                    #make sure to update this mess if I add hose to her
-                    call KittyFace("bemused", 1) 
-                    if K_Legs:
-                        ch_k "Ok, no problem."                         
-                    elif Approval < 2 and not K_Panties and HoseNum("Kitty") >= 10:
-                        call Kitty_NoPanties                            
-                    elif not Approval and HoseNum("Kitty") >= 6:
-                        ch_k "No thanks, [K_Petname]."
-                        return                            
-                    else:
-                        ch_k "Ok, sure, [K_Petname]."                 
-                         
-                    $ Line = K_Hose   
-                    $ K_Hose = 0  
-                    if K_Legs:
-                        "She reaches under her [K_Legs] and pulls her [Line] down."
-                    elif HoseNum("Kitty") < 10:
-                        "Kitty pulls her [Line] off." 
-                    elif not K_Panties:
-                        call KittyFace("sly", 2)  
-                        "She blushes and looks at you slyly before removing her [Line]." 
-                        $ K_Blush = 1
-                        call Kitty_First_Bottomless   
-                    elif not K_SeenPanties:
-                        "Kitty shyly removes her [Line]."
-                        $ K_SeenPanties = 1
-                    else:
-                        "Kitty pulls her [Line] off." 
+#            "Lose the [K_Hose]." if K_Hose:                                    #make sure to update this mess if I add hose to her
+#                    call KittyFace("bemused", 1) 
+#                    if K_Legs:
+#                        ch_k "Ok, no problem."                         
+#                    elif Approval < 2 and not K_Panties and HoseNum("Kitty") >= 10:
+#                        call Kitty_NoPanties                            
+#                    elif not Approval and HoseNum("Kitty") >= 6:
+#                        ch_k "No thanks, [K_Petname]."
+#                        return                            
+#                    else:
+#                        ch_k "Ok, sure, [K_Petname]."                 
+                        
+#                    $ Line = K_Hose   
+#                    $ K_Hose = 0  
+#                    if K_Legs:
+#                        "She reaches under her [K_Legs] and pulls her [Line] down."
+#                    elif HoseNum("Kitty") < 10:
+#                        "Kitty pulls her [Line] off." 
+#                    elif not K_Panties:
+#                        call KittyFace("sly", 2)  
+#                        "She blushes and looks at you slyly before removing her [Line]." 
+#                        $ K_Blush = 1
+#                        call Kitty_First_Bottomless   
+#                    elif not K_SeenPanties:
+#                        "Kitty shyly removes her [Line]."
+#                        $ K_SeenPanties = 1
+#                    else:
+#                        "Kitty pulls her [Line] off." 
                         
             "Keep it all on for now." if Cnt == 1:
                 $ K_Mouth = "smile"
@@ -1804,6 +1806,8 @@ label Kitty_First_Bottomless(Silent = 0):
     if PantiesNum("Kitty") > 1 or PantsNum("Kitty") > 2 or HoseNum("Kitty") > 9:
         #if she's wearing substantial clothing. . .
         return     
+    if K_Loc != bg_current:
+            return
     $ K_RecentActions.append("bottomless")                      
     $ K_DailyActions.append("bottomless")
     call DrainWord("Kitty","no bottomless")
@@ -2032,6 +2036,7 @@ label Kitty_First_Peen(Silent = 0, Undress = 0, Second = 0, React = 0):
         call Statup("Kitty", "Inbt", 60, 20) 
         call Statup("Kitty", "Lust", 200, 5)
     
+    call KittyFace("sly",1)  
     return React
     # End Kitty shown peen
     

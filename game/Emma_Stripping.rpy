@@ -878,7 +878,9 @@ label Emma_ToplessorNothing:
 label Emma_First_Topless(Silent = 0, TempLine = 0):    
     if ChestNum("Emma") > 1 or OverNum("Emma") > 2:
         #if she's wearing substantial clothing. . .
-        return      
+        return     
+    if E_Loc != bg_current:
+            return   
     $ E_RecentActions.append("topless")                      
     $ E_DailyActions.append("topless")
     call DrainWord("Emma","no topless")      
@@ -1451,6 +1453,8 @@ label Emma_First_Bottomless(Silent = 0):
     if PantiesNum("Emma") > 1 or PantsNum("Emma") > 2 or HoseNum("Emma") > 9:
         #if she's wearing substantial clothing. . .  
         return     
+    if E_Loc != bg_current:
+            return   
     $ E_RecentActions.append("bottomless")                      
     $ E_DailyActions.append("bottomless")
     call DrainWord("Emma","no bottomless")
@@ -1719,6 +1723,7 @@ label Emma_First_Peen(Silent = 0, Undress = 0, Second = 0, React = 0):
         call Statup("Emma", "Inbt", 60, 20) 
         call Statup("Emma", "Lust", 80, 10)
     
+    call EmmaFace("sly",1)  
     return React
     # End Emma shown peen
     

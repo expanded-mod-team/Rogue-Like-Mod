@@ -1025,18 +1025,19 @@ label Rogue_BF:
         ch_r "I mean, we've done some stuff. . ."
     if R_SEXP >= 15:
         ch_r "Like {i}sex{/i} stuff. . ."
-    if "dating" in K_Traits and "dating?" in R_Traits:    
-        ch_r "I know you've been going with Kitty for a while now, but we got talking and . . ."
-    elif "dating" in K_Traits:
-        ch_r "I know you've been going with Kitty for a while now, but . . ."
+        
+    
+    if len(P_Harem) >= 2:
+        ch_r "I know you've been going with those other girls for a while now, but we got talking and . . ."
+    elif P_Harem:        
+        ch_r "I know you've been going with [P_Harem[0]] for a while now, but we got talking and . . ."
+                    
     if not R_Event[5]:
         ch_r "Right, so I was thinking. . ."
         ch_r "I haven't really been able to have a stable relationship, since I couldn't touch anyone."
         ch_r "This is all very new to me, but I'm feeling my way through it as best I can."
         ch_r "Let's make it official, you want to be my boyfriend?"
-    elif "dating?" in R_Traits: 
-        ch_r "Kitty said it would be cool if we were dating too." 
-    elif "dating" in K_Traits: 
+    elif P_Harem: 
         ch_r "I'd still like to be your girlfriend too."
     else:        
         ch_r "You can be a real jerk sometimes, but still. . . I'm serious about this."
@@ -1750,6 +1751,7 @@ label Rogue_Fuckbuddy_Jerk:
 label Rogue_Daddy:      
     $ R_DailyActions.append("relationship")
     call Shift_Focus("Rogue")
+    call Set_The_Scene
     ch_r ". . ."
     if "dating" in R_Traits:
         ch_r "You know, even though we've been dating,"  
@@ -2291,7 +2293,7 @@ label SpecialMenu:
         menu:
             "Tutorial":
                 jump Tutorial                        
-            "Statchecker":
+            "Statchecker" if False:
                     "This element will check all the stats and make sure that they work in your current savegame."
                     "This is a good idea if you're getting 'variable not found' syle errors."
                     menu:
@@ -2307,17 +2309,17 @@ label SpecialMenu:
             "Reset Custom Outfits":
                     call Emergency_Clothing_Reset
             "Leveling Menu":
-                while P_Lvl:
+                while True:
                     menu:
                         "Level Yourself":
                                 call P_Level_Up
                         "Level Rogue":
                                 call R_Level_Up 
-                        "Level Kitty":
+                        "Level Kitty" if "met" in K_History:
                                 call K_Level_Up 
-                        "Level Emma":
+                        "Level Emma" if "met" in E_History:
                                 call E_Level_Up 
-                        "Level Laura":
+                        "Level Laura" if "met" in L_History:
                                 call L_Level_Up 
                         "Back":
                                 jump SpecialMenu
@@ -2330,6 +2332,10 @@ label SpecialMenu:
                     $ TravelMode = 1
             "Deactivate Travel Mode" if TravelMode:
                     $ TravelMode = 0
+            
+            "Press the red button":
+                "[R_Thirst],[K_Thirst],[E_Thirst],[L_Thirst]"
+                "Huh, wonder what that was about. . ."
                     
             "Never mind.":
                 return

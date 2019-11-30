@@ -2,6 +2,7 @@
 # E_Doggy_P //////////////////////////////////////////////////////////////////////
 
 label E_Doggy_P:  
+label E_Sex_P:  
     $ Round -= 5 if Round > 5 else (Round-1)
     call Shift_Focus("Emma")
     if E_Sex >= 7: # She loves it
@@ -43,51 +44,7 @@ label E_Doggy_P:
              
         
     $ Approval = ApprovalCheck("Emma", 1400, TabM = 5) # 135, 150, 165, Taboo -200(335)
-    
-    if Situation == "Emma":                                                                  #Emma auto-starts   
-        if Approval > 2:                                                      # fix, add emma auto stuff here
-            call Emma_Doggy_Launch("L")   
-            if E_Legs == "skirt":
-                "Emma turns and backs up against your cock, sliding her skirt up as she does so."
-                $ E_Upskirt = 1
-            elif E_Legs == "pants":
-                "Emma turns and backs up against your cock, sliding her pants off as she does so."                
-                $ E_Legs = 0
-            else:
-                "Emma turns and backs up against your cock."
-            $ E_SeenPanties = 1
-            "She slides the tip along her pussy and seems to want you to insert it."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    call Statup("Emma", "Inbt", 50, 2)
-                    "Emma slides it in."
-                "Praise her.":       
-                    call EmmaFace("sexy", 1)                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    ch_p "Oh yeah, [E_Pet], let's do this."
-                    call Emma_Namecheck
-                    "Emma slides it in."
-                    call Statup("Emma", "Love", 85, 1)
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 2)
-                "Ask her to stop.":
-                    call EmmaFace("surprised")       
-                    call Statup("Emma", "Inbt", 70, 1) 
-                    ch_p "Let's not do that right now, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma pulls back."
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 1)
-                    call Statup("Emma", "Obed", 30, 2)
-                    return            
-            jump E_Doggy_SexPrep
-        else:                
-            $ Tempmod = 0                               # fix, add emma auto stuff here
-            $ Trigger2 = 0
-        return            
-    
+            
     if Situation == "auto":   
         call Emma_Doggy_Launch("L")   
         if E_Legs == "skirt":
@@ -338,60 +295,104 @@ label E_Doggy_P:
     return
 
 label E_Doggy_SexPrep:
-    call Seen_First_Peen("Emma",Partner)
+    call Seen_First_Peen("Emma",Partner,React=Situation)
     call Emma_Doggy_Launch("hotdog")
-    
-    if Situation != "auto":
-        call Emma_Bottoms_Off       
         
-        
-        if (E_Panties and not E_PantiesDown) or (E_Legs and not E_Upskirt) or HoseNum("Emma") >= 6: #If she refuses to take off her pants but agreed to sex
-            ch_e "Well, I guess some things are necessary, [E_Petname]."            
-            if (E_Legs == "pants" and not E_Upskirt) and (E_Panties and not E_PantiesDown):
-                "She quickly pulls down her pants and drops her [E_Panties]."
-            elif (E_Legs == "pants" and not E_Upskirt):
-                "She quickly pulls down her pants, exposing her bare ass."
-            elif HoseNum("Emma") >= 6 and (E_Panties and not E_PantiesDown):
-                "She quickly pulls down her [E_Hose] and drops her [E_Panties]."
-                $ E_Hose = 0
-            elif HoseNum("Emma") >= 6:
-                "She quickly pulls down her [E_Hose], exposing her bare ass."
-                $ E_Hose = 0
-            elif (E_Panties and not E_PantiesDown):
-                "She quickly pulls down her [E_Panties]."  
+    if Situation == "Emma":                                                                 
+            #Emma auto-starts   
+            $ Situation = 0
+            if E_Legs == "skirt":
+                "Emma turns and backs up against your cock, sliding her skirt up as she does so."
+                $ E_Upskirt = 1
+            elif E_Legs == "pants":
+                "Emma turns and backs up against your cock, sliding her pants down as she does so."    
+                $ E_Upskirt = 1
+            else:
+                "Emma turns and backs up against your cock."
+            $ E_SeenPanties = 1
+            "She slides the tip along her pussy and seems to want you to insert it."
+            menu:
+                "What do you do?"
+                "Go with it.":                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    call Statup("Emma", "Inbt", 50, 2)
+                    "Emma slides it in."
+                "Praise her.":       
+                    call EmmaFace("sexy", 1)                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    ch_p "Oh yeah, [E_Pet], let's do this."
+                    call Emma_Namecheck
+                    "Emma slides it in."
+                    call Statup("Emma", "Love", 85, 1)
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call EmmaFace("surprised")       
+                    call Statup("Emma", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma pulls back."
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 1)
+                    call Statup("Emma", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Emma",1,"refused","refused")  
+                    return      
+            $ E_PantiesDown = 1  
+            call Emma_First_Bottomless(1)
             
-        $ E_Upskirt = 1
-        $ E_PantiesDown = 1       
-        $ E_SeenPanties = 1
-        call Emma_First_Bottomless
-        
-        if Taboo: # Emma gets started. . .
-            if not E_Sex:
-                "Emma glances around for voyeurs. . ."
-                "Emma hesitantly pulls down your pants and slowly backs up against your rigid member."
-                "You guide it into place and slide it in."
-            else:
-                "Emma glances around to see if anyone notices what she's doing, then backs her ass up against your cock."
-                "You guide your cock into place and ram it home."
-            $ E_Inbt += int(Taboo/10)  
-            $ E_Lust += int(Taboo/5)
-        else:    
-            if not E_Sex:
-                "Emma hesitantly pulls down your pants slowly backs up against your rigid member."
-                "You press her folds aside and nudge your cock in."
-            else:
-                "Emma bends over and presses her backside against you suggestively."
-                "You take careful aim and then ram your cock in."
+    elif Situation != "auto":
+            call Emma_Bottoms_Off       
+            
+            
+            if (E_Panties and not E_PantiesDown) or (E_Legs and not E_Upskirt) or HoseNum("Emma") >= 6: #If she refuses to take off her pants but agreed to sex
+                ch_e "Well, I guess some things are necessary, [E_Petname]."            
+                if (E_Legs == "pants" and not E_Upskirt) and (E_Panties and not E_PantiesDown):
+                    "She quickly pulls down her pants and drops her [E_Panties]."
+                elif (E_Legs == "pants" and not E_Upskirt):
+                    "She quickly pulls down her pants, exposing her bare ass."
+                elif HoseNum("Emma") >= 6 and (E_Panties and not E_PantiesDown):
+                    "She quickly pulls down her [E_Hose] and drops her [E_Panties]."
+                    $ E_Hose = 0
+                elif HoseNum("Emma") >= 6:
+                    "She quickly pulls down her [E_Hose], exposing her bare ass."
+                    $ E_Hose = 0
+                elif (E_Panties and not E_PantiesDown):
+                    "She quickly pulls down her [E_Panties]."  
+                
+            $ E_Upskirt = 1
+            $ E_PantiesDown = 1       
+            $ E_SeenPanties = 1
+            call Emma_First_Bottomless
+            
+            if Taboo: # Emma gets started. . .
+                if not E_Sex:
+                    "Emma glances around for voyeurs. . ."
+                    "Emma hesitantly pulls down your pants and slowly backs up against your rigid member."
+                    "You guide it into place and slide it in."
+                else:
+                    "Emma glances around to see if anyone notices what she's doing, then backs her ass up against your cock."
+                    "You guide your cock into place and ram it home."
+                $ E_Inbt += int(Taboo/10)  
+                $ E_Lust += int(Taboo/5)
+            else:    
+                if not E_Sex:
+                    "Emma hesitantly pulls down your pants slowly backs up against your rigid member."
+                    "You press her folds aside and nudge your cock in."
+                else:
+                    "Emma bends over and presses her backside against you suggestively."
+                    "You take careful aim and then ram your cock in."
+            #end auto
                             
     else:  #if Situation == "auto"         
-        if (E_Legs == "pants" and not E_Upskirt) and (E_Panties and not E_PantiesDown):
-            "You quickly pull down her pants and her [E_Panties] and press against her slit."
-        elif (E_Panties and not E_PantiesDown):
-            "You quickly pull down her [E_Panties] and press against her slit."  
-        $ E_Upskirt = 1
-        $ E_PantiesDown = 1       
-        $ E_SeenPanties = 1
-        call Emma_First_Bottomless(1)
+            if (E_Legs == "pants" and not E_Upskirt) and (E_Panties and not E_PantiesDown):
+                "You quickly pull down her pants and her [E_Panties] and press against her slit."
+            elif (E_Panties and not E_PantiesDown):
+                "You quickly pull down her [E_Panties] and press against her slit."  
+            $ E_Upskirt = 1
+            $ E_PantiesDown = 1       
+            $ E_SeenPanties = 1
+            call Emma_First_Bottomless(1)
             
     if not E_Sex:        
         if E_Forced:
@@ -646,6 +647,8 @@ label E_Doggy_Sex_Cycle: #Repeating strokes
                                     jump E_Doggy_SexAfter
         #End Count check
    
+        call Escalation("Emma","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_e "You might want to wrap this up, it's getting late."  
         elif Round == 5:
@@ -711,6 +714,7 @@ label E_Doggy_SexAfter:
 # E_Doggy_A anal //////////////////////////////////////////////////////////////////////
 
 label E_Doggy_A:
+label E_Sex_A:  
     $ Round -= 5 if Round > 5 else (Round-1)
     call Shift_Focus("Emma")
     if E_Anal >= 7: # She loves it
@@ -756,50 +760,6 @@ label E_Doggy_A:
         $ Tempmod -= 10 if "no anal" in E_RecentActions else 0  
             
     $ Approval = ApprovalCheck("Emma", 1550, TabM = 5) # 155, 170, 185, Taboo -200(355)
-    
-    if Situation == "Emma":                                                                  #Emma auto-starts   
-        if Approval > 2:                                                      # fix, add emma auto stuff here
-            call Emma_Doggy_Launch("L")   
-            if E_Legs == "skirt":
-                "Emma turns and backs up against your cock, sliding her skirt up as she does so."
-                $ E_Upskirt = 1
-            elif E_Legs == "pants":
-                "Emma turns and backs up against your cock, sliding her pants off as she does so."                
-                $ E_Legs = 0
-            else:
-                "Emma turns and backs up against your cock."
-            $ E_SeenPanties = 1
-            "She slides the tip up to her anus, and presses against it."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    call Statup("Emma", "Inbt", 50, 2)
-                    "Emma slides it in."
-                "Praise her.":       
-                    call EmmaFace("sexy", 1)                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    ch_p "Ooo, dirty girl, [E_Pet], let's do this."
-                    call Emma_Namecheck
-                    "Emma slides it in."
-                    call Statup("Emma", "Love", 85, 1)
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 2)
-                "Ask her to stop.":
-                    call EmmaFace("surprised")       
-                    call Statup("Emma", "Inbt", 70, 1) 
-                    ch_p "Let's not do that right now, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma pulls back."
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 1)
-                    call Statup("Emma", "Obed", 30, 2)                    
-                    return            
-            jump E_Doggy_AnalPrep
-        else:                
-            $ Tempmod = 0                               # fix, add emma auto stuff here
-            $ Trigger2 = 0
-        return            
     
     if Situation == "auto":   
         call Emma_Doggy_Launch("L")   
@@ -1076,60 +1036,104 @@ label E_Doggy_A:
     return
 
 label E_Doggy_AnalPrep:    
-    call Seen_First_Peen("Emma",Partner)            
+    call Seen_First_Peen("Emma",Partner,React=Situation)            
     call Emma_Doggy_Launch("hotdog")
     
-    if Situation != "auto":
-        call Emma_Bottoms_Off        
-        if (E_Panties and not E_PantiesDown) or (E_Legs and not E_Upskirt) or HoseNum("Emma") >= 6: #If she refuses to take off her pants but agreed to sex
-            ch_e "Well, I guess some things are necessary, [E_Petname]."            
-            if (E_Legs == "pants" and not E_Upskirt) and (E_Panties and not E_PantiesDown):
-                "She quickly pulls down her pants and drops her [E_Panties]."
-            elif (E_Legs == "pants" and not E_Upskirt):
-                "She quickly pulls down her pants, exposing her bare ass."
-            elif HoseNum("Emma") >= 6 and (E_Panties and not E_PantiesDown):
-                "She quickly pulls down her [E_Hose] and drops her [E_Panties]."
-                $ E_Hose = 0
-            elif HoseNum("Emma") >= 6:
-                "She quickly pulls down her [E_Hose], exposing her bare ass."
-                $ E_Hose = 0
-            elif (E_Panties and not E_PantiesDown):
-                "She quickly pulls down her [E_Panties]."    
-            
-        $ E_Upskirt = 1
-        $ E_PantiesDown = 1       
-        $ E_SeenPanties = 1
-        call Emma_First_Bottomless
-        
-        if Taboo: # Emma gets started. . .
-            if E_Anal:                
-                "Emma glances around to see if anyone notices what she's doing, then backs her ass up against your cock."
-                "You guide your cock into place and ram it home."   
-                
-            else:         
-                "Emma glances around for voyeurs. . ."
-                "Emma hesitantly pulls down your pants and slowly backs up against your rigid member."
-                "You guide it into place and slide it in."
-            $ E_Inbt += int(Taboo/10)  
-            $ E_Lust += int(Taboo/5)
-        else:    
-            if not E_Anal:
-                "Emma bends over and presses her backside against you suggestively."
-                "You take careful aim and then push your cock in."
+    if Situation == "Emma":                                                                  
+            #Emma auto-starts  
+            $ Situation = 0  
+            if E_Legs == "skirt":
+                "Emma turns and backs up against your cock, sliding her skirt up as she does so."
+                $ E_Upskirt = 1
+            elif E_Legs == "pants":
+                "Emma turns and backs up against your cock, sliding her pants down as she does so."                
+                $ E_Upskirt = 1
             else:
-                "Emma hesitantly pulls down your pants slowly backs up against your rigid member."
-                "You press against her rim and nudge your cock in."
+                "Emma turns and backs up against your cock."
+            $ E_SeenPanties = 1
+            "She slides the tip up to her anus, and presses against it."
+            menu:
+                "What do you do?"
+                "Go with it.":                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    call Statup("Emma", "Inbt", 50, 2)
+                    "Emma slides it in."
+                "Praise her.":       
+                    call EmmaFace("sexy", 1)                    
+                    call Statup("Emma", "Inbt", 80, 3) 
+                    ch_p "Ooo, dirty girl, [E_Pet], let's do this."
+                    call Emma_Namecheck
+                    "Emma slides it in."
+                    call Statup("Emma", "Love", 85, 1)
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call EmmaFace("surprised")       
+                    call Statup("Emma", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma pulls back."
+                    call Statup("Emma", "Obed", 90, 1)
+                    call Statup("Emma", "Obed", 50, 1)
+                    call Statup("Emma", "Obed", 30, 2)   
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Emma",1,"refused","refused")                    
+                    return   
+            $ E_PantiesDown = 1   
+            call Emma_First_Bottomless(1)  
+    
+    elif Situation != "auto":
+            call Emma_Bottoms_Off        
+            if (E_Panties and not E_PantiesDown) or (E_Legs and not E_Upskirt) or HoseNum("Emma") >= 6: #If she refuses to take off her pants but agreed to sex
+                ch_e "Well, I guess some things are necessary, [E_Petname]."            
+                if (E_Legs == "pants" and not E_Upskirt) and (E_Panties and not E_PantiesDown):
+                    "She quickly pulls down her pants and drops her [E_Panties]."
+                elif (E_Legs == "pants" and not E_Upskirt):
+                    "She quickly pulls down her pants, exposing her bare ass."
+                elif HoseNum("Emma") >= 6 and (E_Panties and not E_PantiesDown):
+                    "She quickly pulls down her [E_Hose] and drops her [E_Panties]."
+                    $ E_Hose = 0
+                elif HoseNum("Emma") >= 6:
+                    "She quickly pulls down her [E_Hose], exposing her bare ass."
+                    $ E_Hose = 0
+                elif (E_Panties and not E_PantiesDown):
+                    "She quickly pulls down her [E_Panties]."    
+                
+            $ E_Upskirt = 1
+            $ E_PantiesDown = 1       
+            $ E_SeenPanties = 1
+            call Emma_First_Bottomless
+            
+            if Taboo: # Emma gets started. . .
+                if E_Anal:                
+                    "Emma glances around to see if anyone notices what she's doing, then backs her ass up against your cock."
+                    "You guide your cock into place and ram it home."   
+                    
+                else:         
+                    "Emma glances around for voyeurs. . ."
+                    "Emma hesitantly pulls down your pants and slowly backs up against your rigid member."
+                    "You guide it into place and slide it in."
+                $ E_Inbt += int(Taboo/10)  
+                $ E_Lust += int(Taboo/5)
+            else:    
+                if not E_Anal:
+                    "Emma bends over and presses her backside against you suggestively."
+                    "You take careful aim and then push your cock in."
+                else:
+                    "Emma hesitantly pulls down your pants slowly backs up against your rigid member."
+                    "You press against her rim and nudge your cock in."
+            #end auto
                      
     else: #if Situation == "auto"               
-        if (E_Legs == "pants" and not E_Upskirt) and (E_Panties and not E_PantiesDown):
-            "You quickly pull down her pants and her [E_Panties] and press against her ass."
-        elif (E_Panties and not E_PantiesDown):
-            "You quickly pull down her [E_Panties] and press against her ass."  
-            
-        $ E_Upskirt = 1
-        $ E_PantiesDown = 1       
-        $ E_SeenPanties = 1
-        call Emma_First_Bottomless(1)
+            if (E_Legs == "pants" and not E_Upskirt) and (E_Panties and not E_PantiesDown):
+                "You quickly pull down her pants and her [E_Panties] and press against her ass."
+            elif (E_Panties and not E_PantiesDown):
+                "You quickly pull down her [E_Panties] and press against her ass."  
+                
+            $ E_Upskirt = 1
+            $ E_PantiesDown = 1       
+            $ E_SeenPanties = 1
+            call Emma_First_Bottomless(1)
     
     if not E_Anal:                                                      #First time stat buffs       
         if E_Forced:
@@ -1471,6 +1475,7 @@ label E_Doggy_AnalAfter:
 # E_Doggy_A hotdog //////////////////////////////////////////////////////////////////////
 
 label E_Doggy_H: 
+label E_Sex_H:  
     $ Round -= 5 if Round > 5 else (Round-1)
     call Shift_Focus("Emma")
     if E_Hotdog >= 3: #You've done it before several times
@@ -1501,38 +1506,6 @@ label E_Doggy_H:
         $ Tempmod -= 10 if "no hotdog" in E_RecentActions else 0      
         
     $ Approval = ApprovalCheck("Emma", 1000, TabM = 3) # 100, 115, 130, Taboo -120(220)
-    
-    if Situation == "Emma":                                                                  #Emma auto-starts   
-        if Approval > 2:                                                      # fix, add emma auto stuff here
-            call Emma_Doggy_Launch("L") 
-            "Emma turns and backs up against your cock, rubbing it against her ass."
-            menu:
-                "What do you do?"
-                "Nothing.":                     
-                    call Statup("Emma", "Inbt", 50, 3)
-                    "Emma starts to grind against you."
-                "Praise her.":       
-                    call EmmaFace("sexy", 1)                    
-                    call Statup("Emma", "Inbt", 80, 2) 
-                    ch_p "Hmmm, that's good, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma starts to grind against you."
-                    call Statup("Emma", "Love", 85, 1)
-                    call Statup("Emma", "Obed", 60, 2)
-                "Ask her to stop.":
-                    call EmmaFace("surprised")       
-                    call Statup("Emma", "Inbt", 70, 1) 
-                    ch_p "Let's not do that right now, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma pulls back."
-                    call Statup("Emma", "Obed", 80, 1)
-                    call Statup("Emma", "Obed", 30, 2)                    
-                    return            
-            jump E_Doggy_HotdogPrep
-        else:                
-            $ Tempmod = 0                               # fix, add emma auto stuff here
-            $ Trigger2 = 0
-        return            
     
     if Situation == "auto":   
         call Emma_Doggy_Launch("L")   
@@ -1778,29 +1751,57 @@ label E_Doggy_H:
     return
 
 label E_Doggy_HotdogPrep:  
-    call Seen_First_Peen("Emma",Partner)
+    call Seen_First_Peen("Emma",Partner,React=Situation)
     call Emma_Doggy_Launch("hotdog")
     
-    if Situation != "auto":
-        call Emma_Bottoms_Off    
-        
-        if Taboo: # Emma gets started. . .
-            if E_Hotdog:                
-                "Emma glances around to see if anyone notices what she's doing, then backs her ass up against your cock."
-                
-            else:         
-                "Emma glances around for voyeurs. . ."
-                "Emma hesitantly pulls down your pants and slowly backs up against your rigid member."
-            $ E_Inbt += int(Taboo/10)  
-            $ E_Lust += int(Taboo/5)
-        else:    
-            if not E_Hotdog:
-                "Emma bends over and presses her backside against you suggestively."
-            else:
-                "Emma hesitantly pulls down your pants slowly backs up against your rigid member."
-                     
+    if Situation == "Emma":                                                                
+            #Emma auto-starts  
+            $ Situation = 0
+            "Emma turns and backs up against your cock, rubbing it against her ass."
+            menu:
+                "What do you do?"
+                "Go with it.":                     
+                    call Statup("Emma", "Inbt", 50, 3)
+                    "Emma starts to grind against you."
+                "Praise her.":       
+                    call EmmaFace("sexy", 1)                    
+                    call Statup("Emma", "Inbt", 80, 2) 
+                    ch_p "Hmmm, that's good, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma starts to grind against you."
+                    call Statup("Emma", "Love", 85, 1)
+                    call Statup("Emma", "Obed", 60, 2)
+                "Ask her to stop.":
+                    call EmmaFace("surprised")       
+                    call Statup("Emma", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [E_Pet]."
+                    call Emma_Namecheck
+                    "Emma pulls back."
+                    call Statup("Emma", "Obed", 80, 1)
+                    call Statup("Emma", "Obed", 30, 2) 
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Emma",1,"refused","refused")                     
+                    return  
+    elif Situation != "auto":
+            call Emma_Bottoms_Off    
+            
+            if Taboo: # Emma gets started. . .
+                if E_Hotdog:                
+                    "Emma glances around to see if anyone notices what she's doing, then backs her ass up against your cock."
+                    
+                else:         
+                    "Emma glances around for voyeurs. . ."
+                    "Emma hesitantly pulls down your pants and slowly backs up against your rigid member."
+                $ E_Inbt += int(Taboo/10)  
+                $ E_Lust += int(Taboo/5)
+            else:    
+                if not E_Hotdog:
+                    "Emma bends over and presses her backside against you suggestively."
+                else:
+                    "Emma hesitantly pulls down your pants slowly backs up against your rigid member."
+                         
     else: #if Situation == "auto"       
-        "You press yourself against her ass."
+            "You press yourself against her ass."
         
     if not E_Hotdog:                                                      #First time stat buffs      
         if E_Forced:
@@ -1829,9 +1830,10 @@ label E_Doggy_HotdogPrep:
 label E_Doggy_Hotdog_Cycle: #Repeating strokes  
     while Round >=0:  
         call Shift_Focus("Emma")
-        call Emma_Doggy_Launch("hotdog") 
-        call EmmaLust        
-        $ P_Cock = "out"
+        call Emma_Doggy_Launch(0) #"hotdog"
+        call EmmaLust  
+        if Speed:
+                $ P_Cock = "out"
         $ Trigger = "hotdog"
         
         if  P_Focus < 100:                                                    
@@ -1930,6 +1932,9 @@ label E_Doggy_Hotdog_Cycle: #Repeating strokes
                                                         jump E_Doggy_Hotdog_Cycle 
                                             "Never mind":
                                                         jump E_Doggy_Hotdog_Cycle 
+                                    "Just take a look at her.":                                           
+                                            $ P_Cock = 0
+                                            $ Speed = 0
                                     "Undress Emma":
                                             call E_Undress   
                                     "Clean up Emma (locked)" if not E_Spunk:
@@ -2056,6 +2061,8 @@ label E_Doggy_Hotdog_Cycle: #Repeating strokes
                                     jump E_Doggy_HotdogAfter
         #End Count check
    
+        call Escalation("Emma","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_e "You might want to wrap this up, it's getting late."  
         elif Round == 5:

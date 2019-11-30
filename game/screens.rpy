@@ -15,6 +15,8 @@ screen say(who, what, side_image=None, two_window=False, CountWords = 0): #Count
 
     # Decide if we want to use the one-window or two-window variant.
     
+    if who == "Neutral":
+            $ who = Ch_Focus
     
     if not two_window:
         # The one window variant. Used for caption boxes
@@ -83,7 +85,7 @@ screen say(who, what, side_image=None, two_window=False, CountWords = 0): #Count
 #                            style "say_balloon"         
                           
                     text what id "what" color "#000000" font "CRIMFBRG.ttf" text_align 0.5
-              
+            
             if who == "Rogue":
                     if R_SpriteLoc == StageRight or R_SpriteLoc == StageFarRight:
                         add "arrow" rotate -90 xzoom -1 xpos 1.03 ypos -0.85                        
@@ -299,6 +301,7 @@ screen nvl(dialogue, items=None):
 # http://www.renpy.org/doc/html/screen_special.html#main-menu
 
 screen main_menu():
+
     # This ensures that any other menu screen is replaced.
     tag menu
 
@@ -320,16 +323,6 @@ screen main_menu():
         textbutton _("Disclaimer") action Show("Disclaimer_screen") #ui.callsinnewcontext("Disclaimer_screen_label")        
         textbutton _("Patreon") action OpenURL("http://www.patreon.com/OniArtist")       
         textbutton _("Quit") action Quit(confirm=False)
-    
-    frame:
-        # style_group "mm"
-        xalign .02
-        yalign .98
-        imagebutton:
-            auto "images/icon_discord_%s.png"
-            action OpenURL("https://discord.gg/TuF8YVX")
-            focus_mask True
-
 
 init -2:
 
@@ -555,7 +548,8 @@ screen preferences():
             frame:
                 style_group "pref"
                 has vbox
-                label _("There is no Audio")
+                #Mod Marker Background menu
+                label _("There is no Audio") 
                 
             frame:
                 style_group "pref"
@@ -564,11 +558,10 @@ screen preferences():
                 label _("Background")
                 textbutton _("Modded") action Preference("background choices", "modded1")
                 textbutton _("Modded Laura") action Preference("background choices", "modded_laura")
-                # textbutton _("Modded Rogue") action Preference("background choices", "modded_rogue")
-                # textbutton _("Modded Kitty") action Preference("background choices", "modded_kitty")
+                textbutton _("Modded Rogue") action Preference("background choices", "modded_rogue")
+                textbutton _("Modded Kitty") action Preference("background choices", "modded_kitty")
                 textbutton _("Modded Emma") action Preference("background choices", "modded_emma")
                 textbutton _("Original") action Preference("background choices", "original")
-
 #                label _("Music Volume")
 #                bar value Preference("music volume")
 
@@ -1043,38 +1036,12 @@ screen R_Status_screen:
         # Money and level
         xminimum 75
         xpos 500    
-        ypos -5   
         background None
         has vbox
         hbox:            
             text "Money: $[P_Cash]" size 12
         hbox:
             text "Level: [P_Lvl]" size 12 
-        if Ch_Focus == 'Emma':
-            hbox:
-                text "Actions Left: [E_Action]" size 12
-            hbox:
-                text "Forced: [E_ForcedCount]" size 12
-        elif Ch_Focus == 'Kitty':
-            hbox:
-                text "Actions Left: [K_Action]" size 12
-            hbox:
-                text "Forced: [K_ForcedCount]" size 12
-        elif Ch_Focus == 'Rogue':
-            hbox:
-                text "Actions Left: [R_Action]" size 12
-            hbox:
-                text "Forced: [R_ForcedCount]" size 12
-        # elif Ch_Focus == 'Mystique':
-        #     hbox:
-        #         text "Actions Left: [newgirl[Mystique].Action]" size 12
-        #     hbox:
-        #         text "Forced: [newgirl[Mystique].ForcedCount]" size 12
-        elif Ch_Focus == 'Laura':
-            hbox:
-                text "Actions Left: [L_Action]" size 12
-            hbox:
-                text "Forced: [L_ForcedCount]" size 12
         # this block is the name tag
         window:         
             pos (90,-40)#(-15,-8)
@@ -1244,6 +1211,7 @@ screen P_Inventory_screen:
         has vbox
         
 #        hbox:    
+        #Mod Marker Cheats
         text "Inventory:" size 20
         if CheatsEnabled:
             textbutton "Disable Cheats" text_size 15 action [ SetVariable("CheatsEnabled", 0)]

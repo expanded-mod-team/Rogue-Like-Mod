@@ -25,7 +25,8 @@ label Kitty_Chat_Set(Preset=0):
                     $ renpy.pop_call() #this removes the callback to the previous settings menu
                     $ renpy.pop_call() #this removes the callback to the previous settings menu testing. . .
                     ch_p "I wanted to talk about your outfit. . ."
-                    if Taboo:
+                    call Taboo_Level
+                    if K_Taboo:
                             if "exhibitionist" in K_Traits:
                                 ch_k "Mmmmm. . ."  
                             elif ApprovalCheck("Kitty", 900, TabM=4) or ApprovalCheck("Kitty", 400, "I", TabM=3): 
@@ -56,6 +57,13 @@ label Kitty_Chat:
     if "angry" in K_RecentActions:
                 ch_k "I'm[K_like]so mad at you right now!"
                 return
+    if "les" in K_RecentActions:
+            #if she's with a girl. . .
+            ch_k "Ah! One minute. . ."
+            "You hear some shifting around. . ."
+            ch_k "Ok, (\"quit it!\") what did you. . .)"
+            "You hear some muffled giggles in the background."
+            ch_k "So. . ."
     menu:
         ch_k "So[K_like]what did you want to talk about, [K_Petname]?"
         "Come on over." if K_Loc != bg_current:
@@ -69,62 +77,93 @@ label Kitty_Chat:
         "Ask Kitty to leave" if K_Loc == bg_current:
                     call Kitty_Dismissed    
                     return
-        
-        "Flirt with her." if not K_Chat[5]:
-                    call Kitty_Flirt               
-        "Flirt with her. (locked)" if K_Chat[5]:  
-                    pass
-            
-        "Sex Menu" if K_Loc == bg_current:
-                    if K_Love >= K_Obed:   
-                        ch_p "Did you want to fool around?"  
-                    else: 
-                        ch_p "I want to get naughty."
-                    if "angry" in K_RecentActions:  
-                        ch_k "Not even!"
-                    elif ApprovalCheck("Kitty", 600, "LI"):
-                        call KittyFace("sexy")
-                        ch_k "Mmmm, ok, [K_Petname]."
-                        call Kitty_SexMenu
-                        return
-                    elif ApprovalCheck("Kitty", 400, "OI"):
-                        ch_k "Yes, [K_Petname]."
-                        call Kitty_SexMenu
-                        return
-                    else:
-                        ch_k "No thanks, [K_Petname]."          
-                          
-        "I just wanted to talk. . .":
-                    call Kitty_Chitchat   
+        "Romance her": 
+                menu:
+                    "Flirt with her (locked)" if K_Chat[5]:  
+                                pass
+                    "Flirt with her" if not K_Chat[5]:
+                                call Kitty_Flirt      
+                        
+                    "Sex Menu (locked)" if K_Loc != bg_current:
+                                pass
+                    "Sex Menu" if K_Loc == bg_current:
+                                if K_Love >= K_Obed:   
+                                    ch_p "Did you want to fool around?"  
+                                else: 
+                                    ch_p "I want to get naughty."
+                                if "angry" in K_RecentActions:  
+                                    ch_k "Not even!"
+                                elif ApprovalCheck("Kitty", 600, "LI"):
+                                    call KittyFace("sexy")
+                                    ch_k "Mmmm, ok, [K_Petname]."
+                                    call Kitty_SexMenu
+                                    return
+                                elif ApprovalCheck("Kitty", 400, "OI"):
+                                    ch_k "Yes, [K_Petname]."
+                                    call Kitty_SexMenu
+                                    return
+                                else:
+                                    ch_k "No thanks, [K_Petname]."   
+                        
+                    "Dirty Talk (locked)" if K_SEXP < 10:
+                                pass
+                    "Dirty Talk" if K_SEXP >= 10:
+                                ch_p "About when we get together. . ."
+                                call Kitty_SexChat
+                    "Date":
+                                ch_p "Do you want to go on a date tonight?"
+                                call Kitty_Date_Ask
+                                
+                    "Gifts (locked)" if K_Loc != bg_current:
+                                pass
+                    "Gifts" if K_Loc == bg_current:
+                                ch_p "I'd like to give you something."
+                                call Kitty_Gifts    
+                    "Back":
+                                pass   
+          
+        "Talk with her":      
+                menu:
+                    "I just wanted to talk. . .":
+                                call Kitty_Chitchat  
+                    "Relationship status":
+                                ch_p "Could we talk about us?"  
+                                if "relationship" in K_DailyActions:
+                                    ch_k "I think we've done enough talking about \"us\" for one day."
+                                elif K_Loc == bg_current:
+                                    call Kitty_Relationship
+                                else:
+                                    ch_k "That seems like something we'd want to do face to face."
+                                    ch_k "Maybe later?" 
                     
-        "Kitty's settings":
-                    ch_p "Let's talk about you."
+                    "About other girls":
+                            menu:
+                                ch_p "How do you feel about. . ."
+                                "Rogue?":
+                                    call Kitty_About("Rogue")
+                                "Emma?" if "met" in E_History:
+                                    call Kitty_About("Emma")
+                                "Laura?" if "met" in L_History:
+                                    call Kitty_About("Laura")
+                                "About hooking up with other girls. . .":
+                                        call Kitty_Monogamy
+                                "Never mind.":
+                                    pass
+                        
+                    "Could I get your number?" if "Kitty" not in Digits:
+                                if ApprovalCheck("Kitty", 400, "L") or ApprovalCheck("Kitty", 200, "I"):
+                                    ch_k "OMG[K_like]sure."
+                                    $ Digits.append("Kitty") 
+                                elif ApprovalCheck("Kitty", 200, "O"):
+                                    ch_k "[K_Like]fine."             
+                                    $ Digits.append("Kitty")
+                                else:
+                                    ch_k "[K_Like]I'd rather not?"  
+                    "Back":
+                                pass
+        "Change Kitty":
                     call Kitty_Settings   
         
-        "Relationship status":
-                    ch_p "Could we talk about us?"  
-                    if "relationship" in K_DailyActions:
-                        ch_k "I think we've done enough talking about \"us\" for one day."
-                    elif K_Loc == bg_current:
-                        call Kitty_Relationship
-                    else:
-                        ch_k "That seems like something we'd want to do face to face."
-                        ch_k "Maybe later?"
-                        
-        "Could I get your number?" if "Kitty" not in Digits:
-                    if ApprovalCheck("Kitty", 400, "L") or ApprovalCheck("Kitty", 200, "I"):
-                        ch_k "OMG[K_like]sure."
-                        $ Digits.append("Kitty") 
-                    elif ApprovalCheck("Kitty", 200, "O"):
-                        ch_k "[K_Like]fine."             
-                        $ Digits.append("Kitty")
-                    else:
-                        ch_k "[K_Like]I'd rather not?"  
-                        
-        "Gifts" if K_Loc == bg_current:
-                    ch_p "I'd like to give you something."
-                    call Kitty_Gifts
-                        
         "Add her to party" if "Kitty" not in Party and K_Loc == bg_current:
                     ch_p "Could you follow me for a bit?"
                     if ApprovalCheck("Kitty", 650):
@@ -148,11 +187,6 @@ label Kitty_Chat:
                         call Set_The_Scene   
                     return
                 
-        
-        "Date":
-                    ch_p "Do you want to go on a date tonight?"
-                    call Kitty_Date_Ask
-
         "Switch to. . .":
                 menu:
                     "Rogue":
@@ -165,8 +199,7 @@ label Kitty_Chat:
                         pass
                             
         "Never mind.":
-                    if K_Loc != bg_current:
-                        ch_k "Ok, bye."
+                    ch_k "Ok, bye."
                     return
     jump Kitty_Chat
 
@@ -174,271 +207,246 @@ label Kitty_Chat:
 #Kitty Relationship ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
 label Kitty_Relationship:
-    menu:
-        ch_k "What did you want to talk about?"
-        
-        "Do you want to be my girlfriend?" if "dating" not in K_Traits and "ex" not in K_Traits:
-                $ K_DailyActions.append("relationship")
-                if "asked boyfriend" in K_DailyActions and "angry" in K_DailyActions:
-                    call KittyFace("angry", 1)
-                    ch_k "For real, buzz off."
-                    return
-                elif "asked boyfriend" in K_DailyActions:
-                    call KittyFace("angry", 1)
-                    ch_k "Still \"nope.\""
-                    return
-#                elif K_Break[0]:                    
-#                    call KittyFace("angry", 1)                    
-#                    ch_k "Not while you're dating her. . ."
-#                    if "dating" in R_Traits:   
-#                        $ K_DailyActions.append("asked boyfriend")                     
-#                        return
-#                    elif "ex" in R_Traits:
-#                        ch_p "I'm not anymore."
-                        
-                $ K_DailyActions.append("asked boyfriend")
-                
-                if P_Harem and "KittyYes" not in P_Traits:   
-                    if len(P_Harem) >= 2:
-                        ch_k "I don't think they'd be ok with that, [K_Petname]."
-                    else:
-                        ch_k "I don't think [P_Harem[0]] would be ok with that, [K_Petname]."
-                    return                                
-                
-                if K_Event[5]:
-                    call KittyFace("bemused", 1)
-                    ch_k "I {i}did{/i} ask you about that. . ."
-                else:
-                    call KittyFace("surprised", 2)
-                    ch_k "I don't know, [K_Petname]. . ." 
-                    call KittyFace("smile", 1)
-                
-                call Kitty_OtherWoman
-                
-                if K_Love >= 800:
-                    call KittyFace("surprised", 1)
-                    $ K_Mouth = "smile"
-                    call Statup("Kitty", "Love", 200, 40)
-                    ch_k "YES!"
-                    if "boyfriend" not in K_Petnames:
-                        $ K_Petnames.append("boyfriend")                
-                    $ K_Traits.append("dating")
-                    if "KittyYes" in P_Traits:       
-                                $ P_Traits.remove("KittyYes")
-                                $ P_Harem.append("Kitty")
-                                call Harem_Initiation
-                    "Kitty leaps in and kisses you deeply."
-                    call KittyFace("kiss", 1) 
-                    $ K_Kissed += 1
-                elif K_Obed >= 500:
-                    call KittyFace("perplexed")
-                    ch_k "Maybe not so much \"dating\". . ."
-                elif K_Inbt >= 500:
-                    call KittyFace("smile")                
-                    ch_k "That's not[K_like]where I'm at right now?"
-                else:
-                    call KittyFace("perplexed", 1)
-                    ch_k "I don't really feel that way about you right now, [K_Petname]."
-                    
-        "When you said you loved me. . ." if "lover" not in K_Traits and K_Event[6] >= 20:
-                call Kitty_Love_Redux
-        
-        "Do you want to get back together?" if "ex" in K_Traits:
-                $ K_DailyActions.append("relationship")
-                if "asked boyfriend" in K_DailyActions and "angry" in K_DailyActions:
-                    call KittyFace("angry", 1)
-                    ch_k "Seriously, buzz off."
-                    return
-                elif "asked boyfriend" in K_DailyActions:
-                    call KittyFace("angry", 1)
-                    ch_k "Still no."
-                    return
-                elif K_Break[0]: 
-                    call KittyFace("angry", 1)                    
-                    if "dating" in R_Traits:   
-                        ch_k "Not while you're with her."
+    while True:
+        menu:
+            ch_k "What did you want to talk about?"
+            
+            "Do you want to be my girlfriend?" if "dating" not in K_Traits and "ex" not in K_Traits:
+                    $ K_DailyActions.append("relationship")
+                    if "asked boyfriend" in K_DailyActions and "angry" in K_DailyActions:
+                        call KittyFace("angry", 1)
+                        ch_k "For real, buzz off."
                         return
-                    elif "ex" in R_Traits:
-                        ch_k "Not while you're with her."
-                        ch_p "I'm not anymore."
-                        $ K_Break[0] = 0
-                    else:    
-                        if not ApprovalCheck("Kitty", 1500) or K_Break[1] > 5:
-                            ch_k "Give it a rest."
-                        else:
-                            call KittyFace("sad", 1)
-                            ch_k "Too soon."
-                        $ K_DailyActions.append("asked boyfriend")
+                    elif "asked boyfriend" in K_DailyActions:
+                        call KittyFace("angry", 1)
+                        ch_k "Still \"nope.\""
                         return
-                $ K_DailyActions.append("asked boyfriend")
-                
-                if P_Harem and "KittyYes" not in P_Traits:
-                    if len(P_Harem) >= 2:
-                        ch_k "I don't think they'd be ok with that, [K_Petname]."
-                    else:
-                        ch_k "I don't think [P_Harem[0]] would be ok with that, [K_Petname]."
-                    return
-                
-                
-                $ Cnt = 0
-                call Kitty_OtherWoman
-                                        
-                if K_Love >= 800:
-                    call KittyFace("surprised", 1)
-                    $ K_Mouth = "smile"
-                    call Statup("Kitty", "Love", 90, 5)
-                    ch_k "Well, I guess, sure!"
-                    if "boyfriend" not in K_Petnames:
-                        $ K_Petnames.append("boyfriend")                
-                    $ K_Traits.append("dating")          
-                    $ K_Traits.remove("ex")
-                    if "KittyYes" in P_Traits:       
-                                $ P_Traits.remove("KittyYes")
-                                $ P_Harem.append("Kitty")
-                                call Harem_Initiation
-                    "Kitty leaps in and kisses you deeply."
-                    call KittyFace("kiss", 1) 
-                    $ K_Kissed += 1
-                elif K_Love >= 600 and ApprovalCheck("Kitty", 1500):
-                    call KittyFace("smile", 1)
-                    $ K_Mouth = "smile"
-                    call Statup("Kitty", "Love", 90, 5)
-                    ch_k "Um, ok, I guess."
-                    if "boyfriend" not in K_Petnames:
-                        $ K_Petnames.append("boyfriend")                
-                    $ K_Traits.append("dating")             
-                    $ K_Traits.remove("ex")
-                    if "KittyYes" in P_Traits:       
-                                $ P_Traits.remove("KittyYes")
-                                $ P_Harem.append("Kitty")
-                                call Harem_Initiation
-                    "Kitty gives you a quick kiss."
-                    call KittyFace("kiss", 1) 
-                    $ K_Kissed += 1
-                elif K_Obed >= 500:
-                    call KittyFace("sad")
-                    ch_k "I think we're better like this."  
-                elif K_Inbt >= 500:
-                    call KittyFace("perplexed")                
-                    ch_k "I kind of like what we have right now."
-                else:
-                    call KittyFace("perplexed", 1)
-                    ch_k "I'm not ready to get burned again."
-                
-        # End Back Together
-           
-        "I wanted to ask about [[another girl]" if "Kitty" in P_Harem:
-                menu:
-                    "Have you reconsidered letting me date. . ."
-                    "Rogue" if "Rogue" not in P_Harem:
-                            call Poly_Start("Rogue",1)
-                    "Emma" if "Emma" not in P_Harem:
-                            call Poly_Start("Emma",1)
-                    "Laura" if "Laura" not in P_Harem:
-                            call Poly_Start("Laura",1)
-                    "Never mind":
-                            pass         
-                               
-#        "I think we should break up." if "dating" in R_Traits: #ApprovalCheck("Rogue", 950, "L", Bonus = (B/3)):
-#            if "breakup talk" in R_RecentActions:
-#                ch_r "We were {i}just{/i} over this, not even funny."
-#            elif "breakup talk" in R_DailyActions:
-#                ch_r "Tired of me again that quick?" 
-#                ch_r "We're not having this talk today, [R_Petname]."
-#            else:
-#                call Rogue_Breakup                
-            
-            
-#        "I'd like to bring Kitty into this." if "poly Kitty" not in R_Traits and not K_Break[0]:    #fix nonfunctional yet, switch over to Kitty stuff
-            
-#            if "asked threesome" in R_RecentActions:
-#                ch_r "Persistence will NOT be rewarded here."
-#                return
-#            elif "asked threesome" in R_DailyActions:
-#                ch_r "I don't think my answer's changing any time soon." 
-#                return
-#            else:
-#                $ R_DailyActions.append("asked threesome")                
-#                $Cnt = int((R_LikeKitty - 500)/2)
-#                menu:
-#                    ch_r "What does she think about this?"
-                        
-#                    "She said I can be with you too." if "poly Rogue" in K_Traits:
-#                        if ApprovalCheck("Rogue", 1800, Bonus = Cnt):
-#                            call RogueFace("smile", 1)
-#                            if R_Love >= R_Obed:
-#                                ch_r "Just so long as we can be together, I can share."
-#                            elif R_Obed >= R_Inbt:
-#                                ch_r "I'm ok with that if she is."
-#                            else:
-#                                ch_r "Yeah, I mean I guess so."
-#                                $ R_Traits.append("poly Kitty")
-#                        else:
-#                            call RogueFace("angry", 1)
-#                            ch_r "Well maybe she did, but I don't want to share."  
-                    
-#                    "I could ask if she'd be ok with me dating you both." if "poly Rogue" not in K_Traits:
-#                        if ApprovalCheck("Rogue", 1800, Bonus = Cnt) or :
-#                            call RogueFace("smile", 1)
-#                            if R_Love >= R_Obed:
-#                                ch_r "Just so long as we can be together, I can share."
-#                            elif R_Obed >= R_Inbt:
-#                                ch_r "I'm ok with that if she is."
-#                            else:
-#                                ch_r "Yeah, I mean I guess so."                        
-#                            ch_r "Go ask her, give me the night to think about it, and then come back tomorrow with her answer."
-#                        else:
-#                            call RogueFace("angry", 1)
-#                            ch_r "Well maybe she would, but I don't want to share."  
-                    
-#                    "Could you ask?":
-#                        if R_LikeKitty >= 700:
-#                            ch_r "I have to say I've kind of been thinking about it myself."  
-#                            call Statup("Rogue", "Love", 90, 5)
-#                            call Statup("Rogue", "Obed", 70, 1)
-#                            call Statup("Rogue", "Inbt", 80, 5)
-#                        elif R_LikeKitty >= 500:
-#                            ch_r "I guess, if that's what you want. . ." 
-#                        elif R_Obed >= 700:
-#                            ch_r "If that's what you want. . ." 
-#                        else:
-#                            ch_r "I can't really stand her, I don't think so."  
+    #                elif K_Break[0]:                    
+    #                    call KittyFace("angry", 1)                    
+    #                    ch_k "Not while you're dating her. . ."
+    #                    if "dating" in R_Traits:   
+    #                        $ K_DailyActions.append("asked boyfriend")                     
+    #                        return
+    #                    elif "ex" in R_Traits:
+    #                        ch_p "I'm not anymore."
                             
-                        
-#                    "You're right, I was dumb to ask.":
-#                        call RogueFace("sad")
-#                        ch_r "Yeah, you were."  
-                        
-            #end Kitty Threesome
+                    $ K_DailyActions.append("asked boyfriend")
+                    
+                    if P_Harem and "KittyYes" not in P_Traits:   
+                        if len(P_Harem) >= 2:
+                            ch_k "I don't think they'd be ok with that, [K_Petname]."
+                        else:
+                            ch_k "I don't think [P_Harem[0]] would be ok with that, [K_Petname]."
+                        return                                
+                    
+                    if K_Event[5]:
+                        call KittyFace("bemused", 1)
+                        ch_k "I {i}did{/i} ask you about that. . ."
+                    else:
+                        call KittyFace("surprised", 2)
+                        ch_k "I don't know, [K_Petname]. . ." 
+                        call KittyFace("smile", 1)
+                    
+                    call Kitty_OtherWoman
+                    
+                    if K_Love >= 800:
+                        call KittyFace("surprised", 1)
+                        $ K_Mouth = "smile"
+                        call Statup("Kitty", "Love", 200, 40)
+                        ch_k "YES!"
+                        if "boyfriend" not in K_Petnames:
+                            $ K_Petnames.append("boyfriend")                
+                        $ K_Traits.append("dating")
+                        if "KittyYes" in P_Traits:       
+                                    $ P_Traits.remove("KittyYes")
+                                    $ P_Harem.append("Kitty")
+                                    call Harem_Initiation
+                        "Kitty leaps in and kisses you deeply."
+                        call KittyFace("kiss", 1) 
+                        $ K_Kissed += 1
+                    elif K_Obed >= 500:
+                        call KittyFace("perplexed")
+                        ch_k "Maybe not so much \"dating\". . ."
+                    elif K_Inbt >= 500:
+                        call KittyFace("smile")                
+                        ch_k "That's not[K_like]where I'm at right now?"
+                    else:
+                        call KittyFace("perplexed", 1)
+                        ch_k "I don't really feel that way about you right now, [K_Petname]."
+                                
+            "Do you want to get back together?" if "ex" in K_Traits:
+                    $ K_DailyActions.append("relationship")
+                    if "asked boyfriend" in K_DailyActions and "angry" in K_DailyActions:
+                        call KittyFace("angry", 1)
+                        ch_k "Seriously, buzz off."
+                        return
+                    elif "asked boyfriend" in K_DailyActions:
+                        call KittyFace("angry", 1)
+                        ch_k "Still no."
+                        return
+                    elif K_Break[0]: 
+                        call KittyFace("angry", 1)                    
+                        if "dating" in R_Traits:   
+                            ch_k "Not while you're with her."
+                            return
+                        elif "ex" in R_Traits:
+                            ch_k "Not while you're with her."
+                            ch_p "I'm not anymore."
+                            $ K_Break[0] = 0
+                        else:    
+                            if not ApprovalCheck("Kitty", 1500) or K_Break[1] > 5:
+                                ch_k "Give it a rest."
+                            else:
+                                call KittyFace("sad", 1)
+                                ch_k "Too soon."
+                            $ K_DailyActions.append("asked boyfriend")
+                            return
+                    $ K_DailyActions.append("asked boyfriend")
+                    
+                    if P_Harem and "KittyYes" not in P_Traits:
+                        if len(P_Harem) >= 2:
+                            ch_k "I don't think they'd be ok with that, [K_Petname]."
+                        else:
+                            ch_k "I don't think [P_Harem[0]] would be ok with that, [K_Petname]."
+                        return
+                    
+                    
+                    $ Cnt = 0
+                    call Kitty_OtherWoman
+                                            
+                    if K_Love >= 800:
+                        call KittyFace("surprised", 1)
+                        $ K_Mouth = "smile"
+                        call Statup("Kitty", "Love", 90, 5)
+                        ch_k "Well, I guess, sure!"
+                        if "boyfriend" not in K_Petnames:
+                            $ K_Petnames.append("boyfriend")                
+                        $ K_Traits.append("dating")          
+                        $ K_Traits.remove("ex")
+                        if "KittyYes" in P_Traits:       
+                                    $ P_Traits.remove("KittyYes")
+                                    $ P_Harem.append("Kitty")
+                                    call Harem_Initiation
+                        "Kitty leaps in and kisses you deeply."
+                        call KittyFace("kiss", 1) 
+                        $ K_Kissed += 1
+                    elif K_Love >= 600 and ApprovalCheck("Kitty", 1500):
+                        call KittyFace("smile", 1)
+                        $ K_Mouth = "smile"
+                        call Statup("Kitty", "Love", 90, 5)
+                        ch_k "Um, ok, I guess."
+                        if "boyfriend" not in K_Petnames:
+                            $ K_Petnames.append("boyfriend")                
+                        $ K_Traits.append("dating")             
+                        $ K_Traits.remove("ex")
+                        if "KittyYes" in P_Traits:       
+                                    $ P_Traits.remove("KittyYes")
+                                    $ P_Harem.append("Kitty")
+                                    call Harem_Initiation
+                        "Kitty gives you a quick kiss."
+                        call KittyFace("kiss", 1) 
+                        $ K_Kissed += 1
+                    elif K_Obed >= 500:
+                        call KittyFace("sad")
+                        ch_k "I think we're better like this."  
+                    elif K_Inbt >= 500:
+                        call KittyFace("perplexed")                
+                        ch_k "I kind of like what we have right now."
+                    else:
+                        call KittyFace("perplexed", 1)
+                        ch_k "I'm not ready to get burned again."
+                    
+            # End Back Together
+               
+            "I wanted to ask about [[another girl]" if "Kitty" in P_Harem:
+                    menu:
+                        "Have you reconsidered letting me date. . ."
+                        "Rogue" if "Rogue" not in P_Harem:
+                                call Poly_Start("Rogue",1)
+                        "Emma" if "Emma" not in P_Harem and "met" in E_History:
+                                call Poly_Start("Emma",1)
+                        "Laura" if "Laura" not in P_Harem and "met" in L_History:
+                                call Poly_Start("Laura",1)
+                        "Never mind":
+                                pass         
+                                   
+            "I think we should break up." if "dating" in K_Traits or "Kitty" in P_Harem: #ApprovalCheck("Rogue", 950, "L", Bonus = (B/3)):
+                if "breakup talk" in K_RecentActions:
+                    ch_k "We were {i}just{/i} over this, not even funny."
+                elif "breakup talk" in K_DailyActions:
+                    ch_k "I don't want to do this again today, [K_Petname]."
+                else:
+                    call Breakup("Kitty")              
                 
-        "You said you wanted me to be more in control?" if "sir" not in K_Petnames and "sir" in K_History:
-                if "asked sub" in K_RecentActions:
-                        ch_k "We[K_like]{i}just{/i} went over this."
-                elif "asked sub" in K_DailyActions:
-                        ch_k "I think you made yourself {i}perfectly{/i} clear earlier. . ."            
-                else:
-                        call Kitty_Sub_Asked
-        "You said you wanted me to be your Master?" if "master" not in K_Petnames and "master" in K_History:
-                if "asked sub" in K_RecentActions:
-                        ch_k "We[K_like]{i}just{/i} went over this."
-                elif "asked sub" in K_DailyActions:
-                        ch_k "I think you made yourself {i}perfectly{/i} clear earlier. . ."            
-                else:
-                        call Kitty_Sub_Asked
+                    
+            "About that talk we had before. . .":
+                menu:
+                        "When you said you loved me. . ." if "lover" not in K_Traits and K_Event[6] >= 20:
+                                call Kitty_Love_Redux
+                                
+                        "You said you wanted me to be more in control?" if "sir" not in K_Petnames and "sir" in K_History:
+                                if "asked sub" in K_RecentActions:
+                                        ch_k "We[K_like]{i}just{/i} went over this."
+                                elif "asked sub" in K_DailyActions:
+                                        ch_k "I think you made yourself {i}perfectly{/i} clear earlier. . ."            
+                                else:
+                                        call Kitty_Sub_Asked
+                        "You said you wanted me to be your Master?" if "master" not in K_Petnames and "master" in K_History:
+                                if "asked sub" in K_RecentActions:
+                                        ch_k "We[K_like]{i}just{/i} went over this."
+                                elif "asked sub" in K_DailyActions:
+                                        ch_k "I think you made yourself {i}perfectly{/i} clear earlier. . ."            
+                                else:
+                                        call Kitty_Sub_Asked
                         
-        "Never Mind":
-            return
+                        "About that gift you wanted to get Laura. . ." if "dress1" in L_History and "dress2" not in L_History and "dress3" not in L_History:
+                            call Laura_Dressup2
+            
+                        "Never mind":
+                                pass       
+                            
+            "Never Mind":
+                return
               
     return
-
-label Kitty_OtherWoman:
-    $ Cnt = 0
-    if "dating" in R_Traits:
-        call KittyFace("perplexed")
-        menu: 
-            ch_k "But you're with Rogue right now."
-            "She said I can be with you too." if "poly Kitty" in R_Traits:
-                $Cnt = int((K_LikeRogue - 500)/2)
+     
+label Kitty_OtherWoman(Cnt = 0):
+    #Other is the other woman, Poly is whether she'd be cool with a threesome
+    if not P_Harem:
+            return            
+            
+    if "Rogue" == P_Harem[0]:           
+            $Cnt = int((K_LikeRogue - 500)/2)
+    elif "Emma" == P_Harem[0]:     
+            $Cnt = int((K_LikeEmma - 500)/2)
+    elif "Laura" == P_Harem[0]:           
+            $Cnt = int((K_LikeLaura - 500)/2)
+    else:
+            $Cnt = 100     
+        
+    call KittyFace("perplexed")
+    if len(P_Harem) >= 2:
+        ch_k "But you're with [P_Harem[0]] right now, and and all sorts of other girls!"
+    else:    
+        ch_k "But you're with [P_Harem[0]]!"
+    menu: 
+        extend ""
+        "She said I can be with you too." if "KittyYes" in P_Traits:
+                if ApprovalCheck("Kitty", 1800, Bonus = Cnt):
+                    call KittyFace("smile", 1)                    
+                    if K_Love >= K_Obed:
+                        ch_k "Just so long as we can be together, I can share."
+                    elif K_Obed >= K_Inbt:
+                        ch_k "I'm ok with that if she is."
+                    else:
+                        ch_k "Yeah, I mean I guess so."
+                else:
+                    call KittyFace("angry", 1)
+                    ch_k "Well maybe she did, but I don't want to share."  
+                    $ renpy.pop_call()                                          
+                    #This causes it to jump past the previous menu on the return
+        
+        "I could ask if she'd be ok with me dating you both." if "KittyYes" not in P_Traits:
                 if ApprovalCheck("Kitty", 1800, Bonus = Cnt):
                     call KittyFace("smile", 1)
                     if K_Love >= K_Obed:
@@ -447,38 +455,21 @@ label Kitty_OtherWoman:
                         ch_k "I'm ok with that if she is."
                     else:
                         ch_k "Yeah, I mean I guess so."
-                        $ K_Traits.append("poly Rogue")
+                    ch_k "Go ask her, and let me know what she thinks in the morning."
                 else:
                     call KittyFace("angry", 1)
                     ch_k "Well maybe she did, but I don't want to share."  
-                    $ renpy.pop_call()                                          #This causes it to jump past the previous menu on the return
-            
-            "I could ask if she'd be ok with me dating you both." if "poly Kitty" not in R_Traits:
-                $Cnt = int((K_LikeRogue - 500)/2)
-                if ApprovalCheck("Kitty", 1800, Bonus = Cnt):
-                    call KittyFace("smile", 1)
-                    if K_Love >= K_Obed:
-                        ch_k "Just so long as we can be together, I can share."
-                    elif K_Obed >= K_Inbt:
-                        ch_k "I'm ok with that if she is."
-                    else:
-                        ch_k "Yeah, I mean I guess so."                        
-                    ch_k "Go ask her, give me the night to think about it, and then come back tomorrow with her answer."
-                else:
-                    call KittyFace("angry", 1)
-                    ch_k "Well maybe she would, but I don't want to share."      
                 $ renpy.pop_call()
-            
-            "What she doesn't know won't hurt her.":
-                $Cnt = int((K_LikeRogue - 500)/2)
-                if not ApprovalCheck("Kitty", 1800, Bonus = -(int((K_LikeRogue - 600)/2))): #checks if Rogue likes you more than Kitty
+        
+        "What she doesn't know won't hurt her.":
+                if not ApprovalCheck("Kitty", 1800, Bonus = -Cnt): #checks if Kitty likes you more than Kitty
                     call KittyFace("angry", 1)
                     if not ApprovalCheck("Kitty", 1800):
                         ch_k "Well I don't like you that much either."
                     else:
-                        ch_k "Well I'm not cool with that, Rogue's a friend of mine."                    
+                        ch_k "Well I'm not cool with that, [P_Harem[0]]'s a friend of mine."                        
                     $ renpy.pop_call() 
-                    
+                
                 else:
                     call KittyFace("smile", 1)
                     if K_Love >= K_Obed:
@@ -487,28 +478,25 @@ label Kitty_OtherWoman:
                         ch_k "If that's how you want it to be."
                     else:
                         ch_k "I suppose that's true."
-                    $ K_Traits.append("poly Rogue")
                     $ K_Traits.append("downlow")
                 
-            "I can break it off with her.":
-                call KittyFace("sad")
-                ch_k "Well then maybe I'll see you tomorrow after you have."                                   
-                $ renpy.pop_call()
-                
-            "You're right, I was dumb to ask.":
-                call KittyFace("sad")
-                ch_k "We had a good thing there. Maybe some day. . ."                    
-                $ renpy.pop_call()                     
+        "I can break it off with her.":
+                    call KittyFace("sad")
+                    ch_k "Well then maybe I'll see you tomorrow after you have."                                      
+                    $ renpy.pop_call()
+            
+        "You're right, I was dumb to ask.":
+                    call KittyFace("sad")
+                    ch_k "You think?"          
+                    $ renpy.pop_call()                   
                 
     return
-    
 label Kitty_Settings:
     menu:
         ch_p "Let's talk about you."
         "Wardrobe": 
                 ch_p "I wanted to talk about your style."
-                if K_Loc != "bg player" and K_Loc != "bg kitty":  
-                    if Taboo:
+                if K_Taboo:
                         if "exhibitionist" in K_Traits:
                             ch_k "Mmmmm. . ."  
                         elif ApprovalCheck("Kitty", 900, TabM=4) or ApprovalCheck("Kitty", 400, "I", TabM=3): 
@@ -517,7 +505,7 @@ label Kitty_Settings:
                             ch_k "This is[K_like]pretty exposed, right?"
                             ch_k "Can't we talk about this in our rooms?"
                             return
-                    call Kitty_Clothes
+                        call Kitty_Clothes
                 elif ApprovalCheck("Kitty", 900, TabM=4) or ApprovalCheck("Kitty", 600, "L") or ApprovalCheck("Kitty", 300, "O"):
                     ch_k "[K_Like]what were you thinking here?"
                     call Kitty_Clothes
@@ -527,12 +515,7 @@ label Kitty_Settings:
         "Shift her Personality" if ApprovalCheck("Kitty", 900, "L", TabM=0) or ApprovalCheck("Kitty", 900, "O", TabM=0) or ApprovalCheck("Kitty", 900, "I", TabM=0):
                 ch_p "Could we talk about us?"
                 call Kitty_Personality
-        
-        
-        "Dirty Talk":
-                    ch_p "About when we have sex. . ."
-                    call Kitty_SexChat
-          
+                  
         "Pet names":
             menu:  
                 "Your Pet Name":
@@ -555,25 +538,7 @@ label Kitty_Settings:
         
                 "Back":
                         pass
-        "\"Like\" options":    
-                ch_p "So you[K_like]say \"[K_like]\" a lot. . ."      
-                if ApprovalCheck("Kitty", 800):
-                    call KittyLike
-                else:
-                    ch_k "[K_Like]what's it to you?"
-            
-        "About other girls":
-                menu:
-                    ch_p "How do you feel about. . ."
-                    "Rogue?":
-                        call Kitty_AboutRogue  
-                    "Emma?":
-                        call Kitty_AboutEmma  
-                    "Laura?":
-                        call Kitty_AboutLaura  
-                    "Never mind.":
-                        pass
-            
+                                                
         "Follow options" if "follow" in K_Traits:
                 ch_p "You know how you ask if I want to follow you sometimes?"
                 $ Line = 0
@@ -629,33 +594,16 @@ label Kitty_Settings:
                     elif Line == "lock":
                         $ K_Traits.append("lockedtravels")    
                     $ Line = 0        
-                              
-        "Gym clothes" if "asked gym" in K_DailyActions and "no ask gym" not in K_Traits:
-                    ch_p "You asked me about your gym clothes?"
-                    ch_p "Don't worry about that, your gym clothes are cute."   
-                    ch_k "Ok, thanks."
-                    $ K_Traits.append("no ask gym")
-        "Gym clothes" if "no ask gym" in K_Traits:
-                    ch_p "You asked me about your gym clothes?"
-                    ch_p "Forget about that, I changed my mind."   
-                    ch_k "Fine, whatever."
-                    $ K_Traits.remove("no ask gym")
-                    
-        "Private outfit" if K_Schedule[9]:
-                    #if comfy is in K_Traits, she won't ask before changing
-                    ch_p "You know that outfit you wear in private?"
-                    menu:
-                        ch_k "Yeah, what about it?"
-                        "Just put them on without asking me about it." if "comfy" not in K_Traits:
-                            $ K_Traits.append("comfy")
-                        "Ask before changing into that." if "comfy" in K_Traits:
-                            $ K_Traits.remove("comfy")
-                        "Never Mind":
-                            pass     
-                            
-        "Tasks" if "sir" in K_Petnames:
-                ch_p "I have some tasks for you."
-                call Kitty_Controls
+                 
+        "\"Like\" options":    
+                ch_p "So you[K_like]say \"[K_like]\" a lot. . ."      
+                if ApprovalCheck("Kitty", 800):
+                    call KittyLike
+                else:
+                    ch_k "[K_Like]what's it to you?"
+#        "Tasks" if "sir" in K_Petnames:
+#                ch_p "I have some tasks for you."
+#                call Kitty_Controls
         
         "Switch to. . .":
                 menu:
@@ -673,6 +621,182 @@ label Kitty_Settings:
 
 # End Kitty Chat
 
+
+label Kitty_Monogamy:
+        #called from Kitty_Settings to ask her not to hook up wiht other girls    
+        menu:
+            "Could you not hook up with other girls?" if "mono" not in K_Traits:
+                    if K_Thirst >= 60 and not ApprovalCheck("Kitty", 1700, "LO", TabM=0):
+                            #she's too thirsty
+                            call AnyFace("Kitty","sly",1) 
+                            if "mono" not in K_DailyActions:                                                         
+                                    call Statup("Kitty", "Obed", 90, -2) 
+                            ch_k "I[K_like]appreciate the interest, but you aren't around enough. . ."
+                            return
+                    elif ApprovalCheck("Kitty", 1100, "LO", TabM=0) and K_Love >= L_Obed:
+                            #she cares
+                            call AnyFace("Kitty","sly",1) 
+                            if "mono" not in K_DailyActions:                                                         
+                                    call Statup("Kitty", "Love", 90, 1) 
+                            ch_k "Aw, is someone jellie?" 
+                            ch_k "I guess I could take care of myself. . ."
+                    elif ApprovalCheck("Kitty", 600, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Kitty","sly",1,Eyes="side") 
+                            ch_k "If you want. . ."
+                    else:   
+                            #she doesn't care
+                            call AnyFace("Kitty","sly",1,Brows="confused") 
+                            ch_k "I'll hook up with who I want!" 
+                            return                  
+                    if "mono" not in K_DailyActions:                                                         
+                            call Statup("Kitty", "Obed", 90, 3) 
+                    call AnyWord("Kitty",1,0,"mono") #Daily
+                    $ K_Traits.append("mono")   
+            "Don't hook up with other girls." if "mono" not in K_Traits:
+                    if ApprovalCheck("Kitty", 800, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Kitty","sly",1,Eyes="side") 
+                            ch_k "Ok."
+                    elif K_Thirst >= 60 and not ApprovalCheck("Kitty", 1700, "LO", TabM=0):
+                            #she's too thirsty
+                            call AnyFace("Kitty","sly",1) 
+                            if "mono" not in K_DailyActions:                                                         
+                                    call Statup("Kitty", "Obed", 90, -2) 
+                            ch_k "I[K_like]appreciate the interest, but you aren't around enough. . ."
+                            return
+                    elif ApprovalCheck("Kitty", 500, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Kitty","sly",1,Eyes="side") 
+                            ch_k "If you want. . ."
+                    elif ApprovalCheck("Kitty", 1200, "LO", TabM=0):
+                            #she cares
+                            call AnyFace("Kitty","sly",1) 
+                            ch_k "Rude much?" 
+                            ch_k "Fine, I'll do it for you. . ."
+                    else:   
+                            #she doesn't care
+                            call AnyFace("Kitty","sly",1,Brows="confused") 
+                            ch_k "I'll hook up with who I want!" 
+                            return               
+                    if "mono" not in K_DailyActions:                                                         
+                            call Statup("Kitty", "Obed", 90, 3) 
+                    call AnyWord("Kitty",1,0,"mono") #Daily
+                    $ K_Traits.append("mono")   
+            "It's ok if you hook up with other girls." if "mono" in K_Traits:
+                    if ApprovalCheck("Kitty", 650, "O", TabM=0):
+                            call AnyFace("Kitty","sly",1,Eyes="side") 
+                            ch_k "Right, gotcha."
+                    elif ApprovalCheck("Kitty", 800, "L", TabM=0):
+                            call AnyFace("Kitty","sly",1) 
+                            ch_k "Not like you'd give me the time to do that. . ." 
+                            ch_k "right?"
+                    else:
+                            call AnyFace("Kitty","sly",1,Brows="confused") 
+                            if "mono" not in K_DailyActions:                                                         
+                                    call Statup("Kitty", "Love", 90, -2)
+                            ch_k "You're not the boss of my pussy!" 
+                    if "mono" not in K_DailyActions:                                                         
+                            call Statup("Kitty", "Obed", 90, 3) 
+                    if "mono" in K_Traits:
+                            $ K_Traits.remove("mono")   
+                    call AnyWord("Kitty",1,0,"mono") #Daily
+            "Never mind.":
+                pass
+        return
+        
+# end Kitty monogamy <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+label Kitty_Jumped:
+        #called from Kitty_Settings to ask her not to jump you  
+        ch_p "Hey, Remember that time you threw yourself at me?" 
+        call AnyFace("Kitty","sly",1,Brows="confused") 
+        menu:
+            ch_k "Um. . . I guess?"
+            "Could you maybe just ask instead?" if "chill" not in K_Traits:
+                    if K_Thirst >= 60 and not ApprovalCheck("Kitty", 1500, "LO", TabM=0):
+                            #she's too thirsty
+                            call AnyFace("Kitty","surprised",2) 
+                            if "chill" not in K_DailyActions:                                                         
+                                    call Statup("Kitty", "Obed", 90, -2) 
+                            ch_k "Well- Well maybe spend some more time with me!"
+                            call AnyFace("Kitty","angry",1,Eyes="side") 
+                            return
+                    elif ApprovalCheck("Kitty", 900, "LO", TabM=0) and K_Love >= L_Obed:
+                            #she cares
+                            call AnyFace("Kitty","sadside",1) 
+                            if "chill" not in K_DailyActions:                                                         
+                                    call Statup("Kitty", "Love", 90, 1) 
+                            ch_k "Sorry, [K_Petname]. . ."
+                            ch_k "I can't keep my hands to myself. . ." 
+                            ch_k "I'll try though. . ."
+                    elif ApprovalCheck("Kitty", 400, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Kitty","sly",1,Eyes="side") 
+                            ch_k "I guess. . ."
+                    else:   
+                            #she doesn't care
+                            call AnyFace("Kitty","sly",1) 
+                            ch_k "I can't keep my hands to myself. . ." 
+                            return                    
+                    if "chill" not in K_DailyActions:                                                         
+                            call Statup("Kitty", "Obed", 90, 3) 
+                    call AnyWord("Kitty",1,0,"chill") #Daily
+                    $ K_Traits.append("chill")   
+            "Don't bother me like that." if "chill" not in K_Traits:
+                    if ApprovalCheck("Kitty", 900, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Kitty","sly",1,Eyes="side") 
+                            ch_k "Ok."
+                    elif K_Thirst >= 60 and not ApprovalCheck("Kitty", 600, "O", TabM=0):
+                            #she's too thirsty
+                            call AnyFace("Kitty","angry",1) 
+                            if "chill" not in K_DailyActions:                                                         
+                                    call Statup("Kitty", "Obed", 90, -2) 
+                            ch_k "Don't keep me waiting then!"
+                            return
+                    elif ApprovalCheck("Kitty", 400, "O", TabM=0):
+                            #she is obedient
+                            call AnyFace("Kitty","sly",1,Eyes="side") 
+                            ch_k "Fine. . ."
+                    elif ApprovalCheck("Kitty", 500, "LO", TabM=0) and not ApprovalCheck("Kitty", 500, "I", TabM=0):
+                            #she cares
+                            call AnyFace("Kitty","sly",1) 
+                            ch_k "Rude." 
+                            ch_k ". . . I'll try though. . ."
+                    else:   
+                            #she doesn't care
+                            call AnyFace("Kitty","sly",1,Brows="confused") 
+                            ch_k "I don't know. I guess we'll see. . ." 
+                            return                     
+                    if "chill" not in K_DailyActions:                                                         
+                            call Statup("Kitty", "Obed", 90, 3) 
+                    call AnyWord("Kitty",1,0,"chill") #Daily
+                    $ K_Traits.append("chill")   
+            "Knock yourself out.":
+                    if ApprovalCheck("Kitty", 800, "L", TabM=0):
+                            call AnyFace("Kitty","sly",1) 
+                            ch_k "Roger, roger. . ." 
+                    elif ApprovalCheck("Kitty", 700, "O", TabM=0):
+                            call AnyFace("Kitty","sly",1,Eyes="side") 
+                            ch_k "You bet!"
+                    else:
+                            call AnyFace("Kitty","sly",1,Brows="confused") 
+                            if "chill" not in K_DailyActions:                                                         
+                                    call Statup("Kitty", "Love", 90, -2)
+                            ch_k "I don't know."
+                            ch_k "If I've got the time."
+                            ch_k "I guess." 
+                    if "chill" not in K_DailyActions:                                                         
+                            call Statup("Kitty", "Obed", 90, 3) 
+                    if "chill" in K_Traits:
+                            $ K_Traits.remove("chill")  
+                    call AnyWord("Kitty",1,0,"chill") #Daily 
+            "Um, never mind.":
+                pass
+        return
+        
+# end Kitty jumped <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Kitty Sexchat <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 label Kitty_SexChat(Line = "Yeah, what did you want to talk about?"):
@@ -873,7 +997,6 @@ label Kitty_SexChat(Line = "Yeah, what did you want to talk about?"):
                                                 
                                 # End Kitty's favorite things.
                     
-                    
                 "Don't talk as much during sex." if "vocal" in K_Traits:
                         if "setvocal" in K_DailyActions:
                             call KittyFace("perplexed")
@@ -931,7 +1054,6 @@ label Kitty_SexChat(Line = "Yeah, what did you want to talk about?"):
                             $ K_DailyActions.append("setvocal")  
                         # End Kitty Dirty Talk
                     
-                    
                 "Don't do your own thing as much during sex." if "passive" not in K_Traits:
                         if "initiative" in K_DailyActions:
                             call KittyFace("perplexed")
@@ -987,12 +1109,15 @@ label Kitty_SexChat(Line = "Yeah, what did you want to talk about?"):
                                 ch_k "You're not my supervisor!"  
                                 
                             $ K_DailyActions.append("initiative")   
+                "About getting Jumped" if "jumped" in K_History:
+                    call Kitty_Jumped
+                "About when you masturbate":
+                    call NoFap("Kitty")
                 "Never Mind" if Line == "Yeah, what did you want to talk about?":
                     return
                 "That's all." if Line != "Yeah, what did you want to talk about?":
                     return
-            if Line == "Yeah, what did you want to talk about?":
-                $ Line = "Anything else?"
+            $ Line = "Anything else?"
     return
 # End Kitty Sexchat <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -1420,15 +1545,20 @@ label Kitty_Flirt:
     if K_Loc == bg_current:         
         $ K_Chat[5] = 1                                         #can only flirt once per cycle. 
         menu:        
-#            "Compliment her":
+            "Compliment her":
+                    call Compliment("Kitty")
+                
                 
             "Say you love her":
-                        call Love_You("Kitty")
+                    call Love_You("Kitty")
                 
-            "Touch her cheek.":                                                                                 #Touch her cheek 
+            "Touch her cheek.":
                     call K_TouchCheek
+            
+            "Hold hands":
+                    call Hold_Hands("Kitty")    
                             
-            "Kiss her cheek":                                                                                   #Kiss her cheek
+            "Kiss her cheek":
                     "You lean over, tilt her head back, and kiss her on the cheek."                
                     if ApprovalCheck("Kitty", 700, "L", TabM=1):
                         call KittyFace("sexy", 1) 
@@ -2081,7 +2211,10 @@ label Kitty_Controls:
             return
         "I want you to stop taking your own initiative." if "sub" not in K_Traits:
             $ K_Traits.append("sub")
-            ch_k "You're the boss, [K_Petname]."                
+            ch_k "You're the boss, [K_Petname]."           
+        "You can take your own initiative if you like." if "sub" in K_Traits:
+            $ K_Traits.remove("sub")
+            ch_k "Ok, cool."                
         "Exit.":
             return
     jump Kitty_Controls
@@ -2089,9 +2222,9 @@ return
 
 # start Kitty_Gifts//////////////////////////////////////////////////////////
 label Kitty_Gifts:  
-#    if P_Inventory == []:
-#        "You don't have anything to give her."
-#        return
+    if not P_Inventory:
+        "You don't have anything to give her."
+        return
     menu:
         "What would you like to give her?"
         "Toys and books":
@@ -2419,6 +2552,9 @@ label Kitty_Gifts:
                             "She hands it back to you."
                             $ K_RecentActions.append("no gift bra")                      
                             $ K_DailyActions.append("no gift bra") 
+                        if "bikini top" in K_Inventory and "bikini bottoms" in K_Inventory:
+                            if K_Inbt >= 400 or "blue skirt" in K_Inventory:
+                                $ K_Swim[0] = 1
                     else: 
                         ch_k "I already have one of those."
                         
@@ -2473,6 +2609,9 @@ label Kitty_Gifts:
                             "She hands them back to you."
                             $ K_RecentActions.append("no gift panties")                      
                             $ K_DailyActions.append("no gift panties") 
+                        if "bikini top" in K_Inventory and "bikini bottoms" in K_Inventory:
+                            if K_Inbt >= 400 or "blue skirt" in K_Inventory:
+                                $ K_Swim[0] = 1
                     else: 
                         ch_k "I already have one of those."
                         
@@ -2523,6 +2662,8 @@ label Kitty_Gifts:
                             "She hands them back to you."
                             $ K_RecentActions.append("no gift skirt")                      
                             $ K_DailyActions.append("no gift skirt") 
+                        if "bikini top" in K_Inventory and "bikini bottoms" in K_Inventory:
+                            $ K_Swim[0] = 1
                     else: 
                         ch_k "I already have one of those."
                          
@@ -2533,8 +2674,8 @@ label Kitty_Gifts:
             call Laura_Dressup2
             
         "Exit":
-            pass
-    
+            return
+    jump Kitty_Gifts
     return
 
 
@@ -2999,29 +3140,47 @@ label Kitty_Summon(Tempmod=Tempmod):
                     ch_k "Like I told you, I'm busy."   
                 $ K_RecentActions.append("no summon")
                 return
-                              
-    if Current_Time == "Night": 
-                if ApprovalCheck("Kitty", 700, "L") or ApprovalCheck("Kitty", 300, "O"):                              #It's night time but she likes you.
-                        ch_k "It's[K_like]getting kinda late, but we can hang out for a bit."
-                        $ K_Loc = bg_current 
-                        call Set_The_Scene
-                else:                                                           #It's night time and she isn't into you
-                        ch_k "It's kinda late? Maybe tomorrow."       
-                        $ K_RecentActions.append("no summon")         
-                return
-                
+                   
     $ D20 = renpy.random.randint(1, 20) 
     $ Line = 0
     if K_Loc == "bg classroom": #fix change these if changed function
-        $ Tempmod = 10
+        $ Tempmod = -10
     elif K_Loc == "bg dangerroom":    
-        $ Tempmod = 10
+        $ Tempmod = -10
     elif K_Loc == "bg showerroom":    
-        $ Tempmod = 30
+        $ Tempmod = -30
         
     if D20 <= 3:                                                                        
         #unlucky refusal
-        $ Line = "no"       
+        $ Line = "no"
+        
+    elif Current_Time == "Night": 
+                if ApprovalCheck("Kitty", 700, "L") or ApprovalCheck("Kitty", 300, "O"):                              
+                        #It's night time but she likes you.
+                        ch_k "It's[K_like]getting kinda late, but we can hang out for a bit."
+                        $ K_Loc = bg_current 
+                        call Set_The_Scene
+                else:                                                          
+                        #It's night time and she isn't into you
+                        ch_k "It's kinda late? Maybe tomorrow."       
+                        $ K_RecentActions.append("no summon")         
+                return
+    elif "les" in K_RecentActions:
+            #if she's with another girl. . .
+            if ApprovalCheck("Kitty", 2000):
+                    ch_k "I'm sorta with someone right now, [K_Petname], wanna join us?"
+                    menu:
+                        extend ""
+                        "Sure":
+                            $ Line = "go to"
+                        "No thanks.":
+                            ch_k "K' then."
+                            return
+            else:            
+                    ch_k "Um, no, everything's fine here, we're all good here."   
+                    ch_k "Maybe I could see you in a bit?"      
+                    $ K_RecentActions.append("no summon") 
+                    return  
     elif not ApprovalCheck("Kitty", 700, "L") or not ApprovalCheck("Kitty", 600, "O"):                       
         #It's not night time, but she's busy 
         if not ApprovalCheck("Kitty", 300):
@@ -3155,6 +3314,8 @@ label Kitty_Summon(Tempmod=Tempmod):
             ch_k "Ok, be there in a gif, [K_Petname]."
         $ Line = "yes" 
         
+    $ Tempmod = 0
+    
     if not Line:                                                                        
             #You end the dialog neutrally               
             $ K_RecentActions.append("no summon")         
@@ -3194,6 +3355,15 @@ label Kitty_Summon(Tempmod=Tempmod):
             elif K_Loc == "bg campus": 
                     ch_k "I've got a nice spot in the shade."
                     jump Campus
+            elif K_Loc == "bg rogue": 
+                    ch_k "See ya' in a bit. . ."
+                    jump Rogue_Room
+            elif K_Loc == "bg laura": 
+                    ch_k "See ya' in a bit. . ."
+                    jump Laura_Room
+            elif K_Loc == "bg emma": 
+                    ch_k "See ya' in a bit. . ."
+                    jump Emma_Room
             else:
                     ch_k "You know, I'll just meet you in my room."
                     $ K_Loc = "bg kitty"
@@ -3206,13 +3376,13 @@ label Kitty_Summon(Tempmod=Tempmod):
             ch_k "Very well, [K_Petname]."
         
     $ K_RecentActions.append("summoned")  
-    $ Line = 0
-    ch_k "I'll be right over."    
-    if "locked" in P_RecentActions:
+    $ Line = 0 
+    if "locked" in P_Traits:
             call Locked_Door("Kitty")
             return                            
     $ K_Loc = bg_current 
     call KittyOutfit
+    call Taboo_Level
     call Set_The_Scene
     return
 
@@ -3553,128 +3723,131 @@ label Kitty_Dismissed(Leaving = 0):
     #end "you can leave"
     
 
-label Kitty_AboutRogue:
+label Kitty_About(Girl="Rogue"):
     ch_k "What do I think about her? Well. . ."
     
-    if "poly Rogue" in K_Traits:  
-        ch_k "You know we're[K_like]close. . ."    
-    elif K_LikeRogue >= 900:
-        ch_k "She's[K_like]really sexy. . ."
-    elif K_LikeRogue >= 800:
-        ch_k "She's my bestie, and maybe. . ."    
-    elif K_LikeRogue >= 700:
-        ch_k "She's[K_like]my bestie!"
-    elif K_LikeRogue >= 600:
-        ch_k "We're[K_like]friends and all."
-    elif K_LikeRogue >= 500:
-        ch_k "She's not[K_like]a jerk or anything."
-    elif K_LikeRogue >= 400:
-        ch_k "I'm kinda[K_like]over her."
-    elif K_LikeRogue >= 300:
-        ch_k "That basic bitch gotta go." 
-    else:
-        ch_k "That slut?"
+    if Girl == "Rogue":    
+            if "poly Rogue" in K_Traits:  
+                ch_k "You know we're[K_like]close. . ."    
+            elif K_LikeRogue >= 900:
+                ch_k "She's[K_like]really sexy. . ."
+            elif K_LikeRogue >= 800:
+                ch_k "She's my bestie, and maybe. . ."    
+            elif K_LikeRogue >= 700:
+                ch_k "She's[K_like]my bestie!"
+            elif K_LikeRogue >= 600:
+                ch_k "We're[K_like]friends and all."
+            elif K_LikeRogue >= 500:
+                ch_k "She's not[K_like]a jerk or anything."
+            elif K_LikeRogue >= 400:
+                ch_k "I'm kinda[K_like]over her."
+            elif K_LikeRogue >= 300:
+                ch_k "That basic bitch gotta go." 
+            else:
+                ch_k "That slut?"
+    elif Girl == "Emma":    
+            if "poly Emma" in K_Traits:  
+                ch_k "You know we bang, right?"    
+            elif K_LikeEmma >= 900:
+                ch_k "She's got[K_like]really amazing tits. . ."
+            elif K_LikeEmma >= 800:
+                ch_k "She's really beautiful. . ."    
+            elif K_LikeEmma >= 700:
+                ch_k "I think we've become good friends."
+            elif K_LikeEmma >= 600:
+                ch_k "She's[K_like]my favorite teacher."
+            elif K_LikeEmma >= 500:
+                ch_k "She's[K_like]OK."
+            elif K_LikeEmma >= 400:
+                ch_k "She gives out[K_like]way too much homework."
+            elif K_LikeEmma >= 300:
+                ch_k "Ugh, that witch." 
+            else:
+                ch_k "That whore?"
+    elif Girl == "Laura":    
+            if "poly Laura" in K_Traits:  
+                ch_k "You know we[K_like]make out sometimes. . ."    
+            elif K_LikeLaura >= 900:
+                ch_k "She's[K_like]such an animal. . ."
+            elif K_LikeLaura >= 800:
+                ch_k "We're pretty tight lately. . ."    
+            elif K_LikeLaura >= 700:
+                ch_k "She's[K_like]a really good friend."
+            elif K_LikeLaura >= 600:
+                ch_k "We're[K_like]teammates."
+            elif K_LikeLaura >= 500:
+                ch_k "She's not[K_like]a total jerk."
+            elif K_LikeLaura >= 400:
+                ch_k "I'm kinda[K_like]done with her."
+            elif K_LikeLaura >= 300:
+                ch_k "Jungle girl?" 
+            else:
+                ch_k "Bitch in heat."
           
     return
     
-#End Kitty_AboutRogue
-label Kitty_AboutEmma:
-    ch_k "What do I think about her? Well. . ."
-    
-    if "poly Emma" in K_Traits:  
-        ch_k "You know we bang, right?"    
-    elif K_LikeEmma >= 900:
-        ch_k "She's got[K_like]really amazing tits. . ."
-    elif K_LikeEmma >= 800:
-        ch_k "She's really beautiful. . ."    
-    elif K_LikeEmma >= 700:
-        ch_k "I think we've become good friends."
-    elif K_LikeEmma >= 600:
-        ch_k "She's[K_like]my favorite teacher."
-    elif K_LikeEmma >= 500:
-        ch_k "She's[K_like]OK."
-    elif K_LikeEmma >= 400:
-        ch_k "She gives out[K_like]way too much homework."
-    elif K_LikeEmma >= 300:
-        ch_k "Ugh, that witch." 
-    else:
-        ch_k "That whore?"
-          
-    return
-    
-#End Kitty_AboutEmma   
-
-label Kitty_AboutLaura:
-    ch_k "What do I think about her? Well. . ."
-    
-    if "poly Laura" in K_Traits:  
-        ch_k "You know we[K_like]make out sometimes. . ."    
-    elif K_LikeLaura >= 900:
-        ch_k "She's[K_like]such an animal. . ."
-    elif K_LikeLaura >= 800:
-        ch_k "We're pretty tight lately. . ."    
-    elif K_LikeLaura >= 700:
-        ch_k "She's[K_like]a really good friend."
-    elif K_LikeLaura >= 600:
-        ch_k "We're[K_like]teammates."
-    elif K_LikeLaura >= 500:
-        ch_k "She's not[K_like]a total jerk."
-    elif K_LikeLaura >= 400:
-        ch_k "I'm kinda[K_like]done with her."
-    elif K_LikeLaura >= 300:
-        ch_k "Jungle girl?" 
-    else:
-        ch_k "Bitch in heat."
-          
-    return
-    
-## Kitty's Clothes ///////////////////
-label Kitty_Clothes:    
+## Kitty's Clothes  // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+label Kitty_Clothes:         
+    $ Trigger = 1 # to prevent Focus swapping. . .   
     call KittyFace
     menu:
-        ch_k "So[K_like]you wanted to talk about my clothes?"
-        "Let's talk about your modded clothes.":
-                    jump Kitty_Modded_Clothes_Menu
-        "Let's talk about your outfits.":
-                    jump Kitty_Clothes_Outfits        
-        "Let's talk about your over shirts.":
+        ch_k "So[K_like]you wanted to talk about my clothes?"   
+        "Overshirts":
                     jump Kitty_Clothes_Over        
-        "Let's talk about your legwear.":
+        "Legwear":
                     jump Kitty_Clothes_Legs
-        "Let's talk about your underwear.":
+        "Underwear":
                     jump Kitty_Clothes_Under
-        "Let's talk about the other stuff.":
+        "Accessories":
                     jump Kitty_Clothes_Misc
-        "That looks really good on you, you should remember that one. [[Set Custom]":
-                menu:
-                    "Which slot would you like this saved in?"
-                    "Custom 1":
-                                call Kitty_OutfitShame(3,1)
-                    "Custom 2":
-                                call Kitty_OutfitShame(5,1)
-                    "Custom 3":
-                                call Kitty_OutfitShame(6,1)
-                    "Custom 4":
-                                call Kitty_OutfitShame(15,1)
-                    "Custom 5":
-                                call Kitty_OutfitShame(16,1)
-                    "Custom 6":
-                                call Kitty_OutfitShame(17,1)
-                    "Custom 7":
-                                call Kitty_OutfitShame(18,1)
-                    "Custom 8":
-                                call Kitty_OutfitShame(19,1)
-                    "Custom 9":
-                                call Kitty_OutfitShame(20,1)
-                    "Gym Clothes":
-                                call Kitty_OutfitShame(7,1)
-                    "Sleepwear":
-                                call Kitty_OutfitShame(9,1)
-                    "Swimwear":
-                                call Kitty_OutfitShame(10,1)
-                    "Never mind":
-                                pass
-        "Switch to. . .":
+        "Outfits":
+                    jump Kitty_Clothes_Outfits     
+        "Let's talk about what you wear around.":
+                    call Kitty_Clothes_Schedule
+                    
+        "Could I get a look at it?" if K_Loc != bg_current:
+                # checks to see if she'll drop the screen
+                call Kitty_OutfitShame(0,2) 
+                if _return:    
+                    show PhoneSex zorder 150
+                    ch_k "Cute? . ."
+                hide PhoneSex
+        "Could I get a look at it?" if renpy.showing('DressScreen'):
+                # checks to see if she'll drop the screen
+                call Kitty_OutfitShame(0,2) 
+                if _return:
+                    hide DressScreen
+        "Would you be more comfortable behind a screen? (locked)" if K_Taboo:
+                pass
+        "Would you be more comfortable behind a screen?" if K_Loc == bg_current and not K_Taboo and not renpy.showing('DressScreen'):
+                # checks to see if she'll drop the screen
+                if ApprovalCheck("Kitty", 1500) or (K_SeenChest and K_SeenPussy):
+                        ch_k "Probably won't need it, thanks."
+                else:
+                        show DressScreen zorder 150
+                        ch_k "Yeah, this is a bit more comfortable, thanks."
+            
+        "Switch to. . .":            
+                if renpy.showing('DressScreen'):
+                        call Kitty_OutfitShame(0,2) 
+                        if _return:
+                            hide DressScreen
+                        else:
+                            call KittyOutfit                    
+                    
+                $ K_TempClothes[1] = K_Arms  
+                $ K_TempClothes[2] = K_Legs 
+                $ K_TempClothes[3] = K_Over
+                $ K_TempClothes[4] = K_Neck 
+                $ K_TempClothes[5] = K_Chest 
+                $ K_TempClothes[6] = K_Panties
+#                $ K_TempClothes[7] = K_Boots
+                $ K_TempClothes[8] = K_Hair
+                $ K_TempClothes[9] = K_Hose
+                $ K_TempClothes[0] = 1 
+                $ K_Outfit = "temporary"
+                $ K_OutfitDay = "temporary" 
+                $ Trigger = 0
                 menu:
                     "Rogue":
                         call Rogue_Chat_Set("wardrobe")                    
@@ -3702,6 +3875,14 @@ label Kitty_Clothes:
                         else:
                                 ch_k "Sure."                    
                         $ K_RecentActions.append("wardrobe")  
+                        
+                if renpy.showing('DressScreen'):
+                        call Kitty_OutfitShame(0,2) 
+                        if _return:
+                            hide DressScreen
+                        else:
+                            call KittyOutfit 
+                            
                 #sets up a temporary outfit
                 $ K_TempClothes[1] = K_Arms  
                 $ K_TempClothes[2] = K_Legs 
@@ -3715,7 +3896,8 @@ label Kitty_Clothes:
                 $ K_TempClothes[0] = 1 
                 $ K_Outfit = "temporary"
                 $ K_OutfitDay = "temporary"        
-                $ K_Chat[1] += 1    
+                $ K_Chat[1] += 1         
+                $ Trigger = 0
                 return
             
     jump Kitty_Clothes
@@ -3723,231 +3905,237 @@ label Kitty_Clothes:
         
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
 
-    menu Kitty_Clothes_Outfits:                                                                                 # Outfits
-        "I really like that pink shirt and capris outfit you wear.":                   #Green
-            call KittyOutfit("pink outfit")   
-            menu:
-                "You should wear this one out. [[set current outfit]":
-                    $ K_Outfit = "pink outfit"
-                    $ K_Shame = K_OutfitShame[1]
-                    ch_k "I used to wear that one[K_like]every day!"
-                "Let's try something else though.":
-                    ch_k "K."            
+    menu Kitty_Clothes_Outfits:                                                                                
+        # Outfits
+        "You should remember that one. [[Set Custom]":
+                menu:
+                    "Which slot would you like this saved in?"
+                    "Custom 1":
+                                call Kitty_OutfitShame(3,1)
+                    "Custom 2":
+                                call Kitty_OutfitShame(5,1)
+                    "Custom 3":
+                                call Kitty_OutfitShame(6,1)
+                    "Custom 4":
+                                call Kitty_OutfitShame(15,1)
+                    "Custom 5":
+                                call Kitty_OutfitShame(16,1)
+                    "Custom 6":
+                                call Kitty_OutfitShame(17,1)
+                    "Custom 7":
+                                call Kitty_OutfitShame(18,1)
+                    "Custom 8":
+                                call Kitty_OutfitShame(19,1)
+                    "Custom 9":
+                                call Kitty_OutfitShame(20,1)
+                    "Gym Clothes":
+                                call Kitty_OutfitShame(4,1)
+                    "Sleepwear":
+                                call Kitty_OutfitShame(7,1)
+                    "Swimwear":
+                                call Kitty_OutfitShame(10,1)
+                    "Never mind":
+                                pass
+                                
+        "I really like that pink shirt and capris outfit you wear.":                  
+                #pink shirt
+                call KittyOutfit("pink outfit")   
+                menu:
+                    "You should wear this one out. [[set current outfit]":
+                        $ K_Outfit = "pink outfit"
+                        $ K_Shame = K_OutfitShame[1]
+                        ch_k "I used to wear that one[K_like]every day!"
+                    "Let's try something else though.":
+                        ch_k "K."            
                     
-        "That red shirt and black jeans look really nice on you.":                           #Pink  
-            call KittyOutfit("red outfit")
-            menu:
-                "You should wear this one out. [[set current outfit]":
-                    $ K_Outfit = "red outfit"
-                    $ K_Shame = K_OutfitShame[2]
-                    ch_k "That one[K_like]used to be my favorite too!"
-                "Let's try something else though.":
-                    ch_k "K."            
+        "That red shirt and black jeans look really nice on you.":                          
+                #red shirt  
+                call KittyOutfit("red outfit")
+                menu:
+                    "You should wear this one out. [[set current outfit]":
+                        $ K_Outfit = "red outfit"
+                        $ K_Shame = K_OutfitShame[2]
+                        ch_k "That one[K_like]used to be my favorite too!"
+                    "Let's try something else though.":
+                        ch_k "K."            
                     
         "Remember that outfit we put together? [[Set a custom outfit] (locked)" if not K_Custom[0] and not K_Custom2[0] and not K_Custom3[0] and not K_Custom4[0] and not K_Custom5[0] and not K_Custom6[0] and not K_Custom7[0] and not K_Custom8[0] and not K_Custom9[0]:
                         pass       
                         
         "Remember that outfit we put together?" if K_Custom[0] or K_Custom2[0] or K_Custom3[0] or K_Custom4[0] or K_Custom5[0] or K_Custom6[0] or K_Custom7[0] or K_Custom8[0] or K_Custom9[0]: 
-            $ Cnt = 0
-            while 1:
-                menu:                
-                    "Throw on Custom 1 (locked)" if not K_Custom[0]:
-                        pass
-                    "Throw on Custom 1" if K_Custom[0]:
-                        call KittyOutfit("custom1")
-                        $ Cnt = 3
-                    "Throw on Custom 2 (locked)" if not K_Custom2[0]:
-                        pass
-                    "Throw on Custom 2" if K_Custom2[0]:
-                        call KittyOutfit("custom2")
-                        $ Cnt = 5
-                    "Throw on Custom 3 (locked)" if not K_Custom3[0]:
-                        pass
-                    "Throw on Custom 3" if K_Custom3[0]:
-                        call KittyOutfit("custom3")
-                        $ Cnt = 6
+                $ Cnt = 0
+                while 1:
+                    menu:                
+                        "Throw on Custom 1 (locked)" if not K_Custom[0]:
+                                pass
+                        "Throw on Custom 1" if K_Custom[0]:
+                                call KittyOutfit("custom1")
+                                $ Cnt = 3
+                        "Throw on Custom 2 (locked)" if not K_Custom2[0]:
+                                pass
+                        "Throw on Custom 2" if K_Custom2[0]:
+                                call KittyOutfit("custom2")
+                                $ Cnt = 5
+                        "Throw on Custom 3 (locked)" if not K_Custom3[0]:
+                                pass
+                        "Throw on Custom 3" if K_Custom3[0]:
+                                call KittyOutfit("custom3")
+                                $ Cnt = 6
+                        
+                        "You should wear this one in private. (locked)" if not Cnt:
+                                pass
+                        "You should wear this one in private." if Cnt:
+                                if Cnt == 5:
+                                    $ K_Schedule[9] = "custom2"
+                                elif Cnt == 15:
+                                    $ K_Schedule[9] = "custom4"
+                                elif Cnt == 16:
+                                    $ K_Schedule[9] = "custom5"
+                                elif Cnt == 17:
+                                    $ K_Schedule[9] = "custom6"
+                                elif Cnt == 18:
+                                    $ K_Schedule[9] = "custom7"
+                                elif Cnt == 19:
+                                    $ K_Schedule[9] = "custom8"
+                                elif Cnt == 20:
+                                    $ K_Schedule[9] = "custom9"
+                                elif Cnt == 6:
+                                    $ K_Schedule[9] = "custom3"
+                                else:
+                                    $ K_Schedule[9] = "custom"
+                                ch_k "Ok, sure."
+                                                
+                        "On second thought, forget about that one outfit. . .":
+                                menu:
+                                    "Custom 1 [[clear custom 1]" if K_Custom[0]:
+                                        ch_k "Ok, no problem."
+                                        $ K_Custom[0] = 0
+                                    "Custom 1 [[clear custom 1] (locked)" if not K_Custom[0]:
+                                        pass
+                                    "Custom 2 [[clear custom 2]" if K_Custom2[0]:
+                                        ch_k "Ok, no problem."
+                                        $ K_Custom2[0] = 0
+                                    "Custom 2 [[clear custom 2] (locked)" if not K_Custom2[0]:
+                                        pass
+                                    "Custom 3 [[clear custom 3]" if K_Custom3[0]:
+                                        ch_k "Ok, no problem."
+                                        $ K_Custom3[0] = 0
+                                    "Custom 3 [[clear custom 3] (locked)" if not K_Custom3[0]:
+                                        pass
+                                    "Custom 4 [[clear custom 4]" if K_Custom4[0]:
+                                        ch_k "Ok, no problem."
+                                        $ K_Custom4[0] = 0
+                                    "Custom 3 [[clear custom 3] (locked)" if not K_Custom3[0]:
+                                        pass
+                                    "Custom 5 [[clear custom 5]" if K_Custom5[0]:
+                                        ch_k "Ok, no problem."
+                                        $ K_Custom5[0] = 0
+                                    "Custom 3 [[clear custom 3] (locked)" if not K_Custom3[0]:
+                                        pass
+                                    "Custom 6 [[clear custom 6]" if K_Custom6[0]:
+                                        ch_k "Ok, no problem."
+                                        $ K_Custom6[0] = 0
+                                    "Custom 3 [[clear custom 3] (locked)" if not K_Custom3[0]:
+                                        pass
+                                    "Custom 7 [[clear custom 7]" if K_Custom7[0]:
+                                        ch_k "Ok, no problem."
+                                        $ K_Custom7[0] = 0
+                                    "Custom 3 [[clear custom 3] (locked)" if not K_Custom3[0]:
+                                        pass
+                                    "Custom 8 [[clear custom 8]" if K_Custom8[0]:
+                                        ch_k "Ok, no problem."
+                                        $ K_Custom8[0] = 0
+                                    "Custom 3 [[clear custom 3] (locked)" if not K_Custom3[0]:
+                                        pass
+                                    "Custom 9 [[clear custom 9]" if K_Custom9[0]:
+                                        ch_k "Ok, no problem."
+                                        $ K_Custom9[0] = 0
+                                    "Custom 3 [[clear custom 3] (locked)" if not K_Custom3[0]:
+                                        pass
+                                    "Never mind, [[back].":
+                                        pass    
+                                               
+                        "You should wear this one out. [[choose outfit first](locked)" if not Cnt:
+                                pass
+                        "You should wear this one out." if Cnt:
+                            call Kitty_Custom_Out(Cnt)
+                        "Ok, back to what we were talking about. . .":
+                            $ Cnt = 0
+                            jump Kitty_Clothes                  
                     
-                    "Throw on Custom 4 (locked)" if not K_Custom4[0]:
-                        pass
-                    "Throw on Custom 4" if K_Custom4[0]:
-                        call KittyOutfit("custom4")
-                        $ Cnt = 15
-                    "Throw on Custom 5 (locked)" if not K_Custom5[0]:
-                        pass
-                    "Throw on Custom 5" if K_Custom5[0]:
-                        call KittyOutfit("custom5")
-                        $ Cnt = 16
-                    "Throw on Custom 6 (locked)" if not K_Custom6[0]:
-                        pass
-                    "Throw on Custom 6" if K_Custom6[0]:
-                        call KittyOutfit("custom6")
-                        $ Cnt = 17
-                    "Throw on Custom 7 (locked)" if not K_Custom7[0]:
-                        pass
-                    "Throw on Custom 7" if K_Custom7[0]:
-                        call KittyOutfit("custom7")
-                        $ Cnt = 18
-                    "Throw on Custom 8 (locked)" if not K_Custom8[0]:
-                        pass
-                    "Throw on Custom 8" if K_Custom8[0]:
-                        call KittyOutfit("custom8")
-                        $ Cnt = 19
-                    "Throw on Custom 9 (locked)" if not K_Custom9[0]:
-                        pass
-                    "Throw on Custom 9" if K_Custom9[0]:
-                        call KittyOutfit("custom9")
-                        $ Cnt = 20
-                    "You should wear this one in our rooms. (locked)" if not Cnt:
-                        pass
-                    "You should wear this one in our rooms." if Cnt:
-                        if Cnt == 5:
-                            $ K_Schedule[9] = "custom2"
-                        elif Cnt == 15:
-                            $ K_Schedule[9] = "custom4"
-                        elif Cnt == 16:
-                            $ K_Schedule[9] = "custom5"
-                        elif Cnt == 17:
-                            $ K_Schedule[9] = "custom6"
-                        elif Cnt == 18:
-                            $ K_Schedule[9] = "custom7"
-                        elif Cnt == 19:
-                            $ K_Schedule[9] = "custom8"
-                        elif Cnt == 20:
-                            $ K_Schedule[9] = "custom9"
-                        elif Cnt == 6:
-                            $ K_Schedule[9] = "custom3"
-                        else:
-                            $ K_Schedule[9] = "custom"
-                        ch_k "Ok, sure."
-                    
-                    
-                    "On second thought, forget about that one outfit. . .":
-                        menu:
-                            "Custom 1 [[clear custom 1]" if K_Custom[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom[0] = 0
-                            "Custom 1 [[clear custom 1] (locked)" if not K_Custom[0]:
-                                pass
-                            "Custom 2 [[clear custom 2]" if K_Custom2[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom2[0] = 0
-                            "Custom 2 [[clear custom 1] (locked)" if not K_Custom2[0]:
-                                pass
-                            "Custom 3 [[clear custom 3]" if K_Custom3[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom3[0] = 0
-                            "Custom 3 [[clear custom 3] (locked)" if not K_Custom3[0]:
-                                pass
-                            "Custom 4 [[clear custom 4]" if K_Custom4[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom4[0] = 0
-                            "Custom 4 [[clear custom 4] (locked)" if not K_Custom4[0]:
-                                pass
-                            "Custom 5 [[clear custom 5]" if K_Custom5[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom5[0] = 0
-                            "Custom 5 [[clear custom 5] (locked)" if not K_Custom5[0]:
-                                pass
-                            "Custom 6 [[clear custom 6]" if K_Custom6[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom6[0] = 0
-                            "Custom 6 [[clear custom 6] (locked)" if not K_Custom6[0]:
-                                pass
-                            "Custom 7 [[clear custom 7]" if K_Custom7[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom7[0] = 0
-                            "Custom 7 [[clear custom 7] (locked)" if not K_Custom7[0]:
-                                pass
-                            "Custom 8 [[clear custom 8]" if K_Custom8[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom8[0] = 0
-                            "Custom 8 [[clear custom 8] (locked)" if not K_Custom8[0]:
-                                pass
-                            "Custom 9 [[clear custom 9]" if K_Custom9[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom9[0] = 0
-                            "Custom 9 [[clear custom 9] (locked)" if not K_Custom9[0]:
-                                pass
-                            "Never mind, [[back].":
-                                pass    
-                                            
-                                            
-                    "You should wear this one out. [[choose outfit first](locked)" if not Cnt:
-                        pass
-                    "You should wear this one out." if Cnt:
-                        call Kitty_Custom_Out(Cnt)
-                    "Ok, back to what we were talking about. . .":
-                        $ Cnt = 0
-                        jump Kitty_Clothes_Outfits                    
-        
-        "Your birthday suit looks really great. . .":                                     #Nude
-            call KittyFace("sexy", 1)
-            $ Line = 0
-            if not K_Chest and not K_Panties and not K_Over and not K_Legs and not K_Hose:                
-                ch_k "You're kidding, right?"  
-            elif K_SeenChest and K_SeenPussy and ApprovalCheck("Kitty", 1200, TabM=4):
-                ch_k "[K_Like]Reow. . ."  
-                $ Line = 1
-            elif ApprovalCheck("Kitty", 2000, TabM=4):
-                ch_k "You don't[K_like]mess around, huh."    
-                $ Line = 1
-            elif K_SeenChest and K_SeenPussy and ApprovalCheck("Kitty", 1200, TabM=0):
-                ch_k "[K_Like]this is a little exposed. . ."  
-            elif ApprovalCheck("Kitty", 2000, TabM=0):
-                ch_k "Maybe if we were alone?" 
-            elif ApprovalCheck("Kitty", 1000, TabM=0):                
-                call KittyFace("surprised", 2)
-                ch_k "[K_Like]get to know a girl first, [K_Petname]."
-                $ K_Blush = 1
-            else:
-                call KittyFace("angry", 1)
-                ch_k "Yeah[K_like]it does."    
-                
-            if Line:                                                            #If she got nude. . .                            
-                call KittyOutfit("nude")
-                "She lets all her clothes drop into a pile at her feet."
-                call Kitty_First_Topless
-                call Kitty_First_Bottomless(1)
-                call KittyFace("sexy")
-                menu:
-                    "You know, you should wear this one out. [[set current outfit]":
-                        if "exhibitionist" in K_Traits:
-                            ch_k "I'm[K_like]getting a little wet just thinking about it." 
-                            $ K_Outfit = "nude"
-                            call Statup("Kitty", "Lust", 50, 10) 
-                            call Statup("Kitty", "Lust", 70, 5) 
-                            $ K_Shame = K_OutfitShame[0]
-                        elif ApprovalCheck("Kitty", 800, "I") or ApprovalCheck("Kitty", 2800, TabM=0):                    
-                            ch_k "I guess we could. . ."
-                            $ K_Outfit = "nude"
-                            $ K_Shame = K_OutfitShame[0]
-                        else:
-                            call KittyFace("sexy", 1)
-                            $ K_Eyes = "surprised"
-                            ch_k "No way! That'd be[K_like]totally embarrassing!" 
-                            
-                    "Let's try something else though.":
-                        if "exhibitionist" in K_Traits:
-                            ch_k "Aw, do I have to?"                         
-                        elif ApprovalCheck("Kitty", 800, "I") or ApprovalCheck("Kitty", 2800, TabM=0):       
-                            call KittyFace("bemused", 1)             
-                            ch_k "It's a good thing you didn't[K_like]ask me to wear this outside."
-                            ch_k "A good thing. . ."
-                        else:
-                            call KittyFace("confused", 1)
-                            ch_k "I[K_like]don't mind this around the room, but definitely not outside."   
-            $ Line = 0
-                
-        "How about throwing on your sleepwear?" if not Taboo:
-            #fix add conditions
-            call KittyOutfit("sleep")
-        "How about throwing on your swimwear?" if not Taboo or bg_current == "bg pool":
-            #fix add conditions
-            call KittyOutfit("swimwear")
+        "Gym Clothes?" if not K_Taboo or bg_current == "bg dangerroom":
+                call KittyOutfit("gym")
             
-        "Let's talk about what you wear outside.":
-            call Kitty_Clothes_Schedule
+        "Sleepwear?" if not K_Taboo:
+                if ApprovalCheck("Kitty", 1200):
+                        call KittyOutfit("sleep")
+                else:
+                        call Display_DressScreen("Kitty")
+                        if _return:
+                            call KittyOutfit("sleep")
             
+        "Swimwear?" if not K_Taboo or bg_current == "bg pool":
+                call KittyOutfit("swimwear")
+                
+        "Your birthday suit looks really great. . .":                                     
+                #Nude
+                call KittyFace("sexy", 1)
+                $ Line = 0
+                if not K_Chest and not K_Panties and not K_Over and not K_Legs and not K_Hose:                
+                    ch_k "You're kidding, right?"  
+                elif K_SeenChest and K_SeenPussy and ApprovalCheck("Kitty", 1200, TabM=4):
+                    ch_k "[K_Like]Reow. . ."  
+                    $ Line = 1
+                elif ApprovalCheck("Kitty", 2000, TabM=4):
+                    ch_k "You don't[K_like]mess around, huh."    
+                    $ Line = 1
+                elif K_SeenChest and K_SeenPussy and ApprovalCheck("Kitty", 1200, TabM=0):
+                    ch_k "[K_Like]this is a little exposed. . ."  
+                elif ApprovalCheck("Kitty", 2000, TabM=0):
+                    ch_k "Maybe if we were alone?" 
+                elif ApprovalCheck("Kitty", 1000, TabM=0):                
+                    call KittyFace("surprised", 2)
+                    ch_k "[K_Like]get to know a girl first, [K_Petname]."
+                    $ K_Blush = 1
+                else:
+                    call KittyFace("angry", 1)
+                    ch_k "Yeah[K_like]it does."    
+                    
+                if Line:                                                            #If she got nude. . .                            
+                    call KittyOutfit("nude")
+                    "She lets all her clothes drop into a pile at her feet."
+                    call Kitty_First_Topless
+                    call Kitty_First_Bottomless(1)
+                    call KittyFace("sexy")
+                    menu:
+                        "You know, you should wear this one out. [[set current outfit]":
+                            if "exhibitionist" in K_Traits:
+                                ch_k "I'm[K_like]getting a little wet just thinking about it." 
+                                $ K_Outfit = "nude"
+                                call Statup("Kitty", "Lust", 50, 10) 
+                                call Statup("Kitty", "Lust", 70, 5) 
+                                $ K_Shame = K_OutfitShame[0]
+                            elif ApprovalCheck("Kitty", 800, "I") or ApprovalCheck("Kitty", 2800, TabM=0):                    
+                                ch_k "I guess we could. . ."
+                                $ K_Outfit = "nude"
+                                $ K_Shame = K_OutfitShame[0]
+                            else:
+                                call KittyFace("sexy", 1)
+                                $ K_Eyes = "surprised"
+                                ch_k "No way! That'd be[K_like]totally embarrassing!" 
+                                
+                        "Let's try something else though.":
+                            if "exhibitionist" in K_Traits:
+                                ch_k "Aw, do I have to?"                         
+                            elif ApprovalCheck("Kitty", 800, "I") or ApprovalCheck("Kitty", 2800, TabM=0):       
+                                call KittyFace("bemused", 1)             
+                                ch_k "It's a good thing you didn't[K_like]ask me to wear this outside."
+                                ch_k "A good thing. . ."
+                            else:
+                                call KittyFace("confused", 1)
+                                ch_k "I[K_like]don't mind this around the room, but definitely not outside."   
+                $ Line = 0
+                
         "Never mind":    
             jump Kitty_Clothes     
             
@@ -3956,48 +4144,65 @@ label Kitty_Clothes:
             
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
 
-    menu Kitty_Clothes_Over:                                                                                            # Overshirts
+    menu Kitty_Clothes_Over:                                                                                 
+        # Overshirts
         "Why don't you go with no [K_Over]?" if K_Over:
-            call KittyFace("bemused", 1)
-            if ApprovalCheck("Kitty", 800, TabM=3) and (K_Chest or K_SeenChest):
-                ch_k "Why not?"
-            elif ApprovalCheck("Kitty", 1200, TabM=0):
-                call Kitty_NoBra
-                if not _return:
-                    jump Kitty_Clothes
-            $ Line = K_Over
-            $ K_Over = 0
-            "She lets her [Line] drop to her feet."
-            if not K_Chest:
-                    call Kitty_First_Topless
+                call KittyFace("bemused", 1)
+                if ApprovalCheck("Kitty", 800, TabM=3) and (K_Chest or K_SeenChest):
+                    ch_k "Why not?"
+                elif ApprovalCheck("Kitty", 600, TabM=0):
+                    call Kitty_NoBra
+                    if not _return:
+                        if not ApprovalCheck("Kitty", 1200):
+                            call Display_DressScreen("Kitty")
+                            if not _return:
+                                jump Kitty_Clothes
+                        else:
+                                jump Kitty_Clothes
+                else:
+                    call Display_DressScreen("Kitty")
+                    if not _return:
+                            ch_k "Lol, not around you."
+                            if not K_Chest:
+                                ch_k "I don't have anything under this. . ."
+                            jump Kitty_Clothes
+                $ Line = K_Over
+                $ K_Over = 0
+                "She lets her [Line] drop to her feet."
+                if not K_Chest and not renpy.showing('DressScreen'):
+                        call Kitty_First_Topless
             
         "Try on that pink shirt you have." if K_Over != "pink top":
-            call KittyFace("bemused")
-            if K_Chest or K_SeenChest:
-                ch_k "K."
-            elif ApprovalCheck("Kitty", 800, TabM=0):
-                ch_k "Yeah, ok."          
-            else:
-                call KittyFace("bemused", 1)
-                ch_k "This top is a little skimpy for what I have on under it."
-                jump Kitty_Clothes    
-            $ K_Over = "pink top"   
+                call KittyFace("bemused")
+                if K_Chest or K_SeenChest:
+                    ch_k "K."
+                elif ApprovalCheck("Kitty", 800, TabM=0):
+                    ch_k "Yeah, ok."          
+                else:
+                    call Display_DressScreen("Kitty")
+                    if not _return:
+                            call KittyFace("bemused", 1)
+                            ch_k "This top is a little skimpy for what I have on under it."
+                            jump Kitty_Clothes
+                $ K_Over = "pink top"   
                 
         "How about that red t-shirt you have?" if K_Over != "red shirt":
-            $ K_Over = "red shirt"  
-            ch_k "This one?"
+                $ K_Over = "red shirt"  
+                ch_k "This one?"
             
         "Maybe just throw on a towel?" if K_Over != "towel":
-            call KittyFace("bemused", 1)
-            if K_Chest or K_SeenChest:
-                ch_k "Weirdo."
-            elif ApprovalCheck("Kitty", 1000, TabM=0):
-                call KittyFace("perplexed", 1)
-                ch_k "I guess? . ."          
-            else:
-                ch_k "I don't think so with what I have on under it."
-                jump Kitty_Clothes    
-            $ K_Over = "towel"    
+                call KittyFace("bemused", 1)
+                if K_Chest or K_SeenChest:
+                    ch_k "Weirdo."
+                elif ApprovalCheck("Kitty", 1000, TabM=0): #or showing screen
+                    call KittyFace("perplexed", 1)
+                    ch_k "I guess? . ."          
+                else:
+                    call Display_DressScreen("Kitty")
+                    if not _return:
+                            ch_k "I don't think so with what I have on under it."
+                            jump Kitty_Clothes
+                $ K_Over = "towel"    
                             
         "Never mind":
             pass
@@ -4050,7 +4255,7 @@ label Kitty_Clothes:
                         else: 
                                 call KittyFace("surprised")
                                 $ K_Brows = "angry"
-                                if Taboo > 20:
+                                if K_Taboo > 20:
                                     ch_k "Not in public, [K_Petname]!"
                                 else:
                                     ch_k "I don't like you {i}that{/i} much, [K_Petname]!"
@@ -4065,140 +4270,68 @@ label Kitty_Clothes:
        
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
 
-    menu Kitty_Clothes_Legs:                                                                                                    # Leggings    
-        "Maybe go without the pants." if PantsNum("Kitty") >= 5:
-            call KittyFace("sexy", 1)
-            if K_SeenPanties and K_Panties and ApprovalCheck("Kitty", 500, TabM=5):
-                ch_k "K."
-            elif K_SeenPussy and ApprovalCheck("Kitty", 900, TabM=4):
-                ch_k "Yeah, ok."
-            elif ApprovalCheck("Kitty", 1300, TabM=2) and K_Panties:
-                ch_k "For you, I guess. . ."
-            elif ApprovalCheck("Kitty", 800) and not K_Panties:
-                call Kitty_NoPantiesOn
-                if not _return:
-                    jump Kitty_Clothes
-            else:
-                ch_k "Lol, not around you."
-                if not K_Panties:
-                    ch_k "I'm not {i}wearing any panties{/i}. . ."
-                jump Kitty_Clothes
-            $ K_Legs = 0    
-            "She lets her pants drop through her to the ground."
-            if K_Panties:                
-                $ K_SeenPanties = 1
-            else:
-                call Kitty_First_Bottomless
-        
-        "Why don't you lose the shorts?" if K_Legs == "shorts":
-            call KittyFace("sexy", 1)
-            if K_SeenPussy and ApprovalCheck("Kitty", 900, TabM=4): 
-                # You've seen her pussy
-                if ApprovalCheck("Kitty", 800, "L"):                  
-                    ch_k "Well, not that I mind you seeing it. . ."
-                elif ApprovalCheck("Kitty", 500, "O"):
-                    ch_k "I guess. . ."
-                elif ApprovalCheck("Kitty", 350, "I"):
-                    ch_k "Hrmm. . ."
+    menu Kitty_Clothes_Legs:                                                                                                    
+        # Leggings    
+        "Maybe go without the [K_Legs]." if K_Legs:
+                call KittyFace("sexy", 1)       
+                if K_SeenPanties and K_Panties and ApprovalCheck("Kitty", 500, TabM=5):
+                    ch_k "K."
+                elif K_SeenPussy and ApprovalCheck("Kitty", 900, TabM=4):
+                    ch_k "Yeah, ok."
+                elif ApprovalCheck("Kitty", 1300, TabM=2) and K_Panties:
+                    ch_k "For you, I guess. . ."
+                elif ApprovalCheck("Kitty", 700) and not K_Panties:
+                    call Kitty_NoPantiesOn
+                    if not _return and not K_Panties:
+                        if not ApprovalCheck("Kitty", 1500):
+                            call Display_DressScreen("Kitty")
+                            if not _return:
+                                jump Kitty_Clothes
+                        else:
+                                jump Kitty_Clothes
                 else:
-                    ch_k "Okay, okay."
-                    
-            elif ApprovalCheck("Kitty", 800) and not K_Panties:                       
-                #she's not wearing anything over them
-                call Kitty_NoPantiesOn
-                if not _return:
-                    jump Kitty_Clothes
-                    
-            else:                                                      
-                #she's wearing panties
-                if not ApprovalCheck("Kitty", 700, TabM=3): #700+1200
-                        ch_k "I'm not really comfortable with that right now. . ."
-                        jump Kitty_Clothes_Under                    
-                elif ApprovalCheck("Kitty", 800, "L", TabM=3):               
-                        ch_k "Well aren't you cheeky. . ."
-                elif ApprovalCheck("Kitty", 500, "O", TabM=3): #500+400
-                        ch_k "Fine by me."
-                elif ApprovalCheck("Kitty", 350, "I", TabM=3):
-                        ch_k "Oooh, naughty."
+                    call Display_DressScreen("Kitty")
+                    if not _return:
+                        ch_k "Lol, not around you."
+                        if not K_Panties:
+                            ch_k "I'm not {i}wearing any panties{/i}. . ."
+                        jump Kitty_Clothes
+                $ Line = K_Legs
+                $ K_Legs = 0    
+                "She lets her [Line] drop through her to the ground."
+                $ Line = 0
+                if renpy.showing('DressScreen'):
+                    pass
+                elif K_Panties:                
+                    $ K_SeenPanties = 1
                 else:
-                        ch_k "Oh, I guess I could."  
-                    
-            $ K_Legs  = 0       
-            "She lets her shorts fall to the ground."
-            
-            if K_Panties:                
-                $ K_SeenPanties = 1
-            else:
-                call Kitty_First_Bottomless
-                call Statup("Kitty", "Inbt", 50, 2)  
-        
-        "Why don't you lose the skirt?" if K_Legs == "blue skirt":
-            call KittyFace("sexy", 1)
-            if K_SeenPussy and ApprovalCheck("Kitty", 900, TabM=4): 
-                # You've seen her pussy
-                if ApprovalCheck("Kitty", 800, "L"):                  
-                    ch_k "Well, not that I mind you seeing it. . ."
-                elif ApprovalCheck("Kitty", 500, "O"):
-                    ch_k "I guess. . ."
-                elif ApprovalCheck("Kitty", 350, "I"):
-                    ch_k "Hrmm. . ."
-                else:
-                    ch_k "Okay, okay."
-                    
-            elif ApprovalCheck("Kitty", 800) and not K_Panties:                       
-                #she's not wearing anything over them
-                call Kitty_NoPantiesOn
-                if not _return:
-                    jump Kitty_Clothes
-                    
-            else:                                                      
-                #she's wearing panties
-                if not ApprovalCheck("Kitty", 700, TabM=3): #700+1200
-                        ch_k "I'm not really comfortable with that right now. . ."
-                        jump Kitty_Clothes_Under                    
-                elif ApprovalCheck("Kitty", 800, "L", TabM=3):               
-                        ch_k "Well aren't you cheeky. . ."
-                elif ApprovalCheck("Kitty", 500, "O", TabM=3): #500+400
-                        ch_k "Fine by me."
-                elif ApprovalCheck("Kitty", 350, "I", TabM=3):
-                        ch_k "Oooh, naughty."
-                else:
-                        ch_k "Oh, I guess I could."  
-                    
-            $ K_Legs  = 0       
-            "She lets her skirt fall to the ground."
-            
-            if K_Panties:                
-                $ K_SeenPanties = 1
-            else:
-                call Kitty_First_Bottomless
-                call Statup("Kitty", "Inbt", 50, 2)  
-        
-        "You look great in those capris." if K_Legs != "capris":
-            ch_k "Yeah, ok."
-            $ K_Legs = "capris"
+                    call Kitty_First_Bottomless
                 
+        "You look great in those capris." if K_Legs != "capris":
+                ch_k "Yeah, ok."
+                $ K_Legs = "capris"
+                    
         "You look great in those black jeans." if K_Legs != "black jeans":
-            ch_k "K, no problem."
-            $ K_Legs = "black jeans"
+                ch_k "K, no problem."
+                $ K_Legs = "black jeans"
         
         "You look great in yoga pants." if K_Legs != "yoga pants":
-            ch_k "Yeah, ok."
-            $ K_Legs = "yoga pants"
+                ch_k "Yeah, ok."
+                $ K_Legs = "yoga pants"
             
         "What about wearing your yellow shorts?" if K_Legs != "shorts":
-            ch_k "K, no problem."
-            $ K_Legs = "shorts"    
+                ch_k "K, no problem."
+                $ K_Legs = "shorts"    
             
         "How about the blue skirt?" if K_Legs != "blue skirt":
-            if K_Panties or ApprovalCheck("Kitty",500,"I",TabM=2):
-                    ch_k "Yeah, ok."
-                    $ K_Legs = "blue skirt"    
-            else:
-                    ch_k "That's a little revealing. . ."
+                if K_Panties or ApprovalCheck("Kitty",500,"I",TabM=2):
+                        ch_k "Yeah, ok."
+                        $ K_Legs = "blue skirt"    
+                else:
+                        ch_k "That's a little revealing. . ."
                                 
         "Never mind":
-            pass
+                pass
     jump Kitty_Clothes
     #End of Kitty Pants
     
@@ -4240,7 +4373,7 @@ label Kitty_Clothes:
                         else: 
                                 call KittyFace("surprised")
                                 $ K_Brows = "angry"
-                                if Taboo > 20:
+                                if K_Taboo > 20:
                                     ch_k "Not in public, [K_Petname]!"
                                 else:
                                     ch_k "I don't like you {i}that{/i} much, [K_Petname]!"
@@ -4254,307 +4387,328 @@ label Kitty_Clothes:
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
 
-    menu Kitty_Clothes_Under:                                                                                                 # Tops 
+    menu Kitty_Clothes_Under:     
         "Tops":
             menu:
                 "How about you lose the [K_Chest]?" if K_Chest:
-                    call KittyFace("bemused", 1)
-                    if K_SeenChest and ApprovalCheck("Kitty", 900, TabM=2.7):
-                        ch_k "Sure."    
-                    elif ApprovalCheck("Kitty", 1100, TabM=2):
-                        if Taboo:
-                            ch_k "I'm kind of nervous. . ."
+                        call KittyFace("bemused", 1)
+                        if K_SeenChest and ApprovalCheck("Kitty", 900, TabM=2.7):
+                            ch_k "Sure."    
+                        elif ApprovalCheck("Kitty", 1100, TabM=2):
+                            if K_Taboo:
+                                ch_k "I'm kind of nervous. . ."
+                            else:
+                                ch_k "If it's just you. . ."
+                        elif K_Over == "pink top" and ApprovalCheck("Kitty", 600, TabM=2):
+                            ch_k "This look is a bit revealing. . ."  
+                        elif K_Over == "red shirt" and ApprovalCheck("Kitty", 500, TabM=2):
+                            ch_k "I guess I could. . ." 
+                        elif not K_Over:                            
+                            call Display_DressScreen("Kitty")
+                            if not _return:
+                                ch_k "Not without a little coverage, for modesty."
+                                jump Kitty_Clothes 
                         else:
-                            ch_k "If it's just you. . ."
-                    elif K_Over == "pink top" and ApprovalCheck("Kitty", 600, TabM=2):
-                        ch_k "This look is a bit revealing. . ."  
-                    elif K_Over == "red shirt" and ApprovalCheck("Kitty", 500, TabM=2):
-                        ch_k "I guess I could. . ."  
-                    elif not K_Over:
-                        ch_k "Not without a little coverage, for modesty."
-                        jump Kitty_Clothes 
-                    else:
-                        ch_k "I don't think so, [K_Petname]."
-                        jump Kitty_Clothes 
-                    $ Line = K_Chest
-                    $ K_Chest = 0
-                    if K_Over:
-                        "She reaches into her [K_Over] grabs her [Line], and pulls it out, dropping it to the ground."
-                    else:
-                        "She lets her [Line] fall to the ground."
-                        call Kitty_First_Topless
-                    
-                    
+                            call Display_DressScreen("Kitty")
+                            if not _return:
+                                ch_k "I don't think so, [K_Petname]."
+                                jump Kitty_Clothes 
+                        $ Line = K_Chest
+                        $ K_Chest = 0
+                        if K_Over:
+                            "She reaches into her [K_Over] grabs her [Line], and pulls it out, dropping it to the ground."
+                        else:
+                            "She lets her [Line] fall to the ground."
+                            if not renpy.showing('DressScreen'):
+                                call Kitty_First_Topless
+                                        
                 "Try on that yellow camisole." if K_Chest != "cami":
-                    ch_k "Ok."
-                    $ K_Chest = "cami"           
+                        ch_k "Ok."
+                        $ K_Chest = "cami"           
                     
                 "I like that strapless bra." if K_Chest != "bra":
-                    if K_SeenChest or ApprovalCheck("Kitty", 1200, TabM=2):
-                        ch_k "K."   
-                        $ K_Chest = "bra"         
-                    else:                
-                        ch_k "I'm not really comfortable with that. . ."  
+                        if K_SeenChest or ApprovalCheck("Kitty", 1200, TabM=2):
+                            ch_k "K."   
+                            $ K_Chest = "bra"         
+                        else:       
+                            call Display_DressScreen("Kitty")
+                            if not _return:       
+                                ch_k "I'm not really comfortable with that. . ."  
                         
                 "I like that lace bra." if "lace bra" in K_Inventory and K_Chest != "lace bra":
-                    if K_SeenChest or ApprovalCheck("Kitty", 1300, TabM=2):
-                        ch_k "K."   
-                        $ K_Chest = "lace bra"         
-                    else:                
-                        ch_k "It's pretty skimpy. . ."  
+                        if K_SeenChest or ApprovalCheck("Kitty", 1300, TabM=2):
+                            ch_k "K."   
+                            $ K_Chest = "lace bra"         
+                        else:           
+                            call Display_DressScreen("Kitty")
+                            if not _return: 
+                                ch_k "It's pretty skimpy. . ."  
                     
                 "I like that sports bra." if K_Chest != "sports bra":
-                    if K_SeenChest or ApprovalCheck("Kitty", 1000, TabM=2):
-                        ch_k "K."   
-                        $ K_Chest = "sports bra"         
-                    else:                
-                        ch_k "I'm not sure about that. . ."  
+                        if K_SeenChest or ApprovalCheck("Kitty", 1000, TabM=2):
+                            ch_k "K."   
+                            $ K_Chest = "sports bra"         
+                        else:               
+                            call Display_DressScreen("Kitty")
+                            if not _return:
+                                ch_k "I'm not sure about that. . ."  
                     
                 "I like that bikini top." if K_Chest != "bikini top" and "bikini top" in K_Inventory:
-                    if bg_current == "bg pool":
-                            ch_k "K."   
-                            $ K_Chest = "bikini top"         
-                    else:                
-                            if K_SeenChest or ApprovalCheck("Kitty", 1000, TabM=2):
+                        if bg_current == "bg pool":
                                 ch_k "K."   
                                 $ K_Chest = "bikini top"         
-                            else:                
-                                ch_k "Geez, not here!"  
+                        else:                
+                                if K_SeenChest or ApprovalCheck("Kitty", 1000, TabM=2):
+                                    ch_k "K."   
+                                    $ K_Chest = "bikini top"         
+                                else:           
+                                    call Display_DressScreen("Kitty")
+                                    if not _return:     
+                                            ch_k "Geez, not here!"  
                 "Never mind":
-                    pass
+                        pass
+            jump Kitty_Clothes_Under
                         
         #Panties       
         "Panties":
             menu:
                 "You could lose those panties. . ." if K_Panties:
-                    call KittyFace("bemused", 1)  
-                    if ApprovalCheck("Kitty", 900) and (K_Legs or (K_SeenPussy and not Taboo)):
-                        #If you've got decent approval and either she's wearing pants or you've seen her pussy and it's not in public
-                        
-                        if ApprovalCheck("Kitty", 850, "L"):               
-                                ch_k "Well, if you ask me nicely. . ."
-                        elif ApprovalCheck("Kitty", 500, "O"):
-                                ch_k "For you, ok."
-                        elif ApprovalCheck("Kitty", 350, "I"):
-                                ch_k "[[snort]."
+                        call KittyFace("bemused", 1)  
+                        if ApprovalCheck("Kitty", 900) and (K_Legs or (K_SeenPussy and not K_Taboo)):
+                            #If you've got decent approval and either she's wearing pants or you've seen her pussy and it's not in public                            
+                            if ApprovalCheck("Kitty", 850, "L"):               
+                                    ch_k "Well, if you ask me nicely. . ."
+                            elif ApprovalCheck("Kitty", 500, "O"):
+                                    ch_k "For you, ok."
+                            elif ApprovalCheck("Kitty", 350, "I"):
+                                    ch_k "[[snort]."
+                            else:
+                                    ch_k "Yeah, I guess."         
+                        else:                       #low approval or not wearing pants or in public 
+                            if ApprovalCheck("Kitty", 1100, "LI", TabM=3) and K_Love > K_Inbt:               
+                                    ch_k "Well, not that I mind you seeing it. . ."
+                            elif ApprovalCheck("Kitty", 700, "OI", TabM=3) and K_Obed > K_Inbt:
+                                    ch_k "I guess. . ."
+                            elif ApprovalCheck("Kitty", 600, "I", TabM=3):
+                                    ch_k "Hrmm. . ."
+                            elif ApprovalCheck("Kitty", 1300, TabM=3):
+                                    ch_k "Okay, okay."
+                            else: 
+                                call Display_DressScreen("Kitty")
+                                if not _return:
+                                    call KittyFace("surprised")
+                                    $ K_Brows = "angry" 
+                                    if K_Taboo > 20:
+                                        ch_k "Not in public, [K_Petname]!"
+                                    else:
+                                        ch_k "I don't like you that much, [K_Petname]!"
+                                    jump Kitty_Clothes
+                                    
+                        $ Line = K_Panties
+                        $ K_Panties = 0  
+                        if K_Legs:
+                            "She reaches into her pocket, grabs hold of something, and then pulls her [Line] out, droping them to the ground."                
                         else:
-                                ch_k "Yeah, I guess."         
-                    else:                       #low approval or not wearing pants or in public 
-                        if ApprovalCheck("Kitty", 1100, "LI", TabM=3) and K_Love > K_Inbt:               
-                                ch_k "Well, not that I mind you seeing it. . ."
-                        elif ApprovalCheck("Kitty", 700, "OI", TabM=3) and K_Obed > K_Inbt:
-                                ch_k "I guess. . ."
-                        elif ApprovalCheck("Kitty", 600, "I", TabM=3):
-                                ch_k "Hrmm. . ."
-                        elif ApprovalCheck("Kitty", 1300, TabM=3):
-                                ch_k "Okay, okay."
-                        else: 
-                                call KittyFace("surprised")
-                                $ K_Brows = "angry"
-                                if Taboo > 20:
-                                    ch_k "Not in public, [K_Petname]!"
-                                else:
-                                    ch_k "I don't like you that much, [K_Petname]!"
-                                jump Kitty_Clothes
-                                
-                                
-                    $ Line = K_Panties
-                    $ K_Panties = 0  
-                    if K_Legs:
-                        "She reaches into her pocket, grabs hold of something, and then pulls her [Line] out, droping them to the ground."                
-                    else:
-                        "She lets her [Line] drop to the ground."
-                        call Kitty_First_Bottomless
-                        call Statup("Kitty", "Inbt", 50, 2)  
+                            "She lets her [Line] drop to the ground."
+                            if  not renpy.showing('DressScreen'):
+                                call Kitty_First_Bottomless
+                                call Statup("Kitty", "Inbt", 50, 2)  
                         
                 "Why don't you wear the green panties instead?" if K_Panties and K_Panties != "green panties":
-                    if ApprovalCheck("Kitty", 1100, TabM=3):
-                            ch_k "K."
-                            $ K_Panties = "green panties"  
-                    else:                
-                            ch_k "I don't think that's any of your beeswax."
+                        if ApprovalCheck("Kitty", 1100, TabM=3):
+                                ch_k "K."
+                                $ K_Panties = "green panties"  
+                        else:            
+                                call Display_DressScreen("Kitty")
+                                if not _return:
+                                    ch_k "I don't think that's any of your beeswax."
                         
                 "Why don't you wear the lace panties instead?" if "lace panties" in K_Inventory and K_Panties and K_Panties != "lace panties":
-                    if ApprovalCheck("Kitty", 1300, TabM=3):
-                            ch_k "I guess."
-                            $ K_Panties = "lace panties"
-                    else:
-                            ch_k "That's[K_like]none of your business."
+                        if ApprovalCheck("Kitty", 1300, TabM=3):
+                                ch_k "I guess."
+                                $ K_Panties = "lace panties"
+                        else:
+                                call Display_DressScreen("Kitty")
+                                if not _return:
+                                    ch_k "That's[K_like]none of your business."
                             
                 "I like those bikini bottoms." if K_Panties != "bikini bottoms" and "bikini bottoms" in K_Inventory:
-                    if bg_current == "bg pool":
-                            ch_k "K."   
-                            $ K_Panties = "bikini bottoms"         
-                    else:                
-                            if ApprovalCheck("Kitty", 1000, TabM=2):
+                        if bg_current == "bg pool":
                                 ch_k "K."   
                                 $ K_Panties = "bikini bottoms"         
-                            else:                
-                                ch_k "Geez, not here!"  
+                        else:                
+                                if ApprovalCheck("Kitty", 1000, TabM=2):
+                                    ch_k "K."   
+                                    $ K_Panties = "bikini bottoms"         
+                                else:           
+                                    call Display_DressScreen("Kitty")
+                                    if not _return: 
+                                        ch_k "Geez, not here!"  
                         
                 "You know, you could wear some panties with that. . ." if not K_Panties:
-                    call KittyFace("bemused", 1)
-                    if (K_Love+K_Obed) <= (2 * K_Inbt):
-                        $ K_Mouth = "smile"
-                        ch_k "I think I'd. . . rather not."
-                        call Statup("Kitty", "Inbt", 70, 2)
-                        menu:
-                            "Fine by me":
-                                call Statup("Kitty", "Love", 90, 2)
-                                call Statup("Kitty", "Inbt", 70, 2)
-                                jump Kitty_Clothes
-                            "I insist, put some on.":
-                                if (K_Love+K_Obed) <= (1.5 * K_Inbt):
-                                    call KittyFace("angry", Eyes="side")
-                                    call Statup("Kitty", "Inbt", 99, 5)
-                                    call Statup("Kitty", "Obed", 80, -5)
-                                    ch_k "Well that's too bad."
+                        call KittyFace("bemused", 1)
+                        if (K_Love+K_Obed) <= (2 * K_Inbt):
+                            $ K_Mouth = "smile"
+                            ch_k "I think I'd. . . rather not."
+                            menu:
+                                "Fine by me":
                                     jump Kitty_Clothes
-                                else:
-                                    call KittyFace("sadside")
-                                    call Statup("Kitty", "Inbt", 200, -5)
-                                    call Statup("Kitty", "Obed", 80, 5)
-                                    ch_k "Ok, FINE."                
-                    menu:
-                        ch_k "I guess. . ."
-                        "How about the green ones?":
-                            ch_k "Sure, ok."
-                            $ K_Panties = "green panties"
-                        "How about the lace ones?" if "lace panties" in K_Inventory:
-                            ch_k "Alright."                
-                            $ K_Panties  = "lace panties"
+                                "I insist, put some on.":
+                                    if (K_Love+K_Obed) <= (1.5 * K_Inbt):
+                                        call KittyFace("angry", Eyes="side")
+                                        ch_k "Well that's too bad."
+                                        jump Kitty_Clothes
+                                    else:
+                                        call KittyFace("sadside")
+                                        ch_k "Ok, FINE."                
+                        menu:
+                            ch_k "I guess. . ."
+                            "How about the green ones?":
+                                ch_k "Sure, ok."
+                                $ K_Panties = "green panties"
+                            "How about the lace ones?" if "lace panties" in K_Inventory:
+                                ch_k "Alright."                
+                                $ K_Panties  = "lace panties"
                 "Never mind":
-                    pass
+                        pass
+            jump Kitty_Clothes_Under
         "Never mind":
-            pass
+                pass
     jump Kitty_Clothes
     #End of Kitty Underwear
        
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  
         
-    menu Kitty_Clothes_Misc:                                                                                                                    #Misc
+    menu Kitty_Clothes_Misc:                                                                                                                   
+        #Misc
         "You look good with your hair up." if K_Hair != "evo":
-            if ApprovalCheck("Kitty", 600):
-                ch_k "Like this?"
-                $ K_Hair = "evo"
-            else:
-                ch_k "Yeah, I know that."
+                if ApprovalCheck("Kitty", 600):
+                    ch_k "Like this?"
+                    $ K_Hair = "evo"
+                else:
+                    ch_k "Yeah, I know that."
                 
         "Maybe let your hair down." if K_Hair != "long":
-            if ApprovalCheck("Kitty", 600):
-                ch_k "You think?"
-                $ K_Hair = "long"
-            else:
-                ch_k "I[K_like]kinda prefer to keep it up."
+                if ApprovalCheck("Kitty", 600):
+                    ch_k "You think?"
+                    $ K_Hair = "long"
+                else:
+                    ch_k "I[K_like]kinda prefer to keep it up."
                 
         "You should go for that wet look with your hair." if K_Hair != "wet":
-            if ApprovalCheck("Kitty", 800):
-                ch_k "You think so?"
-                "She rummages in her bag and grabs some gel, running it through her hair."
-                ch_k "Like this?"
-                $ K_Hair = "wet"
-            else:
-                ch_k "It's too high maintenance."
+                if ApprovalCheck("Kitty", 800):
+                    ch_k "You think so?"
+                    "She rummages in her bag and grabs some gel, running it through her hair."
+                    ch_k "Like this?"
+                    $ K_Hair = "wet"
+                else:
+                    ch_k "It's too high maintenance."
         
-        "You know, I like some nice hair down there. Maybe grow it out." if not K_Pubes and "pubes" in K_Todo:
-            call KittyFace("bemused", 1)
-            ch_k "[[snort] You've got to give it some time!"
-        "You know, I like some nice hair down there. Maybe grow it out." if not K_Pubes and "pubes" not in K_Todo:
-            call KittyFace("bemused", 1)
-            $ Approval = ApprovalCheck("Kitty", 1150, TabM=0)
-            if ApprovalCheck("Kitty", 850, "L", TabM=0) or (Approval and K_Love > 2 * K_Obed):               
-                ch_k "I guess I could. . ."
-            elif ApprovalCheck("Kitty", 500, "I", TabM=0) or (Approval and K_Inbt > K_Obed):
-                ch_k "You want a furry kitty to pet?"
-            elif ApprovalCheck("Kitty", 400, "O", TabM=0) or Approval:
-                ch_k "If you want me to. . ."
-            else: 
-                call KittyFace("surprised")
-                $ K_Brows = "angry"
-                ch_k "Not that it's any of your business, [K_Petname]."
-                jump Kitty_Clothes
-            $ K_Todo.append("pubes")
-            $ K_PubeC = 6
+        "You know, I like some nice hair down there. Maybe grow it out." if not K_Pubes:      
+                if "pubes" in K_Todo:
+                    ch_k "[[snort] You've got to give it some time!"
+                else:                    
+                    call KittyFace("bemused", 1)
+                    $ Approval = ApprovalCheck("Kitty", 1150, TabM=0)
+                    if ApprovalCheck("Kitty", 850, "L", TabM=0) or (Approval and K_Love > 2 * K_Obed):               
+                        ch_k "I guess I could. . ."
+                    elif ApprovalCheck("Kitty", 500, "I", TabM=0) or (Approval and K_Inbt > K_Obed):
+                        ch_k "You want a furry kitty to pet?"
+                    elif ApprovalCheck("Kitty", 400, "O", TabM=0) or Approval:
+                        ch_k "If you want me to. . ."
+                    else: 
+                        call KittyFace("surprised")
+                        $ K_Brows = "angry"
+                        ch_k "Not that it's any of your business, [K_Petname]."
+                        jump Kitty_Clothes
+                    $ K_Todo.append("pubes")
+                    $ K_PubeC = 6
         
-        "I like it waxed clean down there." if K_Pubes == 1:
+        "I like it waxed clean down there." if K_Pubes:
             call KittyFace("bemused", 1)            
             if "shave" in K_Todo:
-                ch_k "I know, I know. I'll take care of it later."
+                    ch_k "I know, I know. I'll take care of it later."
             else:
-                $ Approval = ApprovalCheck("Kitty", 1150, TabM=0)
-                
-                if ApprovalCheck("Kitty", 850, "L", TabM=0) or (Approval and K_Love > 2 * K_Obed):               
-                    ch_k "I guess I could tidy up a bit. . ."
-                elif ApprovalCheck("Kitty", 500, "I", TabM=0) or (Approval and K_Inbt > K_Obed):
-                    ch_k "I'll keep it smooth."
-                elif ApprovalCheck("Kitty", 400, "O", TabM=0) or Approval:
-                    ch_k "I'll get it done."
-                else: 
-                    call KittyFace("surprised")
-                    $ K_Brows = "angry"
-                    ch_k "Not that it's any of your business, [K_Petname]."
-                    jump Kitty_Clothes
-                $ K_Todo.append("shave")        
+                    $ Approval = ApprovalCheck("Kitty", 1150, TabM=0)
+                    
+                    if ApprovalCheck("Kitty", 850, "L", TabM=0) or (Approval and K_Love > 2 * K_Obed):               
+                        ch_k "I guess I could tidy up a bit. . ."
+                    elif ApprovalCheck("Kitty", 500, "I", TabM=0) or (Approval and K_Inbt > K_Obed):
+                        ch_k "I'll keep it smooth."
+                    elif ApprovalCheck("Kitty", 400, "O", TabM=0) or Approval:
+                        ch_k "I'll get it done."
+                    else: 
+                        call KittyFace("surprised")
+                        $ K_Brows = "angry"
+                        ch_k "Not that it's any of your business, [K_Petname]."
+                        jump Kitty_Clothes
+                    $ K_Todo.append("shave")        
         "Piercings. [[See what she looks like without them first] (locked)" if not K_SeenPussy and not K_SeenChest:
             pass
             
-        "You know, you'd look really nice with some ring body piercings." if K_Pierce != "ring" and (K_SeenPussy or K_SeenChest) and "ring" not in K_Todo:
-            call KittyFace("bemused", 1)
-            $ Approval = ApprovalCheck("Kitty", 1350, TabM=0)
-            if ApprovalCheck("Kitty", 900, "L", TabM=0) or (Approval and K_Love > 2* K_Obed):   
-                ch_k "If you think they'd look good on me. . ."
-            elif ApprovalCheck("Kitty", 600, "I", TabM=0) or (Approval and K_Inbt > K_Obed):
-                ch_k "I think they'd look great too!"
-            elif ApprovalCheck("Kitty", 500, "O", TabM=0) or Approval:
-                ch_k "K, I'll take care of it."
-            else: 
-                call KittyFace("surprised")
-                $ K_Brows = "angry"
-                ch_k "Not that it's any of your business, [K_Petname]."
-                jump Kitty_Clothes            
-            $ K_Todo.append("ring")
+        "You know, you'd look really nice with some ring body piercings." if K_Pierce != "ring" and (K_SeenPussy or K_SeenChest):        
+                if "ring" in K_Todo:
+                    ch_k "I know, I know. I'll take care of it later."
+                else:                    
+                    call KittyFace("bemused", 1)
+                    $ Approval = ApprovalCheck("Kitty", 1350, TabM=0)
+                    if ApprovalCheck("Kitty", 900, "L", TabM=0) or (Approval and K_Love > 2* K_Obed):   
+                        ch_k "If you think they'd look good on me. . ."
+                    elif ApprovalCheck("Kitty", 600, "I", TabM=0) or (Approval and K_Inbt > K_Obed):
+                        ch_k "I think they'd look great too!"
+                    elif ApprovalCheck("Kitty", 500, "O", TabM=0) or Approval:
+                        ch_k "K, I'll take care of it."
+                    else: 
+                        call KittyFace("surprised")
+                        $ K_Brows = "angry"
+                        ch_k "Not that it's any of your business, [K_Petname]."
+                        jump Kitty_Clothes            
+                    $ K_Todo.append("ring")
         
-        "You know, you'd look really nice with some barbell body piercings." if K_Pierce != "barbell" and (K_SeenPussy or K_SeenChest)and "barbell" not in K_Todo:
-            call KittyFace("bemused", 1)
-            $ Approval = ApprovalCheck("Kitty", 1350, TabM=0)
-            if ApprovalCheck("Kitty", 900, "L", TabM=0) or (Approval and K_Love > 2 * K_Obed): 
-                ch_k "If you think they'd look good on me. . ."
-            elif ApprovalCheck("Kitty", 600, "I", TabM=0) or (Approval and K_Inbt > K_Obed):
-                ch_k "I think they'd look great too!"
-            elif ApprovalCheck("Kitty", 500, "O", TabM=0) or Approval:
-                ch_k "K, I'll take care of it."
-            else: 
-                call KittyFace("surprised")
-                $ K_Brows = "angry"
-                ch_k "Not that it's any of your business, [K_Petname]."
-                jump Kitty_Clothes                
-            $ K_Todo.append("barbell")
-            $ K_Pierce = "barbell"
+        "You know, you'd look really nice with some barbell body piercings." if K_Pierce != "barbell" and (K_SeenPussy or K_SeenChest):      
+                if "barbell" in K_Todo:
+                    ch_k "I know, I know. I'll take care of it later."
+                else:                    
+                    call KittyFace("bemused", 1)
+                    $ Approval = ApprovalCheck("Kitty", 1350, TabM=0)
+                    if ApprovalCheck("Kitty", 900, "L", TabM=0) or (Approval and K_Love > 2 * K_Obed): 
+                        ch_k "If you think they'd look good on me. . ."
+                    elif ApprovalCheck("Kitty", 600, "I", TabM=0) or (Approval and K_Inbt > K_Obed):
+                        ch_k "I think they'd look great too!"
+                    elif ApprovalCheck("Kitty", 500, "O", TabM=0) or Approval:
+                        ch_k "K, I'll take care of it."
+                    else: 
+                        call KittyFace("surprised")
+                        $ K_Brows = "angry"
+                        ch_k "Not that it's any of your business, [K_Petname]."
+                        jump Kitty_Clothes                
+                    $ K_Todo.append("barbell")
+                    $ K_Pierce = "barbell"
             
         "You know, you'd look better without those piercings." if K_Pierce:
-            call KittyFace("bemused", 1)
-            $ Approval = ApprovalCheck("Kitty", 1350, TabM=0)
-            if ApprovalCheck("Kitty", 950, "L", TabM=0) or (Approval and K_Love > K_Obed):   
-                ch_k "I guess if they're getting in the way . ."
-            elif ApprovalCheck("Kitty", 700, "I", TabM=0) or (Approval and K_Inbt > K_Obed):
-                ch_k "They were getting a little annoying."
-            elif ApprovalCheck("Kitty", 600, "O", TabM=0) or Approval:
-                ch_k "I'll take them out then."
-            else: 
-                call KittyFace("surprised")
-                $ K_Brows = "angry"
-                ch_k "Well {i}I{/i} kinda like'em."
-                jump Kitty_Clothes            
-            $ K_Pierce = 0 
+                call KittyFace("bemused", 1)
+                $ Approval = ApprovalCheck("Kitty", 1350, TabM=0)
+                if ApprovalCheck("Kitty", 950, "L", TabM=0) or (Approval and K_Love > K_Obed):   
+                    ch_k "I guess if they're getting in the way . ."
+                elif ApprovalCheck("Kitty", 700, "I", TabM=0) or (Approval and K_Inbt > K_Obed):
+                    ch_k "They were getting a little annoying."
+                elif ApprovalCheck("Kitty", 600, "O", TabM=0) or Approval:
+                    ch_k "I'll take them out then."
+                else: 
+                    call KittyFace("surprised")
+                    $ K_Brows = "angry"
+                    ch_k "Well {i}I{/i} kinda like'em."
+                    jump Kitty_Clothes            
+                $ K_Pierce = 0 
         "Why don't you try on that gold necklace." if K_Neck != "gold necklace":
-            ch_k "Ok. . ."         
-            $ K_Neck = "gold necklace"
+                ch_k "Ok. . ."         
+                $ K_Neck = "gold necklace"
         "Why don't you try on that star necklace." if K_Neck != "star necklace":
-            ch_k "Ok. . ."         
-            $ K_Neck = "star necklace"
+                ch_k "Ok. . ."         
+                $ K_Neck = "star necklace"
         "Maybe go without a necklace." if K_Neck:
-            ch_k "Ok. . ."         
-            $ K_Neck = 0
+                ch_k "Ok. . ."         
+                $ K_Neck = 0
             
         "Never mind":
             pass         
@@ -4572,6 +4726,7 @@ return
 
 label Kitty_Clothes_Schedule(Cnt = 0):
         #Sets clothing for different days, if Cnt is 3 it's all days, 2 is TuThu, 1 is only weekends
+        #Schedule 0-6= mon-fri, Schedule 7 is dates, 9 is private
         
         if ApprovalCheck("Kitty", 1500, "LO"):
                 ch_k "Let me know what you like."
@@ -4585,74 +4740,121 @@ label Kitty_Clothes_Schedule(Cnt = 0):
         else:
                 ch_k "I think I'll[K_like]figure out my own outfits."
                 return
-            
-        
-        menu:
-                extend ""
-                "Weekdays":
-                    menu:
-                        "On Monday you should wear. . ." if Cnt > 1:
-                            call Kitty_Clothes_ScheduleB
-                            $ K_Schedule[0] = _return
-                        "On Monday you should wear. . . (locked)" if Cnt <= 1:
-                            pass
-                            
-                        "On Tuesday you should wear. . ." if Cnt > 2:
-                            call Kitty_Clothes_ScheduleB
-                            $ K_Schedule[1] = _return        
-                        "On Tuesday you should wear. . . (locked)" if Cnt <= 2:
-                            pass
-                            
-                        "On Wednesday you should wear. . ." if Cnt > 1:
-                            call Kitty_Clothes_ScheduleB
-                            $ K_Schedule[2] = _return
-                        "On Wednesday you should wear. . . (locked)" if Cnt <= 1:
-                            pass   
-                            
-                        "On Thursday you should wear. . ." if Cnt > 2:
-                            call Kitty_Clothes_ScheduleB
-                            $ K_Schedule[3] = _return
-                        "On Thursday you should wear. . . (locked)" if Cnt <= 2:
-                            pass
-                            
-                        "On Friday you should wear. . ." if Cnt > 1:
-                            call Kitty_Clothes_ScheduleB
-                            $ K_Schedule[4] = _return
-                        "On Friday you should wear. . . (locked)" if Cnt <= 1:
-                            pass 
-                        "Back":
-                            pass         
-               
-                "Other":
-                    menu:       
-                        "On Saturday you should wear. . . (locked)" if Cnt < 1:
-                            pass
-                        "On Saturday you should wear. . ." if Cnt >= 1:
-                            call Kitty_Clothes_ScheduleB
-                            $ K_Schedule[5] = _return
-                            
-                        "On Sunday you should wear. . . (locked)" if Cnt < 1:
-                            pass                          
-                        "On Sunday you should wear. . ." if Cnt >= 1:
-                            call Kitty_Clothes_ScheduleB
-                            $ K_Schedule[6] = _return
-                            
-                        "In our rooms you should wear. . . (locked)" if Cnt < 1:
-                            pass
-                        "In our rooms you should wear. . ." if Cnt >= 1:
-                            call Kitty_Clothes_ScheduleB(99)
-                            $ K_Schedule[9] = _return   
-                            
-                        "On dates you should wear. . . (locked)" if Cnt < 2:
-                            pass  
-                        "On dates you should wear. . ." if Cnt >= 2:
-                            call Kitty_Clothes_ScheduleB
-                            $ K_Schedule[7] = _return     
-                        "Back":
-                            pass         
                     
-                "Never mind":
-                    return        
+        while True:    
+            menu:
+                    extend ""
+                    "Every Day":
+                        "This sets her outfit for every day of the week in one go."
+                        "This overwrites the default schedule, and any scheduling you've already made."
+                        "Any choices you make later will overwrite this choice."
+                        menu:
+                            "Pick an outfit to wear":                                
+                                call Kitty_Clothes_ScheduleB
+                                if Cnt > 1:
+                                        $ K_Schedule[0] = _return
+                                if Cnt > 2:
+                                        $ K_Schedule[1] = _return
+                                if Cnt > 1:
+                                        $ K_Schedule[2] = _return
+                                if Cnt > 2:
+                                        $ K_Schedule[3] = _return
+                                if Cnt > 1:
+                                        $ K_Schedule[4] = _return
+                                $ K_Schedule[5] = _return
+                                $ K_Schedule[6] = _return
+                            "Never mind.":
+                                pass
+                    "Weekdays":
+                        menu:
+                            "On Monday you should wear. . ." if Cnt > 1:
+                                call Kitty_Clothes_ScheduleB
+                                $ K_Schedule[0] = _return
+                            "On Monday you should wear. . . (locked)" if Cnt <= 1:
+                                pass
+                                
+                            "On Tuesday you should wear. . ." if Cnt > 2:
+                                call Kitty_Clothes_ScheduleB
+                                $ K_Schedule[1] = _return        
+                            "On Tuesday you should wear. . . (locked)" if Cnt <= 2:
+                                pass
+                                
+                            "On Wednesday you should wear. . ." if Cnt > 1:
+                                call Kitty_Clothes_ScheduleB
+                                $ K_Schedule[2] = _return
+                            "On Wednesday you should wear. . . (locked)" if Cnt <= 1:
+                                pass   
+                                
+                            "On Thursday you should wear. . ." if Cnt > 2:
+                                call Kitty_Clothes_ScheduleB
+                                $ K_Schedule[3] = _return
+                            "On Thursday you should wear. . . (locked)" if Cnt <= 2:
+                                pass
+                                
+                            "On Friday you should wear. . ." if Cnt > 1:
+                                call Kitty_Clothes_ScheduleB
+                                $ K_Schedule[4] = _return
+                            "On Friday you should wear. . . (locked)" if Cnt <= 1:
+                                pass 
+                            "Back":
+                                pass         
+                   
+                    "Other":
+                        menu:       
+                            "On Saturday you should wear. . . (locked)" if Cnt < 1:
+                                pass
+                            "On Saturday you should wear. . ." if Cnt >= 1:
+                                call Kitty_Clothes_ScheduleB
+                                $ K_Schedule[5] = _return
+                                
+                            "On Sunday you should wear. . . (locked)" if Cnt < 1:
+                                pass                          
+                            "On Sunday you should wear. . ." if Cnt >= 1:
+                                call Kitty_Clothes_ScheduleB
+                                $ K_Schedule[6] = _return
+                                
+                            "In our rooms you should wear. . . (locked)" if Cnt < 1:
+                                pass
+                            "In our rooms you should wear. . ." if Cnt >= 1:
+                                call Kitty_Clothes_ScheduleB(99)
+                                $ K_Schedule[9] = _return   
+                                
+                            "On dates you should wear. . . (locked)" if Cnt < 2:
+                                pass  
+                            "On dates you should wear. . ." if Cnt >= 2:
+                                call Kitty_Clothes_ScheduleB
+                                $ K_Schedule[7] = _return     
+                            "Back":
+                                pass  
+                                
+                    "About Gym clothes":
+                            menu:
+                                ch_p "You asked me before about your gym clothes?"
+                                "Don't ask before changing into gym clothes" if "no ask gym" not in K_Traits:
+                                            ch_k "K."
+                                            $ K_Traits.append("no ask gym")
+                                "Ask me before changing into gym clothes" if "no ask gym" in K_Traits:
+                                            ch_k "K."
+                                            $ K_Traits.remove("no ask gym")    
+                                "Never Mind":
+                                    pass                              
+                                
+                    "Private outfit" if K_Schedule[9]:
+                            #if comfy is in L_Traits, she won't ask before changing
+                            ch_p "You know that outfit you wear in private?"
+                            menu:
+                                ch_k "Yeah?"
+                                "Just put them on without asking me about it." if "comfy" not in K_Traits:
+                                    ch_k "K."
+                                    $ K_Traits.append("comfy")
+                                "Ask before changing into that." if "comfy" in K_Traits:
+                                    ch_k "K."
+                                    $ K_Traits.remove("comfy")
+                                "Never Mind":
+                                    pass     
+                    
+                    "Never mind [[Done]":
+                        return        
         jump Kitty_Clothes_Schedule
     
     
@@ -4666,7 +4868,7 @@ label Kitty_Clothes_ScheduleB(Count = 0):
                     $ Count = 1
                 "Your red shirt outfit.":
                     $ Count = 2
-                "That outfit we put together [[custom]" if K_Custom[0] or K_Custom2[0] or K_Custom3[0] or K_Custom4[0] or K_Custom5[0] or K_Custom6[0] or K_Custom7[0] or K_Custom8[0] or K_Custom9[0]:
+                "That outfit we put together [[custom]":
                             menu:
                                 ch_k "Like, which?"
                                 "The first one. (locked)" if not K_Custom[0]:
@@ -4761,7 +4963,6 @@ label Kitty_Clothes_ScheduleB(Count = 0):
             return Count    
 #End Kitty Clothes Scheduling Check
 
-
 label K_AltClothes(Outfit=8):
         #1 = "pink outfit", 2 = "red outfit"
         #3 = "custom1", 5 = "custom2", 6 = "custom3", 7 = "sleep", 4 = "gym", 10 = "swimwear"
@@ -4800,6 +5001,12 @@ label K_AltClothes(Outfit=8):
   
 label K_Private_Outfit:
     #sets Kitty's private outfit in private
+    if K_Break[0] or "angry" in K_DailyActions:
+            return
+            
+    if K_Outfit == "temporary":
+            #if you manually set a different option, keep it
+            return
     if "comfy" in K_RecentActions or "comfy" in K_Traits or K_Outfit == K_Schedule[9]:
             call K_AltClothes(9)
             call KittyOutfit(Changed=1)
@@ -4909,18 +5116,18 @@ label Kitty_Custom_Out(Custom = 3, Shame = 0, Agree = 1):
 # End Kitty Custom Out
                                 
                                 
-label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree = 1):                                                                             #sets custom outfit    
+label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree = 1):                                                                      
             #Custom determines which custom outfit is being checked against.    
-            #If Custom1 = 3, if custom2 = 5, if custom3 = 6, if gym = 7, if private = 9, if swimwear = 10
+            #If Custom1 = 3, if custom2 = 5, if custom3 = 6, if gym = 4, if sleepwear 7, if private = 9, if swimsuit = 10
             #if not a check, then it is only applied if it's in a taboo area
             # Tempshame is a throwaway value, 0-50, Agree is whether she will wear it out, 2 if yes, 1 if only around you.
             
-            if not Check and not Taboo and Custom != 20:
-                #if this is not a custom check and you're in a safe space,
-                if K_Schedule[9]:
-                    #if there is a "private outfit" set, ask to change.
-                    call K_Private_Outfit
-                return
+            if not Check and not K_Taboo and Custom != 20:
+                    #if this is not a custom check and you're in a safe space,
+                    if K_Schedule[9]:
+                            #if there is a "private outfit" set, ask to change.
+                            call K_Private_Outfit
+                    return
                         
             #If she's wearing a bra of some kind
             if Custom == 20 and K_Uptop: 
@@ -4957,7 +5164,7 @@ label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             #else: nothing    
             
             call KittyFace("sexy", 0)
-            if Custom == 9:
+            if Custom == 9 or Custom == 7:
                 pass
             elif Count >= 20:
                 $ Count = 20
@@ -5018,7 +5225,7 @@ label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             if not Check:
                         #If this isn't a custom check, skip this dialog stuff
                         pass
-            elif Custom == 9:
+            elif Custom == 9 or Custom == 7:
                         pass
             elif Count >= 20:
                         if PantsNum("Kitty") >= 5:
@@ -5050,15 +5257,60 @@ label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             
             if Check:
                     #if this is a custom outfit check
-                    if Custom == 7:
+                    if Check == 2:
+                        ch_p "So can I see it then?"
+                    elif Custom == 4:
                         ch_p "So would you work out in that?"
-                    elif Custom == 9:
+                    elif Custom == 7:
                         ch_p "So would you sleep in that?"
                     else:
                         ch_p "So would you wear that outside?"  
                         
                     call KittyFace("sexy", 0)
-                    if Taboo >= 40: #K_Loc != "bg player" and K_Loc != "bg kitty": 
+                    
+                    if PantsNum("Kitty") > 2:  
+                        pass        #if she's wearing pants
+                    elif PantiesNum("Kitty") > 2 and (K_SeenPanties or ApprovalCheck("Kitty", 900, TabM=0)):
+                        pass        #no pants, but panties
+                    elif K_SeenPussy or ApprovalCheck("Kitty", 1200, TabM=0):
+                        pass        #no panties, but she's fine with that
+                    else:
+                        $ Agree = 0 #not fine with it
+                        
+                    if not Agree:
+                        pass
+                    elif OverNum("Kitty") > 2:    
+                        pass        #if she's wearing a top
+                    elif ChestNum("Kitty") > 2 and (K_SeenChest or ApprovalCheck("Kitty", 900, TabM=0)):
+                        pass        #no top, but bra
+                    elif K_SeenChest or ApprovalCheck("Kitty", 1200, TabM=0):
+                        pass        #no bra, but she's fine with that
+                    else:
+                        $ Agree = 0 #not fine with it
+                    
+                    if Check == 2 and Agree:
+                                #if checking to see if she'll drop the dressing screen. . .                                
+                                $ K_Shame = Tempshame
+                                call KittyFace("sly")
+                                ch_k "I suppose you've put together a cute little outfit. . ."
+                                hide DressScreen
+                                return 1   
+                    if not Agree:
+                                #she isn't even comfortable with you seeing it
+                                call KittyFace("bemused", 2,Eyes="side")
+                                ch_k "I don't think I'd be comfortable with you seeing me like this. . ."
+                                menu:
+                                    extend ""
+                                    "Ok then, you can put your normal clothes back on.":
+                                                call KittyOutfit(Changed=1)  
+                                                hide DressScreen
+                                    "Ok, we can keep tweaking it.":
+                                                pass
+                                call KittyFace("smile", 1)
+                                ch_k "Thanks."    
+                                return
+                                         
+                    if K_Taboo >= 40: #K_Loc != "bg player" and K_Loc != "bg kitty": 
                         call KittyFace("confused",1)
                         $ K_Mouth = "smile"
                         ch_k "Kinda late to ask, right?" 
@@ -5070,7 +5322,7 @@ label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                         ch_k "Sure, it's a cute look!"
                     elif Tempshame <= 15 and (ApprovalCheck("Kitty", 1700, TabM=0, C = 0) or ApprovalCheck("Kitty", 400, "I", TabM=0, C = 0)):        
                         ch_k "It's pretty hot, right?"
-                    elif Custom == 9:
+                    elif Custom == 7:
                         #if it's sleepwear      
                         call KittyFace("bemused", 1)
                         if Tempshame >= 30:
@@ -5191,7 +5443,7 @@ label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                             $ K_Custom3[9] = K_Hose
                             $ K_Custom3[0] = 2 if Agree else 1
                             call Clothing_Schedule_Check("Kitty",6,1)  
-                    elif Custom == 7 and Agree:
+                    elif Custom == 4 and Agree:
                             $ K_Gym[1] = K_Arms  
                             $ K_Gym[2] = K_Legs 
                             $ K_Gym[3] = K_Over
@@ -5202,7 +5454,7 @@ label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                             $ K_Gym[9] = K_Hose
                             $ K_Gym[0] = 2   
                             call Clothing_Schedule_Check("Kitty",4,1)  
-                    elif Custom == 9:                            
+                    elif Custom == 7:                            
                             $ K_Sleepwear[1] = K_Arms  
                             $ K_Sleepwear[2] = K_Legs 
                             $ K_Sleepwear[3] = K_Over
@@ -5234,7 +5486,7 @@ label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                             $ K_Custom[0] = 2 if Agree else 1
                             call Clothing_Schedule_Check("Kitty",3,1)  
                     #End check                       
-            elif Taboo <= 20:
+            elif K_Taboo <= 20:
                 # halves shame level if she's comfortable
                 $ Tempshame /= 2
                 
@@ -5258,7 +5510,7 @@ label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             elif Tempshame <= 15 and (ApprovalCheck("Kitty", 1700) or ApprovalCheck("Kitty", 600, "I")):
                     #If the outfit is hot but she's ok     
                     pass
-            elif Tempshame <= 20 and K_Loc == "bg dangerroom": 
+            elif Tempshame <= 20 and (K_Loc == "bg dangerroom" or K_Loc == "bg pool"): 
                     #If the outfit is light but she's in the gym
                     pass
             elif Tempshame <= 20 and (ApprovalCheck("Kitty", 1800) or ApprovalCheck("Kitty", 650, "I")):
@@ -5270,11 +5522,17 @@ label Kitty_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
             elif (ApprovalCheck("Kitty", 2600) or ApprovalCheck("Kitty", 950, "I")):
                     #If the outfit is very scandelous but she's ok with that      
                     pass
-            elif Custom == 9 and not Taboo:
+            elif not K_Taboo: #Custom == 9 and not K_Taboo?
                     pass
-            else:
-                    ch_k "One sec, I gotta change real quick."
-                    $ K_Outfit = renpy.random.choice(["pink outfit", "red outfit"])
+            else:       
+                    if K_Loc == bg_current:
+                            ch_k "One sec, I gotta change real quick."
+                    if K_Loc == "bg dangerroom":
+                            $ K_Outfit =  "gym"
+                    elif K_Loc == "bg pool" and K_Swim[0]:
+                            $ K_Outfit =  "swimwear"                        
+                    else:
+                            $ K_Outfit = renpy.random.choice(["pink outfit", "red outfit"])
                     $ K_Water = 0
                     call KittyOutfit(Changed = 1) 
                     ch_k "I wouldn't want to be seen like that."

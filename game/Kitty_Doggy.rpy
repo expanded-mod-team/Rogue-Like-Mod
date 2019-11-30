@@ -2,6 +2,7 @@
 # K_Doggy_P //////////////////////////////////////////////////////////////////////
 
 label K_Doggy_P:  
+label K_Sex_P:  
     $ Round -= 5 if Round > 5 else (Round-1)
     call Shift_Focus("Kitty")
     if K_Sex >= 7: # She loves it
@@ -43,51 +44,7 @@ label K_Doggy_P:
              
         
     $ Approval = ApprovalCheck("Kitty", 1400, TabM = 5) # 135, 150, 165, Taboo -200(335)
-    
-    if Situation == "Kitty":                                                                  #Rogue auto-starts   
-        if Approval > 2:                                                      # fix, add kitty auto stuff here
-            call Kitty_Doggy_Launch("L")   
-            if K_Legs == "skirt":
-                "Kitty turns and backs up against your cock, sliding her skirt up as she does so."
-                $ K_Upskirt = 1
-            elif K_Legs == "pants":
-                "Kitty turns and backs up against your cock, sliding her pants off as she does so."                
-                $ K_Legs = 0
-            else:
-                "Kitty turns and backs up against your cock."
-            $ K_SeenPanties = 1
-            "She slides the tip along her pussy and seems to want you to insert it."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Kitty", "Inbt", 80, 3) 
-                    call Statup("Kitty", "Inbt", 50, 2)
-                    "Kitty slides it in."
-                "Praise her.":       
-                    call KittyFace("sexy", 1)                    
-                    call Statup("Kitty", "Inbt", 80, 3) 
-                    ch_p "Oh yeah, [K_Pet], let's do this."
-                    call Kitty_Namecheck
-                    "Kitty slides it in."
-                    call Statup("Kitty", "Love", 85, 1)
-                    call Statup("Kitty", "Obed", 90, 1)
-                    call Statup("Kitty", "Obed", 50, 2)
-                "Ask her to stop.":
-                    call KittyFace("surprised")       
-                    call Statup("Kitty", "Inbt", 70, 1) 
-                    ch_p "Let's not do that right now, [K_Pet]."
-                    call Kitty_Namecheck
-                    "Kitty pulls back."
-                    call Statup("Kitty", "Obed", 90, 1)
-                    call Statup("Kitty", "Obed", 50, 1)
-                    call Statup("Kitty", "Obed", 30, 2)
-                    return            
-            jump K_Doggy_SexPrep
-        else:                
-            $ Tempmod = 0                               # fix, add kitty auto stuff here
-            $ Trigger2 = 0
-        return            
-    
+            
     if Situation == "auto":   
         call Kitty_Doggy_Launch("L")   
         if K_Legs == "skirt":
@@ -338,60 +295,104 @@ label K_Doggy_P:
     return
 
 label K_Doggy_SexPrep:
-    call Seen_First_Peen("Kitty",Partner)
+    call Seen_First_Peen("Kitty",Partner,React=Situation)
     call Kitty_Doggy_Launch("hotdog")
-    
-    if Situation != "auto":
-        call Kitty_Bottoms_Off       
         
-        
-        if (K_Panties and not K_PantiesDown) or (K_Legs and not K_Upskirt) or HoseNum("Kitty") >= 6: #If she refuses to take off her pants but agreed to sex
-            ch_k "Well, I guess some things are necessary, [K_Petname]."            
-            if (K_Legs == "pants" and not K_Upskirt) and (K_Panties and not K_PantiesDown):
-                "She quickly pulls down her pants and drops her [K_Panties]."
-            elif (K_Legs == "pants" and not K_Upskirt):
-                "She quickly pulls down her pants, exposing her bare ass."
-            elif HoseNum("Kitty") >= 6 and (K_Panties and not K_PantiesDown):
-                "She quickly pulls down her [K_Hose] and drops her [K_Panties]."
-                $ K_Hose = 0
-            elif HoseNum("Kitty") >= 6:
-                "She quickly pulls down her [K_Hose], exposing her bare ass."
-                $ K_Hose = 0
-            elif (K_Panties and not K_PantiesDown):
-                "She quickly pulls down her [K_Panties]."  
+    if Situation == "Kitty":                                                                 
+            #Rogue auto-starts   
+            $ Situation = 0
+            if K_Legs == "skirt":
+                "Kitty turns and backs up against your cock, sliding her skirt up as she does so."
+                $ K_Upskirt = 1
+            elif K_Legs == "pants":
+                "Kitty turns and backs up against your cock, sliding her pants down as she does so."    
+                $ K_Upskirt = 1
+            else:
+                "Kitty turns and backs up against your cock."
+            $ K_SeenPanties = 1
+            "She slides the tip along her pussy and seems to want you to insert it."
+            menu:
+                "What do you do?"
+                "Go with it.":                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    call Statup("Kitty", "Inbt", 50, 2)
+                    "Kitty slides it in."
+                "Praise her.":       
+                    call KittyFace("sexy", 1)                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    ch_p "Oh yeah, [K_Pet], let's do this."
+                    call Kitty_Namecheck
+                    "Kitty slides it in."
+                    call Statup("Kitty", "Love", 85, 1)
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call KittyFace("surprised")       
+                    call Statup("Kitty", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty pulls back."
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 1)
+                    call Statup("Kitty", "Obed", 30, 2)
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Kitty",1,"refused","refused")  
+                    return      
+            $ K_PantiesDown = 1  
+            call Kitty_First_Bottomless(1)
             
-        $ K_Upskirt = 1
-        $ K_PantiesDown = 1       
-        $ K_SeenPanties = 1
-        call Kitty_First_Bottomless
-        
-        if Taboo: # Kitty gets started. . .
-            if not K_Sex:
-                "Kitty glances around for voyeurs. . ."
-                "Kitty hesitantly pulls down your pants and slowly backs up against your rigid member."
-                "You guide it into place and slide it in."
-            else:
-                "Kitty glances around to see if anyone notices what she's doing, then backs her ass up against your cock."
-                "You guide your cock into place and ram it home."
-            $ K_Inbt += int(Taboo/10)  
-            $ K_Lust += int(Taboo/5)
-        else:    
-            if not K_Sex:
-                "Kitty hesitantly pulls down your pants slowly backs up against your rigid member."
-                "You press her folds aside and nudge your cock in."
-            else:
-                "Kitty bends over and presses her backside against you suggestively."
-                "You take careful aim and then ram your cock in."
+    elif Situation != "auto":
+            call Kitty_Bottoms_Off       
+            
+            
+            if (K_Panties and not K_PantiesDown) or (K_Legs and not K_Upskirt) or HoseNum("Kitty") >= 6: #If she refuses to take off her pants but agreed to sex
+                ch_k "Well, I guess some things are necessary, [K_Petname]."            
+                if (K_Legs == "pants" and not K_Upskirt) and (K_Panties and not K_PantiesDown):
+                    "She quickly pulls down her pants and drops her [K_Panties]."
+                elif (K_Legs == "pants" and not K_Upskirt):
+                    "She quickly pulls down her pants, exposing her bare ass."
+                elif HoseNum("Kitty") >= 6 and (K_Panties and not K_PantiesDown):
+                    "She quickly pulls down her [K_Hose] and drops her [K_Panties]."
+                    $ K_Hose = 0
+                elif HoseNum("Kitty") >= 6:
+                    "She quickly pulls down her [K_Hose], exposing her bare ass."
+                    $ K_Hose = 0
+                elif (K_Panties and not K_PantiesDown):
+                    "She quickly pulls down her [K_Panties]."  
+                
+            $ K_Upskirt = 1
+            $ K_PantiesDown = 1       
+            $ K_SeenPanties = 1
+            call Kitty_First_Bottomless
+            
+            if Taboo: # Kitty gets started. . .
+                if not K_Sex:
+                    "Kitty glances around for voyeurs. . ."
+                    "Kitty hesitantly pulls down your pants and slowly backs up against your rigid member."
+                    "You guide it into place and slide it in."
+                else:
+                    "Kitty glances around to see if anyone notices what she's doing, then backs her ass up against your cock."
+                    "You guide your cock into place and ram it home."
+                $ K_Inbt += int(Taboo/10)  
+                $ K_Lust += int(Taboo/5)
+            else:    
+                if not K_Sex:
+                    "Kitty hesitantly pulls down your pants slowly backs up against your rigid member."
+                    "You press her folds aside and nudge your cock in."
+                else:
+                    "Kitty bends over and presses her backside against you suggestively."
+                    "You take careful aim and then ram your cock in."
+            #end auto
                             
     else:  #if Situation == "auto"         
-        if (K_Legs == "pants" and not K_Upskirt) and (K_Panties and not K_PantiesDown):
-            "You quickly pull down her pants and her [K_Panties] and press against her slit."
-        elif (K_Panties and not K_PantiesDown):
-            "You quickly pull down her [K_Panties] and press against her slit."  
-        $ K_Upskirt = 1
-        $ K_PantiesDown = 1       
-        $ K_SeenPanties = 1
-        call Kitty_First_Bottomless(1)
+            if (K_Legs == "pants" and not K_Upskirt) and (K_Panties and not K_PantiesDown):
+                "You quickly pull down her pants and her [K_Panties] and press against her slit."
+            elif (K_Panties and not K_PantiesDown):
+                "You quickly pull down her [K_Panties] and press against her slit."  
+            $ K_Upskirt = 1
+            $ K_PantiesDown = 1       
+            $ K_SeenPanties = 1
+            call Kitty_First_Bottomless(1)
             
     if not K_Sex:        
         if K_Forced:
@@ -646,6 +647,8 @@ label K_Doggy_Sex_Cycle: #Repeating strokes
                                     jump K_Doggy_SexAfter
         #End Count check
    
+        call Escalation("Kitty","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_k "You might want to wrap this up, it's getting late."  
         elif Round == 5:
@@ -711,6 +714,7 @@ label K_Doggy_SexAfter:
 # K_Doggy_A anal //////////////////////////////////////////////////////////////////////
 
 label K_Doggy_A:
+label K_Sex_A:  
     $ Round -= 5 if Round > 5 else (Round-1)
     call Shift_Focus("Kitty")
     if K_Anal >= 7: # She loves it
@@ -756,50 +760,6 @@ label K_Doggy_A:
         $ Tempmod -= 10 if "no anal" in K_RecentActions else 0  
             
     $ Approval = ApprovalCheck("Kitty", 1550, TabM = 5) # 155, 170, 185, Taboo -200(355)
-    
-    if Situation == "Kitty":                                                                  #Rogue auto-starts   
-        if Approval > 2:                                                      # fix, add kitty auto stuff here
-            call Kitty_Doggy_Launch("L")   
-            if K_Legs == "skirt":
-                "Kitty turns and backs up against your cock, sliding her skirt up as she does so."
-                $ K_Upskirt = 1
-            elif K_Legs == "pants":
-                "Kitty turns and backs up against your cock, sliding her pants off as she does so."                
-                $ K_Legs = 0
-            else:
-                "Kitty turns and backs up against your cock."
-            $ K_SeenPanties = 1
-            "She slides the tip up to her anus, and presses against it."
-            menu:
-                "What do you do?"
-                "Nothing.":                    
-                    call Statup("Kitty", "Inbt", 80, 3) 
-                    call Statup("Kitty", "Inbt", 50, 2)
-                    "Kitty slides it in."
-                "Praise her.":       
-                    call KittyFace("sexy", 1)                    
-                    call Statup("Kitty", "Inbt", 80, 3) 
-                    ch_p "Ooo, dirty girl, [K_Pet], let's do this."
-                    call Kitty_Namecheck
-                    "Kitty slides it in."
-                    call Statup("Kitty", "Love", 85, 1)
-                    call Statup("Kitty", "Obed", 90, 1)
-                    call Statup("Kitty", "Obed", 50, 2)
-                "Ask her to stop.":
-                    call KittyFace("surprised")       
-                    call Statup("Kitty", "Inbt", 70, 1) 
-                    ch_p "Let's not do that right now, [K_Pet]."
-                    call Kitty_Namecheck
-                    "Kitty pulls back."
-                    call Statup("Kitty", "Obed", 90, 1)
-                    call Statup("Kitty", "Obed", 50, 1)
-                    call Statup("Kitty", "Obed", 30, 2)                    
-                    return            
-            jump K_Doggy_AnalPrep
-        else:                
-            $ Tempmod = 0                               # fix, add kitty auto stuff here
-            $ Trigger2 = 0
-        return            
     
     if Situation == "auto":   
         call Kitty_Doggy_Launch("L")   
@@ -1076,60 +1036,104 @@ label K_Doggy_A:
     return
 
 label K_Doggy_AnalPrep:    
-    call Seen_First_Peen("Kitty",Partner)            
+    call Seen_First_Peen("Kitty",Partner,React=Situation)            
     call Kitty_Doggy_Launch("hotdog")
     
-    if Situation != "auto":
-        call Kitty_Bottoms_Off        
-        if (K_Panties and not K_PantiesDown) or (K_Legs and not K_Upskirt) or HoseNum("Kitty") >= 6: #If she refuses to take off her pants but agreed to sex
-            ch_k "Well, I guess some things are necessary, [K_Petname]."            
-            if (K_Legs == "pants" and not K_Upskirt) and (K_Panties and not K_PantiesDown):
-                "She quickly pulls down her pants and drops her [K_Panties]."
-            elif (K_Legs == "pants" and not K_Upskirt):
-                "She quickly pulls down her pants, exposing her bare ass."
-            elif HoseNum("Kitty") >= 6 and (K_Panties and not K_PantiesDown):
-                "She quickly pulls down her [K_Hose] and drops her [K_Panties]."
-                $ K_Hose = 0
-            elif HoseNum("Kitty") >= 6:
-                "She quickly pulls down her [K_Hose], exposing her bare ass."
-                $ K_Hose = 0
-            elif (K_Panties and not K_PantiesDown):
-                "She quickly pulls down her [K_Panties]."    
-            
-        $ K_Upskirt = 1
-        $ K_PantiesDown = 1       
-        $ K_SeenPanties = 1
-        call Kitty_First_Bottomless
-        
-        if Taboo: # Kitty gets started. . .
-            if K_Anal:                
-                "Kitty glances around to see if anyone notices what she's doing, then backs her ass up against your cock."
-                "You guide your cock into place and ram it home."   
-                
-            else:         
-                "Kitty glances around for voyeurs. . ."
-                "Kitty hesitantly pulls down your pants and slowly backs up against your rigid member."
-                "You guide it into place and slide it in."
-            $ K_Inbt += int(Taboo/10)  
-            $ K_Lust += int(Taboo/5)
-        else:    
-            if not K_Anal:
-                "Kitty bends over and presses her backside against you suggestively."
-                "You take careful aim and then push your cock in."
+    if Situation == "Kitty":                                                                  
+            #Rogue auto-starts  
+            $ Situation = 0  
+            if K_Legs == "skirt":
+                "Kitty turns and backs up against your cock, sliding her skirt up as she does so."
+                $ K_Upskirt = 1
+            elif K_Legs == "pants":
+                "Kitty turns and backs up against your cock, sliding her pants down as she does so."                
+                $ K_Upskirt = 1
             else:
-                "Kitty hesitantly pulls down your pants slowly backs up against your rigid member."
-                "You press against her rim and nudge your cock in."
+                "Kitty turns and backs up against your cock."
+            $ K_SeenPanties = 1
+            "She slides the tip up to her anus, and presses against it."
+            menu:
+                "What do you do?"
+                "Go with it.":                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    call Statup("Kitty", "Inbt", 50, 2)
+                    "Kitty slides it in."
+                "Praise her.":       
+                    call KittyFace("sexy", 1)                    
+                    call Statup("Kitty", "Inbt", 80, 3) 
+                    ch_p "Ooo, dirty girl, [K_Pet], let's do this."
+                    call Kitty_Namecheck
+                    "Kitty slides it in."
+                    call Statup("Kitty", "Love", 85, 1)
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 2)
+                "Ask her to stop.":
+                    call KittyFace("surprised")       
+                    call Statup("Kitty", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty pulls back."
+                    call Statup("Kitty", "Obed", 90, 1)
+                    call Statup("Kitty", "Obed", 50, 1)
+                    call Statup("Kitty", "Obed", 30, 2)   
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Kitty",1,"refused","refused")                    
+                    return   
+            $ K_PantiesDown = 1   
+            call Kitty_First_Bottomless(1)  
+    
+    elif Situation != "auto":
+            call Kitty_Bottoms_Off        
+            if (K_Panties and not K_PantiesDown) or (K_Legs and not K_Upskirt) or HoseNum("Kitty") >= 6: #If she refuses to take off her pants but agreed to sex
+                ch_k "Well, I guess some things are necessary, [K_Petname]."            
+                if (K_Legs == "pants" and not K_Upskirt) and (K_Panties and not K_PantiesDown):
+                    "She quickly pulls down her pants and drops her [K_Panties]."
+                elif (K_Legs == "pants" and not K_Upskirt):
+                    "She quickly pulls down her pants, exposing her bare ass."
+                elif HoseNum("Kitty") >= 6 and (K_Panties and not K_PantiesDown):
+                    "She quickly pulls down her [K_Hose] and drops her [K_Panties]."
+                    $ K_Hose = 0
+                elif HoseNum("Kitty") >= 6:
+                    "She quickly pulls down her [K_Hose], exposing her bare ass."
+                    $ K_Hose = 0
+                elif (K_Panties and not K_PantiesDown):
+                    "She quickly pulls down her [K_Panties]."    
+                
+            $ K_Upskirt = 1
+            $ K_PantiesDown = 1       
+            $ K_SeenPanties = 1
+            call Kitty_First_Bottomless
+            
+            if Taboo: # Kitty gets started. . .
+                if K_Anal:                
+                    "Kitty glances around to see if anyone notices what she's doing, then backs her ass up against your cock."
+                    "You guide your cock into place and ram it home."   
+                    
+                else:         
+                    "Kitty glances around for voyeurs. . ."
+                    "Kitty hesitantly pulls down your pants and slowly backs up against your rigid member."
+                    "You guide it into place and slide it in."
+                $ K_Inbt += int(Taboo/10)  
+                $ K_Lust += int(Taboo/5)
+            else:    
+                if not K_Anal:
+                    "Kitty bends over and presses her backside against you suggestively."
+                    "You take careful aim and then push your cock in."
+                else:
+                    "Kitty hesitantly pulls down your pants slowly backs up against your rigid member."
+                    "You press against her rim and nudge your cock in."
+            #end auto
                      
     else: #if Situation == "auto"               
-        if (K_Legs == "pants" and not K_Upskirt) and (K_Panties and not K_PantiesDown):
-            "You quickly pull down her pants and her [K_Panties] and press against her ass."
-        elif (K_Panties and not K_PantiesDown):
-            "You quickly pull down her [K_Panties] and press against her ass."  
-            
-        $ K_Upskirt = 1
-        $ K_PantiesDown = 1       
-        $ K_SeenPanties = 1
-        call Kitty_First_Bottomless(1)
+            if (K_Legs == "pants" and not K_Upskirt) and (K_Panties and not K_PantiesDown):
+                "You quickly pull down her pants and her [K_Panties] and press against her ass."
+            elif (K_Panties and not K_PantiesDown):
+                "You quickly pull down her [K_Panties] and press against her ass."  
+                
+            $ K_Upskirt = 1
+            $ K_PantiesDown = 1       
+            $ K_SeenPanties = 1
+            call Kitty_First_Bottomless(1)
     
     if not K_Anal:                                                      #First time stat buffs       
         if K_Forced:
@@ -1471,6 +1475,7 @@ label K_Doggy_AnalAfter:
 # K_Doggy_A hotdog //////////////////////////////////////////////////////////////////////
 
 label K_Doggy_H: 
+label K_Sex_H:  
     $ Round -= 5 if Round > 5 else (Round-1)
     call Shift_Focus("Kitty")
     if K_Hotdog >= 3: #You've done it before several times
@@ -1501,38 +1506,6 @@ label K_Doggy_H:
         $ Tempmod -= 10 if "no hotdog" in K_RecentActions else 0      
         
     $ Approval = ApprovalCheck("Kitty", 1000, TabM = 3) # 100, 115, 130, Taboo -120(220)
-    
-    if Situation == "Kitty":                                                                  #Rogue auto-starts   
-        if Approval > 2:                                                      # fix, add kitty auto stuff here
-            call Kitty_Doggy_Launch("L") 
-            "Kitty turns and backs up against your cock, rubbing it against her ass."
-            menu:
-                "What do you do?"
-                "Nothing.":                     
-                    call Statup("Kitty", "Inbt", 50, 3)
-                    "Kitty starts to grind against you."
-                "Praise her.":       
-                    call KittyFace("sexy", 1)                    
-                    call Statup("Kitty", "Inbt", 80, 2) 
-                    ch_p "Hmmm, that's good, [K_Pet]."
-                    call Kitty_Namecheck
-                    "Kitty starts to grind against you."
-                    call Statup("Kitty", "Love", 85, 1)
-                    call Statup("Kitty", "Obed", 60, 2)
-                "Ask her to stop.":
-                    call KittyFace("surprised")       
-                    call Statup("Kitty", "Inbt", 70, 1) 
-                    ch_p "Let's not do that right now, [K_Pet]."
-                    call Kitty_Namecheck
-                    "Kitty pulls back."
-                    call Statup("Kitty", "Obed", 80, 1)
-                    call Statup("Kitty", "Obed", 30, 2)                    
-                    return            
-            jump K_Doggy_HotdogPrep
-        else:                
-            $ Tempmod = 0                               # fix, add kitty auto stuff here
-            $ Trigger2 = 0
-        return            
     
     if Situation == "auto":   
         call Kitty_Doggy_Launch("L")   
@@ -1778,29 +1751,57 @@ label K_Doggy_H:
     return
 
 label K_Doggy_HotdogPrep:  
-    call Seen_First_Peen("Kitty",Partner)
+    call Seen_First_Peen("Kitty",Partner,React=Situation)
     call Kitty_Doggy_Launch("hotdog")
     
-    if Situation != "auto":
-        call Kitty_Bottoms_Off    
-        
-        if Taboo: # Kitty gets started. . .
-            if K_Hotdog:                
-                "Kitty glances around to see if anyone notices what she's doing, then backs her ass up against your cock."
-                
-            else:         
-                "Kitty glances around for voyeurs. . ."
-                "Kitty hesitantly pulls down your pants and slowly backs up against your rigid member."
-            $ K_Inbt += int(Taboo/10)  
-            $ K_Lust += int(Taboo/5)
-        else:    
-            if not K_Hotdog:
-                "Kitty bends over and presses her backside against you suggestively."
-            else:
-                "Kitty hesitantly pulls down your pants slowly backs up against your rigid member."
-                     
+    if Situation == "Kitty":                                                                
+            #Rogue auto-starts  
+            $ Situation = 0
+            "Kitty turns and backs up against your cock, rubbing it against her ass."
+            menu:
+                "What do you do?"
+                "Go with it.":                     
+                    call Statup("Kitty", "Inbt", 50, 3)
+                    "Kitty starts to grind against you."
+                "Praise her.":       
+                    call KittyFace("sexy", 1)                    
+                    call Statup("Kitty", "Inbt", 80, 2) 
+                    ch_p "Hmmm, that's good, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty starts to grind against you."
+                    call Statup("Kitty", "Love", 85, 1)
+                    call Statup("Kitty", "Obed", 60, 2)
+                "Ask her to stop.":
+                    call KittyFace("surprised")       
+                    call Statup("Kitty", "Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [K_Pet]."
+                    call Kitty_Namecheck
+                    "Kitty pulls back."
+                    call Statup("Kitty", "Obed", 80, 1)
+                    call Statup("Kitty", "Obed", 30, 2) 
+                    $ P_RecentActions.append("nope")      
+                    call AnyWord("Kitty",1,"refused","refused")                     
+                    return  
+    elif Situation != "auto":
+            call Kitty_Bottoms_Off    
+            
+            if Taboo: # Kitty gets started. . .
+                if K_Hotdog:                
+                    "Kitty glances around to see if anyone notices what she's doing, then backs her ass up against your cock."
+                    
+                else:         
+                    "Kitty glances around for voyeurs. . ."
+                    "Kitty hesitantly pulls down your pants and slowly backs up against your rigid member."
+                $ K_Inbt += int(Taboo/10)  
+                $ K_Lust += int(Taboo/5)
+            else:    
+                if not K_Hotdog:
+                    "Kitty bends over and presses her backside against you suggestively."
+                else:
+                    "Kitty hesitantly pulls down your pants slowly backs up against your rigid member."
+                         
     else: #if Situation == "auto"       
-        "You press yourself against her ass."
+            "You press yourself against her ass."
         
     if not K_Hotdog:                                                      #First time stat buffs      
         if K_Forced:
@@ -1829,9 +1830,10 @@ label K_Doggy_HotdogPrep:
 label K_Doggy_Hotdog_Cycle: #Repeating strokes  
     while Round >=0:  
         call Shift_Focus("Kitty")
-        call Kitty_Doggy_Launch("hotdog") 
-        call KittyLust        
-        $ P_Cock = "out"
+        call Kitty_Doggy_Launch(0) #"hotdog"
+        call KittyLust  
+        if Speed:
+                $ P_Cock = "out"
         $ Trigger = "hotdog"
         
         if  P_Focus < 100:                                                    
@@ -1930,6 +1932,9 @@ label K_Doggy_Hotdog_Cycle: #Repeating strokes
                                                         jump K_Doggy_Hotdog_Cycle 
                                             "Never mind":
                                                         jump K_Doggy_Hotdog_Cycle 
+                                    "Just take a look at her.":                                           
+                                            $ P_Cock = 0
+                                            $ Speed = 0
                                     "Undress Kitty":
                                             call K_Undress   
                                     "Clean up Kitty (locked)" if not K_Spunk:
@@ -2056,6 +2061,8 @@ label K_Doggy_Hotdog_Cycle: #Repeating strokes
                                     jump K_Doggy_HotdogAfter
         #End Count check
    
+        call Escalation("Kitty","R") #sees if she wants to escalate things
+        
         if Round == 10:
             ch_k "You might want to wrap this up, it's getting late."  
         elif Round == 5:
