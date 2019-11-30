@@ -1,5 +1,7 @@
 ﻿label  Mod_Nude(Girl = "Kitty"):
-    
+   
+    if Day <= 3:
+        return
     $ Roll = renpy.random.randint(1, 3)
     if Roll != 2: # 1/3 chance of getting a nude from this girl
         return
