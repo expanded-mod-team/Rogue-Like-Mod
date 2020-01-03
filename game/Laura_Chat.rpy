@@ -1,4 +1,4 @@
-?¿# star Laura chat interface
+# star Laura chat interface
 label Laura_Chat_Set(Preset=0):
     if "met" not in L_History:
             "Who?"
@@ -4094,35 +4094,35 @@ label Laura_Clothes:
                                 call LauraOutfit("custom3")
                                 $ Cnt = 6
                         "Throw on Custom 4 (locked)" if not L_Custom4[0]:
-                            pass
+                                pass
                         "Throw on Custom 4" if L_Custom4[0]:
-                            call LauraOutfit("custom4")
-                            $ Cnt = 15
+                                call LauraOutfit("custom4")
+                                $ Cnt = 15
                         "Throw on Custom 5 (locked)" if not L_Custom5[0]:
-                            pass
-						"Throw on Custom 5" if L_Custom5[0]:
-							call LauraOutfit("custom5")
-							$ Cnt = 16
-						"Throw on Custom 6 (locked)" if not L_Custom6[0]:
-							pass
-						"Throw on Custom 6" if L_Custom6[0]:
-							call LauraOutfit("custom6")
-							$ Cnt = 17
-						"Throw on Custom 7 (locked)" if not L_Custom7[0]:
-							pass
-						"Throw on Custom 7" if L_Custom7[0]:
-							call LauraOutfit("custom7")
-							$ Cnt = 18
-						"Throw on Custom 8 (locked)" if not L_Custom8[0]:
-							pass
-						"Throw on Custom 8" if L_Custom8[0]:
-							call LauraOutfit("custom8")
-							$ Cnt = 19
-						"Throw on Custom 9 (locked)" if not L_Custom9[0]:
-							pass
-						"Throw on Custom 9" if L_Custom9[0]:
-							call LauraOutfit("custom9")
-							$ Cnt = 20
+                                pass
+                        "Throw on Custom 5" if L_Custom5[0]:
+                                call LauraOutfit("custom5")
+                                $ Cnt = 16
+                        "Throw on Custom 6 (locked)" if not L_Custom6[0]:
+                                pass
+                        "Throw on Custom 6" if L_Custom6[0]:
+                                call LauraOutfit("custom6")
+                                $ Cnt = 17
+                        "Throw on Custom 7 (locked)" if not L_Custom7[0]:
+                                pass
+                        "Throw on Custom 7" if L_Custom7[0]:
+                                call LauraOutfit("custom7")
+                                $ Cnt = 18
+                        "Throw on Custom 8 (locked)" if not L_Custom8[0]:
+                                pass
+                        "Throw on Custom 8" if L_Custom8[0]:
+                                call LauraOutfit("custom8")
+                                $ Cnt = 19
+                        "Throw on Custom 9 (locked)" if not L_Custom9[0]:
+                                pass
+                        "Throw on Custom 9" if L_Custom9[0]:
+                                call LauraOutfit("custom9")
+                                $ Cnt = 20
                         
                         "You should wear this one in private. (locked)" if not Cnt:
                                 pass
@@ -4131,18 +4131,18 @@ label Laura_Clothes:
                                     $ L_Schedule[9] = "custom2"
                                 elif Cnt == 6:
                                     $ L_Schedule[9] = "custom3"
-								elif Cnt == 15:
-									$ L_Schedule[9] = "custom4"
-								elif Cnt == 16:
-									$ L_Schedule[9] = "custom5"
-								elif Cnt == 17:
-									$ L_Schedule[9] = "custom6"
-								elif Cnt == 18:
-									$ L_Schedule[9] = "custom7"
-								elif Cnt == 19:
-									$ L_Schedule[9] = "custom8"
-								elif Cnt == 20:
-									$ L_Schedule[9] = "custom9"
+                                elif Cnt == 15:
+                                    $ L_Schedule[9] = "custom4"
+                                elif Cnt == 16:
+                                    $ L_Schedule[9] = "custom5"
+                                elif Cnt == 17:
+                                    $ L_Schedule[9] = "custom6"
+                                elif Cnt == 18:
+                                    $ L_Schedule[9] = "custom7"
+                                elif Cnt == 19:
+                                    $ L_Schedule[9] = "custom8"
+                                elif Cnt == 20:
+                                    $ L_Schedule[9] = "custom9"
                                 else:
                                     $ L_Schedule[9] = "custom"
                                 ch_l "Ok, sure."
@@ -4164,36 +4164,36 @@ label Laura_Clothes:
                                         $ L_Custom3[0] = 0
                                     "Custom 3 [[clear custom 3] (locked)" if not L_Custom3[0]:
                                         pass
-									"Custom 4 [[clear custom 4]" if L_Custom4[0]:
-										ch_l "Ok."
-										$ L_Custom4[0] = 0
-									"Custom 4 [[clear custom 4] (locked)" if not L_Custom4[0]:
-										pass
-									"Custom 5 [[clear custom 5]" if L_Custom5[0]:
-										ch_l "Ok."
-										$ L_Custom5[0] = 0
-									"Custom 5 [[clear custom 5] (locked)" if not L_Custom5[0]:
-										pass
-									"Custom 6 [[clear custom 6]" if L_Custom6[0]:
-										ch_l "Ok."
-										$ L_Custom6[0] = 0
-									"Custom 6 [[clear custom 6] (locked)" if not L_Custom6[0]:
-										pass
-									"Custom 7 [[clear custom 7]" if L_Custom7[0]:
-										ch_l "Ok."
-										$ L_Custom7[0] = 0
-									"Custom 7 [[clear custom 7] (locked)" if not L_Custom7[0]:
-										pass
-									"Custom 8 [[clear custom 8]" if L_Custom8[0]:
-										ch_l "Ok."
-										$ L_Custom8[0] = 0
-									"Custom 8 [[clear custom 8] (locked)" if not L_Custom8[0]:
-										pass
-									"Custom 9 [[clear custom 9]" if L_Custom9[0]:
-										ch_l "Ok."
-										$ L_Custom9[0] = 0
-									"Custom 9 [[clear custom 9] (locked)" if not L_Custom9[0]:
-										pass
+                                    "Custom 4 [[clear custom 4]" if L_Custom4[0]:
+                                        ch_l "Ok."
+                                        $ L_Custom4[0] = 0
+                                    "Custom 4 [[clear custom 4] (locked)" if not L_Custom4[0]:
+                                        pass
+                                    "Custom 5 [[clear custom 5]" if L_Custom5[0]:
+                                        ch_l "Ok."
+                                        $ L_Custom5[0] = 0
+                                    "Custom 5 [[clear custom 5] (locked)" if not L_Custom5[0]:
+                                        pass
+                                    "Custom 6 [[clear custom 6]" if L_Custom6[0]:
+                                        ch_l "Ok."
+                                        $ L_Custom6[0] = 0
+                                    "Custom 6 [[clear custom 6] (locked)" if not L_Custom6[0]:
+                                        pass
+                                    "Custom 7 [[clear custom 7]" if L_Custom7[0]:
+                                        ch_l "Ok."
+                                        $ L_Custom7[0] = 0
+                                    "Custom 7 [[clear custom 7] (locked)" if not L_Custom7[0]:
+                                        pass
+                                    "Custom 8 [[clear custom 8]" if L_Custom8[0]:
+                                        ch_l "Ok."
+                                        $ L_Custom8[0] = 0
+                                    "Custom 8 [[clear custom 8] (locked)" if not L_Custom8[0]:
+                                        pass
+                                    "Custom 9 [[clear custom 9]" if L_Custom9[0]:
+                                        ch_l "Ok."
+                                        $ L_Custom9[0] = 0
+                                    "Custom 9 [[clear custom 9] (locked)" if not L_Custom9[0]:
+                                        pass
                                     "Never mind, [[back].":
                                         pass                                               
                                                 

@@ -1,4 +1,4 @@
-?¿# Basic Kitty Sprites
+# Basic Kitty Sprites
        
 image Kitty_Sprite:        
     LiveComposite(

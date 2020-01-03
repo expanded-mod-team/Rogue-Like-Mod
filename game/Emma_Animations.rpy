@@ -1,4 +1,4 @@
-?¿# Basic character Sprites
+# Basic character Sprites
 image Emma_Sprite:
     LiveComposite(
         (402,965), 

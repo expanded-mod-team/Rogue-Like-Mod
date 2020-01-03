@@ -1,4 +1,4 @@
-?¿# star Kitty chat interface
+# star Kitty chat interface
 label Kitty_Chat_Set(Preset=0):
     if "met" not in K_History:
             "Who?"
@@ -4051,88 +4051,86 @@ label Kitty_Clothes:
                     "Throw on Custom 9" if K_Custom9[0]:
                         call KittyOutfit("custom9")
                         $ Cnt = 20
-                 "You should wear this one in private. (locked)" if not Cnt:
-                     pass
-                 "You should wear this one in private." if Cnt:
-                        if Cnt == 5:
-                            $ K_Schedule[9] = "custom2"
-                        elif Cnt == 15:
-                            $ K_Schedule[9] = "custom4"
-                        elif Cnt == 16:
-                            $ K_Schedule[9] = "custom5"
-                        elif Cnt == 17:
-                            $ K_Schedule[9] = "custom6"
-                        elif Cnt == 18:
-                            $ K_Schedule[9] = "custom7"
-                        elif Cnt == 19:
-                            $ K_Schedule[9] = "custom8"
-                        elif Cnt == 20:
-                            $ K_Schedule[9] = "custom9"
-                        elif Cnt == 6:
-                            $ K_Schedule[9] = "custom3"
-                        else:
-                            $ K_Schedule[9] = "custom"
-                        ch_k "Ok, sure."
-                    
-                    
-                    "On second thought, forget about that one outfit. . .":
-                        menu:
-                            "Custom 1 [[clear custom 1]" if K_Custom[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom[0] = 0
-                            "Custom 1 [[clear custom 1] (locked)" if not K_Custom[0]:
-                                pass
-                            "Custom 2 [[clear custom 2]" if K_Custom2[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom2[0] = 0
-                            "Custom 2 [[clear custom 1] (locked)" if not K_Custom2[0]:
-                                pass
-                            "Custom 3 [[clear custom 3]" if K_Custom3[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom3[0] = 0
-                            "Custom 3 [[clear custom 3] (locked)" if not K_Custom3[0]:
-                                pass
-                            "Custom 4 [[clear custom 4]" if K_Custom4[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom4[0] = 0
-                            "Custom 4 [[clear custom 4] (locked)" if not K_Custom4[0]:
-                                pass
-                            "Custom 5 [[clear custom 5]" if K_Custom5[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom5[0] = 0
-                            "Custom 5 [[clear custom 5] (locked)" if not K_Custom5[0]:
-                                pass
-                            "Custom 6 [[clear custom 6]" if K_Custom6[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom6[0] = 0
-                            "Custom 6 [[clear custom 6] (locked)" if not K_Custom6[0]:
-                                pass
-                            "Custom 7 [[clear custom 7]" if K_Custom7[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom7[0] = 0
-                            "Custom 7 [[clear custom 7] (locked)" if not K_Custom7[0]:
-                                pass
-                            "Custom 8 [[clear custom 8]" if K_Custom8[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom8[0] = 0
-                            "Custom 8 [[clear custom 8] (locked)" if not K_Custom8[0]:
-                                pass
-                            "Custom 9 [[clear custom 9]" if K_Custom9[0]:
-                                ch_k "Ok, no problem."
-                                $ K_Custom9[0] = 0
-                            "Custom 9 [[clear custom 9] (locked)" if not K_Custom9[0]:
-                                pass
-                            "Never mind, [[back].":
-                                pass    
-                                            
-                                            
-                    "You should wear this one out. [[choose outfit first](locked)" if not Cnt:
-                        pass
-                    "You should wear this one out." if Cnt:
-                        call Kitty_Custom_Out(Cnt)
-                    "Ok, back to what we were talking about. . .":
-                        $ Cnt = 0
-                        jump Kitty_Clothes                  
+        "You should wear this one in private. (locked)" if not Cnt:
+            pass
+        "You should wear this one in private." if Cnt:
+            if Cnt == 5:
+                $ K_Schedule[9] = "custom2"
+            elif Cnt == 15:
+                $ K_Schedule[9] = "custom4"
+            elif Cnt == 16:
+                $ K_Schedule[9] = "custom5"
+            elif Cnt == 17:
+                $ K_Schedule[9] = "custom6"
+            elif Cnt == 18:
+                $ K_Schedule[9] = "custom7"
+            elif Cnt == 19:
+                $ K_Schedule[9] = "custom8"
+            elif Cnt == 20:
+                $ K_Schedule[9] = "custom9"
+            elif Cnt == 6:
+                $ K_Schedule[9] = "custom3"
+            else:
+                $ K_Schedule[9] = "custom"
+            ch_k "Ok, sure."
+        "On second thought, forget about that one outfit. . .":
+            menu:
+                "Custom 1 [[clear custom 1]" if K_Custom[0]:
+                    ch_k "Ok, no problem."
+                    $ K_Custom[0] = 0
+                "Custom 1 [[clear custom 1] (locked)" if not K_Custom[0]:
+                    pass
+                "Custom 2 [[clear custom 2]" if K_Custom2[0]:
+                    ch_k "Ok, no problem."
+                    $ K_Custom2[0] = 0
+                "Custom 2 [[clear custom 1] (locked)" if not K_Custom2[0]:
+                    pass
+                "Custom 3 [[clear custom 3]" if K_Custom3[0]:
+                    ch_k "Ok, no problem."
+                    $ K_Custom3[0] = 0
+                "Custom 3 [[clear custom 3] (locked)" if not K_Custom3[0]:
+                    pass
+                "Custom 4 [[clear custom 4]" if K_Custom4[0]:
+                    ch_k "Ok, no problem."
+                    $ K_Custom4[0] = 0
+                "Custom 4 [[clear custom 4] (locked)" if not K_Custom4[0]:
+                    pass
+                "Custom 5 [[clear custom 5]" if K_Custom5[0]:
+                    ch_k "Ok, no problem."
+                    $ K_Custom5[0] = 0
+                "Custom 5 [[clear custom 5] (locked)" if not K_Custom5[0]:
+                    pass
+                "Custom 6 [[clear custom 6]" if K_Custom6[0]:
+                    ch_k "Ok, no problem."
+                    $ K_Custom6[0] = 0
+                "Custom 6 [[clear custom 6] (locked)" if not K_Custom6[0]:
+                    pass
+                "Custom 7 [[clear custom 7]" if K_Custom7[0]:
+                    ch_k "Ok, no problem."
+                    $ K_Custom7[0] = 0
+                "Custom 7 [[clear custom 7] (locked)" if not K_Custom7[0]:
+                    pass
+                "Custom 8 [[clear custom 8]" if K_Custom8[0]:
+                    ch_k "Ok, no problem."
+                    $ K_Custom8[0] = 0
+                "Custom 8 [[clear custom 8] (locked)" if not K_Custom8[0]:
+                    pass
+                "Custom 9 [[clear custom 9]" if K_Custom9[0]:
+                    ch_k "Ok, no problem."
+                    $ K_Custom9[0] = 0
+                "Custom 9 [[clear custom 9] (locked)" if not K_Custom9[0]:
+                    pass
+                "Never mind, [[back].":
+                    pass    
+                                
+                                
+        "You should wear this one out. [[choose outfit first](locked)" if not Cnt:
+            pass
+        "You should wear this one out." if Cnt:
+            call Kitty_Custom_Out(Cnt)
+        "Ok, back to what we were talking about. . .":
+            $ Cnt = 0
+            jump Kitty_Clothes                  
                     
         "Gym Clothes?" if not K_Taboo or bg_current == "bg dangerroom":
                 call KittyOutfit("gym")

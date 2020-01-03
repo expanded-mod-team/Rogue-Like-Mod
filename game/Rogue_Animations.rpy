@@ -1,4 +1,4 @@
-?¿# Basic character Sprites
+# Basic character Sprites
 image Rogue:
     LiveComposite(
         (480,960),
