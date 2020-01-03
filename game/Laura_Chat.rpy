@@ -1,4 +1,4 @@
-ï»¿# star Laura chat interface
+?¿# star Laura chat interface
 label Laura_Chat_Set(Preset=0):
     if "met" not in L_History:
             "Who?"
@@ -622,10 +622,33 @@ label Laura_Settings:
                     elif Line == "lock":
                         $ L_Traits.append("lockedtravels")    
                     $ Line = 0        
-                  
-#        "Tasks" if "sir" in L_Petnames:
-#                ch_p "I have some tasks for you."
-#                call Laura_Controls
+                              
+        "Gym clothes" if "asked gym" in L_DailyActions and "no ask gym" not in L_Traits:
+                    ch_p "You asked me about your gym clothes?"
+                    ch_p "Don't worry about that, your gym clothes are cute."   
+                    ch_l "Oh. . . ok."
+                    $ L_Traits.append("no ask gym")
+        "Gym clothes" if "no ask gym" in L_Traits:
+                    ch_p "You asked me about your gym clothes?"
+                    ch_p "Forget about that, I changed my mind."      
+                    ch_l "Oh. . . ok."
+                    $ L_Traits.remove("no ask gym")
+                    
+        "Private outfit" if L_Schedule[9]:
+                    #if comfy is in L_Traits, she won't ask before changing
+                    ch_p "You know that outfit you wear in private?"
+                    menu:
+                        ch_l "Yeah?"
+                        "Just put them on without asking me about it." if "comfy" not in L_Traits:
+                            $ L_Traits.append("comfy")
+                        "Ask before changing into that." if "comfy" in L_Traits:
+                            $ L_Traits.remove("comfy")
+                        "Never Mind":
+                            pass     
+                            
+        "Tasks" if "sir" in L_Petnames:
+                ch_p "I have some tasks for you."
+                call Laura_Controls
         
         "Switch to. . .":
                 menu:
@@ -3890,6 +3913,8 @@ label Laura_Clothes:
                     jump Laura_Clothes_Misc                    
         "Outfit Management":
                     jump Laura_Clothes_Outfits                      
+        "Let's talk about your modded outfits.":
+                    jump Laura_Modded_Clothes
         "Let's talk about what you wear around.":
                     call Laura_Clothes_Schedule
             
@@ -4004,6 +4029,18 @@ label Laura_Clothes:
                                 call Laura_OutfitShame(5,1)
                     "Custom 3":
                                 call Laura_OutfitShame(6,1)
+                    "Custom 4":
+                                call Laura_OutfitShame(15,1)
+                    "Custom 5":
+                                call Laura_OutfitShame(16,1)
+                    "Custom 6":
+                                call Laura_OutfitShame(17,1)
+                    "Custom 7":
+                                call Laura_OutfitShame(18,1)
+                    "Custom 8":
+                                call Laura_OutfitShame(19,1)
+                    "Custom 9":
+                                call Laura_OutfitShame(20,1)
                     "Gym Clothes":
                                 call Laura_OutfitShame(4,1)
                     "Sleepwear":
@@ -4034,7 +4071,7 @@ label Laura_Clothes:
                     "Let's try something else though.":
                             ch_l "Ok."            
                     
-        "Remember that outfit we put together? [[Set a custom outfit] (locked)" if not L_Custom[0] and not L_Custom2[0] and not L_Custom3[0]:
+        "Remember that outfit we put together? [[Set a custom outfit] (locked)" if not L_Custom[0] and not L_Custom2[0] and not L_Custom3[0] and not L_Custom4[0] and not L_Custom5[0] and not L_Custom6[0] and not L_Custom7[0] and not L_Custom8[0] and not L_Custom9[0]:
                         pass       
                         
         "Remember that outfit we put together?" if L_Custom[0] or L_Custom2[0] or L_Custom3[0]: 
@@ -4056,6 +4093,36 @@ label Laura_Clothes:
                         "Throw on Custom 3" if L_Custom3[0]:
                                 call LauraOutfit("custom3")
                                 $ Cnt = 6
+                        "Throw on Custom 4 (locked)" if not L_Custom4[0]:
+                            pass
+                        "Throw on Custom 4" if L_Custom4[0]:
+                            call LauraOutfit("custom4")
+                            $ Cnt = 15
+                        "Throw on Custom 5 (locked)" if not L_Custom5[0]:
+                            pass
+						"Throw on Custom 5" if L_Custom5[0]:
+							call LauraOutfit("custom5")
+							$ Cnt = 16
+						"Throw on Custom 6 (locked)" if not L_Custom6[0]:
+							pass
+						"Throw on Custom 6" if L_Custom6[0]:
+							call LauraOutfit("custom6")
+							$ Cnt = 17
+						"Throw on Custom 7 (locked)" if not L_Custom7[0]:
+							pass
+						"Throw on Custom 7" if L_Custom7[0]:
+							call LauraOutfit("custom7")
+							$ Cnt = 18
+						"Throw on Custom 8 (locked)" if not L_Custom8[0]:
+							pass
+						"Throw on Custom 8" if L_Custom8[0]:
+							call LauraOutfit("custom8")
+							$ Cnt = 19
+						"Throw on Custom 9 (locked)" if not L_Custom9[0]:
+							pass
+						"Throw on Custom 9" if L_Custom9[0]:
+							call LauraOutfit("custom9")
+							$ Cnt = 20
                         
                         "You should wear this one in private. (locked)" if not Cnt:
                                 pass
@@ -4064,6 +4131,18 @@ label Laura_Clothes:
                                     $ L_Schedule[9] = "custom2"
                                 elif Cnt == 6:
                                     $ L_Schedule[9] = "custom3"
+								elif Cnt == 15:
+									$ L_Schedule[9] = "custom4"
+								elif Cnt == 16:
+									$ L_Schedule[9] = "custom5"
+								elif Cnt == 17:
+									$ L_Schedule[9] = "custom6"
+								elif Cnt == 18:
+									$ L_Schedule[9] = "custom7"
+								elif Cnt == 19:
+									$ L_Schedule[9] = "custom8"
+								elif Cnt == 20:
+									$ L_Schedule[9] = "custom9"
                                 else:
                                     $ L_Schedule[9] = "custom"
                                 ch_l "Ok, sure."
@@ -4085,6 +4164,36 @@ label Laura_Clothes:
                                         $ L_Custom3[0] = 0
                                     "Custom 3 [[clear custom 3] (locked)" if not L_Custom3[0]:
                                         pass
+									"Custom 4 [[clear custom 4]" if L_Custom4[0]:
+										ch_l "Ok."
+										$ L_Custom4[0] = 0
+									"Custom 4 [[clear custom 4] (locked)" if not L_Custom4[0]:
+										pass
+									"Custom 5 [[clear custom 5]" if L_Custom5[0]:
+										ch_l "Ok."
+										$ L_Custom5[0] = 0
+									"Custom 5 [[clear custom 5] (locked)" if not L_Custom5[0]:
+										pass
+									"Custom 6 [[clear custom 6]" if L_Custom6[0]:
+										ch_l "Ok."
+										$ L_Custom6[0] = 0
+									"Custom 6 [[clear custom 6] (locked)" if not L_Custom6[0]:
+										pass
+									"Custom 7 [[clear custom 7]" if L_Custom7[0]:
+										ch_l "Ok."
+										$ L_Custom7[0] = 0
+									"Custom 7 [[clear custom 7] (locked)" if not L_Custom7[0]:
+										pass
+									"Custom 8 [[clear custom 8]" if L_Custom8[0]:
+										ch_l "Ok."
+										$ L_Custom8[0] = 0
+									"Custom 8 [[clear custom 8] (locked)" if not L_Custom8[0]:
+										pass
+									"Custom 9 [[clear custom 9]" if L_Custom9[0]:
+										ch_l "Ok."
+										$ L_Custom9[0] = 0
+									"Custom 9 [[clear custom 9] (locked)" if not L_Custom9[0]:
+										pass
                                     "Never mind, [[back].":
                                         pass                                               
                                                 
@@ -4221,6 +4330,10 @@ label Laura_Clothes:
                             jump Laura_Clothes    
                 $ L_Over = "jacket"   
                 
+#        "How about that red t-shirt you have?" if L_Over != "red shirt":
+#            $ L_Over = "red shirt"  
+#            ch_l "This one?"
+            
         "Maybe just throw on a towel?" if L_Over != "towel":
                 call LauraFace("bemused", 1)
                 if L_Chest or L_SeenChest:
@@ -4266,6 +4379,10 @@ label Laura_Clothes:
                                 ch_l "Yeah, I guess."
                                 $ L_Chest = "leather bra"
                                 "She pulls out her leather bra and slips it on under her [L_Over]."
+#                        elif ApprovalCheck("Laura", 600, TabM=2):
+#                                ch_l "Yeah, I guess."
+#                                $ L_Chest = "sports bra"
+#                                "She pulls out her sports bra and passes it through her [L_Over]."
                         else:
                                 ch_l "Yeah, I don't think so."
                                 return 0
@@ -4525,7 +4642,11 @@ label Laura_Clothes:
                 "The stockings and garterbelt would look good with that." if L_Hose != "stockings and garterbelt" and "lace panties" in L_Inventory:     
                                 $ L_Hose = "stockings and garterbelt"  
                 "Just the garterbelt would look good with that." if L_Hose != "garterbelt" and "lace panties" in L_Inventory:     
-                                $ L_Hose = "garterbelt"    
+                                $ L_Hose = "garterbelt"  
+#                "The pantyhose would look good with that." if L_Hose != "pantyhose":     
+#                                $ L_Hose = "pantyhose" 
+#                "Your ripped pantyhose would look good with that." if L_Hose != "ripped pantyhose" and "ripped pantyhose" in L_Inventory:     
+#                                $ L_Hose = "ripped pantyhose"    
                 "Never mind":
                         pass  
             jump Laura_Clothes_Under
@@ -4942,7 +5063,7 @@ label Laura_Clothes_ScheduleB(Count = 0):
                     $ Count = 1
                 "Your jacket and skirt.":
                     $ Count = 2
-                "That outfit we put together [[custom]":
+                "That outfit we put together [[custom]" if L_Custom[0] or L_Custom2[0] or L_Custom3[0] or L_Custom4[0] or L_Custom5[0] or L_Custom6[0] or L_Custom7[0] or L_Custom8[0] or L_Custom9[0]:
                             menu:
                                 ch_l "Which one?"
                                 "The first one. (locked)" if not L_Custom[0]:
@@ -4966,6 +5087,54 @@ label Laura_Clothes_ScheduleB(Count = 0):
                                 "The third one." if L_Custom3[0]:
                                     if L_Custom3[0] == 2 or Count == 99:
                                         $ Count = 6
+                                    else:
+                                        ch_l "I told you I wouldn't wear that out."
+                                        
+                                "The fourth one. (locked)" if not L_Custom4[0]:
+                                    pass
+                                "The fourth one." if L_Custom4[0]:
+                                    if L_Custom4[0] == 2 or Count == 99:
+                                        $ Count = 15
+                                    else:
+                                        ch_l "I told you I wouldn't wear that out."
+                                        
+                                "The fifth one. (locked)" if not L_Custom5[0]:
+                                    pass
+                                "The fifth one." if L_Custom5[0]:
+                                    if L_Custom5[0] == 2 or Count == 99:
+                                        $ Count = 16
+                                    else:
+                                        ch_l "I told you I wouldn't wear that out."
+                                        
+                                "The sixth one. (locked)" if not L_Custom6[0]:
+                                    pass
+                                "The sixth one." if L_Custom6[0]:
+                                    if L_Custom6[0] == 2 or Count == 99:
+                                        $ Count = 17
+                                    else:
+                                        ch_l "I told you I wouldn't wear that out."
+                                        
+                                "The seventh one. (locked)" if not L_Custom7[0]:
+                                    pass
+                                "The seventh one." if L_Custom7[0]:
+                                    if L_Custom7[0] == 2 or Count == 99:
+                                        $ Count = 18
+                                    else:
+                                        ch_l "I told you I wouldn't wear that out."
+                                        
+                                "The eighth one. (locked)" if not L_Custom8[0]:
+                                    pass
+                                "The eighth one." if L_Custom8[0]:
+                                    if L_Custom8[0] == 2 or Count == 99:
+                                        $ Count = 19
+                                    else:
+                                        ch_l "I told you I wouldn't wear that out."
+                                        
+                                "The ninth one. (locked)" if not L_Custom9[0]:
+                                    pass
+                                "The ninth one." if L_Custom9[0]:
+                                    if L_Custom9[0] == 2 or Count == 99:
+                                        $ Count = 20
                                     else:
                                         ch_l "I told you I wouldn't wear that out."
                                         
@@ -4999,6 +5168,18 @@ label L_AltClothes(Outfit=8):
                     $ L_Outfit = "mission"
         elif L_Schedule[Outfit] == 2:
                     $ L_Outfit = "streets"
+        elif L_Schedule[Outfit] == 15:
+                    $ L_Outfit = "custom4"
+        elif L_Schedule[Outfit] == 16:
+                    $ L_Outfit = "custom5"
+        elif L_Schedule[Outfit] == 17:
+                    $ L_Outfit = "custom6"
+        elif L_Schedule[Outfit] == 18:
+                    $ L_Outfit = "custom7"
+        elif L_Schedule[Outfit] == 19:
+                    $ L_Outfit = "custom8"
+        elif L_Schedule[Outfit] == 20:
+                    $ L_Outfit = "custom9"
         elif L_Schedule[Outfit] == 3:
                     $ L_Outfit = "custom1"
         elif L_Schedule[Outfit] == 5:
@@ -5056,6 +5237,24 @@ label Laura_Custom_Out(Custom = 3, Shame = 0, Agree = 1):
                         if Custom == 5 and L_Custom2[0] == 2:
                             $ L_Outfit = "custom2"                    
                             $ L_Shame = L_OutfitShame[5]
+                        elif Custom == 15 and L_Custom4[0] == 2:
+                                    $ L_Outfit = "custom4"
+                                    $ L_Shame = L_OutfitShame[Custom]
+                        elif Custom == 16 and L_Custom5[0] == 2:
+                                    $ L_Outfit = "custom5"
+                                    $ L_Shame = L_OutfitShame[Custom]
+                        elif Custom == 17 and L_Custom6[0] == 2:
+                                    $ L_Outfit = "custom6"
+                                    $ L_Shame = L_OutfitShame[Custom]
+                        elif Custom == 18 and L_Custom7[0] == 2:
+                                    $ L_Outfit = "custom7"
+                                    $ L_Shame = L_OutfitShame[Custom]
+                        elif Custom == 19 and L_Custom8[0] == 2:
+                                    $ L_Outfit = "custom8"
+                                    $ L_Shame = L_OutfitShame[Custom]
+                        elif Custom == 20 and L_Custom9[0] == 2:
+                                    $ L_Outfit = "custom9"
+                                    $ L_Shame = L_OutfitShame[Custom]
                         elif Custom == 6 and L_Custom3[0] == 2:
                             $ L_Outfit = "custom3"                    
                             $ L_Shame = L_OutfitShame[6]
@@ -5066,6 +5265,18 @@ label Laura_Custom_Out(Custom = 3, Shame = 0, Agree = 1):
             
             if Custom == 5 and L_Custom2[0] == 2:
                         $ L_Outfit = "custom2"   
+            elif Custom == 15 and L_Custom4[0] == 2:
+                        $ L_Outfit = "custom4"
+            elif Custom == 16 and L_Custom5[0] == 2:
+                        $ L_Outfit = "custom5"
+            elif Custom == 17 and L_Custom6[0] == 2:
+                        $ L_Outfit = "custom6"
+            elif Custom == 18 and L_Custom7[0] == 2:
+                        $ L_Outfit = "custom7"
+            elif Custom == 19 and L_Custom8[0] == 2:
+                        $ L_Outfit = "custom8"
+            elif Custom == 20 and L_Custom9[0] == 2:
+                        $ L_Outfit = "custom9"
             elif Custom == 6 and L_Custom3[0] == 2:
                         $ L_Outfit = "custom3"   
             elif L_Custom[0] == 2: #if custom 1:
@@ -5137,6 +5348,10 @@ label Laura_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                 $ Count = 0
             elif L_Over == "jacket":                                             
                 $ Count += 10
+            elif IsOutfitModdedLaura("Over"):                                             
+                $ Count += Mod_Laura_OutfitShame("Over")  
+#            elif L_Over == "red shirt":      
+#                $ Count += 20
             elif L_Over == "towel":      
                 $ Count += 10
             #else: nothing    
@@ -5339,6 +5554,73 @@ label Laura_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree 
                             $ L_Custom2[9] = L_Hose
                             $ L_Custom2[0] = 2 if Agree else 1  
                             call Clothing_Schedule_Check("Laura",5,1)           
+#MOD CUSTOM OUTFITS OUTFITSHAME
+                    elif Custom == 20:
+                            $ L_Custom9[1] = L_Arms  
+                            $ L_Custom9[2] = L_Legs 
+                            $ L_Custom9[3] = L_Over
+                            $ L_Custom9[4] = L_Neck 
+                            $ L_Custom9[5] = L_Chest 
+                            $ L_Custom9[6] = L_Panties
+                            $ L_Custom9[8] = L_Hair
+                            $ L_Custom9[9] = L_Hose
+                            $ L_Custom9[0] = 2 if Agree else 1
+                            call Clothing_Schedule_Check("Laura",Custom,1)  
+                    elif Custom == 19:
+                            $ L_Custom8[1] = L_Arms  
+                            $ L_Custom8[2] = L_Legs 
+                            $ L_Custom8[3] = L_Over
+                            $ L_Custom8[4] = L_Neck 
+                            $ L_Custom8[5] = L_Chest 
+                            $ L_Custom8[6] = L_Panties
+                            $ L_Custom8[8] = L_Hair
+                            $ L_Custom8[9] = L_Hose
+                            $ L_Custom8[0] = 2 if Agree else 1
+                            call Clothing_Schedule_Check("Laura",Custom,1)  
+                    elif Custom == 18:
+                            $ L_Custom7[1] = L_Arms  
+                            $ L_Custom7[2] = L_Legs 
+                            $ L_Custom7[3] = L_Over
+                            $ L_Custom7[4] = L_Neck 
+                            $ L_Custom7[5] = L_Chest 
+                            $ L_Custom7[6] = L_Panties
+                            $ L_Custom7[8] = L_Hair
+                            $ L_Custom7[9] = L_Hose
+                            $ L_Custom7[0] = 2 if Agree else 1
+                            call Clothing_Schedule_Check("Laura",Custom,1)  
+                    elif Custom == 17:
+                            $ L_Custom6[1] = L_Arms  
+                            $ L_Custom6[2] = L_Legs 
+                            $ L_Custom6[3] = L_Over
+                            $ L_Custom6[4] = L_Neck 
+                            $ L_Custom6[5] = L_Chest 
+                            $ L_Custom6[6] = L_Panties
+                            $ L_Custom6[8] = L_Hair
+                            $ L_Custom6[9] = L_Hose
+                            $ L_Custom6[0] = 2 if Agree else 1
+                            call Clothing_Schedule_Check("Laura",Custom,1)  
+                    elif Custom == 16:
+                            $ L_Custom5[1] = L_Arms  
+                            $ L_Custom5[2] = L_Legs 
+                            $ L_Custom5[3] = L_Over
+                            $ L_Custom5[4] = L_Neck 
+                            $ L_Custom5[5] = L_Chest 
+                            $ L_Custom5[6] = L_Panties
+                            $ L_Custom5[8] = L_Hair
+                            $ L_Custom5[9] = L_Hose
+                            $ L_Custom5[0] = 2 if Agree else 1
+                            call Clothing_Schedule_Check("Laura",Custom,1)  
+                    elif Custom == 15:
+                            $ L_Custom4[1] = L_Arms  
+                            $ L_Custom4[2] = L_Legs 
+                            $ L_Custom4[3] = L_Over
+                            $ L_Custom4[4] = L_Neck 
+                            $ L_Custom4[5] = L_Chest 
+                            $ L_Custom4[6] = L_Panties
+                            $ L_Custom4[8] = L_Hair
+                            $ L_Custom4[9] = L_Hose
+                            $ L_Custom4[0] = 2 if Agree else 1
+                            call Clothing_Schedule_Check("Laura",Custom,1)  
                     elif Custom == 6:
                             $ L_Custom3[1] = L_Arms  
                             $ L_Custom3[2] = L_Legs 

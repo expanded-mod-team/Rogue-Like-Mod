@@ -33,7 +33,7 @@ image Laura_Sprite_BG:
             "not persistent.L_BG_Hair", Null(),
             "renpy.showing('Laura_BJ_Animation')", Null(), 
             "renpy.showing('Laura_BJ_Body_0') or renpy.showing('Laura_BJ_Body_1') or renpy.showing('Laura_BJ_Body_2') or renpy.showing('Laura_BJ_Body_3') or renpy.showing('Laura_BJ_Body_4') or renpy.showing('Laura_BJ_Body_5') or renpy.showing('Laura_BJ_Body_6')", Null(), 
-            "persistent.L_BG_Hair", "Laura_Sprite_HairBack",   
+            "persistent.L_BG_Hair", "Laura_Sprite_HairBack_BG",   
             "True", Null(),        
             ),   
         (0,0), ConditionSwitch(            
@@ -51,6 +51,7 @@ image Laura_Sprite_BG:
         (0,0), "images/LauraSprite/Laura_Sprite_Body.png",
         (0,0), ConditionSwitch(
             #pubes 
+            "persistent.L_BG_Pubes and persistent.L_BG_PubesColor", im.MatrixColor("images/LauraSprite/Laura_Sprite_PubesWhite.png",im.matrix.tint(float(persistent.L_BG_HairCustomColor_red)/255.0, float(persistent.L_BG_HairCustomColor_green)/255.0, float(persistent.L_BG_HairCustomColor_blue)/255.0)),
             "persistent.L_BG_Pubes", "images/LauraSprite/Laura_Sprite_Pubes.png",   
             "True", Null(),        
             ),      
@@ -58,7 +59,12 @@ image Laura_Sprite_BG:
             #stockings    
             "persistent.L_BG_Hose == 'stockings' or persistent.L_BG_Hose == 'stockings and garterbelt'", "images/LauraSprite/Laura_Sprite_Stockings.png",
             "True", Null(),
-            ),     
+            ),
+        (0,0), ConditionSwitch(
+            "not persistent.L_BG_Hose", Null(),
+            "'modded' in persistent.L_BG_Hose", "images/LauraSprite/Laura_Sprite_Hose_[persistent.L_BG_Hose].png",
+            "True", Null(),
+            ),
         (0,0), ConditionSwitch(
             #garterbelt    
             "persistent.L_BG_Hose == 'stockings and garterbelt' or persistent.L_BG_Hose == 'garterbelt'", "images/LauraSprite/Laura_Sprite_Garters.png",
@@ -159,6 +165,8 @@ image Laura_Sprite_BG:
 
         (0,0), ConditionSwitch(
             #L Over
+            "not persistent.L_BG_Over", Null(),
+            "'modded' in persistent.L_BG_Over", "images/LauraSprite/Laura_Sprite_Over_[persistent.L_BG_Over]_0_A[persistent.L_BG_Girl_Arms].png",
             "persistent.L_BG_Over == 'jacket' and persistent.L_BG_Girl_Arms == 2", "images/LauraSprite/Laura_Sprite_Jacket_A2.png", # one hand up
             "persistent.L_BG_Over == 'jacket'", "images/LauraSprite/Laura_Sprite_Jacket_A1.png", # one hand up
             "persistent.L_BG_Over == 'towel'", "images/LauraSprite/Laura_Sprite_Towel.png",
@@ -181,6 +189,12 @@ image Laura_Sprite_BG:
             #arms wristband
             "persistent.L_BG_Girl_Arms == 2 and persistent.L_BG_Arms == 'wrists'", "images/LauraSprite/Laura_Sprite_Wrist_Left2.png", # one hand up
             "True", Null(),     
+            ),
+        (0,0), ConditionSwitch(
+            #modded Over arm toplayer
+            "not persistent.L_BG_Over", Null(),
+            "'modded' in persistent.L_BG_Over and Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Over_[persistent.L_BG_Over]_0_A2Top.png", # one hand up
+            "True", Null(),     
             ), 
         (0,0), ConditionSwitch(
             #jacket arm toplayer
@@ -196,6 +210,19 @@ image Laura_Sprite_BG:
     anchor (0.6, 0.0)                
     yoffset 15
     zoom .75                
+
+image Laura_Sprite_HairBack_BG: 
+    ConditionSwitch(
+            #hair back 
+            "persistent.L_BG_HairColor and persistent.L_BG_Hair == 'wet' or persistent.L_BG_Water", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Wet_Under.png",im.matrix.tint(float(persistent.L_BG_HairCustomColor_red)/255.0, float(persistent.L_BG_HairCustomColor_green)/255.0, float(persistent.L_BG_HairCustomColor_blue)/255.0)),
+            "persistent.L_BG_Hair == 'wet' or persistent.L_BG_Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Under.png",
+            "persistent.L_BG_HairColor and persistent.L_BG_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Under.png",im.matrix.tint(float(persistent.L_BG_HairCustomColor_red)/255.0, float(persistent.L_BG_HairCustomColor_green)/255.0, float(persistent.L_BG_HairCustomColor_blue)/255.0)),
+            "persistent.L_BG_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Under.png",   
+            "True", Null(),        
+            ),   
+#    "images/LauraSprite/Laura_Sprite_Hair_Long_Under.png"       
+    anchor (0.6, 0.0)                
+    zoom .5  
 
 image Laura_Sprite_Head_BG:            
     LiveComposite(
@@ -245,12 +272,14 @@ image Laura_Sprite_Head_BG:
         (0,0), ConditionSwitch(                
             #Hair mid
             "persistent.L_BG_Over == 'jacket'", Null(),
+            "persistent.L_BG_HairColor and persistent.L_BG_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Mid.png",im.matrix.tint(float(persistent.L_BG_HairCustomColor_red)/255.0, float(persistent.L_BG_HairCustomColor_green)/255.0, float(persistent.L_BG_HairCustomColor_blue)/255.0)),
             "persistent.L_BG_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Mid.png",
             "True", Null(),
             ),       
         (0,0), ConditionSwitch(                                                                         
             #Hair over
             "not persistent.L_BG_Hair", Null(),
+            "persistent.L_BG_HairColor and persistent.L_BG_Hair", im.MatrixColor("images/LauraSprite/Laura_Sprite_HairWhite_Long_Over.png",im.matrix.tint(float(persistent.L_BG_HairCustomColor_red)/255.0, float(persistent.L_BG_HairCustomColor_green)/255.0, float(persistent.L_BG_HairCustomColor_blue)/255.0)),
             "persistent.L_BG_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Over.png",
             "True", Null(),
             ),        
@@ -1313,13 +1342,11 @@ image Emma_Sprite_BG:
             "persistent.E_BG_Panties == 'lace panties' and E_Wet", "images/EmmaSprite/EmmaSprite_Panties_Lace_DownWet.png",  
             "persistent.E_BG_Panties == 'lace panties'", "images/EmmaSprite/EmmaSprite_Panties_Lace_Down.png",   
             "persistent.E_BG_Panties == 'bikini bottoms'", "images/EmmaSprite/EmmaSprite_Panties_Bikini_Down.png",  
-#            "E_Wet", "images/EmmaSprite/EmmaSprite_Panties_DownWet.png",  
             "True", "images/EmmaSprite/EmmaSprite_Panties_Down.png",       
             ),   
         (0,0), ConditionSwitch(
             #panties up
             "E_PantiesDown or not E_Panties", Null(),   
-#            "E_Panties == 'sports panties' and E_Wet", "images/EmmaSprite/EmmaSprite_Panties_Sports_Wet.png",     
             "not persistent.E_BG_Panties", Null(), 
             "'modded' in persistent.E_BG_Panties and E_Wet", GetModdedString("images/EmmaSprite/EmmaSprite_Panties_", persistent.E_BG_Panties, "_Wet.png"),
             "'modded' in persistent.E_BG_Panties", GetModdedString("images/EmmaSprite/EmmaSprite_Panties_", persistent.E_BG_Panties, ".png"),
@@ -1327,7 +1354,6 @@ image Emma_Sprite_BG:
             "persistent.E_BG_Panties == 'lace panties' and E_Wet", "images/EmmaSprite/EmmaSprite_Panties_Lace_Wet.png", 
             "persistent.E_BG_Panties == 'lace panties'", "images/EmmaSprite/EmmaSprite_Panties_Lace.png",  
             "persistent.E_BG_Panties == 'bikini bottoms'", "images/EmmaSprite/EmmaSprite_Panties_Bikini.png",  
-#            "E_Wet", "images/EmmaSprite/EmmaSprite_Panties_Wet.png", #readd when sprite works 
             "True", "images/EmmaSprite/EmmaSprite_Panties.png",  
             ),  
         (0,0), ConditionSwitch(
@@ -1444,16 +1470,12 @@ image Emma_Sprite_BG:
                     #if it's the barbell pericings
                     "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",                     
                     "persistent.E_BG_Chest in ('corset','lace bra','sports bra','bikini top') or persistent.E_BG_Chest in ('modded black corset','modded red sports bra','modded white sports bra', 'modded NewX', 'modded NewX black')", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",   
-#                    "persistent.E_BG_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",    
-#                    "persistent.E_BG_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",  
                     "True", "images/EmmaSprite/EmmaSprite_Pierce_Down_Barbell.png",        
                     ),                        
             "persistent.E_BG_Pierce == 'ring'", ConditionSwitch(                      
                     #if it's the ring pericings                                 
                     "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png", 
                     "persistent.E_BG_Chest in ('corset','lace bra','sports bra','bikini top') or persistent.E_BG_Chest in ('modded black corset','modded red sports bra','modded white sports bra', 'modded NewX', 'modded NewX black')", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png",                          
-#                    "persistent.E_BG_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png", 
-#                    "persistent.E_BG_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png", 
                     "True", "images/EmmaSprite/EmmaSprite_Pierce_Down_Ring.png", 
                     ),       
             "True", Null(),  
@@ -1490,10 +1512,6 @@ image Emma_Sprite_BG:
             "persistent.E_BG_Chest == 'corset'", "images/EmmaSprite/EmmaSprite_CorsetTits.png",   
             "True", Null(),              
             ),       
-#        (0,0), ConditionSwitch(                                                                         #soap
-#            "persistent.E_BG_Water == 3", "images/EmmaSprite/Emma_body_wet3.png",
-#            "True", Null(),                 
-#            ),
         (0,0), ConditionSwitch(                                                                         #cape layer       
             "persistent.E_BG_Uptop or persistent.E_BG_Over == 'jacket' or persistent.E_BG_Over == 'modded black jacket' or (persistent.E_BG_Chest != 'corset' and persistent.E_BG_Chest != 'modded black corset')", Null(),  
             "Emma_Arms == 2 and persistent.E_BG_Chest == 'modded black corset'", "images/EmmaSprite/EmmaSprite_Chest_modded black corset_cape2.png",              
@@ -1553,16 +1571,12 @@ image Emma_Sprite_BG:
                     #if it's the barbell pericings
                     "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",  
                     "persistent.E_BG_Chest in ('corset','lace bra','sports bra','bikini top') or persistent.E_BG_Chest in ('modded black corset','modded red sports bra','modded white sports bra', 'modded NewX', 'modded NewX black')", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",   
-#                    "persistent.E_BG_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",    
-#                    "persistent.E_BG_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",  
                     "True", "images/EmmaSprite/EmmaSprite_Pierce_Down_BarOut.png", 
                     ),    
             "persistent.E_BG_Pierce == 'ring'", ConditionSwitch(   
                     #if it's the ring pericings
                     "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",  
                     "persistent.E_BG_Chest in ('corset','lace bra','sports bra','bikini top') or persistent.E_BG_Chest in ('modded black corset','modded red sports bra','modded white sports bra', 'modded NewX', 'modded NewX black')", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",   
-#                    "persistent.E_BG_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",    
-#                    "persistent.E_BG_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",  
                     "True", "images/EmmaSprite/EmmaSprite_Pierce_Down_RingOut.png", 
                     ),                 
             "True", Null(), 
@@ -1756,7 +1770,6 @@ image Emma_Squint_BG:
     repeat 
 # End Emma Sprite / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
-
 label Define_Outfit_BG:
     default persistent.L_BG_Arms = "wrists"                  #her gloves
     default persistent.L_BG_Legs = "mesh pants"
@@ -1770,7 +1783,7 @@ label Define_Outfit_BG:
     default persistent.L_BG_Pierce = 0
     default persistent.L_BG_Hose = 0
     default persistent.L_BG_Glasses = 0
-    default persistent.L_BG_HeadBand = 0
+    default persistent.L_BG_HeadBand = ""
     default persistent.L_BG_Tan = 0
     default persistent.L_BG_Gloves = 0
     default persistent.L_BG_DynamicTan = [0,0,0,0,0]
@@ -1785,6 +1798,12 @@ label Define_Outfit_BG:
     default persistent.L_BG_Eyes = 0
     default persistent.L_BG_Mouth = 0
     default persistent.L_BG_Water = 0
+
+    # if not persistent.L_BG_HairCustomColor:
+    default persistent.L_BG_HairCustomColor_red = 255
+    default persistent.L_BG_HairCustomColor_blue = 255
+    default persistent.L_BG_HairCustomColor_green = 255
+    default persistent.L_BG_PubesColor = 0
 
 
     default persistent.R_BG_Arms = 0                  #her gloves
@@ -1857,7 +1876,7 @@ label Define_Outfit_BG:
     default persistent.E_BG_Boots = 0
     default persistent.E_BG_Hose = "modded black thigh high"
     default persistent.E_BG_Glasses = 0
-    default persistent.E_BG_HeadBand = 0
+    default persistent.E_BG_HeadBand = ""
     default persistent.E_BG_Tan = 0
     # default persistent.E_BG_Gloves = "black gloves"
     default persistent.E_BG_DynamicTan = [0,0,0,0,0]

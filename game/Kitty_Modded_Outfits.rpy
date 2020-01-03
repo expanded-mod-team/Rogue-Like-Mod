@@ -3,6 +3,14 @@ label Kitty_Modded_Clothes_Menu:
     call KittyFace 
     menu:
         ch_k "So[K_like]you wanted to talk about my clothes?"
+        "Poses":
+                jump Kitty_Posing
+        "Stop sending me nudes." if K_Nude:
+                    $ K_Nude = 0
+                    ch_k "Ok"
+        "Keep sending me nudes." if not K_Nude:
+                    $ K_Nude = 1
+                    ch_k "Ok"
         "Let's talk about your over shirts.":
                     jump Kitty_Modded_Clothes_Over        
         "Let's talk about your legwear.":
@@ -219,31 +227,31 @@ label Kitty_Modded_Clothes_Menu:
         
         "You look great in those black blue pants." if K_Legs != "modded black blue pants":
             ch_k "K, no problem."
-            call SetLegsKitty("modded black blue pants")
+            $ K_Legs = "modded black blue pants"
         
         "What about wearing your blue shorts?" if K_Legs != "modded blue shorts":
             ch_k "K, no problem."
-            call SetLegsKitty("modded blue shorts")
+            $ K_Legs = "modded blue shorts"
 
         "What about wearing your white shorts?" if K_Legs != "modded white shorts":
             ch_k "K, no problem."
-            call SetLegsKitty("modded white shorts")
+            $ K_Legs = "modded white shorts"
 
         "Your butt looks cute in that orange skirt." if K_Legs != "modded orange skirt":
             ch_k "Meoww~"
-            call SetLegsKitty("modded orange skirt")
+            $ K_Legs = "modded orange skirt"
 
         "Your butt looks cute in that white skirt." if K_Legs != "modded white skirt":
             ch_k "Meoww~"
-            call SetLegsKitty("modded white skirt")
+            $ K_Legs = "modded white skirt"
 
         "Your butt looks cute in that black skirt." if K_Legs != "modded black skirt":
             ch_k "Meoww~"
-            call SetLegsKitty("modded black skirt")
+            $ K_Legs = "modded black skirt"
 
         "Those leather pants look real tight on you." if K_Legs != "modded leather pants":
             ch_k "Mm~ That's hot."
-            call SetLegsKitty("modded leather pants")
+            $ K_Legs = "modded leather pants"
             
                    
                                 
@@ -384,7 +392,7 @@ label Kitty_Modded_Clothes_Menu:
                     if ApprovalCheck("Kitty", 1100, TabM=3):
                             # call Kitty_Swimsuit_Change_Bottom 
                             ch_k "K."
-                            call SetPantiesKitty("modded white panties")
+                            $ K_Panties = "modded white panties"
                     else:                
                             ch_k "I don't think that's any of your beeswax."
                     jump Kitty_Modded_Clothes_Under_Panties
@@ -393,7 +401,7 @@ label Kitty_Modded_Clothes_Menu:
                     if ApprovalCheck("Kitty", 1300, TabM=3):
                             # call Kitty_Swimsuit_Change_Bottom 
                             ch_k "I guess."
-                            call SetPantiesKitty("modded darker lace panties")
+                            $ K_Panties = "modded darker lace panties"
                     else:
                             ch_k "That's[K_like]none of your business."
                     jump Kitty_Modded_Clothes_Under_Panties
@@ -402,7 +410,7 @@ label Kitty_Modded_Clothes_Menu:
                     if ApprovalCheck("Kitty", 1300, TabM=3):
                             # call Kitty_Swimsuit_Change_Bottom 
                             ch_k "I guess."
-                            call SetPantiesKitty("modded kitty lingerie panties")
+                            $ K_Panties = "modded kitty lingerie panties"
                     else:
                             ch_k "That's[K_like]none of your business."
                     jump Kitty_Modded_Clothes_Under_Panties
@@ -426,77 +434,100 @@ label Kitty_Modded_Clothes_Menu:
                             $ K_Panties = "green panties"
                         "How about the white ones?":
                             ch_k "Sure, ok."
-                            call SetPantiesKitty("modded white panties")
+                            $ K_Panties = "modded white panties"
                         "How about the purple bikini?":
                             ch_k "Sure, ok."
-                            $ K_Panties = "purple bikini panties"
+                            $ K_Panties = "modded purple bikini panties"
                         "How about the lace ones?" if "lace panties" in K_Inventory:
                             ch_k "Alright."                
                             $ K_Panties  = "lace panties"
                         "How about the darker lace ones?":
                             ch_k "Alright."                
-                            call SetPantiesKitty("modded darker lace panties")
+                            $ K_Panties = "modded darker lace panties"
                         "How about the kitty lingerie ones?":
                             ch_k "Alright."                
-                            call SetPantiesKitty("modded kitty lingerie panties")
+                            $ K_Panties = "modded kitty lingerie panties"
                     jump Kitty_Modded_Clothes_Under_Panties
 
                 "Go back":  
                     jump Kitty_Modded_Clothes_Under
 
-        # "Socks and Stockings": 
+        "Socks and Stockings": 
             
-        #     menu Kitty_Modded_Clothes_Under_Hoses:  
+            menu Kitty_Modded_Clothes_Under_Hoses:  
 
-        #         "You could lose those socks. . ." if K_Hose and K_Hose != "stockings":
-        #             ch_k "K."
-        #             $ K_Hose = 0
-        #             jump Kitty_Modded_Clothes_Under_Hoses  
+                "You could lose those socks. . ." if K_Hose and K_Hose != "modded stockings":
+                    ch_k "K."
+                    call SetHoseKitty(0)
+                    jump Kitty_Modded_Clothes_Under_Hoses  
 
-        #         "You could lose those stockings. . ." if K_Hose == "stockings":
-        #             ch_k "K."
-        #             $ K_Hose = 0
-        #             jump Kitty_Modded_Clothes_Under_Hoses  
+                "You could lose those stockings. . ." if K_Hose == "modded stockings":
+                    ch_k "K."
+                    call SetHoseKitty(0)
+                    jump Kitty_Modded_Clothes_Under_Hoses  
 
-        #         "Why don't you wear those stockings?" if K_Hose != "stockings":
-        #             ch_k "K."
-        #             $ K_Hose = "stockings"  
-        #             jump Kitty_Modded_Clothes_Under_Hoses
+                "Why don't you wear those stockings?" if K_Hose != "modded stockings":
+                    ch_k "K."
+                    call SetHoseKitty("modded stockings")
+                    jump Kitty_Modded_Clothes_Under_Hoses
 
-        #         "Why don't you wear those black socks" if K_Hose != "black socks":
-        #             ch_k "K."
-        #             $ K_Hose = "black socks"  
-        #             jump Kitty_Modded_Clothes_Under_Hoses
+                "Why don't you wear those black socks" if K_Hose != "modded black socks":
+                    ch_k "K."
+                    call SetHoseKitty("modded black socks")
+                    jump Kitty_Modded_Clothes_Under_Hoses
 
-        #         "Why don't you wear those white socks" if K_Hose != "white socks":
-        #             ch_k "K."
-        #             $ K_Hose = "white socks"  
-        #             jump Kitty_Modded_Clothes_Under_Hoses
+                "Why don't you wear those white socks" if K_Hose != "modded white socks":
+                    ch_k "K."
+                    call SetHoseKitty("modded white socks")
+                    jump Kitty_Modded_Clothes_Under_Hoses
 
-        #         "Why don't you wear those pink socks" if K_Hose != "pink socks":
-        #             ch_k "K."
-        #             $ K_Hose = "pink socks"  
-        #             jump Kitty_Modded_Clothes_Under_Hoses
+                "Why don't you wear those pink socks" if K_Hose != "modded pink socks":
+                    ch_k "K."
+                    call SetHoseKitty("modded pink socks")
+                    jump Kitty_Modded_Clothes_Under_Hoses
 
-        #         "Go back":  
-        #             jump Kitty_Modded_Clothes_Under
+                "Go back":  
+                    jump Kitty_Modded_Clothes_Under
 
         "How about your swimsuits.":
 
             menu Kitty_Modded_Clothes_Under_SwimSuits:
 
-                # "Why don't you wear the swimsuit3" if K_Panties != "swimsuit3" or K_Chest != "swimsuit3":
-                #     if ApprovalCheck("Kitty", 1200, TabM=3):
-                #         ch_k "Sure."
-                #         $ K_Panties = "swimsuit3"
-                #         $ K_Chest = "swimsuit3"
-                #     else:
-                #         ch_r "I don't see how that's any business of yours, [K_Petname]."
-                #     jump Kitty_Modded_Clothes_Under_SwimSuits
+                "Why don't you wear the green swimsuit" if K_Chest != "modded green swimsuit" or K_Panties != "modded green swimsuit":
+                    if ApprovalCheck("Kitty", 1200, TabM=3):
+                        ch_k "Sure."
+                        $ K_Panties = "modded green swimsuit"
+                        call SetChestKitty("modded green swimsuit")
+                    else:
+                        ch_r "I don't see how that's any business of yours, [K_Petname]."
+                    jump Kitty_Modded_Clothes_Under_SwimSuits
 
-                # "Remove the swimsuit" if K_Panties == "swimsuit3" or K_Chest == "swimsuit3":
-                #                 call Kitty_Remove_Swimsuit 
-                #                 jump Kitty_Modded_Clothes_Under_SwimSuits
+                "Why don't you wear the black swimsuit" if K_Chest != "modded black swimsuit" or K_Panties != "modded black swimsuit":
+                    if ApprovalCheck("Kitty", 1200, TabM=3):
+                        ch_k "Sure."
+                        $ K_Panties = "modded black swimsuit"
+                        call SetChestKitty("modded black swimsuit")
+                    else:
+                        ch_r "I don't see how that's any business of yours, [K_Petname]."
+                    jump Kitty_Modded_Clothes_Under_SwimSuits
+
+                "Why don't you wear the white swimsuit" if K_Chest != "modded white swimsuit" or K_Panties != "modded white swimsuit":
+                    if ApprovalCheck("Kitty", 1400, TabM=3):
+                        ch_k "Sure."
+                        $ K_Panties = "modded white swimsuit"
+                        call SetChestKitty("modded white swimsuit")
+                    else:
+                        ch_r "I don't see how that's any business of yours, [K_Petname]."
+                    jump Kitty_Modded_Clothes_Under_SwimSuits
+
+                "Remove the swimsuit" if K_Chest in ["modded green swimsuit", "modded black swimsuit", "modded white swimsuit"]:
+                    if ApprovalCheck("Kitty", 1400, TabM=3):
+                        ch_k "Sure."
+                        $ K_Panties = 0
+                        call SetChestKitty(0)
+                    else:
+                        ch_r "I don't see how that's any business of yours, [K_Petname]."
+                    jump Kitty_Modded_Clothes_Under_SwimSuits
 
                 "Why don't you wear the purple bikini bra?" if K_Chest != "modded purple bikini bra":
                     if ApprovalCheck("Kitty", 1100, TabM=3):
@@ -511,7 +542,7 @@ label Kitty_Modded_Clothes_Menu:
                     if ApprovalCheck("Kitty", 1100, TabM=3):
                             # call Kitty_Swimsuit_Change_Bottom 
                             ch_k "K."
-                            call SetPantiesKitty("modded purple bikini panties")
+                            $ K_Panties = "modded purple bikini panties"
                     else:                
                             ch_k "I don't think that's any of your beeswax."
                     jump Kitty_Modded_Clothes_Under_SwimSuits
@@ -536,6 +567,14 @@ label Kitty_Modded_Clothes_Menu:
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  
         
     menu Kitty_Modded_Clothes_Misc:
+        "Put on that pink kitty headband of yours." if K_Headband != "pink":
+                        $ K_Headband = "pink"
+        "Put on that pink kitty headband of yours." if K_Headband != "black":
+                        $ K_Headband = "black"
+        "Put on that cruiser dva headphone of yours." if K_Headband != "cruiser dva":
+                        $ K_Headband = "cruiser dva"
+        "Take off that headband." if K_Headband:
+                        $ K_Headband = ""
         "Let's talk about your hair":
             menu Kitty_Modded_Clothes_Misc_Hair:                                                                                                                    #Misc
         
@@ -570,6 +609,9 @@ label Kitty_Modded_Clothes_Menu:
                         ch_k "You think so?"
                         #"She rummages in her bag and grabs some gel, running it through her hair."
                         ch_k "Like this?"
+                        $ K_HairCustomColor.red = 255
+                        $ K_HairCustomColor.green = 255
+                        $ K_HairCustomColor.blue = 255
                         call SetHairColorKitty("black")
                     else:
                         ch_k "It's too high maintenance."
@@ -580,6 +622,9 @@ label Kitty_Modded_Clothes_Menu:
                         ch_k "You think so?"
                         #"She rummages in her bag and grabs some gel, running it through her hair."
                         ch_k "Like this?"
+                        $ K_HairCustomColor.red = 255
+                        $ K_HairCustomColor.green = 255
+                        $ K_HairCustomColor.blue = 255
                         call SetHairColorKitty("blonde")
                     else:
                         ch_k "It's too high maintenance."
@@ -590,6 +635,9 @@ label Kitty_Modded_Clothes_Menu:
                         ch_k "You think so?"
                         #"She rummages in her bag and grabs some gel, running it through her hair."
                         ch_k "Like this?"
+                        $ K_HairCustomColor.red = 255
+                        $ K_HairCustomColor.green = 255
+                        $ K_HairCustomColor.blue = 255
                         call SetHairColorKitty("red")
                     else:
                         ch_k "It's too high maintenance."
@@ -600,13 +648,17 @@ label Kitty_Modded_Clothes_Menu:
                         ch_k "You think so?"
                         #"She rummages in her bag and grabs some gel, running it through her hair."
                         # ch_k "Like this?"
-                        "WARNING: This is gonna apply to all of her hair colors, to reset it either put all values into 255 or select option Change the color of you hair back."
+                        # "WARNING: This is gonna apply to all of her hair colors, to reset it either put all values into 255 or select option Change the color of you hair back."
+                        $ K_HairCustomColor.red = 255
+                        $ K_HairCustomColor.green = 255
+                        $ K_HairCustomColor.blue = 255
                         call Recolor_Hair("Kitty")
+                        call SetHairColorKitty("White")
                     else:
                         ch_k "It's too high maintenance."
                     jump Kitty_Modded_Clothes_Misc_Hair
 
-                "Change the color of you hair back." if K_HairColor == "black" or K_HairColor == "blonde" or K_HairColor == "red":    
+                "Change the color of you hair back." if K_HairColor:    
                     if ApprovalCheck("Kitty", 800):
                         ch_k "You think so?"
                         #"She rummages in her bag and grabs some gel, running it through her hair."
@@ -618,6 +670,12 @@ label Kitty_Modded_Clothes_Menu:
                     else:
                         ch_k "It's too high maintenance."
                     jump Kitty_Modded_Clothes_Misc_Hair
+
+                "Apply color to pubes as well" if K_HairColor and not K_PubesColor:
+                    $ K_PubesColor = 1
+
+                "Reset pubes color" if K_PubesColor:
+                    $ K_PubesColor = 0
 
                 "Go back":
                     jump Kitty_Modded_Clothes_Misc
@@ -736,8 +794,9 @@ label Kitty_Modded_Clothes_Menu:
     #         $ K_Gloves = 0
             
         "Never mind":
-            pass         
-    jump Kitty_Modded_Clothes_Menu
+            jump Kitty_Modded_Clothes_Menu
+            
+    jump Kitty_Modded_Clothes_Misc
     #End of Kitty Misc Wardrobe
     
 return
@@ -787,6 +846,30 @@ label Mod_Update_Kitty_Image:
     elif renpy.showing("Kitty_TJ_Animation"):
         show Kitty_TJ_Animation   
     return
+
+label Kitty_Posing:
+    $ TempP_Sprite = P_Sprite
+    $ P_Sprite = 0
+    menu Kitty_Posing_Menu:
+        "Body":
+            call K_Pussy_Launch(0)
+        "Doggy":
+            hide Kitty_Sprite
+            hide Kitty_SexSprite
+
+            show Kitty_Doggy at SpriteLoc(StageCenter+50) zorder 150
+        "Missionary":
+            hide Kitty_Sprite
+            hide Kitty_Doggy
+
+            show Kitty_SexSprite zorder 150
+        "Return":
+            call Kitty_Hide
+            call K_Pos_Reset
+            $ P_Sprite = TempP_Sprite
+            jump Kitty_Modded_Clothes_Menu
+
+    jump Kitty_Posing_Menu
     
 init python:
     
@@ -846,6 +929,12 @@ init python:
                 return 5   
             elif K_Chest == "modded bustier bra":
                 return 5
+            elif K_Chest == "modded green swimsuit":
+                return 25
+            elif K_Chest == "modded black swimsuit":
+                return 25
+            elif K_Chest == "modded white swimsuit":
+                return 5
             else:
                 return 0
 
@@ -888,6 +977,12 @@ init python:
                 return 15      
             elif K_Panties == "modded white panties":      #If wearing only green panties
                 return 10
+            elif K_Panties == "modded green swimsuit":
+                return 15
+            elif K_Panties == "modded black swimsuit":
+                return 15
+            elif K_Panties == "modded white swimsuit":
+                return 5
             elif K_Panties == "modded darker lace panties":       #If wearing only lace panties
                 return 5
             elif K_Panties == "modded kitty lingerie panties":       #If wearing only kitty lingerie panties
@@ -986,6 +1081,21 @@ init python:
                             # string = "images/Kitty" + str(third) + "/Kitty_" + str(third) + "_Legs_" + str(K_DynamicTan[first_]) + ".png"
                             # if not renpy.loadable(string):
                                 string = Null()
+            elif first_ == 5: #hose
+                    # if "modded" in K_DynamicTan[first_] or third == "Doggy":
+                    if "modded" in K_DynamicTan[first_]:
+                        string = "images/Kitty" + str(third) + "/Kitty_" + str(third) + "_Hose_" + str(K_DynamicTan[first_]) + second
+                        if not renpy.loadable(string):
+                            # string = "images/Kitty" + str(third) + "/Kitty_" + str(third) + "_Hose_" + str(K_DynamicTan[first_]) + ".png"
+                            # if not renpy.loadable(string):
+                                string = Null()
+                    
+                    else:
+                        # string = "images/Kitty" + str(third) + "/KittyTan/Kitty_" + str(third) + "_Hose_tan " + str(K_DynamicTan[first_]) + second
+                        # if not renpy.loadable(string):
+                        #     # string = "images/Kitty" + str(third) + "/Kitty_" + str(third) + "_Hose_" + str(K_DynamicTan[first_]) + ".png"
+                        #     # if not renpy.loadable(string):
+                                string = Null()
         else:
             string = Null()
         return string
@@ -993,6 +1103,8 @@ init python:
     def GetHairColor(HairColor = 0):
         if HairColor == 0:
             return ""
+        elif HairColor == "custom":
+            return "white"
         else:
             return HairColor
 

@@ -1,12 +1,77 @@
 ﻿## Laura's Clothes ///////////////////
-label Laura_Modded_Clothes_Misc_Hair:
-                    if ApprovalCheck("Laura", 700):
-                        ch_l "You think?"
-                        call Recolor_Hair("Laura")
-                        call SetHairColorLaura("custom")
-                    else:
-                        ch_l "I don't know, it's fine like this."
-                    jump Laura_Clothes
+label Laura_Modded_Clothes:
+    menu:
+        "Poses":
+                jump Laura_Posing
+        "Let me select you hair color":
+            if ApprovalCheck("Laura", 700):
+                ch_l "You think?"
+                call Recolor_Hair("Laura")
+                call SetHairColorLaura("custom")
+            else:
+                ch_l "I don't know, it's fine like this."
+            jump Laura_Modded_Clothes
+
+        "Apply color to pubes as well" if L_HairColor == "custom" and not L_PubesColor:
+            $ L_PubesColor = 1
+
+        "Reset pubes color" if L_PubesColor:
+            $ L_PubesColor = 0
+    
+        "You could lose the hose." if L_Hose:     
+            $ L_Hose = 0  
+        "The fishnets would look good with that." if L_Hose != "modded fishnets":     
+            $ L_Hose = "modded fishnets"
+
+        "Try on that red turtleneck." if L_Over != "modded turtleneck":
+            call LauraFace("bemused")
+            ch_l "Yeah, ok."          
+            $ L_Over = "modded turtleneck"
+
+        "Save as main menu background clothes.":
+                "This option will save this Kitty at the main menu background, are you sure?"
+                menu:
+                    "Yes":
+                        "do it"
+                        $ persistent.L_BG_Over = L_Over
+                        $ persistent.L_BG_Chest = L_Chest
+                        $ persistent.L_BG_Neck = L_Neck
+                        $ persistent.L_BG_Legs = L_Legs
+                        $ persistent.L_BG_Panties = L_Panties
+                        # $ persistent.L_BG_Arms = L_Arms  #arm pose
+                        $ persistent.L_BG_Arms = L_Arms
+                        # $ persistent.L_BG_DynamicTan = L_DynamicTan
+                        $ persistent.L_BG_Pierce = L_Pierce
+                        $ persistent.L_BG_Hair = L_Hair
+                        # $ persistent.L_BG_Water = L_Water
+                        $ persistent.L_BG_HairColor = L_HairColor
+                        $ persistent.L_BG_PubesColor = L_PubesColor
+                        $ persistent.L_BG_Pubes = L_Pubes
+                        $ persistent.L_BG_HairCustomColor_red = L_HairCustomColor.red
+                        $ persistent.L_BG_HairCustomColor_green = L_HairCustomColor.green
+                        $ persistent.L_BG_HairCustomColor_blue = L_HairCustomColor.blue
+                        $ persistent.L_BG_Hose = L_Hose
+                        # $ persistent.L_BG_Headband = L_Headband
+                        # $ persistent.L_BG_Gag = L_Gag
+                        # $ persistent.L_BG_Blindfold = L_Blindfold
+                        # $ persistent.L_BG_Boots = L_Boots
+
+                    "No":
+                        pass
+
+        "Nevermind":
+            jump Laura_Clothes
+            # return
+    jump Laura_Modded_Clothes
+
+# label Laura_Modded_Clothes_Misc_Hair:
+#                     if ApprovalCheck("Laura", 700):
+#                         ch_l "You think?"
+#                         call Recolor_Hair("Laura")
+#                         call SetHairColorLaura("custom")
+#                     else:
+#                         ch_l "I don't know, it's fine like this."
+#                     jump Laura_Clothes
 
 label SetChestLaura(Outfit = "modded tape"):
     $ L_Chest = Outfit
@@ -59,6 +124,43 @@ label Mod_Update_Laura_Image:
     elif renpy.showing("Laura_TJ_Animation"):
         show Laura_TJ_Animation   
     return
+
+label Laura_Posing:
+    $ TempP_Sprite = P_Sprite
+    $ P_Sprite = 0
+    menu Laura_Posing_Menu:
+        "Body":
+            call L_Pussy_Launch(0)
+        # "Doggy":
+        #     hide Laura_Sprite
+        #     hide Laura_SexSprite
+        #     hide Laura_Missionary
+
+        #     show Laura_Doggy at SpriteLoc(StageCenter+50) zorder 150
+        "Missionary":
+            hide Laura_Sprite
+            # hide Laura_Doggy
+            # hide Laura_SexSprite
+
+            show Laura_SexSprite zorder 150:
+                pos (450,500)
+        # "Cowgirl":
+        #     hide Laura_Sprite
+        #     hide Laura_Doggy
+        #     hide Laura_Missionary
+
+        #     show Laura_SexSprite zorder 150:
+        #         pos (575,470)
+        "Return":
+            hide Laura_SexSprite
+            # hide Laura_Doggy
+            # hide Laura_Missionary
+            call Laura_Hide
+            call L_Pos_Reset
+            $ P_Sprite = TempP_Sprite
+            jump Laura_Modded_Clothes
+
+    jump Laura_Posing_Menu
     
 init python:
     
@@ -129,7 +231,7 @@ init python:
                 return 0
 
         if Type == "Over":
-            if L_Over == "modded black jacket":                                             
+            if L_Over == "modded turtleneck":                                             
                 return 15
             elif L_Over == "modded black cape":
                 return 20

@@ -1,11 +1,51 @@
 ﻿init python:
+    import copy
+
+    class SetColorNewGirl(object):
+        def __init__(self, name = "Mystique"):
+            self.red = 255
+            self.green = 255
+            self.blue = 255
+            self.opacity = 255
+            self.tempred = 255
+            self.tempgreen = 255
+            self.tempblue = 255
+            self.tempopacity = 255
+            self.name = name
+            self.colored = ""
+            
+        
+        def set_color(self):
+            return self.red, self.green, self.blue, 0
+            
+        def screen_loop(self, outfittype = "Over", outfit = "jacket"):
+            self.outfittype = outfittype
+            self.outfit = outfit
+            renpy.show_screen("recolor_screen_",self.name,self.outfittype, self.outfit) #recolor_screen_()
+            self.tempred = self.red
+            self.tempgreen = self.green
+            self.tempblue = self.blue
+            self.tempopacity = self.opacity
+            while True:
+                result = ui.interact()
+                
+                if result[0] == "apply":
+                    self.red = self.tempred
+                    self.green = self.tempgreen
+                    self.blue = self.tempblue
+                    self.opacity = self.tempopacity
+                    self.colored = "White"
+                    
+                if result[0] == "quit":
+                    renpy.hide_screen("recolor_screen_") #recolor_screen_()
+                    return
 
     class Girlnew(object):
         
         def __init__ (self, name = "no name"):
             #self.name = name
             #self.money = money
-            #self.girl = {   
+            #self.girl = {
             self.name = name
             self.Petname = "boy"       #What Mystique calls the player
             self.Petnames = ["boy"]
@@ -53,10 +93,13 @@
             self.Legs = "skirt"
             self.Over = 0
             self.Chest = "top"    
+            self.BodySuit = 0    
             self.Pierce = 0
             self.Panties = "black panties"
             self.Neck = 0
             self.Hose = 0
+            self.Dress = 0
+            self.Boots = 0
             self.Mouth = "normal"
             self.Brows = "normal"
             self.Eyes = "normal"
@@ -79,9 +122,24 @@
             self.Custom4 = [0,0,0,0,0,0,0,0,0,0,0]  
             self.Custom5 = [0,0,0,0,0,0,0,0,0,0,0]  
             self.Custom6 = [0,0,0,0,0,0,0,0,0,0,0]    
-            self.Custom7 = [0,0,0,0,0,0,0,0,0,0,0]    
+            self.Custom7 = [0,0,0,0,0,0,0,0,0,0,0]
+            self.CustomColors = {}
+            i=1
+            while i < 10:
+                self.CustomColors.update( {
+                                i : {
+                                    "Over" : SetColorNewGirl(self.name),
+                                    "Chest" : SetColorNewGirl(self.name),
+                                    "Legs" : SetColorNewGirl(self.name),
+                                    "Hose" : SetColorNewGirl(self.name),
+                                    "Panties" : SetColorNewGirl(self.name),
+                                    "Hair" : SetColorNewGirl(self.name),
+                                    }
+                                })
+                i+=1
+
             self.Gym = [2,0,0,0,"tights","top","black panties",0,0,0,0] #arms position, 0, 0, over, legs, chest, panties, 
-            self.Sleepwear = [0,0,0,0,0,"short top","black panties",0,0,0]
+            self.Sleepwear = [0,0,0,0,0,"black bra","black panties",0,0,0]
             self.Schedule = [0,0,0,0,0,0,0,0,4,0]                      #chooses when she wears what
             self.GirlLayer = 101
             self.SpriteLoc = 550                        #Sets Emma to default to the center
@@ -143,7 +201,6 @@
             self.Forced = 0                                        #This is a toggle for if she's being coerced
             self.ForcedCount = 0 
             self.Glasses = 0 
-            self.HeadBand = 0 
             self.Swimsuit = 0 
             self.OnePiece = 0 
             self.Held = 0
@@ -153,8 +210,69 @@
             self.Extra = {} 
             self.LooksLike = "Raven" 
             self.Blindfold = 0 
-            self.Headband = 0 
-            #}
+            self.Headband = "" 
+
+            # self.Clothes = {
+            #     "Legs" : "skirt",
+            #     "Over" : 0,
+            #     "Chest" : "top",
+            #     "Pierce" : 0,
+            #     "Panties" : "black panties",
+            #     "Neck" : 0,
+            #     "Hose" : 0,
+            #     }
+
+            self.Colors = {
+                "Over" : SetColorNewGirl(self.name),
+                "Chest" : SetColorNewGirl(self.name),
+                "Legs" : SetColorNewGirl(self.name),
+                "Hose" : SetColorNewGirl(self.name),
+                "Panties" : SetColorNewGirl(self.name),
+                "Hair" : SetColorNewGirl(self.name),
+                }
+            #} newgirl["Mystique"].Colors["Over"].screen_loop("Over",newgirl["Mystique"].Over)
+        def save_colors(self, number = 1):
+            self.CustomColors[number] = copy.deepcopy(self.Colors)
+
+        def load_colors(self, number = 1):
+            self.Colors = copy.deepcopy(self.CustomColors[number])
+
+        def reset_colors(self):
+            for key in self.Colors:
+                self.Colors[key].red = 255
+                self.Colors[key].green = 255
+                self.Colors[key].blue = 255
+                self.Colors[key].opacity = 255
+                self.Colors[key].colored = ""
+
+        def get_outfit(self, outfittype = "Over"):
+            if outfittype == "Over":
+                return self.Over
+            elif outfittype == "Chest":
+                return self.Chest
+            elif outfittype == "Legs":
+                return self.Legs
+            elif outfittype == "Panties":
+                return self.Panties
+            elif outfittype == "Neck":
+                return self.Neck
+            elif outfittype == "Hose":
+                return self.Hose
+            elif outfittype == "Arms":
+                return self.Arms
+            elif outfittype == "Headband":
+                return self.Headband
+            elif outfittype == "BodySuit":
+                return self.BodySuit
+            elif outfittype == "Dress":
+                return self.Dress
+            elif outfittype == "Boots":
+                return self.Boots
+
+        def recolor_part(self, outfittype = "Over", outfit = "workout jacket"):
+            self.Colors[outfittype].screen_loop(outfittype, outfit)
+        #} newgirl["Mystique"].recolor_part("Over", "jacket")
+
 
          
 
@@ -647,6 +765,19 @@
     #     else:
     #         string = Null()
     #     return string
+    #This function checks how many times you've accessed a given action within the timeframe specified. Example: $ Count = Action_Check("Rogue", "recent", "sex")   
+    def Mod_Action_Check(Chr = "Rogue", Time = "recent", Act = "act", Count = 0): 
+            if Chr in ModdedGirls and Time == "recent":
+                if Act in newgirl[Chr].RecentActions:
+                    Count = newgirl[Chr].RecentActions.count(Act) 
+                    
+            return Count
+
+label Reset_Mystique:
+    $ newgirl = {"Mystique" : Girlnew("Mystique"),    #The LikeOtherGirl attribute should be set for each new girl
+                # "Laura" : Girlnew("Laura")
+                 }
+    return
 image blackblink:   
     Solid("#000")   
 image whiteblink:   

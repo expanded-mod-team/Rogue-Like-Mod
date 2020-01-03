@@ -1029,7 +1029,15 @@ label Emma_Doggy_Launch(Line = "massage"):
         return     
     $ P_Sprite = 1
     $ Speed = 0
-    hide Emma_Sprite  
+    hide Emma_Sprite
+    if renpy.showing("Emma_BJ_Animation"):
+        hide Emma_BJ_Animation
+    if renpy.showing("Emma_HJ_Animation"):
+        hide Emma_HJ_Animation
+    if renpy.showing("Emma_TJ_Animation"):
+        hide Emma_TJ_Animation
+    if renpy.showing("Emma_Missionary"):
+        hide Emma_Missionary
     show Emma_Doggy at SpriteLoc(StageCenter+50) zorder 150
     with dissolve
     return

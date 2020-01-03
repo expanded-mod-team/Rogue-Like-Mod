@@ -1,4 +1,4 @@
-ï»¿# Basic Kitty Sprites
+?¿# Basic Kitty Sprites
        
 image Kitty_Sprite:        
     LiveComposite(
@@ -9,73 +9,98 @@ image Kitty_Sprite:
             ),         
         (0,0), ConditionSwitch(                                                                         
             #Arms1               
+            "not Kitty_Arms and K_DynamicTan[0]", "images/KittySprite/Kitty_Sprite_T3Arms1.png",
             "not Kitty_Arms", "images/KittySprite/Kitty_Sprite_Arms1.png",
             "True", Null(),               
             ), 
         (0,0), ConditionSwitch(                                                                        
             #back of the shirt
+            "not K_DynamicTan[3] or Kitty_Arms or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Arms1.png", GetModdedStringTanKitty("3", "1.png")),
+            ),
+        
+        (0,0), ConditionSwitch(   
+            "not K_DynamicTan[1] or Kitty_Arms or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Arms1.png", GetModdedStringTanKitty("1", "1.png")),
+            ),
+        (0,0), ConditionSwitch(               #back of the shirt
+            "not K_Over", Null(),
+            "Kitty_Arms and 'modded' in K_Over and 'top' in K_Over", GetModdedString("images/KittySprite/Kitty_Sprite_Under_", K_Over, "2.png"),
+            "'modded' in K_Over and 'top' in K_Over", GetModdedString("images/KittySprite/Kitty_Sprite_Under_", K_Over, "1.png"),
             "K_Over == 'pink top' and Kitty_Arms", "images/KittySprite/Kitty_Sprite_Under_Pink2.png",       #2
             "K_Over == 'pink top'", "images/KittySprite/Kitty_Sprite_Under_Pink1.png",                  #1
             "True", Null(),               
             ),
         (0,0), ConditionSwitch(                                                                         
             #body
-            "Kitty_Arms and K_Pubes", "images/KittySprite/Kitty_Sprite_Body_Hair2.png",     
+            "Kitty_Arms and K_DynamicTan[0]", "images/KittySprite/Kitty_Sprite_T3Body_Bare2.png",               
             "Kitty_Arms", "images/KittySprite/Kitty_Sprite_Body_Bare2.png",               
-            "K_Pubes", "images/KittySprite/Kitty_Sprite_Body_Hair1.png",     
+            "True and K_DynamicTan[0]", "images/KittySprite/Kitty_Sprite_T3Body_Bare1.png",    
             "True", "images/KittySprite/Kitty_Sprite_Body_Bare1.png",    
             ),
-        
-#        (0,0), ConditionSwitch(                                                                         
-#            #wet look
-#            "K_Water and Kitty_Arms", "images/KittySprite/Kitty_Sprite_Water2.png",
-#            "K_Water", "images/KittySprite/Kitty_Sprite_Water1.png",
-#            "True", Null(),
-#            ),  
+        (0,0), ConditionSwitch(                                                                     #body
+            "not K_DynamicTan[3] or not K_DynamicTan[0]", Null(),
+            "Kitty_Arms", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare2.png", GetModdedStringTanKitty("3", "2.png")),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedStringTanKitty("3", "1.png")),
+            ),
+        (0,0), ConditionSwitch(                                                                     #body
+            "not K_DynamicTan[3] or not K_DynamicTan[0]", Null(),
+            # "K_DynamicTan[3] == 'modded white swimsuit' or K_DynamicTan[3] == 'modded green swimsuit' or K_DynamicTan[3] == 'modded black swimsuit'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedString("images/KittySprite/Kitty_Sprite_Chest_", K_DynamicTan[3], "_tummy.png")),
+            "K_DynamicTan[3] in ['modded white swimsuit', 'modded green swimsuit', 'modded black swimsuit']", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedString("images/KittySprite/Kitty_Sprite_Chest_", K_DynamicTan[3], "_tummy.png")),
+            "True", Null(),
+            ),
+        (0,0), ConditionSwitch(                                                                     #body
+            "not K_DynamicTan[4] or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedStringTanKitty("4", ".png")),
+            ),
+
+        (0,0), ConditionSwitch(                                                                     #body
+            "not K_DynamicTan[5] or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedStringTanKitty("5", ".png")),
+            ),
+
+        (0,0), ConditionSwitch(                                                                     #body
+            "not K_DynamicTan[2] or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedStringTanKitty("2", ".png")),
+            ),
+
+        (0,0), ConditionSwitch(   
+            "not K_DynamicTan[1] or not K_DynamicTan[0]", Null(),
+            "Kitty_Arms", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare2.png", GetModdedStringTanKitty("1", "2.png")),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedStringTanKitty("1", "1.png")),
+            ),
+
+        (0,0), ConditionSwitch(                                                                         #body
+            "K_Pubes and K_PubesColor", im.MatrixColor("images/KittySprite/Kitty_Sprite_Body_Hair_PubesWhite.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+            "K_Pubes and K_HairColor == 'black'", "images/KittySprite/Kitty_Sprite_Body_Hair_PubesBlack.png",               
+            "K_Pubes", "images/KittySprite/Kitty_Sprite_Body_Hair_Pubes.png",               
+            "True", Null(),  
+            ),#            #wet look
         (0,0), ConditionSwitch(                                                                         
             #piercings bottom
             "not K_Pierce or (K_Panties and not K_PantiesDown)", Null(),                       
             "K_Pierce == 'ring'", "images/KittySprite/Kitty_Sprite_Piercing_RingB.png",      
             "True", "images/KittySprite/Kitty_Sprite_Piercing_BallB.png",   
             ),    
-        
-#        (0,0), ConditionSwitch(                                                                         
-#            #panties
-#            "not K_Panties or K_PantiesDown", Null(),
-#            "K_Legs or K_Upskirt", Null(), #If panties are down, and pants are either off or down, skip this
-            
-#            "not K_Panties or not K_PantiesDown", Null(), #If panties are not down or if  pants are on and up, skip this
-#            "K_Legs and K_Legs != 'blue skirt' and not K_Upskirt", Null(), #If panties are not down or if  pants are on and up, skip this
-            
-#            "K_Wet and K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green_Wet.png",
-#            "K_Wet and K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace_Wet.png",     
-#            "K_Wet and K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini_Wet.png",          
-#            "K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green.png",
-#            "K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace.png",
-#            "K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini.png", 
-#            "True", Null(),
-#            ),  
-#        (0,0), ConditionSwitch(                                                                         
-#            #panties down
-#            "not K_Panties or not K_PantiesDown", Null(), #If panties are not down or if  pants are on and up, skip this
-#            "K_Legs and K_Legs != 'blue skirt' and not K_Upskirt", Null(), #If panties are not down or if  pants are on and up, skip this
-#            "K_Wet and K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green_Down_Wet.png",
-#            "K_Wet and K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace_Down_Wet.png",
-#            "K_Wet and K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini_DownW.png", 
-#            "K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green_Down.png",
-#            "K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace_Down.png",
-#            "K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini_Down.png", 
-#            "True", Null(),
-#            ),  
-        
+        (0,0), ConditionSwitch(                                                                         
+            #full hose/tights              
+            "K_Panties and not K_PantiesDown", Null(), 
+            "not K_Hose", Null(),
+            "'modded' in K_Hose", "images/KittySprite/Kitty_Sprite_hose_[K_Hose].png",
+            "True", Null(), 
+            ), 
         (0,0), ConditionSwitch(                                                                         
             #panties layer           
             "not K_Panties", Null(),               
+            "K_Legs and not K_Upskirt and PantsNum('Kitty') != 5", Null(),
+            "'modded' in K_Panties", "images/KittySprite/Kitty_Sprite_Panties_[K_Panties]_[K_PantiesDown]_[K_Wet].png",
+            
             "not K_PantiesDown or (K_Legs and K_Legs != 'blue skirt' and not K_Upskirt)", ConditionSwitch( 
                     # if the panties aren't down. . .
                     # and she's not wearing pants that are up
                     "K_Wet", ConditionSwitch( 
                             # if they're up and wet. . .
+                            # "'modded' in K_Panties", GetModdedString("images/KittySprite/Kitty_Sprite_Panties_", K_Panties, "_Wet.png"),
                             "K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green_Wet.png",
                             "K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace_Wet.png",     
                             "K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini_Wet.png", 
@@ -83,6 +108,7 @@ image Kitty_Sprite:
                             ),
                     "True", ConditionSwitch( 
                             #if they're just up. . .       
+                            # "'modded' in K_Panties", GetModdedString("images/KittySprite/Kitty_Sprite_Panties_", K_Panties, ".png"),
                             "K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green.png",
                             "K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace.png",
                             "K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini.png", 
@@ -91,7 +117,7 @@ image Kitty_Sprite:
                     ),                    
             "K_Wet", ConditionSwitch( 
                     #if wet and down. . .
-#                    "K_Legs and K_Legs != 'blue skirt' and not K_Upskirt", Null(), #If nor wearing a skirt, they would be invisible 
+                    # "'modded' in K_Panties", GetModdedString("images/KittySprite/Kitty_Sprite_Panties_", K_Panties, "_Down_Wet.png"),
                     "K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green_Down_Wet.png",
                     "K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace_Down_Wet.png",
                     "K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini_DownW.png", 
@@ -99,7 +125,7 @@ image Kitty_Sprite:
                     ),
             "True", ConditionSwitch(
                     # if not wet, but down
-#                    "K_Legs and K_Legs != 'blue skirt' and not K_Upskirt", Null(), #If nor wearing a skirt, they would be invisible                     
+                    # "'modded' in K_Panties", GetModdedString("images/KittySprite/Kitty_Sprite_Panties_", K_Panties, "_Down.png"),
                     "K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green_Down.png",
                     "K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace_Down.png",
                     "K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini_Down.png", 
@@ -141,12 +167,34 @@ image Kitty_Sprite:
                     "K_Legs", AlphaMask("Spunk_Drip2","Kitty_Drip_MaskP"),
                     "True", AlphaMask("Spunk_Drip2","Kitty_Drip_Mask"), #only plays if nothing is in the way
                     ),
+            ),
+        (0,0), ConditionSwitch(                                                                         
+            #swimsuit tummy              
+            "not K_Chest", Null(),
+            "K_Chest in ['modded black swimsuit', 'modded green swimsuit', 'modded white swimsuit']", "images/KittySprite/Kitty_Sprite_Chest_[K_Chest]_tummy.png",
+            "True", Null(), 
+            ),
+        (0,0), ConditionSwitch(                                                                         
+            #full hose/tights              
+            "K_Panties and K_PantiesDown", Null(), 
+            "not K_Hose", Null(),
+            "'modded' in K_Hose", "images/KittySprite/Kitty_Sprite_Hose_[K_Hose].png",
+            # "'modded' in K_Hose", GetModdedString("images/KittySprite/Kitty_Sprite_hose_", K_Hose, ".png"),
+            "True", Null(), 
             ),     
         (0,0), ConditionSwitch(                                                                        
             #pants         
+            "not K_Legs", Null(),
+            "'modded' in K_Legs", "images/KittySprite/Kitty_Sprite_Legs_[K_Legs]_[K_Upskirt]_[K_Wet].png",
+
             "K_Legs == 'blue skirt' and K_Upskirt", "images/KittySprite/Kitty_Sprite_Skirt_Up.png",       
             "K_Legs == 'blue skirt'", "images/KittySprite/Kitty_Sprite_Skirt.png",          
+            "not K_Legs", Null(),
+            # "K_Upskirt and 'modded' in K_Legs", GetModdedString("images/KittySprite/Kitty_Sprite_Legs_", K_Legs, "_Down.png"),
+            # "K_Wet and 'modded' in K_Legs", GetModdedString("images/KittySprite/Kitty_Sprite_Legs_", K_Legs, "_Wet.png"),
+            # "'modded' in K_Legs", GetModdedString("images/KittySprite/Kitty_Sprite_Legs_", K_Legs, ".png"),
             "not K_Legs or K_Upskirt", Null(),
+            #"'modded' in K_Legs and K_Upskirt", GetModdedString("images/KittySprite/Kitty_Sprite_Legs", K_Legs, ".png"),
             "K_Legs == 'capris'", "images/KittySprite/Kitty_Sprite_Pants_Blue.png",
             "K_Legs == 'black jeans'", "images/KittySprite/Kitty_Sprite_Pants_Black.png",
             "K_Wet and K_Legs == 'yoga pants'", "images/KittySprite/Kitty_Sprite_Pants_Yoga_Wet.png",   
@@ -157,12 +205,576 @@ image Kitty_Sprite:
             ),    
         (0,0), ConditionSwitch(                                                                         
             #Arms2               
+            "Kitty_Arms and K_DynamicTan[0]", "images/KittySprite/Kitty_Sprite_T3Arms2.png",
             "Kitty_Arms", "images/KittySprite/Kitty_Sprite_Arms2.png",
             "True", Null(),               
             ), 
+
+        (0,0), ConditionSwitch(                                                                         #Arms2               
+            "not K_DynamicTan[3] or not K_DynamicTan[0] or not Kitty_Arms", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Arms2.png", GetModdedStringTanKitty("3", "2.png")),
+            ),
+
+        (0,0), ConditionSwitch(   
+            "not K_DynamicTan[1] or not K_DynamicTan[0] or not Kitty_Arms", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Arms2.png", GetModdedStringTanKitty("1", "2.png")),
+            ),
+
+        (0,0), ConditionSwitch(                                                                         #chest
+            "True and K_DynamicTan[0]", "images/KittySprite/Kitty_Sprite_T3chest_bare.png",
+            "True", "images/KittySprite/Kitty_Sprite_Chest_Bare.png",
+            ),  
+        (0,0), ConditionSwitch(                                                                     #body
+            "not K_DynamicTan[3] or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Chest_Bare.png", GetModdedStringTanKitty("3", "1.png")),
+            ),
+
+        (0,0), ConditionSwitch(   
+            "not K_DynamicTan[1] or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Chest_Bare.png", GetModdedStringTanKitty("1", "1.png")),
+            ),#            #chest
+        (0,0), ConditionSwitch(   
+            #piercings top
+            "not K_Pierce", Null(),                       
+            "K_Pierce == 'ring'", "images/KittySprite/Kitty_Sprite_Piercing_RingT.png",      
+            "True", "images/KittySprite/Kitty_Sprite_Piercing_BallT.png",   
+            ),    
+        (0,0), ConditionSwitch(                                                                        
+            #necklace
+            "K_Neck == 'gold necklace'", "images/KittySprite/Kitty_Sprite_Necklace1.png",
+            "K_Neck == 'star necklace'", "images/KittySprite/Kitty_Sprite_Necklace2.png",
+            "True", Null(),
+            ),   
+        (0,0), ConditionSwitch(                                                                         
+            #bra layer           
+            "not K_Chest", Null(),                  
+            "not K_Uptop", ConditionSwitch( 
+                    #if the top's down. . .
+                    "Kitty_Arms and 'modded' in K_Chest", GetModdedString("images/KittySprite/Kitty_Sprite_Chest_", K_Chest, "2.png"),
+                    "'modded' in K_Chest", GetModdedString("images/KittySprite/Kitty_Sprite_Chest_", K_Chest, "1.png"),
+                    "Kitty_Arms and K_Chest == 'cami'", "images/KittySprite/Kitty_Sprite_Cami2.png",
+                    "Kitty_Arms and K_Chest == 'bikini top'", "images/KittySprite/Kitty_Sprite_Bikini2.png",
+                    "K_Chest == 'bikini top'", "images/KittySprite/Kitty_Sprite_Bikini1.png",
+                    "K_Chest == 'lace bra'", "images/KittySprite/Kitty_Sprite_Bra_Lace.png",
+                    "K_Chest == 'sports bra'", "images/KittySprite/Kitty_Sprite_Bra_Sport.png",
+                    "K_Chest == 'bra'", "images/KittySprite/Kitty_Sprite_Bra_Basic.png",
+                    "K_Chest == 'cami'", "images/KittySprite/Kitty_Sprite_Cami1.png",
+                    "True", Null(),     
+                    ),
+            "K_Over", ConditionSwitch(
+                    # If she's wearing a shirt over the bra                        
+                    "K_Chest == 'bikini top'", "images/KittySprite/Kitty_Sprite_Bikini1_Up.png",
+                    "K_Chest == 'lace bra'", "images/KittySprite/Kitty_Sprite_Bra_Lace1_UpS.png",
+                    "K_Chest == 'sports bra'", "images/KittySprite/Kitty_Sprite_Bra_Sport1_UpS.png",
+                    "K_Chest == 'bra'", "images/KittySprite/Kitty_Sprite_Bra_Basic1_Up.png",
+                    "K_Chest == 'cami'", "images/KittySprite/Kitty_Sprite_Cami1_UpS.png",    
+                    "True", Null(),     
+                    ),
+            "True", ConditionSwitch(
+                    # if she's not wearing a shirt
+                    "Kitty_Arms", ConditionSwitch(
+                            # if Arms 2
+                            "K_Chest == 'bikini top'", "images/KittySprite/Kitty_Sprite_Bikini2_Up.png",
+                            "K_Chest == 'lace bra'", "images/KittySprite/Kitty_Sprite_Bra_Lace2_Up.png",
+                            "K_Chest == 'sports bra'", "images/KittySprite/Kitty_Sprite_Bra_Sport2_Up.png",
+                            "K_Chest == 'bra'", "images/KittySprite/Kitty_Sprite_Bra_Basic2_Up.png",
+                            "K_Chest == 'cami'", "images/KittySprite/Kitty_Sprite_Cami2_Up.png",            
+                            "True", Null(),     
+                            ),                    
+                    "True", ConditionSwitch(
+                            # if Arms 1
+                            "K_Chest == 'bikini top'", "images/KittySprite/Kitty_Sprite_Bikini1_Up.png",
+                            "K_Chest == 'lace bra'", "images/KittySprite/Kitty_Sprite_Bra_Lace1_Up.png",
+                            "K_Chest == 'sports bra'", "images/KittySprite/Kitty_Sprite_Bra_Sport1_Up.png",
+                            "K_Chest == 'bra'", "images/KittySprite/Kitty_Sprite_Bra_Basic1_Up.png",
+                            "K_Chest == 'cami'", "images/KittySprite/Kitty_Sprite_Cami1_Up.png",            
+                            "True", Null(),     
+                            ),            
+                    "True", Null(),     
+                    ),
+            ),
+            
+        (0,0), ConditionSwitch(                                                                        
+            #piercings over shirt
+            "not K_Pierce or not K_Chest or K_Uptop", Null(),                       
+            "K_Pierce == 'ring'", "images/KittySprite/Kitty_Sprite_Piercing_RingOver.png",      
+            "True", "images/KittySprite/Kitty_Sprite_Piercing_BallOver.png",   
+            ),    
+        (0,0), ConditionSwitch(                                                                        
+            #wet look
+            "K_Water and Kitty_Arms", "images/KittySprite/Kitty_Sprite_Water2.png",
+            "K_Water", "images/KittySprite/Kitty_Sprite_Water1.png",
+            "True", Null(),
+            ),  
+        (0,0), ConditionSwitch(                                                                         
+            #shirt layer           
+            "not K_Over", Null(),                  
+            "not K_Uptop", ConditionSwitch( 
+                    #if the top's down. . .
+                    "Kitty_Arms and 'modded' in K_Over", GetModdedString("images/KittySprite/Kitty_Sprite_Over_", K_Over, "2.png"),
+                    "'modded' in K_Over", GetModdedString("images/KittySprite/Kitty_Sprite_Over_", K_Over, "1.png"),
+                    "Kitty_Arms and K_Over == 'pink top'", "images/KittySprite/Kitty_Sprite_Over_Pink2.png",
+                    "Kitty_Arms and K_Over == 'red shirt'", "images/KittySprite/Kitty_Sprite_Over_Crew2.png",
+                    "Kitty_Arms and K_Over == 'towel'", "images/KittySprite/Kitty_Sprite_Over_Towel2.png",
+                    "K_Over == 'pink top'", "images/KittySprite/Kitty_Sprite_Over_Pink1.png",
+                    "K_Over == 'red shirt'", "images/KittySprite/Kitty_Sprite_Over_Crew1.png",
+                    "K_Over == 'towel'", "images/KittySprite/Kitty_Sprite_Over_Towel1.png",
+                    "True", Null(),     
+                    ),            
+            "True", ConditionSwitch(
+                    # if she's not wearing a shirt                    
+                    "Kitty_Arms and K_Over == 'pink top'", "images/KittySprite/Kitty_Sprite_Over_Pink2_Up.png",
+                    "Kitty_Arms and K_Over == 'red shirt'", "images/KittySprite/Kitty_Sprite_Over_Crew2_Up.png",
+                    "K_Over == 'pink top'", "images/KittySprite/Kitty_Sprite_Over_Pink1_Up.png",
+                    "K_Over == 'red shirt'", "images/KittySprite/Kitty_Sprite_Over_Crew1_Up.png",            
+                    "True", Null(),     
+                    ),
+            ),
+            
+        (0,0), ConditionSwitch(                                                                         
+            #bra over shirt layer           
+            "not K_Over or not K_Chest or not K_Uptop", Null(),   
+            "K_Chest == 'cami'", "images/KittySprite/Kitty_Sprite_Cami_Over.png", 
+            "K_Chest == 'lace bra'", "images/KittySprite/Kitty_Sprite_Bra_Lace_Over.png",
+            "K_Chest == 'sports bra'", "images/KittySprite/Kitty_Sprite_Bra_Sport_Over.png",
+            "K_Chest == 'bra'", "images/KittySprite/Kitty_Sprite_Bra_Basic_Over.png",
+            "K_Chest == 'bikini top'", "images/KittySprite/Kitty_Sprite_Bikini_Over.png",
+            "True", Null(),  
+            ),
+            
+        (124,0), ConditionSwitch(
+            "renpy.showing('Kitty_BJ_Animation')", Null(),
+            "True", "Kitty_Head",   
+            ), 
         
-        (0,0), "images/KittySprite/Kitty_Sprite_Chest_Bare.png", #ConditionSwitch(                                                                         
-#            #chest
+        (0,0), ConditionSwitch(                                                                        
+            #anal spunk
+            "K_Legs and not K_Upskirt", Null(), 
+            "K_Panties and not K_PantiesDown", Null(), 
+            "'anal' in K_Spunk", "images/KittySprite/Kitty_Sprite_Spunk_Anal.png",
+            "True", Null(), 
+            ),   
+        (0,0), ConditionSwitch(                                                                        
+            #pussy spunk
+            "K_Legs and not K_Upskirt", Null(), 
+            "K_Panties and not K_PantiesDown", Null(), 
+            "'in' in K_Spunk", "images/KittySprite/Kitty_Sprite_Spunk_Pussy.png",
+            "True", Null(), 
+            ),   
+        (0,0), ConditionSwitch(                                                                         
+            #belly spunk
+            "'belly' in K_Spunk", "images/KittySprite/Kitty_Sprite_Spunk_Belly.png",
+            "True", Null(), 
+            ),  
+        (0,0), ConditionSwitch(                                                                         
+            #tits spunk
+            "'tits' in K_Spunk", "images/KittySprite/Kitty_Sprite_Spunk_Tits.png",
+            "True", Null(), 
+            ),   
+            
+        (0,0), ConditionSwitch(
+            #UI tool for When Kitty is masturbating using Trigger3 actions
+            "Trigger == 'lesbian' or not Trigger3 or Ch_Focus != 'Kitty'", Null(),
+            "Trigger3 == 'fondle pussy' and Trigger != 'sex' and K_Lust >= 70", "GirlFingerPussy_K",
+            "Trigger3 == 'fondle pussy'", "GirlGropePussy_K",            
+            "Trigger3 == 'fondle breasts' and (Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts')", "GirlGropeLeftBreast_K",    #When zero is working the right breast, fondle left
+            "Trigger3 == 'fondle breasts' and (Trigger == 'fondle breasts' or Trigger == 'suck breasts')", "GirlGropeRightBreast_K", #When zero is working the left breast, fondle right  
+            "Trigger3 == 'fondle breasts'", "GirlGropeRightBreast_K",
+            "Trigger3 == 'vibrator breasts'", "VibratorRightBreast_K",     
+            "Trigger3 == 'vibrator pussy'", "VibratorPussy_K",
+            "Trigger3 == 'vibrator pussy insert'", "VibratorPussy_K",
+            "Trigger3 == 'vibrator anal'", "VibratorAnal_K",
+            "Trigger3 == 'vibrator anal insert'", "VibratorPussy_K",            
+            "True", Null(),             
+            ),                        
+        (0,0), ConditionSwitch(  
+            #UI tool for Trigger5(Threesome masutrbation) actions
+            "not Trigger5 or Trigger4 != 'masturbation' or Ch_Focus == 'Kitty'", Null(), 
+            #this doesn't activate unless Kitty is not primary, and actively masturbating
+            "Trigger5 == 'fondle pussy' and Trigger != 'sex' and K_Lust >= 70", "GirlFingerPussy_K",
+            "Trigger5 == 'fondle pussy'", "GirlGropePussy_K",
+            "Trigger5 == 'fondle breasts'", "GirlGropeRightBreast_K",
+            "Trigger5 == 'vibrator breasts'", "VibratorRightBreast",     
+            "Trigger5 == 'vibrator pussy'", "VibratorPussy",
+            "Trigger5 == 'vibrator pussy insert'", "VibratorPussy",
+            "Trigger5 == 'vibrator anal'", "VibratorAnal",
+            "Trigger5 == 'vibrator anal insert'", "VibratorPussy",
+            "True", Null(), 
+            ),               
+        (0,0), ConditionSwitch(                
+            #UI tool for Trigger1(primary) actions
+            "not Trigger or Ch_Focus != 'Kitty'", Null(),
+            "Trigger == 'vibrator breasts'", "VibratorLeftBreast_K",
+            "Trigger == 'fondle thighs'", "GropeThigh_K",
+            "Trigger == 'fondle breasts'", "GropeLeftBreast_K",
+            "Trigger == 'suck breasts'", "LickRightBreast_K",
+            "Trigger == 'fondle pussy' and Speed == 2", "FingerPussy_K",
+            "Trigger == 'fondle pussy'", "GropePussy_K",
+            "Trigger == 'lick pussy'", "Lickpussy_K",
+            "Trigger == 'vibrator pussy'", "VibratorPussy_K",
+            "Trigger == 'vibrator pussy insert'", "VibratorPussy_K",
+            "Trigger == 'vibrator anal'", "VibratorAnal_K",
+            "Trigger == 'vibrator anal insert'", "VibratorPussy_K",
+            "True", Null(), 
+            ),
+        (0,0), ConditionSwitch(                
+            #UI tool for Trigger2(secondary) actions
+            "not Trigger2 or Ch_Focus != 'Kitty'", Null(),
+            "not Trigger2 and not Trigger4 and Trigger == 'fondle breasts'", "GropeRightBreast_K",        
+            #When doing nothing offhand, use both hands on breasts.
+            "Trigger2 == 'fondle breasts' and Trigger == 'suck breasts'", "GropeLeftBreast_K",            
+            #When sucking right breast, fondle left
+            "Trigger2 == 'fondle breasts'", "GropeRightBreast_K",
+            "Trigger2 == 'vibrator breasts' and Trigger == 'suck breasts'", "VibratorLeftBreast_K",       
+            #When sucking right breast, vibrator left
+            "Trigger2 == Trigger", Null(),
+            #When both triggers are the same, do nothing              
+            "Trigger2 == 'suck breasts'", "LickLeftBreast_K",        
+            "Trigger2 == 'fondle pussy'", "GropePussy_K",
+            "Trigger2 == 'lick pussy'", "Lickpussy_K",       
+            "Trigger2 == 'vibrator breasts'", "VibratorRightBreast_K",
+            "Trigger2 == 'vibrator pussy'", "VibratorPussy_K",
+            "Trigger2 == 'vibrator pussy insert'", "VibratorPussy_K",
+            "Trigger2 == 'vibrator anal'", "VibratorAnal_K",
+            "Trigger2 == 'vibrator anal insert'", "VibratorPussy_K",
+            "True", Null(), 
+            ),    
+        (0,0), ConditionSwitch(  
+            #UI tool for Trigger4(Threesome) actions (ie Rogue's hand on her)
+            "not Trigger4 or Ch_Focus != 'Kitty'", Null(),
+            "Trigger4 == 'fondle pussy' and Trigger != 'sex' and K_Lust >= 70", "GirlFingerPussy_K",
+            "Trigger4 == 'fondle pussy'", "GirlGropePussy_K",            
+            "Trigger4 == 'lick pussy'", "Lickpussy_K",
+            "Trigger4 == 'suck breasts' and (Trigger2 != 'suck breasts' or Trigger == 'suck breasts')", "LickLeftBreast_K", 
+            "Trigger4 == 'suck breasts'", "LickRightBreast_K",  
+            "Trigger4 == 'fondle breasts' and (Trigger == 'fondle breasts' or Trigger == 'suck breasts')", "GirlGropeLeftBreast_K",    #When zero is working the right breast, fondle left
+            "Trigger4 == 'fondle breasts' and (Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts')", "GirlGropeRightBreast_K", #When zero is working the left breast, fondle right  
+            "Trigger4 == 'fondle breasts' and (Trigger3 == 'fondle breasts' or Trigger3 == 'suck breasts')", "GirlGropeLeftBreast_K", #When zero is working the left breast, fondle right  
+            "Trigger4 == 'fondle breasts'", "GirlGropeRightBreast_K",
+            "Trigger4 == 'vibrator breasts'", "VibratorRightBreast",     
+            "Trigger4 == 'vibrator pussy'", "VibratorPussy",
+            "Trigger4 == 'vibrator pussy insert'", "VibratorPussy",
+            "Trigger4 == 'vibrator anal'", "VibratorAnal",
+            "Trigger4 == 'vibrator anal insert'", "VibratorPussy",
+            "True", Null(),             
+            ),    
+        (0,0), ConditionSwitch(  
+            #UI tool for Trigger3(lesbian) actions (ie Rogue's hand on her when Kitty is secondary)
+            "Trigger != 'lesbian' or not Trigger3 or Ch_Focus == 'Kitty'", Null(),
+            "Trigger3 == 'fondle pussy' and Trigger != 'sex' and K_Lust >= 70", "GirlFingerPussy_K",
+            "Trigger3 == 'fondle pussy'", "GirlGropePussy_K",            
+            "Trigger3 == 'lick pussy'", "Lickpussy_K",
+            "Trigger3 == 'suck breasts' and (Trigger2 != 'suck breasts' or Trigger == 'suck breasts')", "LickLeftBreast_K", 
+            "Trigger3 == 'suck breasts'", "LickRightBreast_K",  
+            "Trigger3 == 'fondle breasts' and (Trigger == 'fondle breasts' or Trigger == 'suck breasts')", "GirlGropeLeftBreast_K",    #When zero is working the right breast, fondle left
+            "Trigger3 == 'fondle breasts' and (Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts')", "GirlGropeRightBreast_K", #When zero is working the left breast, fondle right  
+            "Trigger3 == 'fondle breasts' and (Trigger3 == 'fondle breasts' or Trigger3 == 'suck breasts')", "GirlGropeLeftBreast_K", #When zero is working the left breast, fondle right  
+            "Trigger3 == 'fondle breasts'", "GirlGropeRightBreast_K",
+            "Trigger3 == 'vibrator breasts'", "VibratorRightBreast",     
+            "Trigger3 == 'vibrator pussy'", "VibratorPussy",
+            "Trigger3 == 'vibrator pussy insert'", "VibratorPussy",
+            "Trigger3 == 'vibrator anal'", "VibratorAnal",
+            "Trigger3 == 'vibrator anal insert'", "VibratorPussy",
+            "True", Null(),             
+            ),         
+        )
+    anchor (0.6, 0.0)
+    zoom .75                      
+
+image Kitty_Sprite_Desu:        
+    LiveComposite(
+        (480,960),                                                                    
+        (124,0), ConditionSwitch(
+            "renpy.showing('Kitty_BJ_Animation')", Null(),
+            "True", "Kitty_HairBack",   
+            ),         
+        (0,0), ConditionSwitch(                                                                         
+            #Arms1               
+            "not Kitty_Arms and K_DynamicTan[0]", "images/KittySprite/Kitty_Sprite_T3Arms1.png",
+            "not Kitty_Arms", "images/KittySprite/Kitty_Sprite_Arms1.png",
+            "True", Null(),               
+            ), 
+        (0,0), ConditionSwitch(                                                                        
+            "not K_DynamicTan[3] or Kitty_Arms or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Arms1.png", GetModdedStringTanKitty("3", "1.png")),
+            # "'modded' in K_DynamicTan[3]", AlphaMask("images/KittySprite/Kitty_Sprite_Arms1.png", GetModdedString("images/KittySprite/Kitty_Sprite_Chest_", K_DynamicTan[3], "1.png")),
+            # "K_DynamicTan[3] == 'bikini top'", AlphaMask("images/KittySprite/Kitty_Sprite_Arms1.png", "images/KittySprite/Kitty_Sprite_Bikini1.png"),
+            # "K_DynamicTan[3] == 'lace bra'", AlphaMask("images/KittySprite/Kitty_Sprite_Arms1.png", "images/KittySprite/Kitty_Sprite_Bra_Lace.png"),
+            # "K_DynamicTan[3] == 'sports bra'", AlphaMask("images/KittySprite/Kitty_Sprite_Arms1.png", "images/KittySprite/Kitty_Sprite_Bra_Sport.png"),
+            # "K_DynamicTan[3] == 'bra'", AlphaMask("images/KittySprite/Kitty_Sprite_Arms1.png", "images/KittySprite/Kitty_Sprite_Bra_Basic.png"),
+            # "K_DynamicTan[3] == 'cami'", AlphaMask("images/KittySprite/Kitty_Sprite_Arms1.png", "images/KittySprite/Kitty_Sprite_Cami1.png"),
+            #"True", Null(),
+            ),
+        
+        (0,0), ConditionSwitch(   
+            "not K_DynamicTan[1] or Kitty_Arms or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Arms1.png", GetModdedStringTanKitty("1", "1.png")),
+            # "'modded' in K_DynamicTan[1]", AlphaMask("images/KittySprite/Kitty_Sprite_Arms1.png", GetModdedString("images/KittySprite/Kitty_Sprite_Over_", K_DynamicTan[1], "1.png")),
+            # "K_DynamicTan[1] == 'pink top'", AlphaMask("images/KittySprite/Kitty_Sprite_Arms1.png", "images/KittySprite/Kitty_Sprite_Over_Pink1.png"),
+            # "K_DynamicTan[1] == 'red shirt'", AlphaMask("images/KittySprite/Kitty_Sprite_Arms1.png", "images/KittySprite/Kitty_Sprite_Over_Crew1.png"),
+            # "K_DynamicTan[1] == 'towel'", AlphaMask("images/KittySprite/Kitty_Sprite_Arms1.png", "images/KittySprite/Kitty_Sprite_Over_Towel1.png"),
+            # "True", Null(),
+            ),
+        (0,0), ConditionSwitch(               #back of the shirt
+            "not K_Over", Null(),
+            "Kitty_Arms and 'modded' in K_Over and 'top' in K_Over", GetModdedString("images/KittySprite/Kitty_Sprite_Under_", K_Over, "2.png"),
+            "'modded' in K_Over and 'top' in K_Over", GetModdedString("images/KittySprite/Kitty_Sprite_Under_", K_Over, "1.png"),
+            "K_Over == 'pink top' and Kitty_Arms", "images/KittySprite/Kitty_Sprite_Under_Pink2.png",       #2
+            "K_Over == 'pink top'", "images/KittySprite/Kitty_Sprite_Under_Pink1.png",                  #1
+            "True", Null(),               
+            ),
+        (0,0), ConditionSwitch(                                                                         
+            #body
+            "Kitty_Arms and K_DynamicTan[0]", "images/KittySprite/Kitty_Sprite_T3Body_Bare2.png",               
+            "Kitty_Arms", "images/KittySprite/Kitty_Sprite_Body_Bare2.png",               
+            "True and K_DynamicTan[0]", "images/KittySprite/Kitty_Sprite_T3Body_Bare1.png",    
+            "True", "images/KittySprite/Kitty_Sprite_Body_Bare1.png",    
+            ),
+        (0,0), ConditionSwitch(                                                                     #body
+            "not K_DynamicTan[3] or not K_DynamicTan[0]", Null(),
+            "Kitty_Arms", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare2.png", GetModdedStringTanKitty("3", "2.png")),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedStringTanKitty("3", "1.png")),
+            
+            # "K_DynamicTan[0] and Kitty_Arms and 'modded' in K_DynamicTan[3]", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare2.png", GetModdedString("images/KittySprite/Kitty_Sprite_Chest_", K_DynamicTan[3], "2.png")),
+            # "K_DynamicTan[0] and Kitty_Arms and K_DynamicTan[3] == 'bikini top'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare2.png", "images/KittySprite/Kitty_Sprite_Bikini2.png"),
+            # "K_DynamicTan[0] and Kitty_Arms and K_DynamicTan[3] == 'cami'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare2.png", "images/KittySprite/Kitty_Sprite_Cami2.png"),
+            
+            # "K_DynamicTan[0] and 'modded' in K_DynamicTan[3]", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedString("images/KittySprite/Kitty_Sprite_Chest_", K_DynamicTan[3], "1.png")),
+            # "K_DynamicTan[0] and K_DynamicTan[3] == 'lace bra'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Bra_Lace.png"),
+            # "K_DynamicTan[0] and K_DynamicTan[3] == 'sports bra'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Bra_Sport.png"),
+            # "K_DynamicTan[0] and K_DynamicTan[3] == 'bra'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Bra_Basic.png"),
+            # "K_DynamicTan[0] and K_DynamicTan[3] == 'cami'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Cami1.png"),
+            # "True", Null(),
+            ),
+
+        (0,0), ConditionSwitch(                                                                     #body
+            "not K_DynamicTan[4] or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedStringTanKitty("4", ".png")),
+            # "K_DynamicTan[0] and 'modded' in K_DynamicTan[4]", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedString("images/KittySprite/Kitty_Sprite_Chest_", K_DynamicTan[4], ".png")),
+            # "K_DynamicTan[0] and K_DynamicTan[4] == 'bikini bottoms'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Panties_Bikini.png"),
+            # "K_DynamicTan[0] and K_DynamicTan[4] == 'green panties'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Panties_Green.png"),
+            # "K_DynamicTan[0] and K_DynamicTan[4] == 'lace panties'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Panties_Lace.png"),
+            # "True", Null(),             
+            ),
+
+        (0,0), ConditionSwitch(                                                                     #body
+            "not K_DynamicTan[5] or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedStringTanKitty("5", ".png")),
+            ),
+
+        (0,0), ConditionSwitch(                                                                     #body
+            "not K_DynamicTan[2] or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedStringTanKitty("2", ".png")),
+            # "K_DynamicTan[0] and 'modded' in K_DynamicTan[2]", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedString("images/KittySprite/Kitty_Sprite_Legs_", K_DynamicTan[2], ".png")),
+            # "K_DynamicTan[0] and K_DynamicTan[2] == 'blue skirt'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Skirt.png"),
+            # "K_DynamicTan[0] and K_DynamicTan[2] == 'capris'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Pants_Blue.png"),
+            # "K_DynamicTan[0] and K_DynamicTan[2] == 'black jeans'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Pants_Black.png"),
+            # "K_DynamicTan[0] and K_DynamicTan[2] == 'yoga pants'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Pants_Yoga.png"),  
+            # "K_DynamicTan[0] and K_DynamicTan[2] == 'shorts'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Shorts.png"),            
+            # "True", Null(),             
+            ),
+
+        (0,0), ConditionSwitch(   
+            "not K_DynamicTan[1] or not K_DynamicTan[0]", Null(),
+            "Kitty_Arms", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare2.png", GetModdedStringTanKitty("1", "2.png")),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedStringTanKitty("1", "1.png")),
+            # "Kitty_Arms and K_DynamicTan[0] and 'modded' in K_DynamicTan[1]", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare2.png", GetModdedString("images/KittySprite/Kitty_Sprite_Over_", K_DynamicTan[1], "2.png")),
+            # "Kitty_Arms and K_DynamicTan[0] and K_DynamicTan[1] == 'pink top'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare2.png", "images/KittySprite/Kitty_Sprite_Over_Pink2.png"),
+            # "Kitty_Arms and K_DynamicTan[0] and K_DynamicTan[1] == 'red shirt'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare2.png", "images/KittySprite/Kitty_Sprite_Over_Crew2.png"),
+            # "Kitty_Arms and K_DynamicTan[0] and K_DynamicTan[1] == 'towel'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare2.png", "images/KittySprite/Kitty_Sprite_Over_Towel2.png"),
+            # "K_DynamicTan[0] and 'modded' in K_DynamicTan[1]", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", GetModdedString("images/KittySprite/Kitty_Sprite_Over_", K_DynamicTan[1], "1.png")),
+            # "K_DynamicTan[0] and K_DynamicTan[1] == 'pink top'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Over_Pink1.png"),
+            # "K_DynamicTan[0] and K_DynamicTan[1] == 'red shirt'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Over_Crew1.png"),
+            # "K_DynamicTan[0] and K_DynamicTan[1] == 'towel'", AlphaMask("images/KittySprite/Kitty_Sprite_Body_Bare1.png", "images/KittySprite/Kitty_Sprite_Over_Towel1.png"),
+            # "True", Null(),
+            ),
+
+        (0,0), ConditionSwitch(                                                                         #body
+   
+            "K_Pubes and K_PubesColor", im.MatrixColor("images/KittySprite/Kitty_Sprite_Body_Hair_PubesWhite.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+            "K_Pubes and K_HairColor == 'black'", "images/KittySprite/Kitty_Sprite_Body_Hair_PubesBlack.png",               
+            "K_Pubes", "images/KittySprite/Kitty_Sprite_Body_Hair_Pubes.png",               
+            "True", Null(),  
+            ),#            #wet look
+#            "K_Water and Kitty_Arms", "images/KittySprite/Kitty_Sprite_Water2.png",
+#            "K_Water", "images/KittySprite/Kitty_Sprite_Water1.png",
+#            "True", Null(),
+#            ),  
+        (0,0), ConditionSwitch(                                                                         
+            #piercings bottom
+            "not K_Pierce or (K_Panties and not K_PantiesDown)", Null(),                       
+            "K_Pierce == 'ring'", "images/KittySprite/Kitty_Sprite_Piercing_RingB.png",      
+            "True", "images/KittySprite/Kitty_Sprite_Piercing_BallB.png",   
+            ),    
+        
+#        (0,0), ConditionSwitch(                                                                         
+#            #panties
+#            "not K_Panties or K_PantiesDown", Null(),
+#            "K_Legs or K_Upskirt", Null(), #If panties are down, and pants are either off or down, skip this
+            
+#            "not K_Panties or not K_PantiesDown", Null(), #If panties are not down or if  pants are on and up, skip this
+#            "K_Legs and K_Legs != 'blue skirt' and not K_Upskirt", Null(), #If panties are not down or if  pants are on and up, skip this
+            
+#            "K_Wet and K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green_Wet.png",
+#            "K_Wet and K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace_Wet.png",     
+#            "K_Wet and K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini_Wet.png",          
+#            "K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green.png",
+#            "K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace.png",
+#            "K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini.png", 
+#            "True", Null(),
+#            ),  
+#        (0,0), ConditionSwitch(                                                                         
+#            #panties down
+#            "not K_Panties or not K_PantiesDown", Null(), #If panties are not down or if  pants are on and up, skip this
+#            "K_Legs and K_Legs != 'blue skirt' and not K_Upskirt", Null(), #If panties are not down or if  pants are on and up, skip this
+#            "K_Wet and K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green_Down_Wet.png",
+#            "K_Wet and K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace_Down_Wet.png",
+#            "K_Wet and K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini_DownW.png", 
+#            "K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green_Down.png",
+#            "K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace_Down.png",
+#            "K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini_Down.png", 
+#            "True", Null(),
+#            ),  
+        (0,0), ConditionSwitch(                                                                         
+            #full hose/tights              
+            "K_Panties and not K_PantiesDown", Null(), 
+            "not K_Hose", Null(),
+            "'modded' in K_Hose", GetModdedString("images/KittySprite/Kitty_Sprite_hose_", K_Hose, ".png"),
+            "True", Null(), 
+            ), 
+        (0,0), ConditionSwitch(                                                                         
+            #panties layer           
+            "not K_Panties", Null(),               
+            "not K_PantiesDown or (K_Legs and K_Legs != 'blue skirt' and not K_Upskirt)", ConditionSwitch( 
+                    # if the panties aren't down. . .
+                    # and she's not wearing pants that are up
+                    "K_Wet", ConditionSwitch( 
+                            # if they're up and wet. . .
+                            "'modded' in K_Panties", GetModdedString("images/KittySprite/Kitty_Sprite_Panties_", K_Panties, "_Wet.png"),
+                            "K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green_Wet.png",
+                            "K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace_Wet.png",     
+                            "K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini_Wet.png", 
+                            "True", Null(),     
+                            ),
+                    "True", ConditionSwitch( 
+                            #if they're just up. . .       
+                            "'modded' in K_Panties", GetModdedString("images/KittySprite/Kitty_Sprite_Panties_", K_Panties, ".png"),
+                            "K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green.png",
+                            "K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace.png",
+                            "K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini.png", 
+                            "True", Null(),     
+                            ),    
+                    ),                    
+            "K_Wet", ConditionSwitch( 
+                    #if wet and down. . .
+#                    "K_Legs and K_Legs != 'blue skirt' and not K_Upskirt", Null(), #If nor wearing a skirt, they would be invisible 
+                    "'modded' in K_Panties", GetModdedString("images/KittySprite/Kitty_Sprite_Panties_", K_Panties, "_Down_Wet.png"),
+                    "K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green_Down_Wet.png",
+                    "K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace_Down_Wet.png",
+                    "K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini_DownW.png", 
+                    "True", Null(),     
+                    ),
+            "True", ConditionSwitch(
+                    # if not wet, but down
+#                    "K_Legs and K_Legs != 'blue skirt' and not K_Upskirt", Null(), #If nor wearing a skirt, they would be invisible                     
+                    "'modded' in K_Panties", GetModdedString("images/KittySprite/Kitty_Sprite_Panties_", K_Panties, "_Down.png"),
+                    "K_Panties == 'green panties'", "images/KittySprite/Kitty_Sprite_Panties_Green_Down.png",
+                    "K_Panties == 'lace panties'", "images/KittySprite/Kitty_Sprite_Panties_Lace_Down.png",
+                    "K_Panties == 'bikini bottoms'", "images/KittySprite/Kitty_Sprite_Panties_Bikini_Down.png", 
+                    "True", Null(),     
+                    ),
+            ),
+        
+        (225,560), ConditionSwitch(                                                                         
+            #Personal Wetness            
+            "not K_Wet", Null(),
+            "K_Legs and not K_Upskirt", Null(),   
+            "K_Panties and not K_PantiesDown and K_Wet <= 1", Null(),                   
+            "K_Wet == 1", ConditionSwitch( #Wet = 1
+                    "K_Panties and K_PantiesDown", AlphaMask("Wet_Drip","Kitty_Drip_MaskP"),  
+                    "K_Legs", AlphaMask("Wet_Drip","Kitty_Drip_MaskP"),
+                    "True", AlphaMask("Wet_Drip","Kitty_Drip_Mask"), #only plays if nothing is in the way
+                    ),
+            "True", ConditionSwitch( #Wet = 2+
+                    "K_Panties and K_PantiesDown", AlphaMask("Wet_Drip2","Kitty_Drip_MaskP"), #"Wet_Drip2",# 
+                    "K_Legs", AlphaMask("Wet_Drip2","Kitty_Drip_MaskP"),
+                    "K_Panties", AlphaMask("Wet_Drip","Kitty_Drip_Mask"), #"Wet_Drip2",# 
+                    "True", AlphaMask("Wet_Drip2","Kitty_Drip_Mask"), #only plays if nothing is in the way
+                    ),
+            ),
+        (0,0), ConditionSwitch(                                                                         
+            #wetness                    
+            "K_Legs or not K_Wet", Null(),             
+            "K_Panties and not K_PantiesDown and K_Wet < 2", Null(),
+            "K_Panties and not K_PantiesDown", "images/KittySprite/Kitty_Sprite_Wet1.png",
+            "K_Wet == 2", "images/KittySprite/Kitty_Sprite_Wet2.png",
+            "True", "images/KittySprite/Kitty_Sprite_Wet1.png",
+            ),  
+        (225,560), ConditionSwitch(                                                                         
+            #Spunk nethers        
+            "'in' not in K_Spunk and 'anal' not in K_Spunk", Null(),
+            "K_Legs and not K_Upskirt", Null(),   
+            "True", ConditionSwitch( #Wet = 2+
+                    "K_Panties and K_PantiesDown", AlphaMask("Spunk_Drip2","Kitty_Drip_MaskP"), #"Wet_Drip2",# 
+                    "K_Legs", AlphaMask("Spunk_Drip2","Kitty_Drip_MaskP"),
+                    "True", AlphaMask("Spunk_Drip2","Kitty_Drip_Mask"), #only plays if nothing is in the way
+                    ),
+            ),
+        (0,0), ConditionSwitch(                                                                         
+            #full hose/tights              
+            "K_Panties and K_PantiesDown", Null(), 
+            "not K_Hose", Null(),
+            "'modded' in K_Hose", GetModdedString("images/KittySprite/Kitty_Sprite_hose_", K_Hose, ".png"),
+            "True", Null(), 
+            ),     
+        (0,0), ConditionSwitch(                                                                        
+            #pants         
+            "K_Legs == 'blue skirt' and K_Upskirt", "images/KittySprite/Kitty_Sprite_Skirt_Up.png",       
+            "K_Legs == 'blue skirt'", "images/KittySprite/Kitty_Sprite_Skirt.png",          
+            "not K_Legs", Null(),
+            "K_Upskirt and 'modded' in K_Legs", GetModdedString("images/KittySprite/Kitty_Sprite_Legs_", K_Legs, "_Down.png"),
+            "K_Wet and 'modded' in K_Legs", GetModdedString("images/KittySprite/Kitty_Sprite_Legs_", K_Legs, "_Wet.png"),
+            "'modded' in K_Legs", GetModdedString("images/KittySprite/Kitty_Sprite_Legs_", K_Legs, ".png"),
+            "not K_Legs or K_Upskirt", Null(),
+            #"'modded' in K_Legs and K_Upskirt", GetModdedString("images/KittySprite/Kitty_Sprite_Legs", K_Legs, ".png"),
+            "K_Legs == 'capris'", "images/KittySprite/Kitty_Sprite_Pants_Blue.png",
+            "K_Legs == 'black jeans'", "images/KittySprite/Kitty_Sprite_Pants_Black.png",
+            "K_Wet and K_Legs == 'yoga pants'", "images/KittySprite/Kitty_Sprite_Pants_Yoga_Wet.png",   
+            "K_Legs == 'yoga pants'", "images/KittySprite/Kitty_Sprite_Pants_Yoga.png",   
+            "K_Wet and K_Legs == 'shorts'", "images/KittySprite/Kitty_Sprite_Shorts_Wet.png",    
+            "K_Legs == 'shorts'", "images/KittySprite/Kitty_Sprite_Shorts.png",            
+            "True", Null(),
+            ),    
+        (0,0), ConditionSwitch(                                                                         
+            #Arms2               
+            "Kitty_Arms and K_DynamicTan[0]", "images/KittySprite/Kitty_Sprite_T3Arms2.png",
+            "Kitty_Arms", "images/KittySprite/Kitty_Sprite_Arms2.png",
+            "True", Null(),               
+            ), 
+
+        (0,0), ConditionSwitch(                                                                         #Arms2               
+            "not K_DynamicTan[3] or not K_DynamicTan[0] or not Kitty_Arms", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Arms2.png", GetModdedStringTanKitty("3", "2.png")),
+            ),
+
+        (0,0), ConditionSwitch(   
+            "not K_DynamicTan[1] or not K_DynamicTan[0] or not Kitty_Arms", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Arms2.png", GetModdedStringTanKitty("1", "2.png")),
+            ),
+
+        (0,0), ConditionSwitch(                                                                         #chest
+            "True and K_DynamicTan[0]", "images/KittySprite/Kitty_Sprite_T3chest_bare.png",
+            "True", "images/KittySprite/Kitty_Sprite_Chest_Bare.png",
+            ),  
+        (0,0), ConditionSwitch(                                                                     #body
+            "not K_DynamicTan[3] or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Chest_Bare.png", GetModdedStringTanKitty("3", "1.png")),
+            ),
+
+        (0,0), ConditionSwitch(   
+            "not K_DynamicTan[1] or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittySprite/Kitty_Sprite_Chest_Bare.png", GetModdedStringTanKitty("1", "1.png")),
+            ),#            #chest
 #            "not K_Chest and not K_Over", "images/KittySprite/Kitty_Sprite_Chest_Bare.png",
 #            "True", "images/KittySprite/Kitty_Sprite_Chest_Bare.png",
 #            ),  
@@ -197,6 +809,8 @@ image Kitty_Sprite:
             "not K_Chest", Null(),                  
             "not K_Uptop", ConditionSwitch( 
                     #if the top's down. . .
+                    "Kitty_Arms and 'modded' in K_Chest", GetModdedString("images/KittySprite/Kitty_Sprite_Chest_", K_Chest, "2.png"),
+                    "'modded' in K_Chest", GetModdedString("images/KittySprite/Kitty_Sprite_Chest_", K_Chest, "1.png"),
                     "Kitty_Arms and K_Chest == 'cami'", "images/KittySprite/Kitty_Sprite_Cami2.png",
                     "Kitty_Arms and K_Chest == 'bikini top'", "images/KittySprite/Kitty_Sprite_Bikini2.png",
                     "K_Chest == 'bikini top'", "images/KittySprite/Kitty_Sprite_Bikini1.png",
@@ -271,6 +885,8 @@ image Kitty_Sprite:
             "not K_Over", Null(),                  
             "not K_Uptop", ConditionSwitch( 
                     #if the top's down. . .
+                    "Kitty_Arms and 'modded' in K_Over", GetModdedString("images/KittySprite/Kitty_Sprite_Over_", K_Over, "2.png"),
+                    "'modded' in K_Over", GetModdedString("images/KittySprite/Kitty_Sprite_Over_", K_Over, "1.png"),
                     "Kitty_Arms and K_Over == 'pink top'", "images/KittySprite/Kitty_Sprite_Over_Pink2.png",
                     "Kitty_Arms and K_Over == 'red shirt'", "images/KittySprite/Kitty_Sprite_Over_Crew2.png",
                     "Kitty_Arms and K_Over == 'towel'", "images/KittySprite/Kitty_Sprite_Over_Towel2.png",
@@ -439,8 +1055,7 @@ image Kitty_Sprite:
             ),         
         )
     anchor (0.6, 0.0)
-    zoom .75                      
-
+    zoom .75
 
 image Kitty_Head:               
     LiveComposite(
@@ -451,11 +1066,17 @@ image Kitty_Head:
 #            "True", Null(),
 #            ),    
         (0,0), ConditionSwitch(
+            "K_DynamicTan[0] and K_Water and K_Blush == 1", "images/KittySprite/Kitty_Sprite_THead_Wet_Blush1.png",
             "K_Water and K_Blush == 1", "images/KittySprite/Kitty_Sprite_Head_Wet_Blush1.png",
+            "K_DynamicTan[0] and K_Water and K_Blush == 2", "images/KittySprite/Kitty_Sprite_THead_Wet_Blush2.png",
             "K_Water and K_Blush == 2", "images/KittySprite/Kitty_Sprite_Head_Wet_Blush2.png",
+            "K_DynamicTan[0] and K_Water", "images/KittySprite/Kitty_Sprite_THead_Wet_Base.png",
             "K_Water", "images/KittySprite/Kitty_Sprite_Head_Wet_Base.png",
+            "K_DynamicTan[0] and K_Blush == 1", "images/KittySprite/Kitty_Sprite_THead_Evo_Blush1.png",
             "K_Blush == 1", "images/KittySprite/Kitty_Sprite_Head_Evo_Blush1.png",
+            "K_DynamicTan[0] and K_Blush == 2", "images/KittySprite/Kitty_Sprite_THead_Evo_Blush2.png",
             "K_Blush == 2", "images/KittySprite/Kitty_Sprite_Head_Evo_Blush2.png",
+            "K_DynamicTan[0]", "images/KittySprite/Kitty_Sprite_THead_Evo_Base.png",
             "True", "images/KittySprite/Kitty_Sprite_Head_Evo_Base.png",
             ),     
         (0,0), ConditionSwitch(
@@ -467,14 +1088,20 @@ image Kitty_Head:
             "True", "images/KittySprite/Kitty_Sprite_Brows_Normal.png",
             ),
         (0,0), ConditionSwitch(
+            "K_DynamicTan[0] and K_Mouth == 'normal'", "images/KittySprite/Kitty_Sprite_TMouth_Normal.png",
             "K_Mouth == 'normal'", "images/KittySprite/Kitty_Sprite_Mouth_Normal.png",
+            "K_DynamicTan[0] and K_Mouth == 'lipbite'", "images/KittySprite/Kitty_Sprite_TMouth_Lipbite.png",
             "K_Mouth == 'lipbite'", "images/KittySprite/Kitty_Sprite_Mouth_Lipbite.png",
+            "K_DynamicTan[0] and K_Mouth == 'kiss'", "images/KittySprite/Kitty_Sprite_TMouth_Kiss.png",
             "K_Mouth == 'kiss'", "images/KittySprite/Kitty_Sprite_Mouth_Kiss.png",
+            "K_DynamicTan[0] and K_Mouth == 'sad'", "images/KittySprite/Kitty_Sprite_TMouth_Sad.png",
             "K_Mouth == 'sad'", "images/KittySprite/Kitty_Sprite_Mouth_Sad.png",
+            "K_DynamicTan[0] and K_Mouth == 'smile'", "images/KittySprite/Kitty_Sprite_TMouth_Smile.png",
             "K_Mouth == 'smile'", "images/KittySprite/Kitty_Sprite_Mouth_Smile.png",
             "K_Mouth == 'surprised'", "images/KittySprite/Kitty_Sprite_Mouth_Surprised.png",
             "K_Mouth == 'tongue'", "images/KittySprite/Kitty_Sprite_Mouth_Tongue.png",
             "K_Mouth == 'sucking'", "images/KittySprite/Kitty_Sprite_Mouth_Tongue.png", #fix add
+            "True", "images/KittySprite/Kitty_Sprite_Mouth_Normal.png",
             "True", "images/KittySprite/Kitty_Sprite_Mouth_Normal.png",
             ),      
         (0,0), ConditionSwitch(
@@ -495,12 +1122,13 @@ image Kitty_Head:
             ),     
         (0,0), "Kitty Blink",
         (0,0), ConditionSwitch(
-            "K_Water", "images/KittySprite/Kitty_Sprite_Hair_Wet.png",
-            "K_Hair == 'evo'", "images/KittySprite/Kitty_Sprite_Hair_Evo.png",
-            "K_Hair == 'long'", "images/KittySprite/Kitty_Sprite_Hair_Long.png",
-            "K_Hair == 'wet'", "images/KittySprite/Kitty_Sprite_Hair_Wet.png",
-            "True", "images/KittySprite/Kitty_Sprite_Hair_Evo.png",
-            ),     
+            "K_Water", im.MatrixColor("images/KittySprite/Kitty_Sprite_Hair" + GetHairColor(K_HairColor) + "_Wet.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+            "K_Hair == 'evo'", im.MatrixColor("images/KittySprite/Kitty_Sprite_Hair" + GetHairColor(K_HairColor) + "_Evo.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+            "K_Hair == 'long'", im.MatrixColor("images/KittySprite/Kitty_Sprite_Hair" + GetHairColor(K_HairColor) + "_Long.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+            "K_Hair == 'wet'", im.MatrixColor("images/KittySprite/Kitty_Sprite_Hair" + GetHairColor(K_HairColor) + "_Wet.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+            "True", im.MatrixColor("images/KittySprite/Kitty_Sprite_Hair" + GetHairColor(K_HairColor) + "_Evo.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+            ),
+        (0,0), "images/KittySprite/Kitty_Sprite_Headband_[K_Headband].png",
         (0,0), ConditionSwitch(
             "K_Water", "images/KittySprite/Kitty_Sprite_Wet_Head.png",
             "True", Null(),
@@ -519,8 +1147,8 @@ image Kitty_HairBack:
     LiveComposite(
         (416,610),    
         (0,0), ConditionSwitch(
-            "K_Water or K_Hair == 'wet'", "images/KittySprite/Kitty_Sprite_Hair_Wet_Back.png",
-            "K_Hair == 'long'", "images/KittySprite/Kitty_Sprite_Hair_Long_Back.png",
+            "K_Water or K_Hair == 'wet'", im.MatrixColor("images/KittySprite/Kitty_Sprite_Hair" + GetHairColor(K_HairColor) + "_Wet_Back.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+            "K_Hair == 'long'", im.MatrixColor("images/KittySprite/Kitty_Sprite_Hair" + GetHairColor(K_HairColor) + "_Long_Back.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
             "True", Null(),
             ),    
         )
@@ -665,7 +1293,8 @@ image Kitty_Sex_Legs_Static:
             "Kitty_Sex_Legs"
     pos (650,230)
 
-image Kitty_Sex_Body = LiveComposite(                                                                                
+image Kitty_Sex_Body:
+    LiveComposite(                                                                                
         #the torso/head used in the sex pose, referenced by Kitty_SexSprite
         (1120,840),
 #        (0,0), ConditionSwitch(                                                                                 #Hair underlayer, delete once this is working
@@ -675,10 +1304,36 @@ image Kitty_Sex_Body = LiveComposite(
 #            ),   
         (260,-350), "Kitty_HairBack_Sex",                                                                                      #Hair underlayer
         (0,0), ConditionSwitch(                                                                                 #Body Base
+            "K_DynamicTan[0]", "images/KittySex/Kitty_Sex_T3Body.png",
             "K_Pierce == 'barbell'", "images/KittySex/Kitty_Sex_Body_Barbell.png",   
             "K_Pierce == 'ring'", "images/KittySex/Kitty_Sex_Body_Ring.png",   
             "True", "images/KittySex/Kitty_Sex_Body.png",             
-            ),            
+            ), 
+        (0,0), ConditionSwitch(   
+            "not K_DynamicTan[0] or not K_DynamicTan[3]", Null(),
+            "True", AlphaMask("images/KittySex/Kitty_Sex_Body.png", GetModdedStringTanKitty("3", ".png", "Sex")),
+            ),
+        (0,0), ConditionSwitch( 
+            "not K_DynamicTan[0] or not K_DynamicTan[3]", Null(),
+            "K_DynamicTan[3] == 'modded white swimsuit'", AlphaMask("images/KittySex/Kitty_Sex_Body.png", "images/KittySex/Kitty_Sex_Chest_modded white swimsuit_tummy.png"),
+            "True", Null(),
+            ),
+        (0,0), ConditionSwitch(   
+            "not K_DynamicTan[0] or not K_DynamicTan[2]", Null(),
+            "K_DynamicTan[2] == 'modded black blue pants'", AlphaMask("images/KittySex/Kitty_Sex_Body.png", "images/KittySex/Kitty_Sex_Legs_Chest_modded black blue pants.png"),
+            "True", Null(),
+            ),
+        (0,0), ConditionSwitch(   
+            "not K_DynamicTan[0] or not K_DynamicTan[1]", Null(),
+            "True", AlphaMask("images/KittySex/Kitty_Sex_Body.png", GetModdedStringTanKitty("1", ".png", "Sex")),
+            "True", Null(),
+            ),
+        (0,0), ConditionSwitch(                                                                                 #Body Base
+            "not K_Pierce", Null(),             
+            "K_Pierce == 'barbell'", "images/KittySex/Kitty_Sex_Body_Tits_Barbell.png",   
+            "K_Pierce == 'ring'", "images/KittySex/Kitty_Sex_Body_Tits_Ring.png",   
+            "True", Null(),             
+            ),             
         (260,-350), "Kitty_Head_Sex",  #check positioning (400,-300)
         #Eyes
         (0,0), ConditionSwitch(                                                                                 #necklace
@@ -686,20 +1341,24 @@ image Kitty_Sex_Body = LiveComposite(
             "K_Neck == 'star necklace'", "images/KittySex/Kitty_Sex_Neck_Star.png",
             "True", Null(),
             ),  
-#        (0,0), ConditionSwitch(                                                                                 #tanktop
-#            "not K_Chest", Null(),        
-#            "K_Chest == 'cami'", "images/KittySex/Kitty_Sex_Under_Cami.png",
-#            "K_Chest == 'sports bra'", "images/KittySex/Kitty_Sex_Under_SportsBra.png",
-#            "K_Chest == 'bra'", "images/KittySex/Kitty_Sex_Under_Bra.png",
-#            "K_Chest == 'lace bra'", "images/KittySex/Kitty_Sex_Under_LaceBra.png",
-#            "True", Null(),            
-#            ), 
-        
+        (0,0), ConditionSwitch( 
+            #if she's chest that should go underneath legs (white swimsuit). . .
+            "K_Uptop", Null(),
+            "K_Chest == 'modded white swimsuit'", "images/KittySex/Kitty_Sex_Chest_modded white swimsuit_tummy.png",
+            "True", Null(),
+            ),
+        (0,0), ConditionSwitch( 
+            #if she's wearing legs that affects the chest (black blue pants). . .
+            "not K_Legs or K_Upskirt", Null(),
+            "'modded' in K_Legs", GetModdedString("images/KittySex/Kitty_Sex_Legs_Chest_", K_Legs, ".png"),
+            "True", Null(),
+            ),
         (0,0), ConditionSwitch(                                                                         
             #bra layer           
             "not K_Chest", Null(),                  
             "not K_Uptop", ConditionSwitch( 
                     #if the top's down. . .
+                    "'modded' in K_Chest", GetModdedString("images/KittySex/Kitty_Sex_Chest_", K_Chest, ".png"),
                     "K_Chest == 'cami'", "images/KittySex/Kitty_Sex_Under_Cami.png",
                     "K_Chest == 'sports bra'", "images/KittySex/Kitty_Sex_Under_SportsBra.png",
                     "K_Chest == 'bra'", "images/KittySex/Kitty_Sex_Under_Bra.png",
@@ -748,6 +1407,7 @@ image Kitty_Sex_Body = LiveComposite(
             "not K_Over", Null(),                  
             "not K_Uptop", ConditionSwitch( 
                     #if the top's down. . .
+                    "'modded' in K_Over", GetModdedString("images/KittySex/Kitty_Sex_Over_", K_Over, ".png"),
                     "K_Over == 'pink top'", "images/KittySex/Kitty_Sex_Over_PinkShirt.png",           
                     "K_Over == 'red shirt'", "images/KittySex/Kitty_Sex_Over_RedShirt.png",   
                     "K_Over == 'towel'", "images/KittySex/Kitty_Sex_Over_Towel.png",   
@@ -800,10 +1460,34 @@ image Kitty_Sex_Legs:
         #the legs used in the sex pose, referenced by Kitty_SexSprite
         (1120,840), 
         (0,0), ConditionSwitch(                                                                                 #Legs Layer
+            "not K_Legs", Null(),   
             "K_Legs == 'blue skirt'", "images/KittySex/Kitty_Sex_Skirt_Back.png",   
+            "'modded' in K_Legs and 'skirt' in K_Legs", GetModdedString("images/KittySex/Kitty_Sex_Legs_", K_Legs, "_Back.png"),
             "True", Null(),                      
             ),  
-        (0,0), "images/KittySex/Kitty_Sex_Legs.png",                                                         #Legs Base
+        (0,0), ConditionSwitch(
+            "K_DynamicTan[0]", "images/KittySex/Kitty_Sex_T3Legs.png",
+            "True", "images/KittySex/Kitty_Sex_Legs.png",
+            ),
+        (0,0), ConditionSwitch(   
+            "not K_DynamicTan[0] or not K_DynamicTan[4]", Null(),
+            "True", AlphaMask("images/KittySex/Kitty_Sex_Legs.png", GetModdedStringTanKitty("4", ".png", "Sex")),
+            # "K_DynamicTan[0] and K_DynamicTan[4] == 'green panties'", AlphaMask("images/KittySex/Kitty_Sex_Legs.png", "images/KittySex/Kitty_Sex_Panties_Green.png"),
+            # "K_DynamicTan[0] and K_DynamicTan[4] == 'lace panties'", AlphaMask("images/KittySex/Kitty_Sex_Legs.png", "images/KittySex/Kitty_Sex_Panties_Lace.png"),   
+            # "True", Null(),
+            ),
+        (0,0), ConditionSwitch(  
+            "not K_DynamicTan[0] or not K_DynamicTan[5]", Null(), #hose
+            "True", AlphaMask("images/KittySex/Kitty_Sex_Legs.png", GetModdedStringTanKitty("5", "_Legs.png", "Sex")),
+            ),
+        (0,0), ConditionSwitch(  
+            "not K_DynamicTan[0] or not K_DynamicTan[2]", Null(),
+            "True", AlphaMask("images/KittySex/Kitty_Sex_Legs.png", GetModdedStringTanKitty("2", ".png", "Sex")),
+            # "K_DynamicTan[0] and K_DynamicTan[2] == 'shorts'", AlphaMask("images/KittySex/Kitty_Sex_Legs.png", "images/KittySex/Kitty_Sex_Shorts.png"),
+            # "K_DynamicTan[0] and K_DynamicTan[2] == 'capris'", AlphaMask("images/KittySex/Kitty_Sex_Legs.png", "images/KittySex/Kitty_Sex_Pants_Blue.png"),
+            # "K_DynamicTan[0] and K_DynamicTan[2] == 'black jeans'", AlphaMask("images/KittySex/Kitty_Sex_Legs.png", "images/KittySex/Kitty_Sex_Pants_Black.png"),
+            # "True", Null(),   
+            ),
         (0,0), ConditionSwitch(                                                                                 #Wet look
             "K_Water", "images/KittySex/Kitty_Sex_Water_Legs.png",   
             "True", Null(),              
@@ -814,6 +1498,9 @@ image Kitty_Sex_Legs:
 
         (0,0), ConditionSwitch(                                                                                 #Panties if up
             "K_PantiesDown", Null(),     
+            "not K_Panties", Null(),
+            "'modded' in K_Panties and K_Wet", GetModdedString("images/KittySex/Kitty_Sex_Panties_", K_Panties, "_Wet.png"),
+            "'modded' in K_Panties", GetModdedString("images/KittySex/Kitty_Sex_Panties_", K_Panties, ".png"),
             "K_Panties == 'green panties' and K_Wet", "images/KittySex/Kitty_Sex_Panties_Green_Wet.png",          
             "K_Panties == 'green panties'", "images/KittySex/Kitty_Sex_Panties_Green.png",    
             "K_Panties == 'lace panties' and K_Wet", "images/KittySex/Kitty_Sex_Panties_Lace_Wet.png",       
@@ -821,9 +1508,17 @@ image Kitty_Sex_Legs:
             "K_Panties == 'bikini bottoms' and K_Wet", "images/KittySex/Kitty_Sex_Panties_Bikini_Wet.png",       
             "K_Panties == 'bikini bottoms'", "images/KittySex/Kitty_Sex_Panties_Bikini.png",    
             "True", Null(),                     
-            ),  
+            ),
+        (0,0), ConditionSwitch(        
+            "not K_Hose", Null(),     
+            "True", GetOutfitString("images/KittySex/Kitty_Sex_Hose_", K_Hose, "_Legs.png"),
+            ), 
         (0,0), ConditionSwitch(                                                                                 #Legs Layer
             "K_Legs == 'blue skirt'", "images/KittySex/Kitty_Sex_Skirt.png",   
+            "not K_Legs", Null(),
+            "not K_Upskirt and 'modded' in K_Legs and K_Wet > 1", GetModdedString("images/KittySex/Kitty_Sex_Legs_", K_Legs, "_Wet.png"),
+            "K_Upskirt and 'modded' in K_Legs and 'skirt' in K_Legs", GetModdedString("images/KittySex/Kitty_Sex_Legs_", K_Legs, ".png"),
+            "not K_Upskirt and'modded' in K_Legs", GetModdedString("images/KittySex/Kitty_Sex_Legs_", K_Legs, ".png"),
             "K_Upskirt", Null(),                            
             "K_Legs == 'capris' and K_Wet > 1", "images/KittySex/Kitty_Sex_Pants_Blue_Wet.png",
             "K_Legs == 'capris'", "images/KittySex/Kitty_Sex_Pants_Blue.png",
@@ -873,16 +1568,34 @@ image Kitty_Sex_Legs:
             ),
         )
     
-image Kitty_Sex_Feet = LiveComposite(                                                                                          
+image Kitty_Sex_Feet:
+    LiveComposite(                                                                                          
         #the lower legs used in the sex pose, referenced by Kitty_Sex_Legs
         (1120,840), 
-        (0,0), "images/KittySex/Kitty_Sex_Feet.png",                                                         #Legs Base
+        (0,0), ConditionSwitch(
+            "K_DynamicTan[0]", "images/KittySex/Kitty_Sex_TFeet.png",                                                         #Legs Base
+            "True", "images/KittySex/Kitty_Sex_Feet.png",
+            ),
+        (0,0), ConditionSwitch(  
+            "not K_DynamicTan[0] or not K_DynamicTan[5]", Null(), #hose
+            "True", AlphaMask("images/KittySex/Kitty_Sex_Feet.png", GetModdedStringTanKitty("5", "_Feet.png", "Sex")),
+            ),
+        (0,0), ConditionSwitch(  
+            "not K_DynamicTan[0] or not K_DynamicTan[2]", Null(),
+            "True", AlphaMask("images/KittySex/Kitty_Sex_Feet.png", GetModdedStringTanKitty("2", ".png", "SexFeet")),
+            ),
         (0,0), ConditionSwitch(                                                                                 #Wet look
             "K_Water", "images/KittySex/Kitty_Sex_Water_Feet.png",   
             "True", Null(),              
-            ),  
+            ),
+        (0,0), ConditionSwitch(
+            "not K_Hose", Null(),     
+            "True", GetOutfitString("images/KittySex/Kitty_Sex_Hose_", K_Hose, "_Feet.png"),
+            ),
         (0,0), ConditionSwitch(                                                                                 #Legs Layer
             "K_Upskirt", Null(),                               
+            "not K_Legs", Null(),
+            "'modded' in K_Legs", GetModdedString("images/KittySex/Kitty_Sex_Feet_", K_Legs, ".png"),
             "K_Legs == 'capris'", "images/KittySex/Kitty_Sex_Feet_Blue.png",
             "K_Legs == 'black jeans'", "images/KittySex/Kitty_Sex_Feet_Black.png",
             "K_Legs == 'yoga pants'", "images/KittySex/Kitty_Sex_Feet_Yoga.png",
@@ -906,6 +1619,7 @@ image Kitty_Pussy_Fucking0:
             # pubes
             ConditionSwitch(             
                 "not K_Pubes", Null(),         
+                "K_PubesColor", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Open.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
                 "True", "images/KittySex/Kitty_Sex_Pubes_Open.png",  
                 ),  
     contains:
@@ -921,6 +1635,7 @@ image Kitty_Pussy_Fucking1:
             # pubes
             ConditionSwitch(             
                 "not K_Pubes", Null(),         
+                "K_PubesColor", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Open.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
                 "True", "images/KittySex/Kitty_Sex_Pubes_Open.png",  
                 ),  
     contains:
@@ -936,6 +1651,7 @@ image Kitty_Pussy_Fucking2:
             # pubes
             ConditionSwitch(             
                 "not K_Pubes", Null(),         
+                "K_PubesColor", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Fucking.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
                 "True", "images/KittySex/Kitty_Sex_Pubes_Fucking.png",  
                 ),  
     contains:
@@ -950,6 +1666,7 @@ image Kitty_Pussy_Fucking3:  #rename this to 3
             # pubes
             ConditionSwitch(             
                 "not K_Pubes", Null(),         
+                "K_PubesColor", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Fucking.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
                 "True", "images/KittySex/Kitty_Sex_Pubes_Fucking.png",  
                 ),  
     contains:
@@ -1022,12 +1739,22 @@ image Kitty_Sex_Pussy:
     contains:
             # pubes
             ConditionSwitch(    
-                "not K_Pubes", Null(),         
+                "not K_Pubes or K_PubesColor", Null(),         
                 "P_Sprite and P_Cock == 'in' and Speed >= 2", "images/KittySex/Kitty_Sex_Pubes_Fucking.png",
                 "P_Sprite and P_Cock == 'in' and Speed", "images/KittySex/Kitty_Sex_Pubes_Open.png",
                 "P_Sprite and P_Cock == 'in'", "images/KittySex/Kitty_Sex_Pubes_Closed.png", 
                 "Trigger == 'lick pussy'", "images/KittySex/Kitty_Sex_Pubes_Open.png", 
                 "True", "images/KittySex/Kitty_Sex_Pubes_Closed.png",
+                )
+    contains:
+            # pubes
+            ConditionSwitch(    
+                "not K_Pubes or not K_PubesColor", Null(),         
+                "P_Sprite and P_Cock == 'in' and Speed >= 2", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Fucking.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+                "P_Sprite and P_Cock == 'in' and Speed", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Open.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+                "P_Sprite and P_Cock == 'in'", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Closed.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)), 
+                "Trigger == 'lick pussy'", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Open.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)), 
+                "True", im.MatrixColor("images/KittySex/Kitty_Sex_PubesWhite_Closed.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
                 )
     contains:
             #Spunk under penis
@@ -1747,11 +2474,12 @@ label Kitty_Sex_Launch(Line = "solo"):
     with dissolve
     return
     
+#MOD MARKER RESET
 label Kitty_Sex_Reset:
-    if not renpy.showing("Kitty_SexSprite"):
+    if not renpy.showing("Kitty_SexSprite") and not renpy.showing("Kitty_Doggy"):
         return
     $ Kitty_Arms = 2     
-    hide Kitty_SexSprite
+    call mod_hide_Kitty_SexSprite
     call Kitty_Hide 
 #    call Set_The_Scene(Dress = 0)    
     show Kitty_Sprite at SpriteLoc(K_SpriteLoc) zorder KittyLayer:
@@ -1846,8 +2574,8 @@ image Kitty_BJ_Animation:#BJ_NewTest:                                           
 image Kitty_BJ_HairBack:
     #Hair underlay
     ConditionSwitch(                                                                            
-            "K_Water and K_Hair == 'evo'", "images/KittyBJFace/Kitty_BJ_HairBackWet.png",
-            "K_Hair == 'long'", "images/KittyBJFace/Kitty_BJ_HairBackWet.png",            
+            "K_Water and K_Hair == 'evo'", im.MatrixColor("images/KittyBJFace/Kitty_BJ_Hair" + GetHairColor(K_HairColor) + "BackWet.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+            "K_Hair == 'long'", im.MatrixColor("images/KittyBJFace/Kitty_BJ_Hair" + GetHairColor(K_HairColor) + "BackWet.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
             "True", Null(),
             ),
     zoom 1.4
@@ -1874,8 +2602,21 @@ image Kitty_BJ_Backdrop:
             "K_Over == 'red shirt'", "images/KittyBJFace/Kitty_BJ_Over_RedUnder.png",
             "True", Null(),
             ),  
-        (0,0),"images/KittyBJFace/Kitty_BJ_Body.png",                                                   
+        (0,0), ConditionSwitch(                                                                         
             #body
+            "K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_T3Body.png",
+            "True", "images/KittyBJFace/Kitty_BJ_Body.png", 
+            ),
+        (0,0), ConditionSwitch(                                                                         
+            #chest tan body
+            "not K_DynamicTan[3] or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittyBJFace/Kitty_BJ_Body.png", GetModdedStringTanKitty("3", ".png", "BJFace")),
+            ), 
+        (0,0), ConditionSwitch(                                                                         
+            #over tan body
+            "not K_DynamicTan[1] or not K_DynamicTan[0]", Null(),
+            "True", AlphaMask("images/KittyBJFace/Kitty_BJ_Body.png", GetModdedStringTanKitty("1", ".png", "BJFace")),
+            ),     
         (0,0), ConditionSwitch(                                                                         
             #necklace
             "K_Neck == 'gold necklace'", "images/KittyBJFace/Kitty_BJ_Neck_Gold.png",
@@ -1897,6 +2638,7 @@ image Kitty_BJ_Backdrop:
         (0,0), ConditionSwitch(                                                                        
             #Bra
             "not K_Chest", Null(),
+            "'modded' in K_Chest", GetModdedString("images/KittyBJFace/Kitty_BJFace_", K_Chest, ".png"),
             "K_Chest == 'lace bra'", "images/KittyBJFace/Kitty_BJ_Bra_Lace.png",
             "K_Chest == 'sports bra'", "images/KittyBJFace/Kitty_BJ_Bra_Sport.png",
             "K_Chest == 'bra'", "images/KittyBJFace/Kitty_BJ_Bra.png",
@@ -1907,6 +2649,7 @@ image Kitty_BJ_Backdrop:
         (0,0), ConditionSwitch(                                                                         
             #Shirt
             "not K_Over", Null(),
+            "'modded' in K_Over", GetModdedString("images/KittyBJFace/Kitty_BJFace_", K_Over, ".png"),
             "K_Over == 'pink top'", "images/KittyBJFace/Kitty_BJ_Over_PinkShirt.png",
             "K_Over == 'red shirt'", "images/KittyBJFace/Kitty_BJ_Over_RedShirt.png",
             "K_Over == 'towel'", "images/KittyBJFace/Kitty_BJ_Over_Towel.png",
@@ -1926,7 +2669,7 @@ image Kitty_BJ_Head:                                                            
         (858,928), 
         (0,0), ConditionSwitch(                                                                 
             #Hair back
-            "K_Water or K_Hair == 'wet'", "images/KittyBJFace/Kitty_BJ_HairBackWet.png", #AlphaMask("images/KittyBJFace/Kitty_BJ_HairBackWet.png", "Kitty_BJ_Backdrop"),
+            "K_Water or K_Hair == 'wet'", im.MatrixColor("images/KittyBJFace/Kitty_BJ_Hair" + GetHairColor(K_HairColor) + "BackWet.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)), #AlphaMask("images/KittyBJFace/Kitty_BJ_HairBackWet.png", "Kitty_BJ_Backdrop"),
             "True", Null(),
             ),   
 #        (0,0), ConditionSwitch(       #Legacy, the bellow version should do the same role                                                          
@@ -1951,45 +2694,59 @@ image Kitty_BJ_Head:                                                            
                     # If the animation isn't sucking, or if not in BJ pose                    
                     "K_Water", ConditionSwitch( 
                             # If she's wet
+                            "K_Blush and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TFaceClosed_Wet_Blush.png",             
                             "K_Blush", "images/KittyBJFace/Kitty_BJ_FaceClosed_Wet_Blush.png",             
+                            "True and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TFaceClosed_Wet.png", 
                             "True", "images/KittyBJFace/Kitty_BJ_FaceClosed_Wet.png", 
                             ),  
+                    "K_Blush and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TFaceClosed_Blush.png",              
                     "K_Blush", "images/KittyBJFace/Kitty_BJ_FaceClosed_Blush.png",              
-                    "True", "images/KittyBJFace/Kitty_BJ_FaceClosed.png"
+                    "True and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TFaceClosed.png",
+                    "True", "images/KittyBJFace/Kitty_BJ_FaceClosed.png",
                     ), 
             #if it is in the open, sucking position
             "K_Water", ConditionSwitch( 
                     # If she's wet
+                    "K_Blush and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TFaceOpen_Wet_Blush.png",              
                     "K_Blush", "images/KittyBJFace/Kitty_BJ_FaceOpen_Wet_Blush.png",              
+                    "True and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TFaceOpen_Wet.png", 
                     "True", "images/KittyBJFace/Kitty_BJ_FaceOpen_Wet.png", 
                     ),  
+            "K_Blush and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TFaceOpen_Blush.png",             
             "K_Blush", "images/KittyBJFace/Kitty_BJ_FaceOpen_Blush.png",             
-            "True",  "images/KittyBJFace/Kitty_BJ_FaceOpen.png"
+            "True and K_DynamicTan[0]",  "images/KittyBJFace/Kitty_BJ_TFaceOpen.png",
+            "True",  "images/KittyBJFace/Kitty_BJ_FaceOpen.png",
             ),    
         (0,0), ConditionSwitch(                                                                         
             #Mouth
             "Speed and renpy.showing('Kitty_BJ_Animation')", ConditionSwitch( 
-                    # If in sucking position
-                    "Speed == 1", "images/KittyBJFace/Kitty_BJ_Mouth_Tongue.png",  #licking
-                    "(Speed == 2 or Speed == 5)", Null(),                          #heading
-                    "Speed == 3", "images/KittyBJFace/Kitty_BJ_Mouth_Sucking.png", #sucking
-                    "Speed == 4", "images/KittyBJFace/Kitty_BJ_Mouth_Sucking.png", #deepthroat     
-                    "Speed == 6", "images/KittyBJFace/Kitty_BJ_Mouth_Sucking.png", #cumming      
-                    "True", "images/KittyBJFace/Kitty_BJ_Mouth_Sucking.png", #cumming     
-                    ),  
+                  # If in sucking position
+                  "Speed == 1", "images/KittyBJFace/Kitty_BJ_Mouth_Tongue.png",  #licking
+                  "(Speed == 2 or Speed == 5)", Null(),                          #heading
+                  "Speed == 3", "images/KittyBJFace/Kitty_BJ_Mouth_Sucking.png", #sucking
+                  "Speed == 4", "images/KittyBJFace/Kitty_BJ_Mouth_Sucking.png", #deepthroat     
+                  "Speed == 6", "images/KittyBJFace/Kitty_BJ_Mouth_Sucking.png", #cumming        
+                  "True", "images/KittyBJFace/Kitty_BJ_Mouth_Sucking.png", #cumming     
+                  ), 
             "Speed == 3 and renpy.showing('Kitty_TJ_Animation')", "images/KittyBJFace/Kitty_BJ_Mouth_Tongue.png",                        
             "Speed >= 5 and renpy.showing('Kitty_TJ_Animation')", "images/KittyBJFace/Kitty_BJ_Mouth_Kiss.png",
+            "K_Mouth == 'normal' and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TMouth_Smile.png",
             "K_Mouth == 'normal'", "images/KittyBJFace/Kitty_BJ_Mouth_Smile.png",
+            "K_Mouth == 'lipbite' and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TMouth_Lipbite.png",
             "K_Mouth == 'lipbite'", "images/KittyBJFace/Kitty_BJ_Mouth_Lipbite.png",
             "K_Mouth == 'sucking'", "images/KittyBJFace/Kitty_BJ_Mouth_Sucking.png",            
+            "K_Mouth == 'kiss' and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TMouth_Kiss.png",
             "K_Mouth == 'kiss'", "images/KittyBJFace/Kitty_BJ_Mouth_Kiss.png",
+            "K_Mouth == 'sad' and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TMouth_Sad.png",
             "K_Mouth == 'sad'", "images/KittyBJFace/Kitty_BJ_Mouth_Sad.png",
-            "K_Mouth == 'smile'", "images/KittyBJFace/Kitty_BJ_Mouth_Smile.png",            
+            "K_Mouth == 'smile' and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TMouth_Smile.png",
+            "K_Mouth == 'smile'", "images/KittyBJFace/Kitty_BJ_Mouth_Smile.png",
+            "K_Mouth == 'grimace' and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TMouth_Smile.png",
             "K_Mouth == 'grimace'", "images/KittyBJFace/Kitty_BJ_Mouth_Smile.png",
             "K_Mouth == 'surprised'", "images/KittyBJFace/Kitty_BJ_Mouth_Surprised.png",          
             "K_Mouth == 'tongue'", "images/KittyBJFace/Kitty_BJ_Mouth_Tongue.png",    
             "True", "images/KittyBJFace/Kitty_BJ_Mouth_Smile.png",
-            ),       
+            ),        
         (428,605), ConditionSwitch(   
             # Heading Mouth
 #            "Speed == 2 and Trigger == 'blow'", At("Kitty_BJ_MouthHeading", Kitty_BJ_MouthAnim()),  #heading 
@@ -2022,10 +2779,15 @@ image Kitty_BJ_Head:                                                            
             ),       
         (0,0), ConditionSwitch(                                                                         
             #Brows
+            "K_Brows == 'normal' and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TBrows_Normal.png",
             "K_Brows == 'normal'", "images/KittyBJFace/Kitty_BJ_Brows_Normal.png",
+            "K_Brows == 'angry' and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TBrows_Angry.png",
             "K_Brows == 'angry'", "images/KittyBJFace/Kitty_BJ_Brows_Angry.png",
+            "K_Brows == 'sad' and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TBrows_Sad.png",
             "K_Brows == 'sad'", "images/KittyBJFace/Kitty_BJ_Brows_Sad.png",
+            "K_Brows == 'surprised' and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TBrows_Surprised.png",
             "K_Brows == 'surprised'", "images/KittyBJFace/Kitty_BJ_Brows_Surprised.png",        
+            "K_Brows == 'confused' and K_DynamicTan[0]", "images/KittyBJFace/Kitty_BJ_TBrows_Confused.png",
             "K_Brows == 'confused'", "images/KittyBJFace/Kitty_BJ_Brows_Confused.png",
             "True", "images/KittyBJFace/Kitty_BJ_Brows_Normal.png",
             ),
@@ -2038,11 +2800,12 @@ image Kitty_BJ_Head:                                                            
             ),
         (0,0), ConditionSwitch(                                                                 
             #Hair overlay
-            "K_Water or K_Hair == 'wet'", "images/KittyBJFace/Kitty_BJ_Hair_Wet.png",
-            "K_Hair == 'long'", "images/KittyBJFace/Kitty_BJ_Hair_Long.png",
-            "K_Hair == 'evo'", "images/KittyBJFace/Kitty_BJ_Hair_Evo.png",
+            "K_Water or K_Hair == 'wet'", im.MatrixColor("images/KittyBJFace/Kitty_BJ_Hair" + GetHairColor(K_HairColor) + "_Wet.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+            "K_Hair == 'long'", im.MatrixColor("images/KittyBJFace/Kitty_BJ_Hair" + GetHairColor(K_HairColor) + "_Long.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+            "K_Hair == 'evo'", im.MatrixColor("images/KittyBJFace/Kitty_BJ_Hair" + GetHairColor(K_HairColor) + "_Evo.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
             "True", Null(),
             ),
+        (0,0), "images/KittyBJFace/Kitty_BJ_Headband_[K_Headband].png",
         (0,0), ConditionSwitch(                                                                 
             #Hair water overlay
             "not K_Water", Null(),            
@@ -3193,13 +3956,19 @@ label Kitty_TJ_Reset: # The sequence to the Kitty animations from Titfuck to def
 #    pos (200,400)#(200,400)
         
 image Kitty_Hand_Under:
-    "images/KittySprite/handkitty2.png"
+    ConditionSwitch(
+        "K_Tan", "images/KittySprite/Thandkitty2.png",
+        "True", "images/KittySprite/handkitty2.png",
+        ),
     anchor (0.5,0.5)
     pos (0,0)
     
     
 image Kitty_Hand_Over:
-    "images/KittySprite/handkitty1.png"    
+    ConditionSwitch(
+        "K_Tan", "images/KittySprite/Thandkitty1.png",
+        "True", "images/KittySprite/handkitty1.png",
+        ), 
     anchor (0.5,0.5)
     pos (0,0)
 
@@ -3371,10 +4140,11 @@ label K_Pos_Reset(Pose = 0):
     $ Trigger = Pose
     return
     
+#MOD MARKER HIDE
 label Kitty_Hide:
-        if renpy.showing("Kitty_SexSprite"):
+        if renpy.showing("Kitty_SexSprite") or renpy.showing("Kitty_Doggy"):
             call Kitty_Sex_Reset
-        hide Kitty_SexSprite
+        call mod_hide_Kitty_SexSprite
         hide Kitty_HJ_Animation
         hide Kitty_BJ_Animation
         hide Kitty_TJ_Animation 

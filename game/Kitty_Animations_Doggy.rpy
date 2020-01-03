@@ -41,6 +41,10 @@ image Kitty_Doggy_Body:
             "K_Hair == 'long'", im.MatrixColor("images/KittyDoggy/Kitty_Doggy_Hair" + GetHairColor(K_HairColor) + ".png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
             "K_Hair == 'evo'", im.MatrixColor("images/KittyDoggy/Kitty_Doggy_Hair" + GetHairColor(K_HairColor) + "_Ponytail.png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
             "True", im.MatrixColor("images/KittyDoggy/Kitty_Doggy_Hair" + GetHairColor(K_HairColor) + ".png",im.matrix.tint(float(K_HairCustomColor.red)/255.0, float(K_HairCustomColor.green)/255.0, float(K_HairCustomColor.blue)/255.0)),
+            ),
+        (0,0), ConditionSwitch(                                                                                 #Wet look
+            "K_DynamicTan[0]", "images/KittyDoggy/Kitty_Doggy_T3Ear.png",   
+            "True", "images/KittyDoggy/Kitty_Doggy_Hair_Ear.png",
             ),   
         #(0,0), ConditionSwitch(                                                                                 #Mouth
         #    "R_Gag == 'ballgag'", "images/RogueDoggy/Rogue_Doggy_BallGag.png",
@@ -202,13 +206,9 @@ image Kitty_Doggy_Body:
             ),                    
         (0,0), ConditionSwitch(                                                                                 #Wet look
             "K_DynamicTan[0]", "images/KittyDoggy/Kitty_Doggy_T3Ear.png",   
-            "True", Null(),              
+            "True", "images/KittyDoggy/Kitty_Doggy_Hair_Ear.png",
             ),
-        (0,0), ConditionSwitch(
-            "K_Headband == 'pink'", "images/KittyDoggy/Kitty_Doggy_Headband_Pink.png",
-            "K_Headband == 'black'", "images/KittyDoggy/Kitty_Doggy_Headband_Black.png",
-            "True", Null(),
-            ), 
+        (0,0), "images/KittyDoggy/Kitty_Doggy_Headband_[K_Headband].png",
         (0,0), ConditionSwitch(                                                                                 #face spunk
             "not K_Spunk", Null(),
             "'facial' in K_Spunk", "images/RogueDoggy/Rogue_Doggy_Facial.png",
@@ -272,7 +272,11 @@ image Kitty_Doggy_Ass:
             # "K_DynamicTan[0] and K_DynamicTan[4] == 'modded kitty lingerie panties'", AlphaMask("images/KittyDoggy/Kitty_Doggy_Ass.png", "images/KittyDoggy/Kitty_Doggy_Panties_green panties.png"),
             # "K_DynamicTan[0] and K_DynamicTan[4] == 'purple bikini panties'", AlphaMask("images/KittyDoggy/Kitty_Doggy_Ass.png", "images/KittyDoggy/Kitty_Doggy_Panties_green panties.png"),
             # "True", Null(),
-            ),  
+            ),
+        (0,0), ConditionSwitch(   
+            "not K_DynamicTan[0] or not K_DynamicTan[5]", Null(),
+            "True", AlphaMask("images/KittyDoggy/Kitty_Doggy_Ass.png", GetModdedStringTanKitty("5", ".png", "Doggy")),
+            ), 
         (0,0), ConditionSwitch(   
             "not K_DynamicTan[0] or not K_DynamicTan[2]", Null(),
             "True", AlphaMask("images/KittyDoggy/Kitty_Doggy_Ass.png", GetModdedStringTanKitty("2", ".png", "Doggy")),
@@ -292,10 +296,10 @@ image Kitty_Doggy_Ass:
             "K_Water", "images/RogueDoggy/Rogue_Doggy_WetAss.png",   
             "True", Null(),              
             ),  
-        #(0,0), ConditionSwitch(                                                                                 #Hose
-        #    "R_Hose == 'stockings'", "images/RogueDoggy/Rogue_Doggy_Hose.png",
-        #    "True", Null(),
-        #    ),             
+        (0,0), ConditionSwitch(
+            "not K_Hose", Null(),     
+            "True", GetOutfitString("images/KittyDoggy/Kitty_Doggy_Hose_", K_Hose, ".png"),
+            ),
         (0,0), ConditionSwitch(                                                                                 #Panties if Down
             "not K_PantiesDown or (K_Legs == 'pants' and not K_Upskirt)", Null(),
             "not K_Panties", Null(),
@@ -390,7 +394,11 @@ image Kitty_Doggy_Ass:
                                                             "True", AlphaMask("images/KittyDoggy/Kitty_Doggy_Pussy_Closed.png", GetModdedStringTanKitty("2", ".png", "Doggy")),
                                                             ),
             "True", Null(),
-            ),  
+            ),
+        (0,0), ConditionSwitch(
+            "not K_Hose", Null(),     
+            "True", GetOutfitString("images/KittyDoggy/Kitty_Doggy_Hose_", K_Hose, ".png"),
+            ),
         #(0,0), ConditionSwitch(                                                                                 #pubes              
         #    "not R_Pubes", Null(),         
         #    "P_Sprite and P_Cock == 'in'", Null(),

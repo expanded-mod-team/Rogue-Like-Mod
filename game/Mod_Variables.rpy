@@ -35,18 +35,22 @@ label  mod_default_Variables:
     default R_Tan = 0
     default R_BodySuit = 0
     default R_HairColor = ""
+    default R_HairColorBangs = ""
     default R_HairTint = 0
+    default R_Headband = ""
     default R_Plugged = 0
     default R_BodySuitOff = 0
     default R_Accessory = 0
     default R_DynamicTan = [0,0,0,0,0,0,0,0]  #controller, over, legs, chest, panties, hose, gloves? choker?
+    default R_Glasses = 0
+    default R_Boots = ""
     default K_Tan = 0
     default K_HairColor = ""
     default K_HairTint = 0
     default K_DynamicTan = [0,0,0,0,0,0,0,0]  #controller, over, legs, chest, panties, hose, gloves? choker?
     default K_Gloves = 0
     default K_Blindfold = 0
-    default K_Headband = 0
+    default K_Headband = ""
     default K_Plugged = 0
     default K_Spank = 0
     default E_Tan = 0
@@ -54,12 +58,13 @@ label  mod_default_Variables:
     default E_DynamicTan = [0,0,0,0,0,0,0,0]  #controller, over, legs, chest, panties, hose, gloves? choker?
     default E_Gloves = 0
     default E_Blindfold = 0
-    default E_Headband = 0
+    default E_Headband = ""
     default E_Plugged = 0
     default E_Spank = 0
     default E_LegsUp = 0
 
     default L_HairColor = ""
+    default L_Headband = ""
 
     default R_Custom4 = [0,0,0,0,0,0,0,0,0,0,0]
     default R_Custom5 = [0,0,0,0,0,0,0,0,0,0,0]
@@ -102,6 +107,7 @@ label  mod_default_Variables:
     default E_HairCustomColor = SetColor("Emma","Hair")
     default L_HairCustomColor = SetColor("Laura","Hair")
     default R_HairCustomColor = SetColor("Rogue","Hair")
+    default R_HairCustomColorBangs = SetColor("Rogue","HairBangs")
     default newgirl = {"Mystique" : Girlnew("Mystique"),    #The LikeOtherGirl attribute should be set for each new girl
                        # "Laura" : Girlnew("Laura")
                         }
@@ -109,6 +115,30 @@ label  mod_default_Variables:
     default GwenStage = 0
     default P_Hands = 0
 
+    default R_Nude = 1
+    default R_Nude_Overlay = 0
+    default R_NudeDay = 0
+    default R_NudeCurrent_Time = 0
+    default K_Nude = 1
+    default K_Nude_Overlay = 0
+    default K_NudeDay = 0
+    default K_NudeCurrent_Time = 0
+    default E_Nude = 1
+    default E_Nude_Overlay = 0
+    default E_NudeDay = 0
+    default E_NudeCurrent_Time = 0
+    default L_Nude = 1
+    default L_Nude_Overlay = 0
+    default L_NudeDay = 0
+    default L_NudeCurrent_Time = 0
+
+    default R_PubesColor = 0
+    default K_PubesColor = 0
+    default E_PubesColor = 0
+    default L_PubesColor = 0
+
+    default BH_Day = 0
+    default BH_Current_Time = 0
 
     define ch_m = Character('[newgirl[Mystique].GirlName]', color="#646dbb", image = "arrow", show_two_window=True)
 
@@ -118,6 +148,39 @@ label  mod_Save_Version:
     
     if getattr(K_HairCustomColor, "outfit", None) == None:
         $ K_HairCustomColor = SetColor("Kitty","Hair")
+
+    if K_Headband == 0:
+        $ K_Headband = ""
+        $ E_Headband = ""
+        $ newgirl["Mystique"].Headband = ""
+
+    if persistent.K_BG_HeadBand == 0:
+        $ persistent.E_BG_HeadBand = ""
+
+    if persistent.R_BG_HeadBand == 0:
+        $ persistent.E_BG_HeadBand = ""
+
+    if persistent.E_BG_HeadBand == 0:
+        $ persistent.E_BG_HeadBand = ""
+
+    if persistent.L_BG_HeadBand == 0:
+        $ persistent.L_BG_HeadBand = ""
+
+    if getattr(newgirl["Mystique"], "Colors", None) == None: #resets Mystique
+        $ newgirl = {"Mystique" : Girlnew("Mystique"),    #The LikeOtherGirl attribute should be set for each new girl
+                       # "Laura" : Girlnew("Laura")
+                        }
+
+    if R_HairColor == 0:
+        $ R_HairColor = ""
+    if K_HairColor == 0:
+        $ K_HairColor = ""
+    if E_HairColor == 0:
+        $ E_HairColor = ""
+    if L_HairColor == 0:
+        $ L_HairColor = ""
+
+
 
     if len(R_OutfitShame) < 21:
         $ R_OutfitShame.append(0) #[15] 16
@@ -1234,7 +1297,7 @@ screen Rogue():
 
 # image testdesss = im.MatrixColor("images/bg.png",im.matrix.tint(.75,.75,1.0))
 
-label Recolor_Hair(Girl = "Kitty"):
+label Recolor_Hair(Girl = "Kitty", Outfit = "Hair"):
 
     if Girl == "Kitty":                    
         $ K_HairCustomColor.screen_loop()
@@ -1246,7 +1309,10 @@ label Recolor_Hair(Girl = "Kitty"):
         $ L_HairCustomColor.screen_loop()
         call Mod_Update_Laura_Image
     elif Girl == "Rogue":
-        $ R_HairCustomColor.screen_loop()
+        if Outfit == "HairBangs":
+            $ R_HairCustomColorBangs.screen_loop()
+        else:
+            $ R_HairCustomColor.screen_loop()
         call Mod_Update_Rogue_Image
     return
 
@@ -1254,7 +1320,7 @@ label Recolor_Hair(Girl = "Kitty"):
 screen recolor_screen_Kitty_Hair:
 
     # add(im.MatrixColor("images/EmmaSprite/EmmaSprite_Head_HairBack_White.png",im.matrix.tint(float(K_HairCustomColor.tempred)/255.0, float(K_HairCustomColor.tempgreen)/255.0, float(K_HairCustomColor.tempblue)/255.0))) align(0.5, 0.1)
-    add(im.MatrixColor("images/KittyBJFace/Kitty_BJ_Hair" + GetHairColor(K_HairColor) + "_Evo.png",im.matrix.tint(float(K_HairCustomColor.tempred)/255.0, float(K_HairCustomColor.tempgreen)/255.0, float(K_HairCustomColor.tempblue)/255.0))) align(0.5, 0.1)
+    add(im.MatrixColor("images/KittyBJFace/Kitty_BJ_HairWhite_Evo.png",im.matrix.tint(float(K_HairCustomColor.tempred)/255.0, float(K_HairCustomColor.tempgreen)/255.0, float(K_HairCustomColor.tempblue)/255.0))) align(0.5, 0.1)
         
     text ("{size=-5}RGB Values: Red: %s, Green: %s, Blue: %s !!!"%(K_HairCustomColor.tempred, K_HairCustomColor.tempgreen, K_HairCustomColor.tempblue)) align(0.5, 0.6)    
         
@@ -1335,8 +1401,13 @@ screen recolor_screen_Laura_Hair:
 
 
 screen recolor_screen_Rogue_Hair:
-
-    add(im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back.png",im.matrix.tint(float(R_HairCustomColor.tempred)/255.0, float(R_HairCustomColor.tempgreen)/255.0, float(R_HairCustomColor.tempblue)/255.0))) align(0.5, 0.1)
+    
+    if R_HairColorBangs:
+        add(im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back.png",im.matrix.tint(float(R_HairCustomColor.tempred)/255.0, float(R_HairCustomColor.tempgreen)/255.0, float(R_HairCustomColor.tempblue)/255.0))) align(0.5, 0.1)
+        add(im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back1.png",im.matrix.tint(float(R_HairCustomColorBangs.tempred)/255.0, float(R_HairCustomColorBangs.tempgreen)/255.0, float(R_HairCustomColorBangs.tempblue)/255.0))) align(0.5, 0.1)
+    else:
+        add(im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back.png",im.matrix.tint(float(R_HairCustomColor.tempred)/255.0, float(R_HairCustomColor.tempgreen)/255.0, float(R_HairCustomColor.tempblue)/255.0))) align(0.5, 0.1)
+        
         
     text ("{size=-5}RGB Values: Red: %s, Green: %s, Blue: %s !!!"%(R_HairCustomColor.tempred, R_HairCustomColor.tempgreen, R_HairCustomColor.tempblue)) align(0.5, 0.6)    
         
@@ -1354,6 +1425,67 @@ screen recolor_screen_Rogue_Hair:
         bar:
             xalign 0.5
             value FieldValue(R_HairCustomColor, 'tempblue', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
+            xmaximum 255
+    
+    textbutton "Apply" align(0.45, 0.95):
+        action Return(['apply'])
+    textbutton "Quit" align(0.55, 0.95):
+        action Return(['quit'])
+
+screen recolor_screen_Rogue_HairBangs:
+
+    add(im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back.png",im.matrix.tint(float(R_HairCustomColor.tempred)/255.0, float(R_HairCustomColor.tempgreen)/255.0, float(R_HairCustomColor.tempblue)/255.0))) align(0.5, 0.1)
+    add(im.MatrixColor("images/RogueBJFace/Rogue_bj_hairWhite_back1.png",im.matrix.tint(float(R_HairCustomColorBangs.tempred)/255.0, float(R_HairCustomColorBangs.tempgreen)/255.0, float(R_HairCustomColorBangs.tempblue)/255.0))) align(0.5, 0.1)
+        
+    text ("{size=-5}RGB Values: Red: %s, Green: %s, Blue: %s !!!"%(R_HairCustomColorBangs.tempred, R_HairCustomColorBangs.tempgreen, R_HairCustomColorBangs.tempblue)) align(0.5, 0.6)    
+        
+    vbox align(0.5, 0.7):
+        bar:
+            xalign 0.5
+            value FieldValue(R_HairCustomColorBangs, 'tempred', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
+            xmaximum 255
+            
+        bar:
+            xalign 0.5
+            value FieldValue(R_HairCustomColorBangs, 'tempgreen', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
+            xmaximum 255
+            
+        bar:
+            xalign 0.5
+            value FieldValue(R_HairCustomColorBangs, 'tempblue', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
+            xmaximum 255
+    
+    textbutton "Apply" align(0.45, 0.95):
+        action Return(['apply'])
+    textbutton "Quit" align(0.55, 0.95):
+        action Return(['quit'])
+
+screen recolor_screen_(_Girl="Mystique", _OutfitType = "Over", _Outfit = "workout jacket"):
+
+    add(im.MatrixColor("images/" + _Girl + "Sprite/" + _Girl + "_Sprite_" + _OutfitType + "White_" + _Outfit + ".png",im.matrix.opacity(float(newgirl[_Girl].Colors[_OutfitType].tempopacity)/255.0)*im.matrix.tint(float(newgirl[_Girl].Colors[_OutfitType].tempred)/255.0, float(newgirl[_Girl].Colors[_OutfitType].tempgreen)/255.0, float(newgirl[_Girl].Colors[_OutfitType].tempblue)/255.0))) align(0.5, 0.1)
+    if _Outfit == "black lingerie":
+        add(im.MatrixColor("images/MystiqueSprite/Mystique_Sprite_PantiesWhite_black lingerie_Waist.png",im.matrix.opacity(float(newgirl[_Girl].Colors[_OutfitType].tempopacity)/255.0)*im.matrix.tint(float(newgirl[_Girl].Colors[_OutfitType].tempred)/255.0, float(newgirl[_Girl].Colors[_OutfitType].tempgreen)/255.0, float(newgirl[_Girl].Colors[_OutfitType].tempblue)/255.0))) align(0.5, 0.1)
+        
+        
+    vbox align(0.5, 0.7):
+        bar:
+            xalign 0.5
+            value FieldValue(newgirl[_Girl].Colors[_OutfitType], 'tempopacity', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
+            xmaximum 255
+
+        bar:
+            xalign 0.5
+            value FieldValue(newgirl[_Girl].Colors[_OutfitType], 'tempred', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
+            xmaximum 255
+            
+        bar:
+            xalign 0.5
+            value FieldValue(newgirl[_Girl].Colors[_OutfitType], 'tempgreen', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
+            xmaximum 255
+            
+        bar:
+            xalign 0.5
+            value FieldValue(newgirl[_Girl].Colors[_OutfitType], 'tempblue', 255, max_is_zero=False, style='scrollbar', offset=0, step=1)
             xmaximum 255
     
     textbutton "Apply" align(0.45, 0.95):

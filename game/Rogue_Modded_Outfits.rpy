@@ -3,6 +3,14 @@ label Rogue_Modded_Clothes_Menu:
     call RogueFace
     menu:
         ch_r "So what did you want to tell me about my clothes again?"
+        "Poses":
+                jump Rogue_Posing
+        "Stop sending me nudes." if R_Nude:
+                    $ R_Nude = 0
+                    ch_r "Ok"
+        "Keep sending me nudes." if not R_Nude:
+                    $ R_Nude = 1
+                    ch_r "Ok"
         "Let's talk about your over shirts.":
                 jump Rogue_Modded_Clothes_Over        
         "Let's talk about your legwear.":
@@ -351,6 +359,11 @@ label Rogue_Modded_Clothes_Menu:
                                 else:
                                       ch_r "No, it's too short, [R_Petname]."
 
+        "Wear your classic uniform bottom?" if R_Legs != "modded classic uniform bottom":
+                                ch_r "Sure, ok."
+                                call SetLegsRogue("modded classic uniform bottom")
+                                jump Rogue_Modded_Clothes_Legs
+
         "Maybe go without the jeans." if R_Legs == "pants":
                         call RogueFace("sexy", 1)
                         if R_BodySuit:
@@ -497,8 +510,9 @@ label Rogue_Modded_Clothes_Menu:
                         "She pulls her shorts off."
                                 
         "Never mind":
-            pass
-    jump Rogue_Modded_Clothes_Menu
+            jump Rogue_Modded_Clothes_Menu
+            
+    jump Rogue_Modded_Clothes_Legs
     #End of Rogue Pants
         
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
@@ -605,6 +619,12 @@ label Rogue_Modded_Clothes_Menu:
                                 # call Rogue_Swimsuit_Change_Top
                                 call SetChestRogue("buttoned tank")
                                 jump Rogue_Modded_Clothes_Under_Top
+                "Wear your classic uniform top?" if R_Chest != "modded classic uniform top":
+                                ch_r "Sure, ok."
+                                # call SetPantiesRogue("bodysuit")
+                                # call SetChestRogue("bodysuit")
+                                call SetChestRogue("modded classic uniform top")
+                                jump Rogue_Modded_Clothes_Under_Top
                     
                 "I like your sport bras.":
                         if (R_SeenChest and ApprovalCheck("Rogue", 600)) or ApprovalCheck("Rogue", 900, TabM=2) or R_BodySuit:
@@ -651,6 +671,26 @@ label Rogue_Modded_Clothes_Menu:
                             ch_r "That's too revealing. . ." 
                         jump Rogue_Modded_Clothes_Under_Top
 
+                "How about that red dress?" if R_Chest != "modded red dress":
+                    # if R_Legs:
+                    #     ch_r "I can't really wear that with my [R_Legs] on."
+                    # elif ApprovalCheck("Rogue", 1000) or R_BodySuit:
+                        ch_r "Sure. . ."
+                        call SetChestRogue("modded red dress")
+        
+                    # else:
+                    #     ch_r "That's a bit . . . revealing."   
+        
+                "How about that blue dress?" if R_Chest != "modded blue dress":
+                    # if R_Legs:
+                    #     ch_r "I can't really wear that with my [R_Legs] on."
+                    # elif ApprovalCheck("Rogue", 1000) or R_BodySuit :
+                        ch_r "Sure. . ."
+                        call SetChestRogue("modded blue dress")
+        
+                    # else:
+                    #     ch_r "That's a bit . . . revealing."  
+        
                 "Nevermind.":
                         jump Rogue_Modded_Clothes_Under
 
@@ -930,10 +970,10 @@ label Rogue_Modded_Clothes_Menu:
 
             
     menu Rogue_Modded_Clothes_Misc:   
-        # "Put on that headband of yours." if R_Headband != "classic headband":
-        #                 $ R_Headband = "classic headband"
-        # "Take off that headband." if R_Headband:
-        #                 $ R_Headband = 0
+        "Put on that headband of yours." if R_Headband != "classic headband":
+                        $ R_Headband = "classic headband"
+        "Take off that headband." if R_Headband:
+                        $ R_Headband = ""
 
         # "Put on that utility belt." if R_Accessory != "classic belt":
         #                 $ R_Accessory = "classic belt"
@@ -952,10 +992,12 @@ label Rogue_Modded_Clothes_Menu:
         # "You could lose that spiked collar." if R_Neck == "spiked collar":
         #                 $ R_Neck = 0
 
-        # "I like those glasses." if not R_Glasses:
-        #                 $ R_Glasses = "glasses"
-        # "You could lose those glasses." if R_Glasses:
-        #                 $ R_Glasses = 0
+        "I like those glasses." if not R_Glasses:
+                        $ R_Glasses = "glasses"
+        "I like those sunglasses." if not R_Glasses:
+                        $ R_Glasses = "sunglasses"
+        "You could lose those glasses." if R_Glasses:
+                        $ R_Glasses = ""
 
         # "Wear those black boots." if R_Boots != "boots":
         #                 $ R_Boots = "boots"
@@ -965,11 +1007,18 @@ label Rogue_Modded_Clothes_Menu:
         # "You could lose those boots." if R_Boots:
         #                 $ R_Boots = 0
 
+        "Change your haistyle":
+            if R_Hair == "evo":
+                $ R_Hair = "newhair"
+                # $ R_Tan = 0
+            else:
+                $ R_Hair = "evo"
+
         "Dye your hair.":
             if ApprovalCheck("Rogue", 800):
                 ch_r "Which color?"
 
-                menu:
+                menu Rogue_Modded_Clothes_Misc_Hair_Color:
                     "Black" if R_HairColor != "black":
                         ch_r "Like this?"
                         call SetHairColorRogue("black")
@@ -988,8 +1037,32 @@ label Rogue_Modded_Clothes_Menu:
 
                     "Let me select the color.":
                         ch_k "You think so?"
+                        if R_HairColorBangs:
+                            "Reset the color of the bangs?"
+                            menu:
+                                "Yes":
+                                    $ R_HairColorBangs = ""
+                                "No":
+                                    pass
+
                         call Recolor_Hair("Rogue")
                         call SetHairColorRogue("custom")
+
+                    "Let me select the color just for the bangs.":
+                        ch_k "You think so?"
+                        call Recolor_Hair("Rogue", "HairBangs")
+                        call SetHairBangsColorRogue("custom2")
+
+                    # "Apply color to pubes as well" if R_HairColor == "custom" and not R_PubesColor:
+                    #     $ R_PubesColor = 1
+
+                    # "Reset pubes color" if R_PubesColor:
+                    #     $ R_PubesColor = 0
+                        
+                    "Nevermind":
+                        jump Rogue_Modded_Clothes_Misc
+
+                jump Rogue_Modded_Clothes_Misc_Hair_Color
 
                 #ch_r "You think so?"
                 #"She rummages in her bag and grabs some gel, running it through her hair."
@@ -1001,14 +1074,16 @@ label Rogue_Modded_Clothes_Menu:
                 ch_r "You think so?"
                 #"She rummages in her bag and grabs some gel, running it through her hair."
                 ch_r "Like this?"
-                call SetHairColorRogue("")
+                # call SetHairColorRogue("")
+                $ R_HairColor = ""
+                call SetHairBangsColorRogue("")
             else:
                 ch_r "It's too high maintenance."
 
         "You know, I like some nice hair down there. Maybe grow it out." if not R_Pubes and "pubes" in R_Todo:
                         call RogueFace("bemused", 1)
                         ch_r "Yeah, I know, [R_Petname]. It doesn't grow out overnight!"
-        "You know, I like some nice hair down there. Maybe grow it out." if not R_Pubes:
+        "You know, I like some nice hair down there. Maybe grow it out." if not R_Pubes and "pubes" not in R_Todo:
                         call RogueFace("bemused", 1)
                         $ Approval = ApprovalCheck("Rogue", 1150, TabM=0)
                         
@@ -1097,8 +1172,9 @@ label Rogue_Modded_Clothes_Menu:
                         $ R_Pierce = 0 
                         
         "Never mind":
+            jump Rogue_Modded_Clothes_Menu
             pass      
-    jump Rogue_Modded_Clothes_Menu
+    jump Rogue_Modded_Clothes_Misc
     #End of Rogue Misc Wardrobe
     
     return
@@ -1133,6 +1209,11 @@ label SetHairColorRogue(Outfit = ""):
     call Mod_Update_Rogue_Image
     return
 
+label SetHairBangsColorRogue(Outfit = ""):
+    $ R_HairColorBangs = Outfit
+    call Mod_Update_Rogue_Image
+    return
+
 label Mod_Update_Rogue_Image:
     if renpy.showing("Rogue"):
         show Rogue 
@@ -1147,6 +1228,31 @@ label Mod_Update_Rogue_Image:
     elif renpy.showing("Rogue_TJ_Animation"):
         show Rogue_TJ_Animation   
     return
+
+label Rogue_Posing:
+    $ TempP_Sprite = P_Sprite
+    $ P_Sprite = 0
+    menu Rogue_Posing_Menu:
+        "Body":
+            call R_Pussy_Launch(0)
+        "Doggy":
+            hide Rogue
+            hide Rogue_SexSprite
+
+            show Rogue_Doggy at SpriteLoc(StageCenter+50) zorder 150
+        "Missionary":
+            hide Rogue
+            hide Rogue_Doggy
+
+            show Rogue_SexSprite zorder 150
+        "Return":
+            call Rogue_Hide
+            call R_Pos_Reset
+            $ P_Sprite = TempP_Sprite
+            jump Rogue_Modded_Clothes_Menu
+
+    jump Rogue_Posing_Menu
+
     
 init python:
     def ModPantsNum(Chr = "Rogue"): 
@@ -1162,6 +1268,8 @@ init python:
                             return 5
                         elif R_Legs == "modded cheerleader skirt":
                             return 5
+                        elif R_Legs == "modded classic uniform bottom":
+                            return 10
                         # elif R_Panties == "shorts":
                         #     return 6
                         else:
@@ -1304,6 +1412,10 @@ init python:
             #     $ Count = 10
             if R_Chest == "modded cheerleader":
                 return 20
+            elif R_Chest == "modded blue dress":
+                return 20
+            elif R_Chest == "modded red dress":
+                return 20
             elif R_Chest == "modded slut tank short":                                              
                 return -5
             elif R_Chest == "modded SR7 tank short":                                              
@@ -1311,6 +1423,8 @@ init python:
             elif R_Chest == "modded green crop top":                                              
                 return 20
             elif R_Chest == "modded black crop top":                                              
+                return 20
+            elif R_Chest == "modded classic uniform top":                                              
                 return 20
             elif R_Chest == "modded tape":                                              
                 return 5
@@ -1352,29 +1466,40 @@ init python:
                 return 40  
 
         if Type == "Legs":
+            if R_Chest == "modded blue dress":
+                return 20
+            elif R_Chest == "modded red dress":
+                return 20
             # if R_BodySuit == "classic uniform":
             #     $ Count = 25
             # if R_Over == "blue dress":      
             #     $ Count = 20  
             # elif R_Over == "red dress":      
             #     $ Count = 20  
-            if R_Legs == "skirtshort":            #If wearing a short skirt commando
+            if R_Legs == "modded skirtshort":            #If wearing a short skirt commando
                 return 0
-            elif R_Legs == "SR7 skirtshort":            #If wearing a short skirt commando
+            elif R_Legs == "modded SR7 skirtshort":            #If wearing a short skirt commando
                 return 0
-            elif R_Legs == "cheerleader skirt":                 #If wearing a cheerleader skirt commando
+            elif R_Legs == "modded cheerleader skirt":                 #If wearing a cheerleader skirt commando
                 return 20
-            elif R_Legs == "cheerleader skirtshort":            #If wearing a short cheerleader skirt commando
+            elif R_Legs == "modded classic uniform bottom":                 #If wearing a cheerleader skirt commando
+                return 20
+            elif R_Legs == "modded cheerleader skirtshort":            #If wearing a short cheerleader skirt commando
                 return 0   
         
 
         if Type == "Panties":
-                       
-            if R_Panties == "red shorts":             #If wearing shorts
+            if R_Chest == "modded blue dress":
+                return 20
+            elif R_Chest == "modded red dress":
+                return 20
+
+                           
+            if R_Panties == "modded red shorts":             #If wearing shorts
                 return 25
-            elif R_Panties == "blue shorts":             #If wearing shorts
+            elif R_Panties == "modded blue shorts":             #If wearing shorts
                 return 25  
-            elif R_Panties == "black large panties":      #If wearing only green panties
+            elif R_Panties == "modded black large panties":      #If wearing only green panties
                 return 10
             # elif R_Panties == "swimsuit1":
             #     return 40
@@ -1572,5 +1697,9 @@ init python:
             string = Null()
         return string
 
-
+    def WearingDress(Girl = "Rogue"):
+        if R_Chest:
+            if "dress" in R_Chest:
+                return 1
+        return 0
 #End Rogue Wardrobe

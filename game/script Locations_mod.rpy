@@ -27,6 +27,25 @@ init python:
         return 0
 
 label Mod_EventCalls:
+    call Get_Dressed
+
+    if Current_Time == "Evening" and "yesdate" in P_DailyActions:
+            if bg_current == "bg campus": 
+                    call DateNight
+                    if "yesdate" in P_DailyActions:
+                            $ P_DailyActions.remove("yesdate")
+                    return
+            else:
+                
+                    menu:
+                        "You have a date to get to, head for the square?"
+                        "Yes":
+                            $ renpy.pop_call()
+                            call Leave_Brotherhood_Area
+                            jump Campus_Entry
+                        "No":
+                            "Suit yourself. . ."
+                            
     if Current_Time == "Night" and "met" not in newgirl["Mystique"].History :
         if Day >= 5:
             if bg_current != "bg player" and not IsGirlAround():
@@ -36,6 +55,16 @@ label Mod_EventCalls:
                 call Mod_Display_Background
                 call MystiqueMeet
                 return 
+    
+    if R_Loc != bg_current and "Rogue" in Digits and R_Nude:
+        call Mod_Nude("Rogue")
+    if K_Loc != bg_current and "Kitty" in Digits and K_Nude:
+        call Mod_Nude("Kitty")
+    if E_Loc != bg_current and "Emma" in Digits and E_Nude:
+        call Mod_Nude("Emma")
+    if L_Loc != bg_current and "Laura" in Digits and L_Nude:
+        call Mod_Nude("Laura")
+
     return
 
 label Mod_Chat:
@@ -148,6 +177,8 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
         $ newgirl["Mystique"].Upskirt = 0
         $ newgirl["Mystique"].Uptop = 0
         $ newgirl["Mystique"].PantiesDown = 0
+        
+        $ newgirl["Mystique"].reset_colors()
         if M_OutfitTemp == "teacher":
                     if 0 in (newgirl["Mystique"].Legs,newgirl["Mystique"].Over,newgirl["Mystique"].Chest,newgirl["Mystique"].Hose):
                             $ Undressed = 1
@@ -235,6 +266,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hair = "wavy"
                     $ newgirl["Mystique"].Hose = 0   
         elif M_OutfitTemp == "custom1":
+                    $ newgirl["Mystique"].load_colors(1)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Custom[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Custom[3]:          
@@ -256,6 +288,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hose = newgirl["Mystique"].Custom[9]                     
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[3]
         elif M_OutfitTemp == "custom2":
+                    $ newgirl["Mystique"].load_colors(2)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Custom2[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Custom2[3]:          
@@ -277,6 +310,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hose = newgirl["Mystique"].Custom2[9]                      
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[5]
         elif M_OutfitTemp == "custom3":
+                    $ newgirl["Mystique"].load_colors(3)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Custom3[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Custom3[3]:          
@@ -298,6 +332,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hose = newgirl["Mystique"].Custom3[9]                         
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[6]
         elif M_OutfitTemp == "custom4":
+                    $ newgirl["Mystique"].load_colors(4)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Custom4[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Custom4[3]:          
@@ -319,6 +354,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hose = newgirl["Mystique"].Custom4[9]                         
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[11]
         elif M_OutfitTemp == "custom5":
+                    $ newgirl["Mystique"].load_colors(5)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Custom5[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Custom5[3]:          
@@ -340,6 +376,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hose = newgirl["Mystique"].Custom5[9]                         
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[12]
         elif M_OutfitTemp == "custom6":
+                    $ newgirl["Mystique"].load_colors(6)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Custom6[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Custom6[3]:          
@@ -361,6 +398,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hose = newgirl["Mystique"].Custom6[9]                         
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[13]
         elif M_OutfitTemp == "custom7":
+                    $ newgirl["Mystique"].load_colors(7)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Custom7[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Custom7[3]:          
@@ -382,6 +420,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Hose = newgirl["Mystique"].Custom7[9]                         
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[14]
         elif M_OutfitTemp == "sleep":  
+                    $ newgirl["Mystique"].load_colors(8)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Sleepwear[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Sleepwear[3]:          
@@ -406,6 +445,7 @@ label MystiqueOutfit(M_OutfitTemp = newgirl["Mystique"].Outfit, Spunk = 0, Undre
                     $ newgirl["Mystique"].Shame = newgirl["Mystique"].OutfitShame[4]
                     
         elif M_OutfitTemp == "gym":
+                    $ newgirl["Mystique"].load_colors(9)
                     if not newgirl["Mystique"].Legs and newgirl["Mystique"].Gym[2]:            
                             $ Undressed = 1
                     elif not newgirl["Mystique"].Over and newgirl["Mystique"].Gym[3]:          
@@ -562,9 +602,10 @@ label Brotherhood_Entry:
     hide screen R_Status_screen
     show screen Mod_Status_screen
     # $ Ch_Focus = "Mystique"
-    $ bg_current = "bg Brotherhood"           
+    $ bg_current = "bg Brotherhood"
+    # call Mod_Daily_Math
     call Mod_Set_The_Scene(Entry = 1)
-    call Taboo_Level
+    call Mod_Taboo_Level
     # $ D20 = renpy.random.randint(1, 20)
     
     $ bg_current = "bg Brotherhood"         
@@ -577,13 +618,13 @@ label Brotherhood_Hall:
     call Mod_Set_The_Scene
     if "traveling" in P_RecentActions:
         $ P_RecentActions.remove("traveling")
-    call Taboo_Level
+    call Mod_Taboo_Level
     call QuickEvents
     call Checkout(1)
     if Round <= 10: 
                 call Mod_Round10
                 call Girls_Location
-                call EventCalls
+                call Mod_EventCalls
     
     call GirlsAngry
     call Mod_Set_The_Scene
@@ -606,7 +647,7 @@ label Brotherhood_Hall:
         "Wait." if Current_Time != "Night":
                     call Mod_Round10
                     call Girls_Location
-                    call EventCalls
+                    call Mod_EventCalls
                             
         # "Return to Your Room" if TravelMode:            
         #             call Leave_Brotherhood_Area
@@ -633,30 +674,30 @@ label Mystique_Room_Entry:
     $ bg_current = "bg Mystique"           
     $ newgirl["Mystique"].LooksLike = "Mystique"
     call Mod_Set_The_Scene(Entry = 1)
-    call Taboo_Level
+    call Mod_Taboo_Level
     $ D20 = renpy.random.randint(1, 20)
     
     $ bg_current = "bg Mystique"         
-    call EventCalls
+    call Mod_EventCalls
     if bg_current != "bg Mystique":
         jump Misplaced
             
 label Mystique_Room:
     $ newgirl["Mystique"].LooksLike = "Mystique"
     $ bg_current = "bg Mystique"
-    call Mod_Set_The_Scene
+    call Mod_Set_The_Scene(Quiet = 1)
     if "traveling" in P_RecentActions:
         $ P_RecentActions.remove("traveling")
-    call Taboo_Level
+    call Mod_Taboo_Level
     call QuickEvents
     call Checkout(1)
     if Round <= 10: 
                 call Mod_Round10
                 call Girls_Location
-                call EventCalls
+                call Mod_EventCalls
     
     call GirlsAngry
-    call Mod_Set_The_Scene
+    call Mod_Set_The_Scene(Quiet = 1)
     
 # Mystique's Room Menu Start <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     if newgirl["Mystique"].Loc == bg_current:
@@ -675,12 +716,12 @@ label Mystique_Room:
         "Sleep." if Current_Time == "Night" and newgirl["Mystique"].Loc == bg_current:
                     call Mod_Round10
                     call Girls_Location
-                    call EventCalls
+                    call Mod_EventCalls
                     
         "Wait." if Current_Time != "Night":
                     call Mod_Round10
                     call Girls_Location
-                    call EventCalls
+                    call Mod_EventCalls
                             
         # "Return to Your Room" if TravelMode:            
         #             call Leave_Brotherhood_Area
@@ -696,7 +737,6 @@ label Mystique_Room:
                     else:
                         call Leave_Brotherhood_Area
                         call Worldmap
-    
     if "angry" in newgirl["Mystique"].RecentActions:
             call MystiqueFace("angry")
             ch_m "Go. Now."
