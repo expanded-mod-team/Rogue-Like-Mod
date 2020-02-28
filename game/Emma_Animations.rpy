@@ -3,377 +3,377 @@ image Emma_Sprite:
     LiveComposite(
         (402,965), 
 #        (55,0), ConditionSwitch(                                                                         #hair back temporary
-#            "not E_Hair", Null(),
-#            "E_Hair == 'wet' or E_Water", "images/EmmaSprite/EmmaSprite_Head_HairBackWet.png",
+#            "not EmmaX.Hair", Null(),
+#            "EmmaX.Hair == 'wet' or EmmaX.Water", "images/EmmaSprite/EmmaSprite_Head_HairBackWet.png",
 #            "True", Null(),        
 #            ),   
         (0,0), ConditionSwitch(                                                                         
             #cape layer       
-            "E_Uptop or E_Over == 'jacket' or E_Chest != 'corset'", Null(),  
-            "Emma_Arms == 2", "images/EmmaSprite/EmmaSprite_Cape2.png",              
+            "EmmaX.Uptop or EmmaX.Over == 'jacket' or EmmaX.Chest != 'corset'", Null(),  
+            "EmmaX.ArmPose == 2", "images/EmmaSprite/EmmaSprite_Cape2.png",              
             "True", "images/EmmaSprite/EmmaSprite_Cape1.png",   
             ), 
         (0,0), ConditionSwitch(                                                                         
             #Overshirt back layer       
-            "E_Over and E_Uptop and E_Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_Back.png",  
+            "EmmaX.Over and EmmaX.Uptop and EmmaX.Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_Back.png",  
             "True", Null(), 
             ), 
         (0,0), ConditionSwitch(
             #hair back 
-            "not E_Hair", Null(),
-            "E_Hair == 'wet' or E_Water", "images/EmmaSprite/EmmaSprite_HairbackWet.png",
-            "E_Hair", "images/EmmaSprite/EmmaSprite_Hairback.png",   
+            "not EmmaX.Hair", Null(),
+            "EmmaX.Hair == 'wet' or EmmaX.Water", "images/EmmaSprite/EmmaSprite_HairbackWet.png",
+            "EmmaX.Hair", "images/EmmaSprite/EmmaSprite_Hairback.png",   
             "True", Null(),        
             ),     
         (0,0), ConditionSwitch(
             #nighty underlayer
-            "E_Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_Under.png", 
+            "EmmaX.Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_Under.png", 
             "True", Null(),              
             ), 
         (0,0), ConditionSwitch(            
             #panties down back 
-            "not E_Panties or not E_PantiesDown or (E_Legs == 'pants' and not E_Upskirt)", Null(), 
-            "E_Panties == 'sports panties'", "images/EmmaSprite/EmmaSprite_Panties_Sports_DownBack.png",   
-            "E_Panties == 'bikini bottoms'", "images/EmmaSprite/EmmaSprite_Panties_Bikini_DownBack.png",  
+            "not EmmaX.Panties or not EmmaX.PantiesDown or (EmmaX.Legs == 'pants' and not EmmaX.Upskirt)", Null(), 
+            "EmmaX.Panties == 'sports panties'", "images/EmmaSprite/EmmaSprite_Panties_Sports_DownBack.png",   
+            "EmmaX.Panties == 'bikini bottoms'", "images/EmmaSprite/EmmaSprite_Panties_Bikini_DownBack.png",  
             "True", "images/EmmaSprite/EmmaSprite_Panties_DownBack.png",   
             ),  
         (0,0), ConditionSwitch(
             #legs/torso 
-            "Emma_Arms == 2", "images/EmmaSprite/EmmaSprite_Legs_Arms2.png",   
-            "True", "images/EmmaSprite/EmmaSprite_Legs_Arms1.png", #if E_Arms == 1 
+            "EmmaX.ArmPose == 2", "images/EmmaSprite/EmmaSprite_Legs_Arms2.png",   
+            "True", "images/EmmaSprite/EmmaSprite_Legs_Arms1.png", #if EmmaX.Arms == 1 
             ),     
         
         (215,540), ConditionSwitch(                                                                         
             #Personal Wetness            
-            "not E_Wet", Null(),
-            "E_Legs == 'pants' and not E_Upskirt", Null(),   
-            "E_Panties and not E_PantiesDown and E_Wet <= 1", Null(),                   
-            "E_Wet == 1", ConditionSwitch( #Wet = 1
-                    "E_Panties and E_PantiesDown", AlphaMask("Wet_Drip","Emma_Drip_MaskP"),  
-                    "E_Legs == 'pants'", AlphaMask("Wet_Drip","Emma_Drip_MaskP"),
+            "not EmmaX.Wet", Null(),
+            "EmmaX.Legs == 'pants' and not EmmaX.Upskirt", Null(),   
+            "EmmaX.Panties and not EmmaX.PantiesDown and EmmaX.Wet <= 1", Null(),                   
+            "EmmaX.Wet == 1", ConditionSwitch( #Wet = 1
+                    "EmmaX.Panties and EmmaX.PantiesDown", AlphaMask("Wet_Drip","Emma_Drip_MaskP"),  
+                    "EmmaX.Legs == 'pants'", AlphaMask("Wet_Drip","Emma_Drip_MaskP"),
                     "True", AlphaMask("Wet_Drip","Emma_Drip_Mask"), #only plays if nothing is in the way
                     ),
             "True", ConditionSwitch( #Wet = 2+
-                    "E_Panties and E_PantiesDown", AlphaMask("Wet_Drip2","Emma_Drip_MaskP"), #"Wet_Drip2",# 
-                    "E_Legs == 'pants'", AlphaMask("Wet_Drip2","Emma_Drip_MaskP"),
-                    "E_Panties", AlphaMask("Wet_Drip","Emma_Drip_Mask"), #"Wet_Drip2",# 
+                    "EmmaX.Panties and EmmaX.PantiesDown", AlphaMask("Wet_Drip2","Emma_Drip_MaskP"), #"Wet_Drip2",# 
+                    "EmmaX.Legs == 'pants'", AlphaMask("Wet_Drip2","Emma_Drip_MaskP"),
+                    "EmmaX.Panties", AlphaMask("Wet_Drip","Emma_Drip_Mask"), #"Wet_Drip2",# 
                     "True", AlphaMask("Wet_Drip2","Emma_Drip_Mask"), #only plays if nothing is in the way
                     ),
             ),
         (0,0), ConditionSwitch(
             #Personal Wetness            
-            "not E_Wet", Null(),
-            "E_Legs and E_Wet <= 1", Null(),
-            "E_Legs", "images/EmmaSprite/EmmaSprite_Wet.png",
-            "E_Wet == 1", "images/EmmaSprite/EmmaSprite_Wet.png",
-            "True", "images/EmmaSprite/EmmaSprite_Wet.png",       #E_Wet >1
+            "not EmmaX.Wet", Null(),
+            "EmmaX.Legs and EmmaX.Wet <= 1", Null(),
+            "EmmaX.Legs", "images/EmmaSprite/EmmaSprite_Wet.png",
+            "EmmaX.Wet == 1", "images/EmmaSprite/EmmaSprite_Wet.png",
+            "True", "images/EmmaSprite/EmmaSprite_Wet.png",       #EmmaX.Wet >1
             ),     
         
         (215,540), ConditionSwitch(                                                                         
             #Spunk nethers        
-            "'in' not in E_Spunk and 'anal' not in E_Spunk", Null(),
-            "E_Legs == 'pants' and not E_Upskirt", Null(),   
+            "'in' not in EmmaX.Spunk and 'anal' not in EmmaX.Spunk", Null(),
+            "EmmaX.Legs == 'pants' and not EmmaX.Upskirt", Null(),   
             "True", ConditionSwitch( #Wet = 2+
-                    "E_Panties and E_PantiesDown", AlphaMask("Spunk_Drip","Emma_Drip_MaskP"), #"Wet_Drip2",# 
-                    "E_Legs == 'pants'", AlphaMask("Spunk_Drip","Emma_Drip_MaskP"),
+                    "EmmaX.Panties and EmmaX.PantiesDown", AlphaMask("Spunk_Drip","Emma_Drip_MaskP"), #"Wet_Drip2",# 
+                    "EmmaX.Legs == 'pants'", AlphaMask("Spunk_Drip","Emma_Drip_MaskP"),
                     "True", AlphaMask("Spunk_Drip","Emma_Drip_Mask"), #only plays if nothing is in the way
                     ),
             ),    
         (0,0), ConditionSwitch(
             #pubes 
-            "E_Pubes", "images/EmmaSprite/EmmaSprite_Pubes.png",   
+            "EmmaX.Pubes", "images/EmmaSprite/EmmaSprite_Pubes.png",   
             "True", Null(),        
             ),      
         (0,0), ConditionSwitch(
             #nude lower piercings        
-            "not E_Pierce", Null(),  
-            "E_Panties and not E_PantiesDown", Null(), 
-            "E_Legs != 'skirt' and E_Legs and not E_Upskirt", Null(), #skirt if wearing a skirt
-            "E_Pierce == 'barbell'", "images/EmmaSprite/EmmaSprite_Pierce_Pussy_Barbell.png",  
-            "E_Pierce == 'ring'", "images/EmmaSprite/EmmaSprite_Pierce_Pussy_Ring.png",  
+            "not EmmaX.Pierce", Null(),  
+            "EmmaX.Panties and not EmmaX.PantiesDown", Null(), 
+            "EmmaX.Legs != 'skirt' and EmmaX.Legs and not EmmaX.Upskirt", Null(), #skirt if wearing a skirt
+            "EmmaX.Pierce == 'barbell'", "images/EmmaSprite/EmmaSprite_Pierce_Pussy_Barbell.png",  
+            "EmmaX.Pierce == 'ring'", "images/EmmaSprite/EmmaSprite_Pierce_Pussy_Ring.png",  
             "True", Null(), 
             ),  
         (0,0), ConditionSwitch(
             #Water effect 
-            "E_Water", "images/EmmaSprite/EmmaSprite_Water_Legs.png",   
+            "EmmaX.Water", "images/EmmaSprite/EmmaSprite_Water_Legs.png",   
             "True", Null(),        
             ),               
         (0,0), ConditionSwitch( 
             # stockings   
             "renpy.showing('Emma_FJ_Animation')", Null(),                    
-            "E_Hose == 'stockings'", "images/EmmaSprite/EmmaSprite_Stockings.png",   
-            "E_Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_StockingsGarter.png",   
-            "E_Hose == 'garterbelt'", "images/EmmaSprite/EmmaSprite_Garter.png",   
+            "EmmaX.Hose == 'stockings'", "images/EmmaSprite/EmmaSprite_Stockings.png",   
+            "EmmaX.Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_StockingsGarter.png",   
+            "EmmaX.Hose == 'garterbelt'", "images/EmmaSprite/EmmaSprite_Garter.png",   
             "True", Null(),        
             ),                  
         (0,0), ConditionSwitch(
             #boots    
-            "E_PantiesDown and E_Boots == 'thigh boots' and (E_Legs == 'skirt' or not E_Legs)", "images/EmmaSprite/EmmaSprite_Boots.png",    
+            "EmmaX.PantiesDown and EmmaX.Acc == 'thigh boots' and (EmmaX.Legs == 'skirt' or not EmmaX.Legs)", "images/EmmaSprite/EmmaSprite_Boots.png",    
             "True", Null(), 
             ),     
         (0,0), ConditionSwitch(
             #panties down if not wearing pants
-            "not E_Panties or not E_PantiesDown or (E_Legs == 'pants' and not E_Upskirt)", Null(),   
-            "E_Panties == 'sports panties' and E_Wet", "images/EmmaSprite/EmmaSprite_Panties_Sports_DownWet.png",  
-            "E_Panties == 'sports panties'", "images/EmmaSprite/EmmaSprite_Panties_Sports_Down.png",              
-            "E_Panties == 'lace panties' and E_Wet", "images/EmmaSprite/EmmaSprite_Panties_Lace_DownWet.png",  
-            "E_Panties == 'lace panties'", "images/EmmaSprite/EmmaSprite_Panties_Lace_Down.png",   
-            "E_Panties == 'bikini bottoms'", "images/EmmaSprite/EmmaSprite_Panties_Bikini_Down.png",  
-#            "E_Wet", "images/EmmaSprite/EmmaSprite_Panties_DownWet.png",  
+            "not EmmaX.Panties or not EmmaX.PantiesDown or (EmmaX.Legs == 'pants' and not EmmaX.Upskirt)", Null(),   
+            "EmmaX.Panties == 'sports panties' and EmmaX.Wet", "images/EmmaSprite/EmmaSprite_Panties_Sports_DownWet.png",  
+            "EmmaX.Panties == 'sports panties'", "images/EmmaSprite/EmmaSprite_Panties_Sports_Down.png",              
+            "EmmaX.Panties == 'lace panties' and EmmaX.Wet", "images/EmmaSprite/EmmaSprite_Panties_Lace_DownWet.png",  
+            "EmmaX.Panties == 'lace panties'", "images/EmmaSprite/EmmaSprite_Panties_Lace_Down.png",   
+            "EmmaX.Panties == 'bikini bottoms'", "images/EmmaSprite/EmmaSprite_Panties_Bikini_Down.png",  
+#            "EmmaX.Wet", "images/EmmaSprite/EmmaSprite_Panties_DownWet.png",  
             "True", "images/EmmaSprite/EmmaSprite_Panties_Down.png",  
             ),                
         (0,0), ConditionSwitch(
             #panties up
-            "E_PantiesDown or not E_Panties", Null(),   
-#            "E_Panties == 'sports panties' and E_Wet", "images/EmmaSprite/EmmaSprite_Panties_Sports_Wet.png",     
-            "E_Panties == 'sports panties'", "images/EmmaSprite/EmmaSprite_Panties_Sports.png",  
-            "E_Panties == 'lace panties' and E_Wet", "images/EmmaSprite/EmmaSprite_Panties_Lace_Wet.png", 
-            "E_Panties == 'lace panties'", "images/EmmaSprite/EmmaSprite_Panties_Lace.png",  
-            "E_Panties == 'bikini bottoms'", "images/EmmaSprite/EmmaSprite_Panties_Bikini.png",  
-#            "E_Wet", "images/EmmaSprite/EmmaSprite_Panties_Wet.png", #readd when sprite works 
+            "EmmaX.PantiesDown or not EmmaX.Panties", Null(),   
+#            "EmmaX.Panties == 'sports panties' and EmmaX.Wet", "images/EmmaSprite/EmmaSprite_Panties_Sports_Wet.png",     
+            "EmmaX.Panties == 'sports panties'", "images/EmmaSprite/EmmaSprite_Panties_Sports.png",  
+            "EmmaX.Panties == 'lace panties' and EmmaX.Wet", "images/EmmaSprite/EmmaSprite_Panties_Lace_Wet.png", 
+            "EmmaX.Panties == 'lace panties'", "images/EmmaSprite/EmmaSprite_Panties_Lace.png",  
+            "EmmaX.Panties == 'bikini bottoms'", "images/EmmaSprite/EmmaSprite_Panties_Bikini.png",  
+#            "EmmaX.Wet", "images/EmmaSprite/EmmaSprite_Panties_Wet.png", #readd when sprite works 
             "True", "images/EmmaSprite/EmmaSprite_Panties.png",  
             ),              
         (0,0), ConditionSwitch(
             # pantyhose
             "renpy.showing('Emma_FJ_Animation')", Null(),  
-            "E_Hose == 'pantyhose' and not E_PantiesDown", "images/EmmaSprite/EmmaSprite_Hose.png",   
+            "EmmaX.Hose == 'pantyhose' and not EmmaX.PantiesDown", "images/EmmaSprite/EmmaSprite_Hose.png",   
             "True", Null(),        
             ),    
         (0,0), ConditionSwitch(
             #pussy spunk 
-            "E_Legs and E_Legs != 'skirt' and not E_Upskirt", Null(),
-            "'in' in E_Spunk or 'anal' in E_Spunk", "images/EmmaSprite/EmmaSprite_Spunk_Pussy.png",
+            "EmmaX.Legs and EmmaX.Legs != 'skirt' and not EmmaX.Upskirt", Null(),
+            "'in' in EmmaX.Spunk or 'anal' in EmmaX.Spunk", "images/EmmaSprite/EmmaSprite_Spunk_Pussy.png",
             "True", Null(), 
             ),   
         (0,0), ConditionSwitch(
             #pants    
-            "not E_Legs", Null(),
-            "E_Upskirt", ConditionSwitch(                   
+            "not EmmaX.Legs", Null(),
+            "EmmaX.Upskirt", ConditionSwitch(                   
                         #if the skirt's up or pants down 
-                        "E_Legs == 'skirt'", "images/EmmaSprite/EmmaSprite_SkirtUp.png", 
-                        "E_Boots", Null(),
-                        "E_Legs == 'pants'", "images/EmmaSprite/EmmaSprite_Pants_Down.png",   
-                        "E_Legs == 'yoga pants'", "images/EmmaSprite/EmmaSprite_Pants_Yoga_Down.png",   
+                        "EmmaX.Legs == 'skirt'", "images/EmmaSprite/EmmaSprite_SkirtUp.png", 
+                        "EmmaX.Acc", Null(),
+                        "EmmaX.Legs == 'pants'", "images/EmmaSprite/EmmaSprite_Pants_Down.png",   
+                        "EmmaX.Legs == 'yoga pants'", "images/EmmaSprite/EmmaSprite_Pants_Yoga_Down.png",   
                         "True", Null(),
                         ),                    
             "True", ConditionSwitch(                
                     #if it's the ring pericings
-                    "E_Wet", ConditionSwitch(   
+                    "EmmaX.Wet", ConditionSwitch(   
                         #if she's not wet
-                        "E_Legs == 'pants'", "images/EmmaSprite/EmmaSprite_Pants.png",   
-                        "E_Legs == 'yoga pants'", "images/EmmaSprite/EmmaSprite_Pants_YogaWet.png",       
-                        "E_Legs == 'skirt'", "images/EmmaSprite/EmmaSprite_Skirt.png", 
+                        "EmmaX.Legs == 'pants'", "images/EmmaSprite/EmmaSprite_Pants.png",   
+                        "EmmaX.Legs == 'yoga pants'", "images/EmmaSprite/EmmaSprite_Pants_YogaWet.png",       
+                        "EmmaX.Legs == 'skirt'", "images/EmmaSprite/EmmaSprite_Skirt.png", 
                         "True", Null(),
                         ),
                     "True", ConditionSwitch(   
                         #if she's wet
-                        "E_Legs == 'pants'", "images/EmmaSprite/EmmaSprite_Pants.png",   
-                        "E_Legs == 'yoga pants'", "images/EmmaSprite/EmmaSprite_Pants_Yoga.png",       
-                        "E_Legs == 'skirt'", "images/EmmaSprite/EmmaSprite_Skirt.png", 
+                        "EmmaX.Legs == 'pants'", "images/EmmaSprite/EmmaSprite_Pants.png",   
+                        "EmmaX.Legs == 'yoga pants'", "images/EmmaSprite/EmmaSprite_Pants_Yoga.png",       
+                        "EmmaX.Legs == 'skirt'", "images/EmmaSprite/EmmaSprite_Skirt.png", 
                         "True", Null(),
                         ),                    
                     ),    
             ),                   
         (0,0), ConditionSwitch(
             #boots    
-            "not E_PantiesDown and E_Boots == 'thigh boots'", "images/EmmaSprite/EmmaSprite_Boots.png",    
+            "not EmmaX.PantiesDown and EmmaX.Acc == 'thigh boots'", "images/EmmaSprite/EmmaSprite_Boots.png",    
             "True", Null(), 
             ),     
         (0,0), ConditionSwitch(
             #clothed lower piercings         
-            "E_Legs == 'skirt'", Null(),
-            "E_Pierce == 'barbell'", ConditionSwitch(   
+            "EmmaX.Legs == 'skirt'", Null(),
+            "EmmaX.Pierce == 'barbell'", ConditionSwitch(   
                     #if it's the barbell pericings 
-                    "E_Legs and not E_Upskirt", "images/EmmaSprite/EmmaSprite_Pierce_Pussy_BarOut.png",  
-                    "E_Panties and not E_PantiesDown", "images/EmmaSprite/EmmaSprite_Pierce_Pussy_BarOut.png", 
+                    "EmmaX.Legs and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_Pierce_Pussy_BarOut.png",  
+                    "EmmaX.Panties and not EmmaX.PantiesDown", "images/EmmaSprite/EmmaSprite_Pierce_Pussy_BarOut.png", 
                     "True", Null(),
                     ),    
-            "E_Pierce == 'ring'", ConditionSwitch(   
+            "EmmaX.Pierce == 'ring'", ConditionSwitch(   
                     #if it's the ring pericings
-                    "E_Legs and not E_Upskirt", "images/EmmaSprite/EmmaSprite_Pierce_Pussy_RingOut.png",  
-                    "E_Panties and not E_PantiesDown", "images/EmmaSprite/EmmaSprite_Pierce_Pussy_RingOut.png", 
+                    "EmmaX.Legs and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_Pierce_Pussy_RingOut.png",  
+                    "EmmaX.Panties and not EmmaX.PantiesDown", "images/EmmaSprite/EmmaSprite_Pierce_Pussy_RingOut.png", 
                     "True", Null(),
                     ),
             "True", Null(), 
             ),    
         (0,0), ConditionSwitch(
             #Chest underlayer
-            "E_Chest == 'sports bra' and not E_Uptop", "images/EmmaSprite/EmmaSprite_Bra_Sports_Under.png",   
-            "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Bra_Lace_Under.png",   
-            "E_Chest == 'corset'", "images/EmmaSprite/EmmaSprite_CorsetUnder.png",   
-            "E_Chest == 'bikini top'", "images/EmmaSprite/EmmaSprite_Bra_Bikini_Under.png",   
+            "EmmaX.Chest == 'sports bra' and not EmmaX.Uptop", "images/EmmaSprite/EmmaSprite_Bra_Sports_Under.png",   
+            "EmmaX.Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Bra_Lace_Under.png",   
+            "EmmaX.Chest == 'corset'", "images/EmmaSprite/EmmaSprite_CorsetUnder.png",   
+            "EmmaX.Chest == 'bikini top'", "images/EmmaSprite/EmmaSprite_Bra_Bikini_Under.png",   
             "True", Null(),              
             ), 
         (0,0), ConditionSwitch(
             #Over underlayer
-            "E_Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_Under.png", 
-            "E_Over == 'towel'", "images/EmmaSprite/EmmaSprite_Towel_Under.png",   
+            "EmmaX.Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_Under.png", 
+            "EmmaX.Over == 'towel'", "images/EmmaSprite/EmmaSprite_Towel_Under.png",   
             "True", Null(),              
             ),          
         (0,0), ConditionSwitch(
             #belly spunk 
-            "'belly' in E_Spunk", "images/EmmaSprite/EmmaSprite_Spunk_Belly.png",
+            "'belly' in EmmaX.Spunk", "images/EmmaSprite/EmmaSprite_Spunk_Belly.png",
             "True", Null(), 
             ),    
         (0,0), ConditionSwitch(
             #arms 
-            "Emma_Arms == 2", "images/EmmaSprite/EmmaSprite_Arms2.png",         # one hand up
-            "True", "images/EmmaSprite/EmmaSprite_Arms1.png", #if E_Arms == 1   # Crossed        
+            "EmmaX.ArmPose == 2", "images/EmmaSprite/EmmaSprite_Arms2.png",         # one hand up
+            "True", "images/EmmaSprite/EmmaSprite_Arms1.png", #if EmmaX.Arms == 1   # Crossed        
             ),  
         (0,0), ConditionSwitch(
             #Water effect on arms
-            "not E_Water", Null(),             
-            "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_Water_Arms1.png",   
-            "True", "images/EmmaSprite/EmmaSprite_Water_Arms2.png", #if E_Arms == 1      
+            "not EmmaX.Water", Null(),             
+            "EmmaX.ArmPose == 1", "images/EmmaSprite/EmmaSprite_Water_Arms1.png",   
+            "True", "images/EmmaSprite/EmmaSprite_Water_Arms2.png", #if EmmaX.Arms == 1      
             ), 
         (0,0), ConditionSwitch(
             #gloves 
-            "not E_Arms", Null(),  
-            "Emma_Arms == 2", "images/EmmaSprite/EmmaSprite_Gloves_Arms2.png",   
-            "True", "images/EmmaSprite/EmmaSprite_Gloves_Arms1.png", #if E_Arms == 1         
+            "not EmmaX.Arms", Null(),  
+            "EmmaX.ArmPose == 2", "images/EmmaSprite/EmmaSprite_Gloves_Arms2.png",   
+            "True", "images/EmmaSprite/EmmaSprite_Gloves_Arms1.png", #if EmmaX.Arms == 1         
             ),   
         
         (0,0), ConditionSwitch(                                                                         
             # jacket arms in "up" pose  
-            "not E_Uptop or E_Over != 'jacket'", Null(),  
-            "Emma_Arms == 2", "images/EmmaSprite/EmmaSprite_Jacket_2Arm_Up.png",              
+            "not EmmaX.Uptop or EmmaX.Over != 'jacket'", Null(),  
+            "EmmaX.ArmPose == 2", "images/EmmaSprite/EmmaSprite_Jacket_2Arm_Up.png",              
             "True", "images/EmmaSprite/EmmaSprite_Jacket_1Arm_Up.png",   
             ), 
         (0,0), ConditionSwitch(
             #tits
-            "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_TitsUp.png",   # E_TitsUp = 1
-            "E_Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_TitsUp.png",   # E_TitsUp = 1
-            "True", "images/EmmaSprite/EmmaSprite_TitsDown.png",   # E_TitsUp = 0
+            "EmmaX.ArmPose == 1", "images/EmmaSprite/EmmaSprite_TitsUp.png",   # EmmaX.TitsUp = 1
+            "EmmaX.Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_TitsUp.png",   # EmmaX.TitsUp = 1
+            "True", "images/EmmaSprite/EmmaSprite_TitsDown.png",   # EmmaX.TitsUp = 0
             ), 
         (0,0), ConditionSwitch(
             #nude peircings      
             #something about this entry makes all subsequent entries mis-aligned
-            "not E_Pierce", Null(),  
-            "E_Pierce == 'barbell'", ConditionSwitch(   
+            "not EmmaX.Pierce", Null(),  
+            "EmmaX.Pierce == 'barbell'", ConditionSwitch(   
                     #if it's the barbell pericings
-                    "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",                     
-                    "E_Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",   
-#                    "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",    
-#                    "E_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",  
+                    "EmmaX.ArmPose == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",                     
+                    "EmmaX.Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",   
+#                    "EmmaX.Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",    
+#                    "EmmaX.Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Barbell.png",  
                     "True", "images/EmmaSprite/EmmaSprite_Pierce_Down_Barbell.png",        
                     ),                        
-            "E_Pierce == 'ring'", ConditionSwitch(                      
+            "EmmaX.Pierce == 'ring'", ConditionSwitch(                      
                     #if it's the ring pericings                                 
-                    "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png", 
-                    "E_Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png",                          
-#                    "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png", 
-#                    "E_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png", 
+                    "EmmaX.ArmPose == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png", 
+                    "EmmaX.Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png",                          
+#                    "EmmaX.Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png", 
+#                    "EmmaX.Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_Ring.png", 
                     "True", "images/EmmaSprite/EmmaSprite_Pierce_Down_Ring.png", 
                     ),       
             "True", Null(),  
             ),    
         (0,0), ConditionSwitch(                          
             #neck
-            "E_Neck == 'choker'", "images/EmmaSprite/EmmaSprite_Neck_Choker.png",       
+            "EmmaX.Neck == 'choker'", "images/EmmaSprite/EmmaSprite_Neck_Choker.png",       
             "True", Null(), 
             ),  
         (0,0), ConditionSwitch(
             #Water effect 
-            "not E_Water", Null(),             
-            "Emma_Arms == 1 or E_Chest == 'corset'", "images/EmmaSprite/EmmaSprite_Water_TitsUp.png",  
-            "True", "images/EmmaSprite/EmmaSprite_Water_TitsDown.png", #if E_Arms == 1      
+            "not EmmaX.Water", Null(),             
+            "EmmaX.ArmPose == 1 or EmmaX.Chest == 'corset'", "images/EmmaSprite/EmmaSprite_Water_TitsUp.png",  
+            "True", "images/EmmaSprite/EmmaSprite_Water_TitsDown.png", #if EmmaX.Arms == 1      
             ), 
         (0,0), ConditionSwitch(                                                                         #Chest layer
-            "E_Uptop and E_Chest", ConditionSwitch(   
+            "EmmaX.Uptop and EmmaX.Chest", ConditionSwitch(   
                             #if her top is up. . .
-                            "E_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Bra_Sports_Up.png",   
-                            "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Bra_Lace_Up.png",   
-                            "E_Chest == 'bikini top'", "images/EmmaSprite/EmmaSprite_Bra_Bikini_Up.png",      
-                            "E_Chest == 'corset'", "images/EmmaSprite/EmmaSprite_CorsetTits_Up.png",  
+                            "EmmaX.Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Bra_Sports_Up.png",   
+                            "EmmaX.Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Bra_Lace_Up.png",   
+                            "EmmaX.Chest == 'bikini top'", "images/EmmaSprite/EmmaSprite_Bra_Bikini_Up.png",      
+                            "EmmaX.Chest == 'corset'", "images/EmmaSprite/EmmaSprite_CorsetTits_Up.png",  
                             "True", Null(), 
                             ),    
-            "E_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Bra_Sports.png",   
-            "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Bra_Lace.png",   
-            "E_Chest == 'bikini top'", "images/EmmaSprite/EmmaSprite_Bra_Bikini.png",   
-            "E_Chest == 'corset' and E_Over", "images/EmmaSprite/EmmaSprite_CorsetTitsX.png",   
-            "E_Chest == 'corset'", "images/EmmaSprite/EmmaSprite_CorsetTits.png",   
+            "EmmaX.Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Bra_Sports.png",   
+            "EmmaX.Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Bra_Lace.png",   
+            "EmmaX.Chest == 'bikini top'", "images/EmmaSprite/EmmaSprite_Bra_Bikini.png",   
+            "EmmaX.Chest == 'corset' and EmmaX.Over", "images/EmmaSprite/EmmaSprite_CorsetTitsX.png",   
+            "EmmaX.Chest == 'corset'", "images/EmmaSprite/EmmaSprite_CorsetTits.png",   
             "True", Null(),              
             ),       
 #        (0,0), ConditionSwitch(                                                                         #soap
-#            "E_Water == 3", "images/EmmaSprite/Emma_body_wet3.png",
+#            "EmmaX.Water == 3", "images/EmmaSprite/Emma_body_wet3.png",
 #            "True", Null(),                 
 #            ),
         (0,0), ConditionSwitch(                                                                         #cape layer       
-            "E_Uptop or E_Over == 'jacket' or E_Chest != 'corset'", Null(),  
-            "Emma_Arms == 2", "images/EmmaSprite/EmmaSprite_Cape2.png",              
+            "EmmaX.Uptop or EmmaX.Over == 'jacket' or EmmaX.Chest != 'corset'", Null(),  
+            "EmmaX.ArmPose == 2", "images/EmmaSprite/EmmaSprite_Cape2.png",              
             "True", "images/EmmaSprite/EmmaSprite_Cape1.png",   
             ), 
         (0,0), ConditionSwitch(                                                                         #Overshirt layer       
-            "not E_Over", Null(),  
-            "Emma_Arms == 2", ConditionSwitch(   
+            "not EmmaX.Over", Null(),  
+            "EmmaX.ArmPose == 2", ConditionSwitch(   
                     #if her arms are down, allowing her breasts to sink                    
-                    "E_Uptop", ConditionSwitch(   
-                                    "E_Chest in ('corset','lace bra','sports bra','bikini top')", ConditionSwitch(   
+                    "EmmaX.Uptop", ConditionSwitch(   
+                                    "EmmaX.Chest in ('corset','lace bra','sports bra','bikini top')", ConditionSwitch(   
                                             #If she's wearing a supporting bra. . .
-                                            "E_Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_2Up_Up.png",  
-                                            "E_Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_Up2_Up.png",   
+                                            "EmmaX.Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_2Up_Up.png",  
+                                            "EmmaX.Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_Up2_Up.png",   
                                             "True", Null(), 
                                             ),  
                                     #if she's not wearing a supporting bra. . .
-                                    "E_Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_2Down_Up.png",  
-                                    "E_Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_Up2_Up.png", 
+                                    "EmmaX.Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_2Down_Up.png",  
+                                    "EmmaX.Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_Up2_Up.png", 
                                     "True", Null(), 
                                     ),    
                     #if not Uptop. . .
-                    "E_Chest in ('corset','lace bra','sports bra','bikini top')", ConditionSwitch(   
+                    "EmmaX.Chest in ('corset','lace bra','sports bra','bikini top')", ConditionSwitch(   
                             #If she's wearing a supporting bra. . .
-                            "E_Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_2Up.png",  
-                            "E_Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_2Up.png",      
-                            "E_Over == 'towel'", "images/EmmaSprite/EmmaSprite_Towel_Up2.png",  
+                            "EmmaX.Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_2Up.png",  
+                            "EmmaX.Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_2Up.png",      
+                            "EmmaX.Over == 'towel'", "images/EmmaSprite/EmmaSprite_Towel_Up2.png",  
                             "True", Null(), 
                             ),  
                     #if she's not wearing a supporting bra. . .
-                    "E_Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_2Down.png",  
-                    "E_Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_2Down.png",      
-                    "E_Over == 'towel'", "images/EmmaSprite/EmmaSprite_Towel_Down2.png",  
+                    "EmmaX.Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_2Down.png",  
+                    "EmmaX.Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_2Down.png",      
+                    "EmmaX.Over == 'towel'", "images/EmmaSprite/EmmaSprite_Towel_Down2.png",  
                     "True", Null(), 
                     ),   
             #if her arms are up, preventng her breasts from sinking
-            "E_Uptop", ConditionSwitch(   
+            "EmmaX.Uptop", ConditionSwitch(   
                             #if her top is up. . .
-                            "E_Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_1Up_Up.png",  
-                            "E_Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_Up1_Up.png",   
+                            "EmmaX.Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_1Up_Up.png",  
+                            "EmmaX.Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_Up1_Up.png",   
                             "True", Null(), 
                             ),    
             #if her top is not up. . .
-            "E_Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_1Up.png",  
-            "E_Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_1Up.png",      
-            "E_Over == 'towel'", "images/EmmaSprite/EmmaSprite_Towel_Up1.png",               
+            "EmmaX.Over == 'jacket'", "images/EmmaSprite/EmmaSprite_Jacket_1Up.png",  
+            "EmmaX.Over == 'nighty'", "images/EmmaSprite/EmmaSprite_Nighty_1Up.png",      
+            "EmmaX.Over == 'towel'", "images/EmmaSprite/EmmaSprite_Towel_Up1.png",               
             "True", Null(), 
             ), 
         (0,0), ConditionSwitch(                                                                         #clothed peircings        
-            "not E_Pierce or E_Uptop or (not E_Over and not E_Chest)", Null(),  
-            "E_Pierce == 'barbell'", ConditionSwitch(   
+            "not EmmaX.Pierce or EmmaX.Uptop or (not EmmaX.Over and not EmmaX.Chest)", Null(),  
+            "EmmaX.Pierce == 'barbell'", ConditionSwitch(   
                     #if it's the barbell pericings
-                    "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",  
-                    "E_Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",   
-#                    "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",    
-#                    "E_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",  
+                    "EmmaX.ArmPose == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",  
+                    "EmmaX.Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",   
+#                    "EmmaX.Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",    
+#                    "EmmaX.Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_BarOut.png",  
                     "True", "images/EmmaSprite/EmmaSprite_Pierce_Down_BarOut.png", 
                     ),    
-            "E_Pierce == 'ring'", ConditionSwitch(   
+            "EmmaX.Pierce == 'ring'", ConditionSwitch(   
                     #if it's the ring pericings
-                    "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",  
-                    "E_Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",   
-#                    "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",    
-#                    "E_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",  
+                    "EmmaX.ArmPose == 1", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",  
+                    "EmmaX.Chest in ('corset','lace bra','sports bra','bikini top')", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",   
+#                    "EmmaX.Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",    
+#                    "EmmaX.Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Pierce_Up_RingOut.png",  
                     "True", "images/EmmaSprite/EmmaSprite_Pierce_Down_RingOut.png", 
                     ),                 
             "True", Null(), 
             ),    
         (0,0), ConditionSwitch(
             #breast spunk      
-            "'tits' in E_Spunk", ConditionSwitch(   
+            "'tits' in EmmaX.Spunk", ConditionSwitch(   
                     #if it's the barbell pericings
-                    "Emma_Arms == 1", "images/EmmaSprite/EmmaSprite_Spunk_TitsU.png",                     
-                    "E_Chest == 'corset'", "images/EmmaSprite/EmmaSprite_Spunk_TitsU.png",   
-                    "E_Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Spunk_TitsU.png",    
-                    "E_Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Spunk_TitsU.png",  
+                    "EmmaX.ArmPose == 1", "images/EmmaSprite/EmmaSprite_Spunk_TitsU.png",                     
+                    "EmmaX.Chest == 'corset'", "images/EmmaSprite/EmmaSprite_Spunk_TitsU.png",   
+                    "EmmaX.Chest == 'lace bra'", "images/EmmaSprite/EmmaSprite_Spunk_TitsU.png",    
+                    "EmmaX.Chest == 'sports bra'", "images/EmmaSprite/EmmaSprite_Spunk_TitsU.png",  
                     "True", "images/EmmaSprite/EmmaSprite_Spunk_TitsD.png",        
                     ),       
             "True", Null(),  
@@ -381,49 +381,49 @@ image Emma_Sprite:
         (55,0), "EmmaSprite_Head", #Head
         (0,0), ConditionSwitch( 
             #hand spunk 
-            "Emma_Arms != 2 or 'hand' not in E_Spunk", Null(),  
-            "'mouth' in E_Spunk", "images/EmmaSprite/EmmaSprite_Spunk_HandM.png", 
+            "EmmaX.ArmPose != 2 or 'hand' not in EmmaX.Spunk", Null(),  
+            "'mouth' in EmmaX.Spunk", "images/EmmaSprite/EmmaSprite_Spunk_HandM.png", 
             "True", "images/EmmaSprite/EmmaSprite_Spunk_Hand.png",   
             ),  
 #        (0,0), ConditionSwitch(                                                                         #Props
-#            "not E_Held or Emma_Arms != 2", Null(), 
-#            "Emma_Arms == 2 and E_Held == 'phone'", "images/EmmaSprite/Emma_held_phone.png",
-#            "Emma_Arms == 2 and E_Held == 'dildo'", "images/EmmaSprite/Emma_held_dildo.png",
-#            "Emma_Arms == 2 and E_Held == 'vibrator'", "images/EmmaSprite/Emma_held_vibrator.png",
-#            "Emma_Arms == 2 and E_Held == 'panties'", "images/EmmaSprite/Emma_held_panties.png",
+#            "not EmmaX.Held or EmmaX.ArmPose != 2", Null(), 
+#            "EmmaX.ArmPose == 2 and EmmaX.Held == 'phone'", "images/EmmaSprite/Emma_held_phone.png",
+#            "EmmaX.ArmPose == 2 and EmmaX.Held == 'dildo'", "images/EmmaSprite/Emma_held_dildo.png",
+#            "EmmaX.ArmPose == 2 and EmmaX.Held == 'vibrator'", "images/EmmaSprite/Emma_held_vibrator.png",
+#            "EmmaX.ArmPose == 2 and EmmaX.Held == 'panties'", "images/EmmaSprite/Emma_held_panties.png",
 #            "True", Null(), 
 #            ),        
         (0,0), ConditionSwitch(
             #UI tool for When Emma is masturbating using Trigger3 actions
-            "E_Loc == 'bg teacher'", Null(),
-            "Trigger == 'lesbian' or not Trigger3 or Ch_Focus != 'Emma'", Null(),
+            "EmmaX.Loc == 'bg teacher'", Null(),
+            "Trigger == 'lesbian' or not Trigger3 or Ch_Focus != EmmaX", Null(),
             
             #this is not a lesbian thing, and a trigger is set, and Emma is the primary. . .
-            "Trigger3 == 'fondle pussy'", "GirlGropePussy_ESelf",  
+            "Trigger3 == 'fondle pussy'", "GirlGropePussy_EmmaSelf",  
             "Trigger3 == 'fondle breasts'", ConditionSwitch(                                                                      
-                    "Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts'", "GirlGropeLeftBreast_E", 
+                    "Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts'", "GirlGropeLeftBreast_Emma", 
                         #When zero is working the right breast, fondle left
-                    "Trigger == 'fondle breasts' or Trigger == 'suck breasts'", "GirlGropeRightBreast_E",   
+                    "Trigger == 'fondle breasts' or Trigger == 'suck breasts'", "GirlGropeRightBreast_Emma",   
                         #When zero is working the left breast, fondle right
-                    "True", "GirlGropeBothBreast_E",
+                    "True", "GirlGropeBothBreast_Emma",
                         #else, fondle both
                     ),  
-            "Trigger3 == 'vibrator breasts'", "VibratorRightBreast_E",     
-            "Trigger3 == 'vibrator pussy'", "VibratorPussy_E",
-            "Trigger3 == 'vibrator pussy insert'", "VibratorPussy_E",
-            "Trigger3 == 'vibrator anal'", "VibratorAnal_E",
-            "Trigger3 == 'vibrator anal insert'", "VibratorPussy_E",            
+            "Trigger3 == 'vibrator breasts'", "VibratorRightBreast_Emma",     
+            "Trigger3 == 'vibrator pussy'", "VibratorPussy_Emma",
+            "Trigger3 == 'vibrator pussy insert'", "VibratorPussy_Emma",
+            "Trigger3 == 'vibrator anal'", "VibratorAnal_Emma",
+            "Trigger3 == 'vibrator anal insert'", "VibratorPussy_Emma",            
             "True", Null(),             
             ),                        
         (0,0), ConditionSwitch(  
             #UI tool for Trigger5(Threesome masutrbation) actions
-            "E_Loc == 'bg teacher'", Null(),
-            "not Trigger5 or Trigger4 != 'masturbation' or Ch_Focus == 'Emma'", Null(), 
+            "EmmaX.Loc == 'bg teacher'", Null(),
+            "not Trigger5 or Trigger4 != 'masturbation' or Ch_Focus == EmmaX", Null(), 
             
             #Emma is not primary, and T4 is masturbation, and a T5 is selected
-            "Trigger5 == 'fondle pussy' and Trigger != 'sex' and E_Lust >= 70", "GirlFingerPussy_E",
-            "Trigger5 == 'fondle pussy'", "GirlGropePussy_E",
-            "Trigger5 == 'fondle breasts'", "GirlGropeRightBreast_E",
+            "Trigger5 == 'fondle pussy' and Trigger != 'sex' and EmmaX.Lust >= 70", "GirlFingerPussy_Emma",
+            "Trigger5 == 'fondle pussy'", "GirlGropePussy_Emma",
+            "Trigger5 == 'fondle breasts'", "GirlGropeRightBreast_Emma",
             "Trigger5 == 'vibrator breasts'", "VibratorRightBreast",     
             "Trigger5 == 'vibrator pussy'", "VibratorPussy",
             "Trigger5 == 'vibrator pussy insert'", "VibratorPussy",
@@ -433,68 +433,68 @@ image Emma_Sprite:
             ),               
         (0,0), ConditionSwitch(                
             #UI tool for Trigger1(primary) actions
-            "E_Loc == 'bg teacher'", Null(),
-            "not Trigger or Ch_Focus != 'Emma'", Null(),
+            "EmmaX.Loc == 'bg teacher'", Null(),
+            "not Trigger or Ch_Focus != EmmaX", Null(),
             
             # Emma is primary and a sex trigger is active
-            "Trigger == 'vibrator breasts'", "VibratorLeftBreast_E",
-            "Trigger == 'fondle thighs'", "GropeThigh_E",
-            "Trigger == 'fondle breasts'", "GropeLeftBreast_E",
-            "Trigger == 'suck breasts'", "LickRightBreast_E",
-            "Trigger == 'fondle pussy' and Speed == 2", "FingerPussy_E",
-            "Trigger == 'fondle pussy'", "GropePussy_E",
-            "Trigger == 'lick pussy'", "Lickpussy_E",
-            "Trigger == 'vibrator pussy'", "VibratorPussy_E",
-            "Trigger == 'vibrator pussy insert'", "VibratorPussy_E",
-            "Trigger == 'vibrator anal'", "VibratorAnal_E",
-            "Trigger == 'vibrator anal insert'", "VibratorPussy_E",
+            "Trigger == 'vibrator breasts'", "VibratorLeftBreast_Emma",
+            "Trigger == 'fondle thighs'", "GropeThigh_Emma",
+            "Trigger == 'fondle breasts'", "GropeLeftBreast_Emma",
+            "Trigger == 'suck breasts'", "LickRightBreast_Emma",
+            "Trigger == 'fondle pussy' and Speed == 2", "FingerPussy_Emma",
+            "Trigger == 'fondle pussy'", "GropePussy_Emma",
+            "Trigger == 'lick pussy'", "Lickpussy_Emma",
+            "Trigger == 'vibrator pussy'", "VibratorPussy_Emma",
+            "Trigger == 'vibrator pussy insert'", "VibratorPussy_Emma",
+            "Trigger == 'vibrator anal'", "VibratorAnal_Emma",
+            "Trigger == 'vibrator anal insert'", "VibratorPussy_Emma",
             "True", Null(), 
             ),
         (0,0), ConditionSwitch(                
             #UI tool for Trigger2(secondary) actions
-            "E_Loc == 'bg teacher'", Null(),
-            "not Trigger2 or Ch_Focus != 'Emma'", Null(),
+            "EmmaX.Loc == 'bg teacher'", Null(),
+            "not Trigger2 or Ch_Focus != EmmaX", Null(),
             
             #Emma is primary and an offhand trigger is active            
             "Trigger2 == 'fondle breasts'", ConditionSwitch(                                                                      
-                    "Trigger2 == 'fondle breasts' and Trigger == 'suck breasts'", "GropeLeftBreast_E", 
+                    "Trigger2 == 'fondle breasts' and Trigger == 'suck breasts'", "GropeLeftBreast_Emma", 
                         #When zero is sucking on the right breast, fondle left
-                    "True", "GropeRightBreast_E",
+                    "True", "GropeRightBreast_Emma",
                         #else, fondle right
                     ),  
-            "Trigger2 == 'vibrator breasts' and Trigger == 'suck breasts'", "VibratorLeftBreast_E",       
+            "Trigger2 == 'vibrator breasts' and Trigger == 'suck breasts'", "VibratorLeftBreast_Emma",       
                 #When sucking right breast, vibrator left            
             "Trigger2 == Trigger", Null(),
                 #When both triggers are the same, do nothing              
-            "Trigger2 == 'suck breasts'", "LickLeftBreast_E",        
-            "Trigger2 == 'fondle pussy'", "GropePussy_E",
-            "Trigger2 == 'lick pussy'", "Lickpussy_E",       
-            "Trigger2 == 'vibrator breasts'", "VibratorRightBreast_E",
-            "Trigger2 == 'vibrator pussy'", "VibratorPussy_E",
-            "Trigger2 == 'vibrator pussy insert'", "VibratorPussy_E",
-            "Trigger2 == 'vibrator anal'", "VibratorAnal_E",
-            "Trigger2 == 'vibrator anal insert'", "VibratorPussy_E",
+            "Trigger2 == 'suck breasts'", "LickLeftBreast_Emma",        
+            "Trigger2 == 'fondle pussy'", "GropePussy_Emma",
+            "Trigger2 == 'lick pussy'", "Lickpussy_Emma",       
+            "Trigger2 == 'vibrator breasts'", "VibratorRightBreast_Emma",
+            "Trigger2 == 'vibrator pussy'", "VibratorPussy_Emma",
+            "Trigger2 == 'vibrator pussy insert'", "VibratorPussy_Emma",
+            "Trigger2 == 'vibrator anal'", "VibratorAnal_Emma",
+            "Trigger2 == 'vibrator anal insert'", "VibratorPussy_Emma",
             "True", Null(), 
             ),    
         (0,0), ConditionSwitch(  
             #UI tool for Trigger4(Threesome) actions (ie Rogue's hand on her)
-            "E_Loc == 'bg teacher'", Null(),
-            "not Trigger4 or Ch_Focus != 'Emma'", Null(),
+            "EmmaX.Loc == 'bg teacher'", Null(),
+            "not Trigger4 or Ch_Focus != EmmaX", Null(),
             
             # There is a threesome trigger set and Emma is the target of it
-            "Trigger4 == 'fondle pussy' and Trigger != 'sex' and E_Lust >= 70", "GirlFingerPussy_E",
-            "Trigger4 == 'fondle pussy'", "GirlGropePussy_E",            
-            "Trigger4 == 'lick pussy'", "Lickpussy_E",
-            "Trigger4 == 'suck breasts' and (Trigger2 != 'suck breasts' or Trigger == 'suck breasts')", "LickLeftBreast_E", 
-            "Trigger4 == 'suck breasts'", "LickRightBreast_E",              
+            "Trigger4 == 'fondle pussy' and Trigger != 'sex' and EmmaX.Lust >= 70", "GirlFingerPussy_Emma",
+            "Trigger4 == 'fondle pussy'", "GirlGropePussy_Emma",            
+            "Trigger4 == 'lick pussy'", "Lickpussy_Emma",
+            "Trigger4 == 'suck breasts' and (Trigger2 != 'suck breasts' or Trigger == 'suck breasts')", "LickLeftBreast_Emma", 
+            "Trigger4 == 'suck breasts'", "LickRightBreast_Emma",              
             "Trigger4 == 'fondle breasts'", ConditionSwitch( 
-                    "Trigger == 'fondle breasts' or Trigger == 'suck breasts'", "GirlGropeLeftBreast_E",   
+                    "Trigger == 'fondle breasts' or Trigger == 'suck breasts'", "GirlGropeLeftBreast_Emma",   
                         #When zero is working the right breast, fondle left                                                  
-#                    "Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts'", "GirlGropeRightBreast_E", 
+#                    "Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts'", "GirlGropeRightBreast_Emma", 
 #                        #When zero is working the left breast, fondle right                                         
-#                    "Trigger3 == 'fondle breasts' or Trigger3 == 'suck breasts'", "GirlGropeRightBreast_E", 
+#                    "Trigger3 == 'fondle breasts' or Trigger3 == 'suck breasts'", "GirlGropeRightBreast_Emma", 
 #                        #When zero is working the left breast, fondle right 
-                    "True", "GirlGropeRightBreast_E",
+                    "True", "GirlGropeRightBreast_Emma",
                         #else, fondle right
                     ),                  
             "Trigger4 == 'vibrator breasts'", "VibratorRightBreast",     
@@ -506,23 +506,23 @@ image Emma_Sprite:
             ),    
         (0,0), ConditionSwitch(             
             #UI tool for Trigger3(lesbian) actions (ie Rogue's hand on her when Emma is secondary)
-            "E_Loc == 'bg teacher'", Null(),
-            "Trigger != 'lesbian' or Ch_Focus == 'Emma' or not Trigger3", Null(),
+            "EmmaX.Loc == 'bg teacher'", Null(),
+            "Trigger != 'lesbian' or Ch_Focus == EmmaX or not Trigger3", Null(),
             
             # If there is a Trigger3 and Emma is not the focus
-            "Trigger3 == 'fondle pussy' and Trigger != 'sex' and E_Lust >= 70", "GirlFingerPussy_E",
-            "Trigger3 == 'fondle pussy'", "GirlGropePussy_E",            
-            "Trigger3 == 'lick pussy'", "Lickpussy_E",
-            "Trigger3 == 'suck breasts' and (Trigger2 != 'suck breasts' or Trigger == 'suck breasts')", "LickLeftBreast_E", 
-            "Trigger3 == 'suck breasts'", "LickRightBreast_E",              
+            "Trigger3 == 'fondle pussy' and Trigger != 'sex' and EmmaX.Lust >= 70", "GirlFingerPussy_Emma",
+            "Trigger3 == 'fondle pussy'", "GirlGropePussy_Emma",            
+            "Trigger3 == 'lick pussy'", "Lickpussy_Emma",
+            "Trigger3 == 'suck breasts' and (Trigger2 != 'suck breasts' or Trigger == 'suck breasts')", "LickLeftBreast_Emma", 
+            "Trigger3 == 'suck breasts'", "LickRightBreast_Emma",              
             "Trigger3 == 'fondle breasts'", ConditionSwitch( 
-                    "Trigger == 'fondle breasts' or Trigger == 'suck breasts'", "GirlGropeLeftBreast_E",   
+                    "Trigger == 'fondle breasts' or Trigger == 'suck breasts'", "GirlGropeLeftBreast_Emma",   
                         #When zero is working the right breast, fondle left                                                  
-                    "Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts'", "GirlGropeRightBreast_E", 
+                    "Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts'", "GirlGropeRightBreast_Emma", 
                         #When zero is working the left breast, fondle right                                         
-                    "Trigger3 == 'fondle breasts' or Trigger3 == 'suck breasts'", "GirlGropeLeftBreast_E", 
+                    "Trigger3 == 'fondle breasts' or Trigger3 == 'suck breasts'", "GirlGropeLeftBreast_Emma", 
                         #When zero is working the right breast, fondle left 
-                    "True", "GirlGropeRightBreast_E",
+                    "True", "GirlGropeRightBreast_Emma",
                         #else, fondle right
                     ),                             
             "Trigger3 == 'vibrator breasts'", "VibratorRightBreast",     
@@ -545,168 +545,168 @@ image EmmaSprite_Head:
     LiveComposite(
         (555,673), 
 #        (0,0), ConditionSwitch(                                                                         #hair back 
-#            "E_Hair", "images/EmmaSprite/EmmaSprite_Hairback.png",   
+#            "EmmaX.Hair", "images/EmmaSprite/EmmaSprite_Hairback.png",   
 #            "True", Null(),        
 #            ),      
 
 #        (0,0), ConditionSwitch(                                                                         #Face no blush not wet
-#            "E_Blush or E_Hair == 'wet' or E_Water", Null(),        
-#            "E_Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wave_Angry.png",
-#            "E_Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wave_Sad.png",
-#            "E_Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wave_Surprised.png",     
-#            "E_Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wave_Confused.png", 
-#            "True", "images/EmmaSprite/EmmaSprite_Head_Wave_Normal.png", #E_Brows == 'normal'
+#            "EmmaX.Blush or EmmaX.Hair == 'wet' or EmmaX.Water", Null(),        
+#            "EmmaX.Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wave_Angry.png",
+#            "EmmaX.Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wave_Sad.png",
+#            "EmmaX.Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wave_Surprised.png",     
+#            "EmmaX.Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wave_Confused.png", 
+#            "True", "images/EmmaSprite/EmmaSprite_Head_Wave_Normal.png", #EmmaX.Brows == 'normal'
 #            ),
 #        (0,0), ConditionSwitch(                                                                         #Face blush 1 not wet
-#            "E_Blush != 1 or E_Hair == 'wet' or E_Water", Null(),        
-#            "E_Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wave_AngryB1.png",
-#            "E_Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wave_SadB1.png",
-#            "E_Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wave_SurprisedB1.png",   
-#            "E_Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wave_ConfusedB1.png", 
-#            "True", "images/EmmaSprite/EmmaSprite_Head_Wave_NormalB1.png", #E_Brows == 'normal'
+#            "EmmaX.Blush != 1 or EmmaX.Hair == 'wet' or EmmaX.Water", Null(),        
+#            "EmmaX.Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wave_AngryB1.png",
+#            "EmmaX.Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wave_SadB1.png",
+#            "EmmaX.Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wave_SurprisedB1.png",   
+#            "EmmaX.Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wave_ConfusedB1.png", 
+#            "True", "images/EmmaSprite/EmmaSprite_Head_Wave_NormalB1.png", #EmmaX.Brows == 'normal'
 #            ),
 #        (0,0), ConditionSwitch(                                                                         #Face blush 2 not wet
-#            "E_Blush != 2 or E_Hair == 'wet' or E_Water", Null(),        
-#            "E_Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wave_AngryB2.png",
-#            "E_Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wave_SadB2.png",
-#            "E_Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wave_SurprisedB2.png",    
-#            "E_Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wave_ConfusedB2.png", 
-#            "True", "images/EmmaSprite/EmmaSprite_Head_Wave_NormalB2.png", #E_Brows == 'normal'
+#            "EmmaX.Blush != 2 or EmmaX.Hair == 'wet' or EmmaX.Water", Null(),        
+#            "EmmaX.Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wave_AngryB2.png",
+#            "EmmaX.Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wave_SadB2.png",
+#            "EmmaX.Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wave_SurprisedB2.png",    
+#            "EmmaX.Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wave_ConfusedB2.png", 
+#            "True", "images/EmmaSprite/EmmaSprite_Head_Wave_NormalB2.png", #EmmaX.Brows == 'normal'
 #            ),
         
 #         (0,0), ConditionSwitch(                                                                         #Face no blush wet
-#            "E_Blush or (E_Hair != 'wet' and not E_Water)", Null(),        
-#            "E_Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wet_Angry.png",
-#            "E_Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wet_Sad.png",
-#            "E_Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wet_Surprised.png",    
-#            "E_Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wet_Confused.png",  
-#            "True", "images/EmmaSprite/EmmaSprite_Head_Wet_Normal.png", #E_Brows == 'normal'
+#            "EmmaX.Blush or (EmmaX.Hair != 'wet' and not EmmaX.Water)", Null(),        
+#            "EmmaX.Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wet_Angry.png",
+#            "EmmaX.Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wet_Sad.png",
+#            "EmmaX.Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wet_Surprised.png",    
+#            "EmmaX.Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wet_Confused.png",  
+#            "True", "images/EmmaSprite/EmmaSprite_Head_Wet_Normal.png", #EmmaX.Brows == 'normal'
 #            ),
 #        (0,0), ConditionSwitch(                                                                         #Face blush 1 wet
-#            "E_Blush != 1 or (E_Hair != 'wet' and not E_Water)", Null(),        
-#            "E_Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wet_AngryB1.png",
-#            "E_Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wet_SadB1.png",
-#            "E_Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wet_SurprisedB1.png",    
-#            "E_Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wet_ConfusedB1.png",    
-#            "True", "images/EmmaSprite/EmmaSprite_Head_Wet_NormalB1.png", #E_Brows == 'normal'
+#            "EmmaX.Blush != 1 or (EmmaX.Hair != 'wet' and not EmmaX.Water)", Null(),        
+#            "EmmaX.Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wet_AngryB1.png",
+#            "EmmaX.Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wet_SadB1.png",
+#            "EmmaX.Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wet_SurprisedB1.png",    
+#            "EmmaX.Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wet_ConfusedB1.png",    
+#            "True", "images/EmmaSprite/EmmaSprite_Head_Wet_NormalB1.png", #EmmaX.Brows == 'normal'
 #            ),
 #        (0,0), ConditionSwitch(                                                                         #Face blush 2 wet
-#            "E_Blush != 2 or (E_Hair != 'wet' and not E_Water)", Null(),        
-#            "E_Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wet_AngryB2.png",
-#            "E_Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wet_SadB2.png",
-#            "E_Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wet_SurprisedB2.png",    
-#            "E_Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wet_ConfusedB2.png",    
-#            "True", "images/EmmaSprite/EmmaSprite_Head_Wet_NormalB2.png", #E_Brows == 'normal'
+#            "EmmaX.Blush != 2 or (EmmaX.Hair != 'wet' and not EmmaX.Water)", Null(),        
+#            "EmmaX.Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wet_AngryB2.png",
+#            "EmmaX.Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wet_SadB2.png",
+#            "EmmaX.Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wet_SurprisedB2.png",    
+#            "EmmaX.Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wet_ConfusedB2.png",    
+#            "True", "images/EmmaSprite/EmmaSprite_Head_Wet_NormalB2.png", #EmmaX.Brows == 'normal'
 #            ),
         
         (0,0), ConditionSwitch(
                 # Face background plate
-                "not E_Blush", ConditionSwitch(
+                "not EmmaX.Blush", ConditionSwitch(
                     #If no Blush
-                    "E_Hair == 'wet' or E_Water", ConditionSwitch(
+                    "EmmaX.Hair == 'wet' or EmmaX.Water", ConditionSwitch(
                             #If the hair is wet
-                            "E_Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wet_Angry.png",
-                            "E_Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wet_Sad.png",
-                            "E_Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wet_Surprised.png",    
-                            "E_Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wet_Confused.png",  
-                            "True", "images/EmmaSprite/EmmaSprite_Head_Wet_Normal.png", #E_Brows == 'normal'
+                            "EmmaX.Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wet_Angry.png",
+                            "EmmaX.Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wet_Sad.png",
+                            "EmmaX.Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wet_Surprised.png",    
+                            "EmmaX.Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wet_Confused.png",  
+                            "True", "images/EmmaSprite/EmmaSprite_Head_Wet_Normal.png", #EmmaX.Brows == 'normal'
                             ),
                     "True", ConditionSwitch(
                             #If the hair is not wet
-                            "E_Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wave_Angry.png",
-                            "E_Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wave_Sad.png",
-                            "E_Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wave_Surprised.png",     
-                            "E_Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wave_Confused.png", 
-                            "True", "images/EmmaSprite/EmmaSprite_Head_Wave_Normal.png", #E_Brows == 'normal'
+                            "EmmaX.Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wave_Angry.png",
+                            "EmmaX.Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wave_Sad.png",
+                            "EmmaX.Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wave_Surprised.png",     
+                            "EmmaX.Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wave_Confused.png", 
+                            "True", "images/EmmaSprite/EmmaSprite_Head_Wave_Normal.png", #EmmaX.Brows == 'normal'
                             ),
                     ),
-                "E_Blush == 1", ConditionSwitch(
+                "EmmaX.Blush == 1", ConditionSwitch(
                     #If the first tier blush
-                    "E_Hair == 'wet' or E_Water", ConditionSwitch(
+                    "EmmaX.Hair == 'wet' or EmmaX.Water", ConditionSwitch(
                             #If the hair is wet
-                            "E_Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wet_AngryB1.png",
-                            "E_Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wet_SadB1.png",
-                            "E_Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wet_SurprisedB1.png",    
-                            "E_Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wet_ConfusedB1.png",    
-                            "True", "images/EmmaSprite/EmmaSprite_Head_Wet_NormalB1.png", #E_Brows == 'normal'
+                            "EmmaX.Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wet_AngryB1.png",
+                            "EmmaX.Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wet_SadB1.png",
+                            "EmmaX.Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wet_SurprisedB1.png",    
+                            "EmmaX.Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wet_ConfusedB1.png",    
+                            "True", "images/EmmaSprite/EmmaSprite_Head_Wet_NormalB1.png", #EmmaX.Brows == 'normal'
                             ),
                     "True", ConditionSwitch(
                             #If the hair is not wet
-                            "E_Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wave_AngryB1.png",
-                            "E_Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wave_SadB1.png",
-                            "E_Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wave_SurprisedB1.png",   
-                            "E_Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wave_ConfusedB1.png", 
-                            "True", "images/EmmaSprite/EmmaSprite_Head_Wave_NormalB1.png", #E_Brows == 'normal'
+                            "EmmaX.Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wave_AngryB1.png",
+                            "EmmaX.Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wave_SadB1.png",
+                            "EmmaX.Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wave_SurprisedB1.png",   
+                            "EmmaX.Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wave_ConfusedB1.png", 
+                            "True", "images/EmmaSprite/EmmaSprite_Head_Wave_NormalB1.png", #EmmaX.Brows == 'normal'
                             ),
                     ),            
                 "True", ConditionSwitch(
                     #else, 2nd tier blush
-                    "E_Hair == 'wet' or E_Water", ConditionSwitch(
+                    "EmmaX.Hair == 'wet' or EmmaX.Water", ConditionSwitch(
                             #If the hair is wet
-                            "E_Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wet_AngryB2.png",
-                            "E_Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wet_SadB2.png",
-                            "E_Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wet_SurprisedB2.png",    
-                            "E_Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wet_ConfusedB2.png",    
-                            "True", "images/EmmaSprite/EmmaSprite_Head_Wet_NormalB2.png", #E_Brows == 'normal'
+                            "EmmaX.Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wet_AngryB2.png",
+                            "EmmaX.Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wet_SadB2.png",
+                            "EmmaX.Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wet_SurprisedB2.png",    
+                            "EmmaX.Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wet_ConfusedB2.png",    
+                            "True", "images/EmmaSprite/EmmaSprite_Head_Wet_NormalB2.png", #EmmaX.Brows == 'normal'
                             ),
                     "True", ConditionSwitch(
                             #If the hair is not wet
-                            "E_Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wave_AngryB2.png",
-                            "E_Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wave_SadB2.png",
-                            "E_Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wave_SurprisedB2.png",    
-                            "E_Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wave_ConfusedB2.png", 
-                            "True", "images/EmmaSprite/EmmaSprite_Head_Wave_NormalB2.png", #E_Brows == 'normal'
+                            "EmmaX.Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Wave_AngryB2.png",
+                            "EmmaX.Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Wave_SadB2.png",
+                            "EmmaX.Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Wave_SurprisedB2.png",    
+                            "EmmaX.Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Wave_ConfusedB2.png", 
+                            "True", "images/EmmaSprite/EmmaSprite_Head_Wave_NormalB2.png", #EmmaX.Brows == 'normal'
                             ),
                     ),                    
                 ),        
         (0,0), ConditionSwitch(                                                                         #Mouths        
-            "E_Mouth == 'normal'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Normal.png",
-            "E_Mouth == 'lipbite'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Lipbite.png",
-            "E_Mouth == 'sucking'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Surprised.png",            
-            "E_Mouth == 'kiss'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Kiss.png",
-            "E_Mouth == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Sad.png",
-            "E_Mouth == 'smile'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Smile.png",
-            "E_Mouth == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Surprised.png",            
-            "E_Mouth == 'tongue'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Tongue.png",                
-            "E_Mouth == 'grimace'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Smile.png",                 
-            "E_Mouth == 'smirk'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Smirk.png",         
+            "EmmaX.Mouth == 'normal'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Normal.png",
+            "EmmaX.Mouth == 'lipbite'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Lipbite.png",
+            "EmmaX.Mouth == 'sucking'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Surprised.png",            
+            "EmmaX.Mouth == 'kiss'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Kiss.png",
+            "EmmaX.Mouth == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Sad.png",
+            "EmmaX.Mouth == 'smile'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Smile.png",
+            "EmmaX.Mouth == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Surprised.png",            
+            "EmmaX.Mouth == 'tongue'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Tongue.png",                
+            "EmmaX.Mouth == 'grimace'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Smile.png",                 
+            "EmmaX.Mouth == 'smirk'", "images/EmmaSprite/EmmaSprite_Head_Mouth_Smirk.png",         
             "True", "images/EmmaSprite/EmmaSprite_Head_Mouth_Normal.png",
             ),   
         
         (0,0), ConditionSwitch(                                                                         #Mouth spunk               
-            "'mouth' not in E_Spunk", Null(),
-            "E_Mouth == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Spunk_MouthOpen.png",            
-            "E_Mouth == 'tongue'", "images/EmmaSprite/EmmaSprite_Head_Spunk_MouthTongue.png",            
+            "'mouth' not in EmmaX.Spunk", Null(),
+            "EmmaX.Mouth == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Spunk_MouthOpen.png",            
+            "EmmaX.Mouth == 'tongue'", "images/EmmaSprite/EmmaSprite_Head_Spunk_MouthTongue.png",            
             "True", "images/EmmaSprite/EmmaSprite_Head_Spunk_Mouth.png",  
             ),  
         
         (0,0), "Emma Blink",                                                                           #Eyes        
         (0,0), ConditionSwitch(                                                                         #brows
-            "E_Brows == 'normal'", "images/EmmaSprite/EmmaSprite_Head_Brows_Normal.png",
-            "E_Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Brows_Angry.png",
-            "E_Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Brows_Sad.png",
-            "E_Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Brows_Surprised.png",        
-            "E_Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Brows_Confused.png",
+            "EmmaX.Brows == 'normal'", "images/EmmaSprite/EmmaSprite_Head_Brows_Normal.png",
+            "EmmaX.Brows == 'angry'", "images/EmmaSprite/EmmaSprite_Head_Brows_Angry.png",
+            "EmmaX.Brows == 'sad'", "images/EmmaSprite/EmmaSprite_Head_Brows_Sad.png",
+            "EmmaX.Brows == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Brows_Surprised.png",        
+            "EmmaX.Brows == 'confused'", "images/EmmaSprite/EmmaSprite_Head_Brows_Confused.png",
             "True", "images/EmmaSprite/EmmaSprite_Head_Brows_Normal.png",
             ),         
         (0,0), ConditionSwitch(                                                                         #facial spunk               
-            "'facial' in E_Spunk", "images/EmmaSprite/EmmaSprite_Head_Spunk_Face.png",             
+            "'facial' in EmmaX.Spunk", "images/EmmaSprite/EmmaSprite_Head_Spunk_Face.png",             
             "True", Null(),
             ),  
         (0,0), ConditionSwitch(                                                                         #Hair
-            "not E_Hair", Null(),
-            "E_Hair == 'wet' or E_Water", "images/EmmaSprite/EmmaSprite_Head_HairWet.png",
-            "E_Hair", "images/EmmaSprite/EmmaSprite_Head_Hair.png",
+            "not EmmaX.Hair", Null(),
+            "EmmaX.Hair == 'wet' or EmmaX.Water", "images/EmmaSprite/EmmaSprite_Head_HairWet.png",
+            "EmmaX.Hair", "images/EmmaSprite/EmmaSprite_Head_Hair.png",
             "True", Null(),
             ),        
         (0,0), ConditionSwitch(                                                                         #Hair Water
-            "not E_Water", Null(),
-            "E_Hair == 'wet'", "images/EmmaSprite/EmmaSprite_Head_Water.png",
+            "not EmmaX.Water", Null(),
+            "EmmaX.Hair == 'wet'", "images/EmmaSprite/EmmaSprite_Head_Water.png",
             "True", "images/EmmaSprite/EmmaSprite_Head_Water.png",
             ),
         (0,0), ConditionSwitch(                                                                         #hair spunk               
-            "'hair' in E_Spunk and (E_Hair == 'wet' or E_Water)", "images/EmmaSprite/EmmaSprite_Head_Spunk_HairWet.png",                         
-            "'hair' in E_Spunk", "images/EmmaSprite/EmmaSprite_Head_Spunk_HairWave.png",              
+            "'hair' in EmmaX.Spunk and (EmmaX.Hair == 'wet' or EmmaX.Water)", "images/EmmaSprite/EmmaSprite_Head_Spunk_HairWet.png",                         
+            "'hair' in EmmaX.Spunk", "images/EmmaSprite/EmmaSprite_Head_Spunk_HairWave.png",              
             "True", Null(),
             ),  
         )                
@@ -715,15 +715,15 @@ image EmmaSprite_Head:
 
 image Emma Blink:
     ConditionSwitch(
-        "E_Eyes == 'sexy'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Sexy.png",
-        "E_Eyes == 'side'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Side.png",
-        "E_Eyes == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Surprised.png",
-        "E_Eyes == 'normal'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Normal.png",    
-        "E_Eyes == 'stunned'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Agao.png",
-        "E_Eyes == 'down'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Down.png",
-        "E_Eyes == 'closed'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Closed.png",
-        "E_Eyes == 'manic'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Surprised.png",
-        "E_Eyes == 'squint'", "Emma_Squint",
+        "EmmaX.Eyes == 'sexy'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Sexy.png",
+        "EmmaX.Eyes == 'side'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Side.png",
+        "EmmaX.Eyes == 'surprised'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Surprised.png",
+        "EmmaX.Eyes == 'normal'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Normal.png",    
+        "EmmaX.Eyes == 'stunned'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Agao.png",
+        "EmmaX.Eyes == 'down'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Down.png",
+        "EmmaX.Eyes == 'closed'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Closed.png",
+        "EmmaX.Eyes == 'manic'", "images/EmmaSprite/EmmaSprite_Head_Eyes_Surprised.png",
+        "EmmaX.Eyes == 'squint'", "Emma_Squint",
         "True", "images/EmmaSprite/EmmaSprite_Head_Eyes_Normal.png", 
     ),
     choice:
@@ -773,7 +773,7 @@ image Emma_SexSprite:
     contains:
         ConditionSwitch(                                                               
             # Emma's lower body
-            "P_Sprite and P_Cock == 'in'", ConditionSwitch(                                                               
+            "Player.Sprite and Player.Cock == 'in'", ConditionSwitch(                                                               
                     # If during sex
                     "Speed == 1", "Emma_Sex_Legs_S1",#heading
                     "Speed == 2", "Emma_Sex_Legs_S2",#slow
@@ -781,7 +781,7 @@ image Emma_SexSprite:
                     "Speed >= 4", "Emma_Sex_Legs_S4",#cumming
                     "True", "Emma_Sex_Legs_S0",#Static
                     ),
-            "P_Sprite and P_Cock == 'anal'", ConditionSwitch(                                                              
+            "Player.Sprite and Player.Cock == 'anal'", ConditionSwitch(                                                              
                     # If during Anal
                     "Speed == 1", "Emma_Sex_Legs_A1",#heading
                     "Speed == 2", "Emma_Sex_Legs_A2",#slow
@@ -800,7 +800,7 @@ image Emma_SexSprite:
     contains:
         ConditionSwitch(                                                              
             # Emma's upper body
-            "P_Sprite and P_Cock == 'in'", ConditionSwitch(                                                               
+            "Player.Sprite and Player.Cock == 'in'", ConditionSwitch(                                                               
                     # If during sex
                     "Speed == 1", "Emma_Sex_Body_S1",#heading
                     "Speed == 2", "Emma_Sex_Body_S2",#slow
@@ -808,7 +808,7 @@ image Emma_SexSprite:
                     "Speed >= 4", "Emma_Sex_Body_S4",#cumming
                     "True",       "Emma_Sex_Body_S0",#Static
                     ),
-            "P_Sprite and P_Cock == 'anal'", ConditionSwitch(                                                              
+            "Player.Sprite and Player.Cock == 'anal'", ConditionSwitch(                                                              
 #                    # If during Anal
                     "Speed == 1", "Emma_Sex_Body_A1",#heading
                     "Speed == 2", "Emma_Sex_Body_A2",#slow
@@ -851,24 +851,24 @@ image Emma_Sex_Tits:
             # tits
         ConditionSwitch(   
             "renpy.showing('Emma_TJ_Animation')", Null(),
-            "E_Chest == 'corset'", "images/EmmaSex/Emma_Sex_Tits_Up.png",   # E_TitsUp = 1
-            "E_Chest == 'sports bra' or E_Chest == 'lace bra'", "images/EmmaSex/Emma_Sex_Tits_Up.png",   # E_TitsUp = 1
-            "True", "images/EmmaSex/Emma_Sex_Tits_Down.png",   # E_TitsUp = 0
+            "EmmaX.Chest == 'corset'", "images/EmmaSex/Emma_Sex_Tits_Up.png",   # EmmaX.TitsUp = 1
+            "EmmaX.Chest == 'sports bra' or EmmaX.Chest == 'lace bra'", "images/EmmaSex/Emma_Sex_Tits_Up.png",   # EmmaX.TitsUp = 1
+            "True", "images/EmmaSex/Emma_Sex_Tits_Down.png",   # EmmaX.TitsUp = 0
             )
     contains:
             # piercings tits
         ConditionSwitch(   
             "renpy.showing('Emma_TJ_Animation')", Null(),
-            "not E_Pierce or E_Chest", Null(),
-            "E_Over == 'nighty'", Null(),
-            "E_Pierce == 'barbell'", ConditionSwitch(   
+            "not EmmaX.Pierce or EmmaX.Chest", Null(),
+            "EmmaX.Over == 'nighty'", Null(),
+            "EmmaX.Pierce == 'barbell'", ConditionSwitch(   
                     #if it's the ring pericings   
-                    "E_Chest in ('corset', 'lace bra', 'sports bra')", Null(),  
+                    "EmmaX.Chest in ('corset', 'lace bra', 'sports bra')", Null(),  
                     "True", "images/EmmaSex/Emma_Pierce_Barbell_Tits_D.png", 
                     ),    
-            "E_Pierce == 'ring'", ConditionSwitch(   
+            "EmmaX.Pierce == 'ring'", ConditionSwitch(   
                     #if it's the ring pericings   
-                    "E_Chest in ('corset', 'lace bra', 'sports bra')", Null(),  
+                    "EmmaX.Chest in ('corset', 'lace bra', 'sports bra')", Null(),  
                     "True", "images/EmmaSex/Emma_Pierce_Ring_Tits_D.png", 
                     ),                    
             "True", Null(), 
@@ -883,23 +883,23 @@ image Emma_Sex_Torso:
             # tits
         ConditionSwitch(   
             "renpy.showing('Emma_TJ_Animation')", Null(),
-            "E_Chest == 'corset'", "images/EmmaSex/Emma_Sex_Tits_Up.png",   # E_TitsUp = 1
-            "E_Chest == 'sports bra' or E_Chest == 'lace bra'", "images/EmmaSex/Emma_Sex_Tits_Up.png",   # E_TitsUp = 1
-            "True", "images/EmmaSex/Emma_Sex_Tits_Down.png",   # E_TitsUp = 0
+            "EmmaX.Chest == 'corset'", "images/EmmaSex/Emma_Sex_Tits_Up.png",   # EmmaX.TitsUp = 1
+            "EmmaX.Chest == 'sports bra' or EmmaX.Chest == 'lace bra'", "images/EmmaSex/Emma_Sex_Tits_Up.png",   # EmmaX.TitsUp = 1
+            "True", "images/EmmaSex/Emma_Sex_Tits_Down.png",   # EmmaX.TitsUp = 0
             )
     contains:
             # piercings tits
         ConditionSwitch(   
             "renpy.showing('Emma_TJ_Animation')", Null(),
-            "not E_Pierce or E_Over or E_Chest", Null(),
-            "E_Pierce == 'barbell'", ConditionSwitch(   
+            "not EmmaX.Pierce or EmmaX.Over or EmmaX.Chest", Null(),
+            "EmmaX.Pierce == 'barbell'", ConditionSwitch(   
                     #if it's the ring pericings   
-                    "E_Chest in ('corset', 'lace bra', 'sports bra')", Null(),  
+                    "EmmaX.Chest in ('corset', 'lace bra', 'sports bra')", Null(),  
                     "True", "images/EmmaSex/Emma_Pierce_Barbell_Tits_D.png", 
                     ),    
-            "E_Pierce == 'ring'", ConditionSwitch(   
+            "EmmaX.Pierce == 'ring'", ConditionSwitch(   
                     #if it's the ring pericings   
-                    "E_Chest in ('corset', 'lace bra', 'sports bra')", Null(),  
+                    "EmmaX.Chest in ('corset', 'lace bra', 'sports bra')", Null(),  
                     "True", "images/EmmaSex/Emma_Pierce_Ring_Tits_D.png", 
                     ),                    
             "True", Null(), 
@@ -913,35 +913,35 @@ image Emma_Sex_Torso:
     contains:
             #chest clothing under layer for TJs
             ConditionSwitch(    
-                "not renpy.showing('Emma_TJ_Animation')", Null(),   # E_TitsUp = 0
-                "E_Chest == 'sports bra'", "images/EmmaSex/Emma_Sex_Bra_Sports_TJU.png",
+                "not renpy.showing('Emma_TJ_Animation')", Null(),   # EmmaX.TitsUp = 0
+                "EmmaX.Chest == 'sports bra'", "images/EmmaSex/Emma_Sex_Bra_Sports_TJU.png",
                 "True", Null(),
                 ) 
     contains:
             # Chest clothing layer
         ConditionSwitch(    
-            "not E_Chest or renpy.showing('Emma_TJ_Animation')", Null(),   # E_TitsUp = 0
-            "E_Chest == 'corset'", "images/EmmaSex/Emma_Sex_Bra_Corset_Up.png",   # E_TitsUp = 1
-            "E_Chest == 'sports bra'", "images/EmmaSex/Emma_Sex_Bra_Sports_Up.png",   # E_TitsUp = 1
-            "E_Chest == 'lace bra'", "images/EmmaSex/Emma_Sex_Bra_Lace_Up.png",   # E_TitsUp = 1
-            "True", Null(),   # E_TitsUp = 0
+            "not EmmaX.Chest or renpy.showing('Emma_TJ_Animation')", Null(),   # EmmaX.TitsUp = 0
+            "EmmaX.Chest == 'corset'", "images/EmmaSex/Emma_Sex_Bra_Corset_Up.png",   # EmmaX.TitsUp = 1
+            "EmmaX.Chest == 'sports bra'", "images/EmmaSex/Emma_Sex_Bra_Sports_Up.png",   # EmmaX.TitsUp = 1
+            "EmmaX.Chest == 'lace bra'", "images/EmmaSex/Emma_Sex_Bra_Lace_Up.png",   # EmmaX.TitsUp = 1
+            "True", Null(),   # EmmaX.TitsUp = 0
             )
     contains:
             # Over clothing layer
         ConditionSwitch(   
-            "E_Over == 'jacket'", ConditionSwitch(   
+            "EmmaX.Over == 'jacket'", ConditionSwitch(   
                     #if it's the ring pericings                       
                     "renpy.showing('Emma_TJ_Animation')", Null(),
 #                    "renpy.showing('Emma_TJ_Animation')", "images/EmmaSex/Emma_Sex_Jacket_Down.png",
-                    "E_Chest == 'corset'", "images/EmmaSex/Emma_Sex_Jacket_Up.png",   # E_TitsUp = 1
-                    "E_Chest == 'sports bra'", "images/EmmaSex/Emma_Sex_Jacket_Up.png",   # E_TitsUp = 1
-                    "E_Chest == 'lace bra'", "images/EmmaSex/Emma_Sex_Jacket_Up.png",   # E_TitsUp = 1
-                    "True", "images/EmmaSex/Emma_Sex_Jacket_Down.png",   # E_TitsUp = 0
+                    "EmmaX.Chest == 'corset'", "images/EmmaSex/Emma_Sex_Jacket_Up.png",   # EmmaX.TitsUp = 1
+                    "EmmaX.Chest == 'sports bra'", "images/EmmaSex/Emma_Sex_Jacket_Up.png",   # EmmaX.TitsUp = 1
+                    "EmmaX.Chest == 'lace bra'", "images/EmmaSex/Emma_Sex_Jacket_Up.png",   # EmmaX.TitsUp = 1
+                    "True", "images/EmmaSex/Emma_Sex_Jacket_Down.png",   # EmmaX.TitsUp = 0
                     ),                
-            "E_Over == 'nighty'", ConditionSwitch(
+            "EmmaX.Over == 'nighty'", ConditionSwitch(
                     #if she has the nighty on     
                     "renpy.showing('Emma_TJ_Animation')", Null(),
-                    "E_Chest in ('corset', 'lace bra', 'sports bra')", "images/EmmaSex/Emma_Sex_Nighty_Up.png",  
+                    "EmmaX.Chest in ('corset', 'lace bra', 'sports bra')", "images/EmmaSex/Emma_Sex_Nighty_Up.png",  
                     "True", "images/EmmaSex/Emma_Sex_Nighty_Down.png", 
                     ),    
             "True", Null(), 
@@ -949,7 +949,7 @@ image Emma_Sex_Torso:
     contains:
             # spunk on tits
             ConditionSwitch(    
-                "'tits' not in E_Spunk", Null(),
+                "'tits' not in EmmaX.Spunk", Null(),
                 "renpy.showing('Emma_TJ_Animation')", "images/EmmaSex/Emma_Spunk_Titjob_Under.png",
                 "True", "images/EmmaSex/Emma_Spunk_Tits.png",
                 ) 
@@ -965,10 +965,10 @@ image Emma_Sex_Body:
     contains:
             # Arms
         ConditionSwitch(    
-            "Emma_Arms == 3", Null(),   # Neither arms
-            "Emma_Arms == 4", AlphaMask("Emma_Arms", "images/EmmaSex/Emma_Sex_ArmsMask_R.png"),   # Right arm only
-            "Emma_Arms == 5", AlphaMask("Emma_Arms", "images/EmmaSex/Emma_Sex_ArmsMask_L.png"),   # Left arm only
-            "True", AlphaMask("Emma_Arms", "images/EmmaSex/Emma_Sex_ArmsMask.png"),  # Both Arms
+            "EmmaX.ArmPose == 3", Null(),   # Neither arms
+            "EmmaX.ArmPose == 4", AlphaMask("Emma_SexArms", "images/EmmaSex/Emma_Sex_ArmsMask_R.png"),   # Right arm only
+            "EmmaX.ArmPose == 5", AlphaMask("Emma_SexArms", "images/EmmaSex/Emma_Sex_ArmsMask_L.png"),   # Left arm only
+            "True", AlphaMask("Emma_SexArms", "images/EmmaSex/Emma_Sex_ArmsMask.png"),  # Both Arms
             )
     contains:
             "Emma_Sex_Head"
@@ -977,28 +977,28 @@ image Emma_Sex_Body:
 # end Emma's sex body torso / / / / / torso / / / / / torso / / / / / torso / / / / / torso / / / / /
 
 
-image Emma_Arms:
+image Emma_SexArms:
     contains:
             # Base Arms
         ConditionSwitch(    
-            "E_Over == 'jacket'", Null(),
-            "E_Chest == 'corset'", "images/EmmaSex/Emma_Sex_Arms_U.png",   # E_TitsUp = 1
-            "E_Chest == 'sports bra'", "images/EmmaSex/Emma_Sex_Arms_U.png",   # E_TitsUp = 1
-            "E_Chest == 'lace bra'", "images/EmmaSex/Emma_Sex_Arms_U.png",   # E_TitsUp = 1
-            "True", "images/EmmaSex/Emma_Sex_Arms_D.png",   # E_TitsUp = 0
+            "EmmaX.Over == 'jacket'", Null(),
+            "EmmaX.Chest == 'corset'", "images/EmmaSex/Emma_Sex_Arms_U.png",   # EmmaX.TitsUp = 1
+            "EmmaX.Chest == 'sports bra'", "images/EmmaSex/Emma_Sex_Arms_U.png",   # EmmaX.TitsUp = 1
+            "EmmaX.Chest == 'lace bra'", "images/EmmaSex/Emma_Sex_Arms_U.png",   # EmmaX.TitsUp = 1
+            "True", "images/EmmaSex/Emma_Sex_Arms_D.png",   # EmmaX.TitsUp = 0
             )
     contains:
             # Arm clothing
         ConditionSwitch(    
-            "E_Over == 'jacket'", Null(),
-            "E_Chest == 'sports bra'", "images/EmmaSex/Emma_Sex_Bra_Sports_Arms.png",   # E_TitsUp = 1
+            "EmmaX.Over == 'jacket'", Null(),
+            "EmmaX.Chest == 'sports bra'", "images/EmmaSex/Emma_Sex_Bra_Sports_Arms.png",   # EmmaX.TitsUp = 1
             "True", Null(),
             )
     contains:
             # Arm clothing Over
         ConditionSwitch(    
-            "E_Over == 'jacket'", "images/EmmaSex/Emma_Sex_Arms_Jacket.png",   # E_TitsUp = 1
-            "E_Arms", "images/EmmaSex/Emma_Sex_Gloves.png",           
+            "EmmaX.Over == 'jacket'", "images/EmmaSex/Emma_Sex_Arms_Jacket.png",   # EmmaX.TitsUp = 1
+            "EmmaX.Arms", "images/EmmaSex/Emma_Sex_Gloves.png",           
             "True", Null(),
             )
 
@@ -1010,7 +1010,7 @@ image Emma_Sex_Legs_S:
     contains:
             # spunk
         ConditionSwitch(    
-            "'anal' in E_Spunk or 'in' in E_Spunk", "images/EmmaSex/Emma_Spunk_Sex.png", 
+            "'anal' in EmmaX.Spunk or 'in' in EmmaX.Spunk", "images/EmmaSex/Emma_Spunk_Sex.png", 
             "True", Null(),
             )
     contains:
@@ -1022,53 +1022,53 @@ image Emma_Sex_Legs_S:
     contains:
             # piercings
         ConditionSwitch(    
-            "E_Panties and not E_PantiesDown", Null(), 
-            "E_Legs and not E_Upskirt", Null(), 
-            "E_Pierce == 'barbell'", "images/EmmaSex/Emma_Pierce_Barbell_Pussy_S.png", 
-            "E_Pierce == 'ring'", "images/EmmaSex/Emma_Pierce_Ring_Pussy_S.png",
+            "EmmaX.Panties and not EmmaX.PantiesDown", Null(), 
+            "EmmaX.Legs and not EmmaX.Upskirt", Null(), 
+            "EmmaX.Pierce == 'barbell'", "images/EmmaSex/Emma_Pierce_Barbell_Pussy_S.png", 
+            "EmmaX.Pierce == 'ring'", "images/EmmaSex/Emma_Pierce_Ring_Pussy_S.png",
             "True", Null(), 
             )
     contains:
             # pubes
         ConditionSwitch(    
-            "E_Pubes", "images/EmmaSex/Emma_Pubes_Sex.png", 
+            "EmmaX.Pubes", "images/EmmaSex/Emma_Pubes_Sex.png", 
             "True", Null(),
             )        
     contains:
             # panties
         ConditionSwitch(    
-            "E_PantiesDown", Null(),
-            "E_Panties == 'sports panties' and E_Wet", "images/EmmaSex/Emma_Sex_Panties_Sport_SW.png", 
-            "E_Panties == 'sports panties'", "images/EmmaSex/Emma_Sex_Panties_Sport_S.png", 
-            "E_Panties and E_Wet", "images/EmmaSex/Emma_Sex_Panties_SW.png", 
-            "E_Panties", "images/EmmaSex/Emma_Sex_Panties_S.png", 
+            "EmmaX.PantiesDown", Null(),
+            "EmmaX.Panties == 'sports panties' and EmmaX.Wet", "images/EmmaSex/Emma_Sex_Panties_Sport_SW.png", 
+            "EmmaX.Panties == 'sports panties'", "images/EmmaSex/Emma_Sex_Panties_Sport_S.png", 
+            "EmmaX.Panties and EmmaX.Wet", "images/EmmaSex/Emma_Sex_Panties_SW.png", 
+            "EmmaX.Panties", "images/EmmaSex/Emma_Sex_Panties_S.png", 
             "True", Null(),
             )         
     contains:
             # boots
         ConditionSwitch(    
-            "E_Boots == 'thigh boots'", "images/EmmaSex/Emma_Sex_Boots_Pussy.png", 
+            "EmmaX.Acc == 'thigh boots'", "images/EmmaSex/Emma_Sex_Boots_Pussy.png", 
             "True", Null(),
             )              
     contains:
             # legs
         ConditionSwitch(    
-            "E_Legs == 'skirt'", "images/EmmaSex/Emma_Sex_Skirt_Pussy.png", 
-            "E_Upskirt", Null(),
-            "E_Legs == 'pants' and E_Wet >= 2", "images/EmmaSex/Emma_Sex_Pants_SW.png", 
-            "E_Legs == 'pants'", "images/EmmaSex/Emma_Sex_Pants_S.png", 
+            "EmmaX.Legs == 'skirt'", "images/EmmaSex/Emma_Sex_Skirt_Pussy.png", 
+            "EmmaX.Upskirt", Null(),
+            "EmmaX.Legs == 'pants' and EmmaX.Wet >= 2", "images/EmmaSex/Emma_Sex_Pants_SW.png", 
+            "EmmaX.Legs == 'pants'", "images/EmmaSex/Emma_Sex_Pants_S.png", 
             "True", Null(),
             )
     contains:
             # Over
         ConditionSwitch(    
-            "E_Over == 'nighty'", "images/EmmaSex/Emma_Sex_Nighty_Pussy.png", 
+            "EmmaX.Over == 'nighty'", "images/EmmaSex/Emma_Sex_Nighty_Pussy.png", 
             "True", Null(),
             )
     contains:
             # spunk
         ConditionSwitch(    
-            "'belly' in E_Spunk", "images/EmmaSex/Emma_Spunk_Belly.png", 
+            "'belly' in EmmaX.Spunk", "images/EmmaSex/Emma_Spunk_Belly.png", 
             "True", Null(),
             )
     zoom 1 
@@ -1079,7 +1079,7 @@ image Emma_Sex_Legs_A:
     contains:
             # anal spunk
         ConditionSwitch(    
-            "'anal' in E_Spunk and not Speed", "images/EmmaSex/Emma_Spunk_Anal_Closed.png", 
+            "'anal' in EmmaX.Spunk and not Speed", "images/EmmaSex/Emma_Spunk_Anal_Closed.png", 
             "True", Null(),
             )
     contains:
@@ -1088,7 +1088,7 @@ image Emma_Sex_Legs_A:
     contains:
             #Anus
         ConditionSwitch(  
-            "P_Sprite and P_Cock == 'anal' and Speed", ConditionSwitch(                                                              
+            "Player.Sprite and Player.Cock == 'anal' and Speed", ConditionSwitch(                                                              
                     # If during Anal
                     "Speed == 1", "Emma_Sex_Anus_A1",#heading
                     "True", "Emma_Sex_Anus_A2",#faster
@@ -1098,59 +1098,59 @@ image Emma_Sex_Legs_A:
     contains:
             # pubes
         ConditionSwitch(    
-            "E_Pubes", "images/EmmaSex/Emma_Pubes_Anal.png", 
+            "EmmaX.Pubes", "images/EmmaSex/Emma_Pubes_Anal.png", 
             "True", Null(),
             )
     contains:
             # piercings
         ConditionSwitch(    
-            "E_Panties and not E_PantiesDown", Null(), 
-            "E_Legs and not E_Upskirt", Null(), 
-            "E_Pierce == 'barbell'", "images/EmmaSex/Emma_Pierce_Barbell_Pussy_A.png", 
-            "E_Pierce == 'ring'", "images/EmmaSex/Emma_Pierce_Ring_Pussy_A.png",
+            "EmmaX.Panties and not EmmaX.PantiesDown", Null(), 
+            "EmmaX.Legs and not EmmaX.Upskirt", Null(), 
+            "EmmaX.Pierce == 'barbell'", "images/EmmaSex/Emma_Pierce_Barbell_Pussy_A.png", 
+            "EmmaX.Pierce == 'ring'", "images/EmmaSex/Emma_Pierce_Ring_Pussy_A.png",
             "True", Null(), 
             )        
     contains:
             # panties
         ConditionSwitch(    
-            "E_PantiesDown", Null(),
-            "E_Panties == 'sports panties' and E_Wet", "images/EmmaSex/Emma_Sex_Panties_Sport_AW.png", 
-            "E_Panties == 'sports panties'", "images/EmmaSex/Emma_Sex_Panties_Sport_A.png", 
-            "E_Panties and E_Wet", "images/EmmaSex/Emma_Sex_Panties_AW.png", 
-            "E_Panties", "images/EmmaSex/Emma_Sex_Panties_A.png", 
+            "EmmaX.PantiesDown", Null(),
+            "EmmaX.Panties == 'sports panties' and EmmaX.Wet", "images/EmmaSex/Emma_Sex_Panties_Sport_AW.png", 
+            "EmmaX.Panties == 'sports panties'", "images/EmmaSex/Emma_Sex_Panties_Sport_A.png", 
+            "EmmaX.Panties and EmmaX.Wet", "images/EmmaSex/Emma_Sex_Panties_AW.png", 
+            "EmmaX.Panties", "images/EmmaSex/Emma_Sex_Panties_A.png", 
             "True", Null(),
             )
     contains:
             # pussy spunk
         ConditionSwitch(    
-            "'in' in E_Spunk", "images/EmmaSex/Emma_Spunk_Anal_Pussy.png", 
+            "'in' in EmmaX.Spunk", "images/EmmaSex/Emma_Spunk_Anal_Pussy.png", 
             "True", Null(),
             )         
     contains:
             # boots
         ConditionSwitch(    
-            "E_Boots == 'thigh boots'", "images/EmmaSex/Emma_Sex_Boots_Anal.png", 
+            "EmmaX.Acc == 'thigh boots'", "images/EmmaSex/Emma_Sex_Boots_Anal.png", 
             "True", Null(),
             )              
     contains:
             # legs
         ConditionSwitch(    
-            "E_Legs == 'skirt'", "images/EmmaSex/Emma_Sex_Skirt_Anal.png", 
-            "E_Upskirt", Null(),
-            "E_Legs == 'pants' and E_Wet >= 2", "images/EmmaSex/Emma_Sex_Pants_AW.png", 
-            "E_Legs == 'pants'", "images/EmmaSex/Emma_Sex_Pants_A.png", 
+            "EmmaX.Legs == 'skirt'", "images/EmmaSex/Emma_Sex_Skirt_Anal.png", 
+            "EmmaX.Upskirt", Null(),
+            "EmmaX.Legs == 'pants' and EmmaX.Wet >= 2", "images/EmmaSex/Emma_Sex_Pants_AW.png", 
+            "EmmaX.Legs == 'pants'", "images/EmmaSex/Emma_Sex_Pants_A.png", 
             "True", Null(),
             )
     contains:
             # Over
         ConditionSwitch(    
-            "E_Over == 'nighty'", "images/EmmaSex/Emma_Sex_Nighty_Anal.png", 
+            "EmmaX.Over == 'nighty'", "images/EmmaSex/Emma_Sex_Nighty_Anal.png", 
             "True", Null(),
             )
     contains:
             # spunk
         ConditionSwitch(    
-            "'belly' in E_Spunk", "images/EmmaSex/Emma_Spunk_Belly.png", 
+            "'belly' in EmmaX.Spunk", "images/EmmaSex/Emma_Spunk_Belly.png", 
             "True", Null(),
             )
         ypos -40
@@ -1163,10 +1163,10 @@ image Emma_Sex_Pussy_Mask:
     contains:       
             # piercings
         ConditionSwitch(    
-            "E_Panties and not E_PantiesDown", Null(), 
-            "E_Legs and not E_Upskirt", Null(), 
-            "E_Pierce == 'barbell'", "images/EmmaSex/Emma_Pierce_Barbell_Pussy_S.png", 
-            "E_Pierce == 'ring'", "images/EmmaSex/Emma_Pierce_Ring_Pussy_S.png",
+            "EmmaX.Panties and not EmmaX.PantiesDown", Null(), 
+            "EmmaX.Legs and not EmmaX.Upskirt", Null(), 
+            "EmmaX.Pierce == 'barbell'", "images/EmmaSex/Emma_Pierce_Barbell_Pussy_S.png", 
+            "EmmaX.Pierce == 'ring'", "images/EmmaSex/Emma_Pierce_Ring_Pussy_S.png",
             "True", Null(), 
             ) 
 
@@ -1177,19 +1177,19 @@ image Emma_Sex_Hotdog_Mask:
     contains:       
             # piercings
         ConditionSwitch(    
-            "E_Panties and not E_PantiesDown", Null(), 
-            "E_Legs and not E_Upskirt", Null(), 
-            "E_Pierce == 'barbell'", "images/EmmaSex/Emma_Pierce_Barbell_Pussy_S.png", 
-            "E_Pierce == 'ring'", "images/EmmaSex/Emma_Pierce_Ring_Pussy_S.png",
+            "EmmaX.Panties and not EmmaX.PantiesDown", Null(), 
+            "EmmaX.Legs and not EmmaX.Upskirt", Null(), 
+            "EmmaX.Pierce == 'barbell'", "images/EmmaSex/Emma_Pierce_Barbell_Pussy_S.png", 
+            "EmmaX.Pierce == 'ring'", "images/EmmaSex/Emma_Pierce_Ring_Pussy_S.png",
             "True", Null(), 
             ) 
     contains:
             # piercings
         ConditionSwitch(    
-            "E_Panties and not E_PantiesDown", Null(), 
-            "E_Legs and not E_Upskirt", Null(), 
-            "E_Pierce == 'barbell'", "images/EmmaSex/Emma_Pierce_Barbell_Pussy_S.png", 
-            "E_Pierce == 'ring'", "images/EmmaSex/Emma_Pierce_Ring_Pussy_S.png",
+            "EmmaX.Panties and not EmmaX.PantiesDown", Null(), 
+            "EmmaX.Legs and not EmmaX.Upskirt", Null(), 
+            "EmmaX.Pierce == 'barbell'", "images/EmmaSex/Emma_Pierce_Barbell_Pussy_S.png", 
+            "EmmaX.Pierce == 'ring'", "images/EmmaSex/Emma_Pierce_Ring_Pussy_S.png",
             "True", Null(), 
             )
             
@@ -1385,7 +1385,7 @@ image Emma_Sex_Legs_H0:
     contains:
             #Cock
             ConditionSwitch(  
-                "P_Sprite", "Zero_Doggy_Insert", 
+                "Player.Sprite", "Zero_Doggy_Insert", 
                 "True", Null(),
                 )          
             alpha 1
@@ -1432,7 +1432,7 @@ image Emma_Sex_Legs_H1:
     contains:
             #Cock
             ConditionSwitch(  
-                "P_Sprite", "Zero_Doggy_Insert", 
+                "Player.Sprite", "Zero_Doggy_Insert", 
                 "True", Null(),
                 )          
             alpha 1
@@ -1479,7 +1479,7 @@ image Emma_Sex_Legs_H2:
     contains:
             #Cock
             ConditionSwitch(  
-                "P_Sprite", "Zero_Doggy_Insert", 
+                "Player.Sprite", "Zero_Doggy_Insert", 
                 "True", Null(),
                 )          
             alpha 1
@@ -1526,7 +1526,7 @@ image Emma_Sex_Legs_H4:
 #    contains:
 #            #Cock
 #            ConditionSwitch(  
-#                "P_Sprite", "Zero_Doggy_Insert", 
+#                "Player.Sprite", "Zero_Doggy_Insert", 
 #                "True", Null(),
 #                )          
 #            alpha 1
@@ -1777,7 +1777,7 @@ image Emma_Sex_Anus_Mask_A1:
         contains:
                 # spunk
             ConditionSwitch(    
-                "'anal' in E_Spunk", "images/EmmaSex/Emma_Spunk_Anal_Open.png",
+                "'anal' in EmmaX.Spunk", "images/EmmaSex/Emma_Spunk_Anal_Open.png",
                 "True", Null(),
                 )
         subpixel True
@@ -1841,7 +1841,7 @@ image Emma_Sex_Legs_A2:
             contains:
                     # spunk
                 ConditionSwitch(    
-                    "'anal' in E_Spunk", "images/EmmaSex/Emma_Spunk_Anal_Open.png",
+                    "'anal' in EmmaX.Spunk", "images/EmmaSex/Emma_Spunk_Anal_Open.png",
                     "True", Null(),
                     )   
             subpixel True  
@@ -1881,7 +1881,7 @@ image Emma_Sex_Legs_A3:
             contains:
                     # spunk
                 ConditionSwitch(    
-                    "'anal' in E_Spunk", "images/EmmaSex/Emma_Spunk_Anal_Open.png",
+                    "'anal' in EmmaX.Spunk", "images/EmmaSex/Emma_Spunk_Anal_Open.png",
                     "True", Null(),
                     )     
             subpixel True
@@ -1917,7 +1917,7 @@ image Emma_Sex_Legs_A4:
             contains:
                     # spunk
                 ConditionSwitch(    
-                    "'anal' in E_Spunk", "images/EmmaSex/Emma_Spunk_Anal_Open.png",
+                    "'anal' in EmmaX.Spunk", "images/EmmaSex/Emma_Spunk_Anal_Open.png",
                     "True", Null(),
                     )     
             subpixel True
@@ -1940,7 +1940,7 @@ image Emma_Sex_Anus_A1:
         contains:
                 # spunk
             ConditionSwitch(    
-                "'anal' in E_Spunk", "images/EmmaSex/Emma_Spunk_Anal_Under.png",
+                "'anal' in EmmaX.Spunk", "images/EmmaSex/Emma_Spunk_Anal_Under.png",
                 "True", Null(),
                 )
         subpixel True
@@ -1982,7 +1982,7 @@ image Emma_Sex_Anus_A2:
         contains:
                 # spunk
             ConditionSwitch(    
-                "'anal' in E_Spunk", "images/EmmaSex/Emma_Spunk_Anal_Under.png",
+                "'anal' in EmmaX.Spunk", "images/EmmaSex/Emma_Spunk_Anal_Under.png",
                 "True", Null(),
                 )
         xpos  0 
@@ -1990,54 +1990,56 @@ image Emma_Sex_Anus_A2:
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 label Emma_Sex_Launch(Line = "solo"): 
-    if Line == "sex":        
-        $ P_Cock = "in"
-    elif Line == "anal":
-        $ P_Cock = "anal"
-    elif Line == "solo":   
-        $ P_Sprite = 0
-        $ P_Cock = "out"
-    elif Line == "hotdog":          
-        $ P_Cock = "out"
-    elif Line == "foot":          
-        $ P_Cock = "foot"
-    if not Trigger:
-        $ Trigger = Line
-    if renpy.showing("Emma_SexSprite"):
-        return 
-    $ P_Sprite = 1
-    $ Speed = 0
-    hide Emma_Sprite      
-    if renpy.showing("Emma_BJ_Animation"):
-        hide Emma_BJ_Animation
-    if renpy.showing("Emma_HJ_Animation"):
-        hide Emma_HJ_Animation
-    if renpy.showing("Emma_TJ_Animation"):
-        hide Emma_TJ_Animation
-    
-    if E_Legs:          #temporary, change or remove when other clothing options are available
-        $ E_Upskirt = 1
-    if E_Panties:       #temporary, change or remove when other clothing options are available
-        $ E_PantiesDown = 1
-                
-    show Emma_SexSprite zorder 150:
-        pos (575,470)
-    with dissolve
-    return
+        if Line == "sex":        
+            $ Player.Cock = "in"
+        elif Line == "anal":
+            $ Player.Cock = "anal"
+        elif Line == "solo":   
+            $ Player.Sprite = 0
+            $ Player.Cock = "out"
+        elif Line == "hotdog":          
+            $ Player.Cock = "out"
+        elif Line == "foot":          
+            $ Player.Cock = "foot"
+        if not Trigger:
+            $ Trigger = Line
+        if renpy.showing("Emma_SexSprite"):
+            return 
+        $ Player.Sprite = 1
+        $ Speed = 0
+        hide Emma_Sprite      
+        if renpy.showing("Emma_BJ_Animation"):
+            hide Emma_BJ_Animation
+        if renpy.showing("Emma_HJ_Animation"):
+            hide Emma_HJ_Animation
+        if renpy.showing("Emma_TJ_Animation"):
+            hide Emma_TJ_Animation
+        
+        if EmmaX.Legs or EmmaX.HoseNum() >=5:          #temporary, change or remove when other clothing options are available
+            $ EmmaX.Upskirt = 1
+        if EmmaX.Panties:       #temporary, change or remove when other clothing options are available
+            $ EmmaX.PantiesDown = 1
+                    
+        show Emma_SexSprite zorder 150:
+            pos (575,470)
+        with dissolve
+        return
     
 label Emma_Sex_Reset:
-    if not renpy.showing("Emma_SexSprite"):
+        if not renpy.showing("Emma_SexSprite"):
+            return
+        $ EmmaX.ArmPose = 2     
+        hide Emma_SexSprite  
+        call Emma_Hide 
+        show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
+            alpha 1
+            zoom 1 offset (0,0) 
+            anchor (0.5, 0.0)
+        with dissolve
+        $ Speed = 0
         return
-    $ Emma_Arms = 2     
-    hide Emma_SexSprite  
-    call Emma_Hide 
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
-        alpha 1
-        zoom 1 offset (0,0) 
-        anchor (0.5, 0.0)
-    with dissolve
-    $ Speed = 0
-    return
+label Emma_Doggy_Reset:
+        return
 
 # End Emma Sex Animations / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
@@ -2053,7 +2055,7 @@ image Emma_TJ_Animation:
     contains:
         ConditionSwitch(                                                              
             # Emma's upper body
-            "P_Sprite", ConditionSwitch(                                                               
+            "Player.Sprite", ConditionSwitch(                                                               
                     # If during sex
                     "Speed == 1", "Emma_TJ_Body_1",#slow
                     "Speed == 2", "Emma_TJ_Body_2",#fast
@@ -2075,15 +2077,15 @@ image Emma_TJ_Tits:
     contains:
             # piercings
         ConditionSwitch(   
-            "not E_Pierce", Null(),
-            "E_Pierce == 'barbell'", ConditionSwitch(   
+            "not EmmaX.Pierce", Null(),
+            "EmmaX.Pierce == 'barbell'", ConditionSwitch(   
                     #if it's the ring pericings   
-#                    "E_Chest in ('corset', 'lace bra', 'sports bra')", Null(),  
+#                    "EmmaX.Chest in ('corset', 'lace bra', 'sports bra')", Null(),  
                     "True", "images/EmmaSex/Emma_Pierce_Barbell_Tits_T.png", 
                     ),    
-            "E_Pierce == 'ring'", ConditionSwitch(   
+            "EmmaX.Pierce == 'ring'", ConditionSwitch(   
                     #if it's the ring pericings   
-#                    "E_Chest in ('corset', 'lace bra', 'sports bra')", Null(),  
+#                    "EmmaX.Chest in ('corset', 'lace bra', 'sports bra')", Null(),  
                     "True", "images/EmmaSex/Emma_Pierce_Ring_Tits_T.png", 
                     ),                    
             "True", Null(), 
@@ -2091,23 +2093,23 @@ image Emma_TJ_Tits:
     contains:
             #chest clothing layer
         ConditionSwitch(    
-            "not E_Chest", Null(),   # E_TitsUp = 0
-            "E_Chest == 'sports bra'", "images/EmmaSex/Emma_Sex_Bra_Sports_TJ.png",   # E_TitsUp = 1
-            "E_Chest == 'lace bra'", "images/EmmaSex/Emma_Sex_Bra_Lace_TJ.png",   # E_TitsUp = 1
-            "True", Null(),   # E_TitsUp = 0
+            "not EmmaX.Chest", Null(),   # EmmaX.TitsUp = 0
+            "EmmaX.Chest == 'sports bra'", "images/EmmaSex/Emma_Sex_Bra_Sports_TJ.png",   # EmmaX.TitsUp = 1
+            "EmmaX.Chest == 'lace bra'", "images/EmmaSex/Emma_Sex_Bra_Lace_TJ.png",   # EmmaX.TitsUp = 1
+            "True", Null(),   # EmmaX.TitsUp = 0
             )
     contains:
             # piercings over clothes
         ConditionSwitch(   
-            "not E_Pierce or not E_Chest", Null(),
-            "E_Pierce == 'barbell'", ConditionSwitch(   
+            "not EmmaX.Pierce or not EmmaX.Chest", Null(),
+            "EmmaX.Pierce == 'barbell'", ConditionSwitch(   
                     #if it's the ring pericings   
-                    "E_Chest in ('corset', 'lace bra', 'sports bra')", "images/EmmaSex/Emma_Pierce_Barbell_Tits_TC.png", 
+                    "EmmaX.Chest in ('corset', 'lace bra', 'sports bra')", "images/EmmaSex/Emma_Pierce_Barbell_Tits_TC.png", 
                     "True", Null(),
                     ),    
-            "E_Pierce == 'ring'", ConditionSwitch(   
+            "EmmaX.Pierce == 'ring'", ConditionSwitch(   
                     #if it's the ring pericings   
-                    "E_Chest in ('corset', 'lace bra', 'sports bra')", "images/EmmaSex/Emma_Pierce_Ring_Tits_TC.png", 
+                    "EmmaX.Chest in ('corset', 'lace bra', 'sports bra')", "images/EmmaSex/Emma_Pierce_Ring_Tits_TC.png", 
                     "True", Null(),
                     ),                    
             "True", Null(), 
@@ -2115,7 +2117,7 @@ image Emma_TJ_Tits:
     contains:
             # spunk on tits
         ConditionSwitch(    
-                "'tits' in E_Spunk", "images/EmmaSex/Emma_Spunk_Titjob_Over.png",
+                "'tits' in EmmaX.Spunk", "images/EmmaSex/Emma_Spunk_Titjob_Over.png",
                 "True", Null(),
                 ) 
 
@@ -2171,7 +2173,7 @@ image Emma_TJ_Body_0:
     contains:
             #zero's cock
             ConditionSwitch(    
-                "P_Sprite", "Blowcock",
+                "Player.Sprite", "Blowcock",
                 "True", Null(),
                 )      
             subpixel True
@@ -2493,62 +2495,59 @@ label Emma_TJ_Launch(Line = 0):    # The sequence to launch the Emma Titfuck ani
     if renpy.showing("Emma_TJ_Animation"):
         return
     call Emma_Hide
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
         alpha 1
         ease 1 zoom 2 xpos 550 yoffset 50 #offset (-100,50) 
     if Taboo: # Emma gets started. . .
-        if R_Loc == bg_current:
-            "Emma looks back at Rogue to see if she's watching."
-        elif K_Loc == bg_current:
-            "Emma looks back at Kitty to see if she's watching."
+        if len(Present) >= 2:
+            if Present[0] != EmmaX:
+                    "[EmmaX.Name] looks back at [Present[0].Name] to see if she's watching."
+            elif Present[1] != EmmaX:
+                    "[EmmaX.Name] looks back at [Present[1].Name] to see if she's watching."
         else:
-            "Emma looks around to see if anyone can see her."
+                    "[EmmaX.Name] looks around to see if anyone can see her."
+            
+#    if EmmaX.Chest and EmmaX.Over:
+#        "She throws off her [EmmaX.Over] and her [EmmaX.Chest]."                
+#    elif EmmaX.Over:
+#        "She throws off her [EmmaX.Over], baring her breasts underneath."
+#    elif EmmaX.Chest:
+#        "She tugs off her [EmmaX.Chest] and throws it aside."
+#    $ EmmaX.Over = 0
+#    $ EmmaX.Chest = 0
+    $ EmmaX.ArmPose = 0
     
-#    if E_Chest and E_Over:
-#        "She throws off her [E_Over] and her [E_Chest]."                
-#    elif E_Over:
-#        "She throws off her [E_Over], baring her breasts underneath."
-#    elif E_Chest:
-#        "She tugs off her [E_Chest] and throws it aside."
-#    $ E_Over = 0
-#    $ E_Chest = 0
-    $ Emma_Arms = 0
+    call Emma_First_Topless        
     
-#    call Emma_First_Topless      #restore if topless          
-    
-#    if not E_Tit and Line == "L": #first time
-#        if not E_Chest and not E_Over:
-#            "As you pull out your cock, Emma hesitantly places it between her breasts and starts to rub them up and down the shaft."
-#        elif E_Chest and not E_Over:
-#            "As you pull out your cock, Emma hesitantly places it under her [E_Chest], between her breasts and starts to rub them up and down the shaft."
-#        elif E_Chest and E_Over:
-#            "As you pull out your cock, Emma hesitantly places it under her [E_Over], between her breasts and starts to rub them up and down the shaft."
-#        else:
-#            "As you pull out your cock, Emma hesitantly places it under her clothes, between her breasts and starts to rub them up and down the shaft."
-#    elif Line == "L": #any other time
-#        if not E_Chest and not E_Over:
-#            "As you pull out your cock, Emma places it between her breasts and starts to rub them up and down the shaft."
-#        elif E_Chest and not E_Over:
-#            "As you pull out your cock, Emma places it under her [E_Chest], between her breasts and starts to rub them up and down the shaft."
-#        elif E_Chest and E_Over:
-#            "As you pull out your cock, Emma places it under her [E_Over], between her breasts and starts to rub them up and down the shaft."
-#        else:
-#            "As you pull out your cock, Emma places it under her clothes, between her breasts and starts to rub them up and down the shaft."    
-#    else:
-#        "Emma wraps her tits around your cock."
+    if not EmmaX.Tit and Line == "L": #first time
+        if not EmmaX.Chest and not EmmaX.Over:
+            "As you pull out your cock, [EmmaX.Name] cautiously places it between her breasts and starts to rub them up and down the shaft."
+        elif EmmaX.Chest and not EmmaX.Over:
+            "As you pull out your cock, [EmmaX.Name] cautiously places it under her [EmmaX.Chest], between her breasts and starts to rub them up and down the shaft."
+        elif EmmaX.Chest and EmmaX.Over:
+            "As you pull out your cock, [EmmaX.Name] cautiously places it under her [EmmaX.Over], between her breasts and starts to rub them up and down the shaft."
+        else:
+            "As you pull out your cock, [EmmaX.Name] cautiously places it under her clothes, between her breasts and starts to rub them up and down the shaft."
+    elif Line == "L": #any other time
+        if not EmmaX.Chest and not EmmaX.Over:
+            "As you pull out your cock, [EmmaX.Name] places it between her breasts and starts to rub them up and down the shaft."
+        elif EmmaX.Chest and not EmmaX.Over:
+            "As you pull out your cock, [EmmaX.Name] places it under her [EmmaX.Chest], between her breasts and starts to rub them up and down the shaft."
+        elif EmmaX.Chest and EmmaX.Over:
+            "As you pull out your cock, [EmmaX.Name] places it under her [EmmaX.Over], between her breasts and starts to rub them up and down the shaft."
+        else:
+            "As you pull out your cock, [EmmaX.Name] places it under her clothes, between her breasts and starts to rub them up and down the shaft."    
+    else:
+            "[EmmaX.Name] wraps her tits around your cock."
 #    hide Emma_Sprite    
     show blackscreen onlayer black with dissolve    
-    if E_Over:
-        $ E_Over = 0
-    if E_Chest == "corset": #test, should I put this back in? 
-        $ E_Over = 0
-    show Emma_Sprite zorder EmmaLayer:
+    show Emma_Sprite zorder EmmaX.Layer:
         alpha 0
     $ Speed = 0
     if Line != "cum":
         $ Trigger = "titjob"
     show Emma_TJ_Animation zorder 150 
-    $ P_Sprite = 1
+    $ Player.Sprite = 1
     hide blackscreen onlayer black with dissolve
     return
     
@@ -2557,20 +2556,20 @@ label Emma_TJ_Reset: # The sequence to the Emma animations from Titfuck to defau
         return
 #    hide Emma_TJ_Animation
     call Emma_Hide 
-    $ P_Sprite = 0
+    $ Player.Sprite = 0
     
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
         zoom 2 xpos 550 yoffset 50 #offset (-100,50)  #zoom 2 offset (-100,50)
-    show Emma_Sprite zorder EmmaLayer:
+    show Emma_Sprite zorder EmmaX.Layer:
         alpha 1
         ease 1 zoom 1.5 xpos 500 yoffset 50
         pause .5
-        ease .5 zoom 1 xpos E_SpriteLoc yoffset 0
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
+        ease .5 zoom 1 xpos EmmaX.SpriteLoc yoffset 0
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
         alpha 1
-        zoom 1 offset (0,0) xpos E_SpriteLoc 
+        zoom 1 offset (0,0) xpos EmmaX.SpriteLoc 
         
-#    "Emma pulls back"
+    "[EmmaX.Name] pulls back"
     return
             
 # End Emma TJ Animations / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
@@ -2646,7 +2645,7 @@ image Emma_BJ_Animation:#BJ_NewTest:                                            
             ),            
         (325,490), ConditionSwitch(                                                                
             # the over part of spunk
-            "Speed < 3 or 'mouth' not in E_Spunk", Null(),
+            "Speed < 3 or 'mouth' not in EmmaX.Spunk", Null(),
             "Speed == 3", At("EmmaSuckingSpunk", Emma_BJ_Head_3()), #Sucking
             "Speed == 4", At("EmmaSuckingSpunk", Emma_BJ_Head_4()), #Deepthroat
             "Speed == 6", At("EmmaSuckingSpunk", Emma_BJ_Head_6()), #Cumming Deep
@@ -2654,8 +2653,8 @@ image Emma_BJ_Animation:#BJ_NewTest:                                            
             ),    
         (325,490), ConditionSwitch(         #(325,490)                                                        
             # same as above, but for the heading animation
-            "Speed == 2 and 'mouth' in E_Spunk", At("Emma_BJ_MaskHeadingSpunk", Emma_BJ_Head_2()), #Heading
-#            "Speed == 5 and 'mouth' in E_Spunk", At("Emma_BJ_MaskHeadingSpunkB", Emma_BJ_Head_5()), #Cumming High
+            "Speed == 2 and 'mouth' in EmmaX.Spunk", At("Emma_BJ_MaskHeadingSpunk", Emma_BJ_Head_2()), #Heading
+#            "Speed == 5 and 'mouth' in EmmaX.Spunk", At("Emma_BJ_MaskHeadingSpunkB", Emma_BJ_Head_5()), #Cumming High
             "True", Null(),
             ),   
         )
@@ -2665,7 +2664,7 @@ image Emma_BJ_Animation:#BJ_NewTest:                                            
 image Emma_BJ_HairBack:
     #Hair underlay
     ConditionSwitch(                                 
-            "E_Water or E_Hair == 'wet'", Null(),
+            "EmmaX.Water or EmmaX.Hair == 'wet'", Null(),
             "True", "images/EmmaBJFace/Emma_BJ_Hair_Wave_Back.png", 
             ),
     zoom 1.4
@@ -2675,7 +2674,7 @@ image Emma_BJ_Backdrop:
     contains:                                                                   
             #blanket     
             ConditionSwitch(      
-                "'blanket' in E_RecentActions", "images/KittyBJFace/Kitty_BJFace_Blanket.png",
+                "'blanket' in EmmaX.RecentActions", "images/KittyBJFace/Kitty_BJFace_Blanket.png",
                 "True", Null(),
                 ),                  
             zoom 2
@@ -2695,24 +2694,24 @@ image Emma_BJ_Head:                                                             
         (858,928), 
          (0,0), ConditionSwitch(                                                                 
             #Hair behind face above body
-            "E_Water or E_Hair == 'wet'", "images/EmmaBJFace/Emma_BJ_Hair_Wet_Mid.png",
+            "EmmaX.Water or EmmaX.Hair == 'wet'", "images/EmmaBJFace/Emma_BJ_Hair_Wet_Mid.png",
             "True", "images/EmmaBJFace/Emma_BJ_Hair_Wave_Mid.png",
             ),
         (0,0), ConditionSwitch(
             # Basic Face layer
             "Speed <= 2 or Speed == 5 or not renpy.showing('Emma_BJ_Animation')", ConditionSwitch( 
                     # If the animation isn't sucking, or if not in BJ pose
-                    "E_Blush", "images/EmmaBJFace/Emma_BJ_FaceClosed_Blush.png",              
+                    "EmmaX.Blush", "images/EmmaBJFace/Emma_BJ_FaceClosed_Blush.png",              
                     "True", "images/EmmaBJFace/Emma_BJ_FaceClosed.png",
                     ),  
-            "E_Blush", "images/EmmaBJFace/Emma_BJ_FaceOpen_Blush.png",              
+            "EmmaX.Blush", "images/EmmaBJFace/Emma_BJ_FaceOpen_Blush.png",              
             "True", "images/EmmaBJFace/Emma_BJ_FaceOpen.png"
             ),           
         (0,0), ConditionSwitch(                                                                         
             #Mouth
 #            "(Speed == 2 or Speed == 5) and renpy.showing('Emma_BJ_Animation')", ConditionSwitch( 
 #                    # If the Heading animation is active
-##                    "E_Blush", "images/EmmaBJFace/Emma_BJ_FaceClosed_Blush.png",              
+##                    "EmmaX.Blush", "images/EmmaBJFace/Emma_BJ_FaceClosed_Blush.png",              
 ##                    "True", "images/EmmaBJFace/Emma_BJ_FaceClosed.png"
 #                    ),  
             "Speed and renpy.showing('Emma_BJ_Animation')", ConditionSwitch( 
@@ -2724,16 +2723,16 @@ image Emma_BJ_Head:                                                             
                     "Speed == 6", "images/EmmaBJFace/Emma_BJ_Mouth_Sucking.png", #cumming    
                     ),  
             "Speed == 3 and renpy.showing('Emma_TJ_Animation')", "images/EmmaBJFace/Emma_BJ_Mouth_Tongue.png",
-            "E_Mouth == 'normal'", "images/EmmaBJFace/Emma_BJ_Mouth_Smile.png",
-            "E_Mouth == 'lipbite'", "images/EmmaBJFace/Emma_BJ_Mouth_Lipbite.png",
-            "E_Mouth == 'sucking'", "images/EmmaBJFace/Emma_BJ_Mouth_Sucking.png",            
-            "E_Mouth == 'kiss'", "images/EmmaBJFace/Emma_BJ_Mouth_Kiss.png",
-            "E_Mouth == 'sad'", "images/EmmaBJFace/Emma_BJ_Mouth_Sad.png",
-            "E_Mouth == 'smile'", "images/EmmaBJFace/Emma_BJ_Mouth_Smile.png",  
-            "E_Mouth == 'smirk'", "images/EmmaBJFace/Emma_BJ_Mouth_Smirk.png",           
-            "E_Mouth == 'grimace'", "images/EmmaBJFace/Emma_BJ_Mouth_Smile.png",
-            "E_Mouth == 'surprised'", "images/EmmaBJFace/Emma_BJ_Mouth_Surprised.png",          
-            "E_Mouth == 'tongue'", "images/EmmaBJFace/Emma_BJ_Mouth_Tongue.png",    
+            "EmmaX.Mouth == 'normal'", "images/EmmaBJFace/Emma_BJ_Mouth_Smile.png",
+            "EmmaX.Mouth == 'lipbite'", "images/EmmaBJFace/Emma_BJ_Mouth_Lipbite.png",
+            "EmmaX.Mouth == 'sucking'", "images/EmmaBJFace/Emma_BJ_Mouth_Sucking.png",            
+            "EmmaX.Mouth == 'kiss'", "images/EmmaBJFace/Emma_BJ_Mouth_Kiss.png",
+            "EmmaX.Mouth == 'sad'", "images/EmmaBJFace/Emma_BJ_Mouth_Sad.png",
+            "EmmaX.Mouth == 'smile'", "images/EmmaBJFace/Emma_BJ_Mouth_Smile.png",  
+            "EmmaX.Mouth == 'smirk'", "images/EmmaBJFace/Emma_BJ_Mouth_Smirk.png",           
+            "EmmaX.Mouth == 'grimace'", "images/EmmaBJFace/Emma_BJ_Mouth_Smile.png",
+            "EmmaX.Mouth == 'surprised'", "images/EmmaBJFace/Emma_BJ_Mouth_Surprised.png",          
+            "EmmaX.Mouth == 'tongue'", "images/EmmaBJFace/Emma_BJ_Mouth_Tongue.png",    
             "True", "images/EmmaBJFace/Emma_BJ_Mouth_Smile.png",
             ),       
         (428,605), ConditionSwitch(   
@@ -2747,7 +2746,7 @@ image Emma_BJ_Head:                                                             
         
         (0,0), ConditionSwitch(                                                                         
             #Spunk layer
-            "'mouth' not in E_Spunk", Null(), 
+            "'mouth' not in EmmaX.Spunk", Null(), 
             "Speed and renpy.showing('Emma_BJ_Animation')", ConditionSwitch( 
                     # If in sucking position
                     "Speed == 1", "images/EmmaBJFace/Emma_BJ_Spunk_Tongue.png",  #licking
@@ -2756,47 +2755,47 @@ image Emma_BJ_Head:                                                             
                     "Speed == 4", "images/EmmaBJFace/Emma_BJ_Spunk_SuckingUnder.png", #deepthroat     
                     "Speed == 6", "images/EmmaBJFace/Emma_BJ_Spunk_SuckingUnder.png", #cumming    
                     ),  
-            "E_Mouth == 'normal'", "images/EmmaBJFace/Emma_BJ_Spunk_Smile.png",
-            "E_Mouth == 'lipbite'", "images/EmmaBJFace/Emma_BJ_Spunk_Lipbite.png",
-            "E_Mouth == 'kiss'", "images/EmmaBJFace/Emma_BJ_Spunk_Kiss.png",
-            "E_Mouth == 'sad'", "images/EmmaBJFace/Emma_BJ_Spunk_Sad.png",
-            "E_Mouth == 'smile'", "images/EmmaBJFace/Emma_BJ_Spunk_Smile.png", 
-            "E_Mouth == 'smirk'", "images/EmmaBJFace/Emma_BJ_Spunk_Smirk.png",
-            "E_Mouth == 'surprised'", "images/EmmaBJFace/Emma_BJ_Spunk_Surprised.png",
-            "E_Mouth == 'tongue'", "images/EmmaBJFace/Emma_BJ_Spunk_Tongue.png",
-            "E_Mouth == 'sucking'", "images/EmmaBJFace/Emma_BJ_Spunk_SuckingUnder.png",
+            "EmmaX.Mouth == 'normal'", "images/EmmaBJFace/Emma_BJ_Spunk_Smile.png",
+            "EmmaX.Mouth == 'lipbite'", "images/EmmaBJFace/Emma_BJ_Spunk_Lipbite.png",
+            "EmmaX.Mouth == 'kiss'", "images/EmmaBJFace/Emma_BJ_Spunk_Kiss.png",
+            "EmmaX.Mouth == 'sad'", "images/EmmaBJFace/Emma_BJ_Spunk_Sad.png",
+            "EmmaX.Mouth == 'smile'", "images/EmmaBJFace/Emma_BJ_Spunk_Smile.png", 
+            "EmmaX.Mouth == 'smirk'", "images/EmmaBJFace/Emma_BJ_Spunk_Smirk.png",
+            "EmmaX.Mouth == 'surprised'", "images/EmmaBJFace/Emma_BJ_Spunk_Surprised.png",
+            "EmmaX.Mouth == 'tongue'", "images/EmmaBJFace/Emma_BJ_Spunk_Tongue.png",
+            "EmmaX.Mouth == 'sucking'", "images/EmmaBJFace/Emma_BJ_Spunk_SuckingUnder.png",
             "True", "images/EmmaBJFace/Emma_BJ_Spunk_Smile.png",
             ),       
         (0,0), ConditionSwitch(                                                                         
             #Brows
-            "E_Brows == 'normal'", "images/EmmaBJFace/Emma_BJ_Brows_Normal.png",
-            "E_Brows == 'angry'", "images/EmmaBJFace/Emma_BJ_Brows_Angry.png",
-            "E_Brows == 'sad'", "images/EmmaBJFace/Emma_BJ_Brows_Sad.png",
-            "E_Brows == 'surprised'", "images/EmmaBJFace/Emma_BJ_Brows_Surprised.png",        
-            "E_Brows == 'confused'", "images/EmmaBJFace/Emma_BJ_Brows_Confused.png",
+            "EmmaX.Brows == 'normal'", "images/EmmaBJFace/Emma_BJ_Brows_Normal.png",
+            "EmmaX.Brows == 'angry'", "images/EmmaBJFace/Emma_BJ_Brows_Angry.png",
+            "EmmaX.Brows == 'sad'", "images/EmmaBJFace/Emma_BJ_Brows_Sad.png",
+            "EmmaX.Brows == 'surprised'", "images/EmmaBJFace/Emma_BJ_Brows_Surprised.png",        
+            "EmmaX.Brows == 'confused'", "images/EmmaBJFace/Emma_BJ_Brows_Confused.png",
             "True", "images/EmmaBJFace/Emma_BJ_Brows_Normal.png",
             ),
         (0,0), "Emma BJ Blink",                                                                
             #Eyes
         (0,0), ConditionSwitch(                                                                 
             #cum on the face
-            "'facial' in E_Spunk", "images/EmmaBJFace/Emma_BJ_Spunk_Facial.png",
+            "'facial' in EmmaX.Spunk", "images/EmmaBJFace/Emma_BJ_Spunk_Facial.png",
             "True", Null(),
             ),
         (0,0), ConditionSwitch(                                                                 
             #Hair overlay
-            "E_Water or E_Hair == 'wet'", "images/EmmaBJFace/Emma_BJ_Hair_Wet_Top.png",
+            "EmmaX.Water or EmmaX.Hair == 'wet'", "images/EmmaBJFace/Emma_BJ_Hair_Wet_Top.png",
             "True", "images/EmmaBJFace/Emma_BJ_Hair_Wave_Top.png",
             ),
 #        (0,0), ConditionSwitch(                                                                 
 #            #Hair water overlay
-#            "not E_Water", Null(),            
+#            "not EmmaX.Water", Null(),            
 #            "Speed > 2", "images/EmmaBJFace/Emma_BJ_Wet_HeadOpen.png",         
 #            "True", "images/EmmaBJFace/Emma_BJ_Wet_HeadClosed.png",
 #            ),        
 #        (0,0), ConditionSwitch(                                                                 
 #            #cum on the hair
-#            "'hair' in E_Spunk", "images/EmmaBJFace/Emma_BJ_Spunk_Hair.png",
+#            "'hair' in EmmaX.Spunk", "images/EmmaBJFace/Emma_BJ_Spunk_Hair.png",
 #            "True", Null(),
 #            ),
         )
@@ -2806,15 +2805,15 @@ image Emma_BJ_Head:                                                             
 image Emma BJ Blink:                                                                           
         #eyeblinks
         ConditionSwitch(
-            "E_Eyes == 'normal'", "images/EmmaBJFace/Emma_BJ_Eyes_Sexy.png",  
-            "E_Eyes == 'sexy'", "images/EmmaBJFace/Emma_BJ_Eyes_Sexy.png",  
-            "E_Eyes == 'closed'", "images/EmmaBJFace/Emma_BJ_Eyes_Closed.png",
-            "E_Eyes == 'surprised'", "images/EmmaBJFace/Emma_BJ_Eyes_Surprised.png",
-            "E_Eyes == 'side'", "images/EmmaBJFace/Emma_BJ_Eyes_Side.png",
-            "E_Eyes == 'stunned'", "images/EmmaBJFace/Emma_BJ_Eyes_Surprised.png",
-            "E_Eyes == 'down'", "images/EmmaBJFace/Emma_BJ_Eyes_Down.png",
-            "E_Eyes == 'manic'", "images/EmmaBJFace/Emma_BJ_Eyes_Surprised.png",
-            "E_Eyes == 'squint'", "images/EmmaBJFace/Emma_BJ_Eyes_Squint.png",
+            "EmmaX.Eyes == 'normal'", "images/EmmaBJFace/Emma_BJ_Eyes_Sexy.png",  
+            "EmmaX.Eyes == 'sexy'", "images/EmmaBJFace/Emma_BJ_Eyes_Sexy.png",  
+            "EmmaX.Eyes == 'closed'", "images/EmmaBJFace/Emma_BJ_Eyes_Closed.png",
+            "EmmaX.Eyes == 'surprised'", "images/EmmaBJFace/Emma_BJ_Eyes_Surprised.png",
+            "EmmaX.Eyes == 'side'", "images/EmmaBJFace/Emma_BJ_Eyes_Side.png",
+            "EmmaX.Eyes == 'stunned'", "images/EmmaBJFace/Emma_BJ_Eyes_Surprised.png",
+            "EmmaX.Eyes == 'down'", "images/EmmaBJFace/Emma_BJ_Eyes_Down.png",
+            "EmmaX.Eyes == 'manic'", "images/EmmaBJFace/Emma_BJ_Eyes_Surprised.png",
+            "EmmaX.Eyes == 'squint'", "images/EmmaBJFace/Emma_BJ_Eyes_Squint.png",
             "True", "images/EmmaBJFace/Emma_BJ_Eyes_Sexy.png",  
             ),
         choice:
@@ -2841,7 +2840,7 @@ image Emma_BJ_MouthSuckingMask:
         zoom 1.4
 #    contains: #see if this works, if not remove it
 #        ConditionSwitch(
-#            "'mouth' not in E_Spunk", Null(),  
+#            "'mouth' not in EmmaX.Spunk", Null(),  
 #            "Speed != 2 and Speed != 5", Null(),            
 #            "True", "images/EmmaBJFace/Emma_BJ_Spunk_SuckingOver.png",            
 #            )   
@@ -3131,33 +3130,34 @@ label Emma_BJ_Launch(Line = 0):    # The sequence to launch the Emma BJ animatio
     
     call Emma_Hide
     if Line == "L" or Line == "cum":
-        show Emma_Sprite at SpriteLoc(StageCenter) zorder EmmaLayer:
+        show Emma_Sprite at SpriteLoc(StageCenter) zorder EmmaX.Layer:
             alpha 1
             ease 1 zoom 2.5 offset (150,80) 
         with dissolve
     else:
-        show Emma_Sprite at SpriteLoc(StageCenter) zorder EmmaLayer:
+        show Emma_Sprite at SpriteLoc(StageCenter) zorder EmmaX.Layer:
             alpha 1
             zoom 2.5 offset (150,80) 
         with dissolve
         
     $ Speed = 0
     if Taboo and Line == "L": # Emma gets started. . .
-            if R_Loc == bg_current:
-                "Emma looks back at Rogue to see if she's watching."
-            elif K_Loc == bg_current:
-                "Emma looks back at Kitty to see if she's watching."
+            if len(Present) >= 2:
+                if Present[0] != EmmaX:
+                        "[EmmaX.Name] looks back at [Present[0].Name] to see if she's watching."
+                elif Present[1] != EmmaX:
+                        "[EmmaX.Name] looks back at [Present[1].Name] to see if she's watching."
             else:
-                "Emma casually glaces around to see if anyone notices what she's doing"
+                        "[EmmaX.Name] looks around to see if anyone can see her."
             "She then bends down and puts your cock to her mouth."
     elif Line == "L":    
-            "Emma smoothly bends down and places your cock against her cheek."    
+            "[EmmaX.Name] smoothly bends down and places your cock against her cheek."    
             
     
     if Line != "cum":
         $ Trigger = "blow"
     
-    show Emma_Sprite zorder EmmaLayer:
+    show Emma_Sprite zorder EmmaX.Layer:
         alpha 0
     show Emma_BJ_Animation zorder 150: 
         pos (645,510) 
@@ -3170,17 +3170,17 @@ label Emma_BJ_Reset: # The sequence to the Emma animations from BJ to default
     call Emma_Hide 
     $ Speed = 0
     
-    show Emma_Sprite at SpriteLoc(StageCenter) zorder EmmaLayer:
+    show Emma_Sprite at SpriteLoc(StageCenter) zorder EmmaX.Layer:
         alpha 1
         zoom 2.5 offset (150,80) 
     with dissolve
     
-    show Emma_Sprite zorder EmmaLayer:
+    show Emma_Sprite zorder EmmaX.Layer:
         alpha 1
         ease 1 zoom 1.5 offset (-50,50)
         pause .5
         ease .5 zoom 1 offset (0,0)      
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
         alpha 1
         zoom 1 offset (0,0)    
     return  
@@ -3305,28 +3305,27 @@ label Emma_HJ_Launch(Line = 0):
         return
     call Emma_Hide
     if Line == "L":      
-        show Emma_Sprite at SpriteLoc(StageRight) zorder EmmaLayer:
+        show Emma_Sprite at SpriteLoc(StageRight) zorder EmmaX.Layer:
             alpha 1
             ease 1 zoom 1.7 offset (0,200)#(-50,200)
     else:     
-        show Emma_Sprite at SpriteLoc(StageRight) zorder EmmaLayer:
+        show Emma_Sprite at SpriteLoc(StageRight) zorder EmmaX.Layer:
             alpha 1
             ease 1 zoom 1.7 offset (0,200)#(-50,200)
         with dissolve
    
-#    if Taboo and Line == "L": # Rogue gets started. . .
-#        if not R_Hand:
-#            "Rogue looks around to see if anyone can see her."
-#            "As you pull out your cock, Rogue pulls off her gloves, and hesitantly reaches for it. She starts to roughly stroke on it."
-#        else:
-#            "Rogue hesitantly looks around to see if anyone notices what she's doing, but then leans over and grabs your cock,"
-#    elif Line == "L":    
-#        if not R_Hand:
-#            "As you pull out your cock, Rogue pulls off her gloves, and hesitantly reaches for it. She starts to roughly stroke on it."
-#        else:
-#            "Rogue bends down and grabs your cock."
-#    else:
-#        "Rogue bends down and grabs your cock."
+    if Line == "L": # Rogue gets started. . .
+        if Taboo:
+            if len(Present) >= 2:
+                if Present[0] != EmmaX:
+                        "[EmmaX.Name] looks back at [Present[0].Name] to see if she's watching."
+                elif Present[1] != EmmaX:
+                        "[EmmaX.Name] looks back at [Present[1].Name] to see if she's watching."
+            else:
+                        "[EmmaX.Name] looks around to see if anyone can see her."
+            "She then bends down and grabs your cock."
+        else:
+            "[EmmaX.Name] bends down and grabs your cock."
             
     $ Speed = 0
     if Line != "cum":
@@ -3334,7 +3333,7 @@ label Emma_HJ_Launch(Line = 0):
     else:
         $ Speed = 1
     pause .5
-    $ Emma_Arms = 1
+    $ EmmaX.ArmPose = 1
     show Emma_HJ_Animation at SpriteLoc(StageCenter) zorder 150 with easeinbottom:
         #xoffset 150
         offset (100,250)#(100,250)
@@ -3344,18 +3343,18 @@ label Emma_HJ_Reset: # The sequence to the Rogue animations from handjob to defa
     if not renpy.showing("Emma_HJ_Animation"):
         return    
     $ Speed = 0            
-    $ Emma_Arms = 1
+    $ EmmaX.ArmPose = 1
     hide Emma_HJ_Animation with easeoutbottom
     call Emma_Hide 
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
         alpha 1
         zoom 1.7 offset (-50,200)
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
         alpha 1
         ease 1 zoom 1.5 offset (-150,50)
         pause .5
         ease .5 zoom 1 offset (0,0) 
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
         alpha 1
         zoom 1 offset (0,0)     
     return
@@ -3390,21 +3389,21 @@ image Emma_FJ_Animation:
     contains:
         ConditionSwitch(                                                                         
             #Personal Wetness            
-            "not E_Wet", Null(),
-            "E_Legs == 'pants' and not E_Upskirt", Null(),   
-            "E_Panties and not E_PantiesDown and E_Wet <= 1", Null(),                   
-            "E_Wet == 1", AlphaMask("Wet_Drip","Emma_Drip_Mask"), #only plays if nothing is in the way
+            "not EmmaX.Wet", Null(),
+            "EmmaX.Legs == 'pants' and not EmmaX.Upskirt", Null(),   
+            "EmmaX.Panties and not EmmaX.PantiesDown and EmmaX.Wet <= 1", Null(),                   
+            "EmmaX.Wet == 1", AlphaMask("Wet_Drip","Emma_Drip_Mask"), #only plays if nothing is in the way
             "True", AlphaMask("Wet_Drip2","Emma_Drip_Mask"), #only plays if nothing is in the way
             )
         pos (160,400)   
     contains:    
         ConditionSwitch(                                                                         
             #Spunk nethers        
-            "'in' not in E_Spunk and 'anal' not in E_Spunk", Null(),
-            "E_Legs == 'pants' and not E_Upskirt", Null(),   
+            "'in' not in EmmaX.Spunk and 'anal' not in EmmaX.Spunk", Null(),
+            "EmmaX.Legs == 'pants' and not EmmaX.Upskirt", Null(),   
             "True", ConditionSwitch( #Wet = 2+
-                    "E_Panties and E_PantiesDown", AlphaMask("Spunk_Drip","Emma_Drip_MaskP"), #"Wet_Drip2",# 
-                    "E_Legs == 'pants'", AlphaMask("Spunk_Drip","Emma_Drip_MaskP"),
+                    "EmmaX.Panties and EmmaX.PantiesDown", AlphaMask("Spunk_Drip","Emma_Drip_MaskP"), #"Wet_Drip2",# 
+                    "EmmaX.Legs == 'pants'", AlphaMask("Spunk_Drip","Emma_Drip_MaskP"),
                     "True", AlphaMask("Spunk_Drip","Emma_Drip_Mask"), #only plays if nothing is in the way
                     ),
             )    
@@ -3420,25 +3419,25 @@ image Emma_FJ_Animation:
     contains:
         #Hose
         ConditionSwitch(    
-            "E_Hose == 'pantyhose' and not E_Upskirt", "images/EmmaSprite/EmmaSprite_FJRight_Pantyhose.png",
-            "E_Hose == 'stockings' or E_Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_FJRight_Stocking.png",                 
+            "EmmaX.Hose == 'pantyhose' and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_FJRight_Pantyhose.png",
+            "EmmaX.Hose == 'stockings' or EmmaX.Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_FJRight_Stocking.png",                 
             "True", Null(),#Static
             ) 
         zoom 0.75        
     contains:
         ConditionSwitch(
             #Personal Wetness            
-            "not E_Wet", Null(),
-            "E_Legs and E_Wet <= 1", Null(),
-            "E_Legs", "images/EmmaSprite/EmmaSprite_Wet.png",
-            "E_Wet == 1", "images/EmmaSprite/EmmaSprite_Wet.png",
-            "True", "images/EmmaSprite/EmmaSprite_Wet.png",       #E_Wet >1
+            "not EmmaX.Wet", Null(),
+            "EmmaX.Legs and EmmaX.Wet <= 1", Null(),
+            "EmmaX.Legs", "images/EmmaSprite/EmmaSprite_Wet.png",
+            "EmmaX.Wet == 1", "images/EmmaSprite/EmmaSprite_Wet.png",
+            "True", "images/EmmaSprite/EmmaSprite_Wet.png",       #EmmaX.Wet >1
             ) 
         zoom .75
     contains:
         #Garter
         ConditionSwitch(    
-            "E_Hose == 'garterbelt' or E_Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_FJRight_Garter.png",                 
+            "EmmaX.Hose == 'garterbelt' or EmmaX.Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_FJRight_Garter.png",                 
             "True", Null(),#Static
             ) 
         zoom 0.75
@@ -3446,16 +3445,16 @@ image Emma_FJ_Animation:
         #her basic pants rightside
         ConditionSwitch(
             #pants    
-            "not E_Legs", Null(),
-            "E_Upskirt", ConditionSwitch(                   
+            "not EmmaX.Legs", Null(),
+            "EmmaX.Upskirt", ConditionSwitch(                   
                         #if the skirt's up or pants down 
-                        "E_Legs == 'skirt'", "images/EmmaSprite/EmmaSprite_SkirtUp.png", 
+                        "EmmaX.Legs == 'skirt'", "images/EmmaSprite/EmmaSprite_SkirtUp.png", 
                         "True", Null(),
                         ),                    
             "True", ConditionSwitch(  
-                        "E_Legs == 'pants'", "images/EmmaSprite/EmmaSprite_FJRight_Pants.png",   
-                        "E_Legs == 'yoga pants'", "images/EmmaSprite/EmmaSprite_FJRight_Yoga.png",       
-                        "E_Legs == 'skirt'", "images/EmmaSprite/EmmaSprite_FJRight_Skirt.png", 
+                        "EmmaX.Legs == 'pants'", "images/EmmaSprite/EmmaSprite_FJRight_Pants.png",   
+                        "EmmaX.Legs == 'yoga pants'", "images/EmmaSprite/EmmaSprite_FJRight_Yoga.png",       
+                        "EmmaX.Legs == 'skirt'", "images/EmmaSprite/EmmaSprite_FJRight_Skirt.png", 
                         "True", Null(),
                         ),   
             )  
@@ -3463,15 +3462,15 @@ image Emma_FJ_Animation:
     contains:
         #boots
         ConditionSwitch(       
-            "E_Upskirt and E_Legs and E_Legs != 'skirt'", Null(),   
-            "E_Boots", "images/EmmaSprite/EmmaSprite_FJRight_Boot.png",       
+            "EmmaX.Upskirt and EmmaX.Legs and EmmaX.Legs != 'skirt'", Null(),   
+            "EmmaX.Acc", "images/EmmaSprite/EmmaSprite_FJRight_Boot.png",       
             "True", Null(),#Static
             ) 
         zoom 0.75        
     contains:
         ConditionSwitch(                                                               
             # Emma's lower body
-#            "P_Cock != 'foot'", Null(),                                                             
+#            "Player.Cock != 'foot'", Null(),                                                             
             # If neither
             "Speed == 1", "Emma_FJ_Legs_1",#slow
             "Speed == 4", "Emma_FJ_Legs_4",#cumming
@@ -3498,10 +3497,10 @@ image Emma_FJ_Legs_0:
         #her basic legs left thigh
         ConditionSwitch(
             #pants    
-            "E_Legs == 'pants' and not E_Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png",   
-            "E_Legs == 'yoga pants' and not E_Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png", 
-            "E_Hose == 'pantyhose' and not E_Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Pantyhose.png",
-            "E_Hose == 'stockings' or E_Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Stocking.png",
+            "EmmaX.Legs == 'pants' and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png",   
+            "EmmaX.Legs == 'yoga pants' and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png", 
+            "EmmaX.Hose == 'pantyhose' and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Pantyhose.png",
+            "EmmaX.Hose == 'stockings' or EmmaX.Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Stocking.png",
             "True", "images/EmmaSprite/EmmaSprite_FJLeftThigh.png", 
             )    
         subpixel True
@@ -3535,7 +3534,7 @@ image Emma_FJ_Legs_0:
         #her basic legs left foot 
         ConditionSwitch(
             #Foot    
-            "E_Hose and E_Hose != 'garterbelt'", "images/EmmaSprite/EmmaSprite_FJFoot_Stocking.png",
+            "EmmaX.Hose and EmmaX.Hose != 'garterbelt'", "images/EmmaSprite/EmmaSprite_FJFoot_Stocking.png",
             "True", "images/EmmaSprite/EmmaSprite_FJFoot.png",
             )    
         transform_anchor True
@@ -3570,10 +3569,10 @@ image Emma_FJ_Legs_1:
         #her basic legs left thigh
         ConditionSwitch(
             #pants    
-            "E_Legs == 'pants' and not E_Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png",   
-            "E_Legs == 'yoga pants' and not E_Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png", 
-            "E_Hose == 'pantyhose' and not E_Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Pantyhose.png",
-            "E_Hose == 'stockings' or E_Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Stocking.png",
+            "EmmaX.Legs == 'pants' and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png",   
+            "EmmaX.Legs == 'yoga pants' and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png", 
+            "EmmaX.Hose == 'pantyhose' and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Pantyhose.png",
+            "EmmaX.Hose == 'stockings' or EmmaX.Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Stocking.png",
             "True", "images/EmmaSprite/EmmaSprite_FJLeftThigh.png", 
             )    
         transform_anchor True
@@ -3612,7 +3611,7 @@ image Emma_FJ_Legs_1:
         #her basic legs left foot 
         ConditionSwitch(
             #Foot    
-            "E_Hose and E_Hose != 'garterbelt'", "images/EmmaSprite/EmmaSprite_FJFoot_Stocking.png",
+            "EmmaX.Hose and EmmaX.Hose != 'garterbelt'", "images/EmmaSprite/EmmaSprite_FJFoot_Stocking.png",
             "True", "images/EmmaSprite/EmmaSprite_FJFoot.png",
             )    
         transform_anchor True
@@ -3653,10 +3652,10 @@ image Emma_FJ_Legs_2:
         #her basic legs left thigh
         ConditionSwitch(
             #pants    
-            "E_Legs == 'pants' and not E_Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png",   
-            "E_Legs == 'yoga pants' and not E_Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png", 
-            "E_Hose == 'pantyhose' and not E_Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Pantyhose.png",
-            "E_Hose == 'stockings' or E_Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Stocking.png",
+            "EmmaX.Legs == 'pants' and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png",   
+            "EmmaX.Legs == 'yoga pants' and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png", 
+            "EmmaX.Hose == 'pantyhose' and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Pantyhose.png",
+            "EmmaX.Hose == 'stockings' or EmmaX.Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Stocking.png",
             "True", "images/EmmaSprite/EmmaSprite_FJLeftThigh.png", 
             )    
         transform_anchor True
@@ -3688,7 +3687,7 @@ image Emma_FJ_Legs_2:
         #her basic legs left foot 
         ConditionSwitch(
             #Foot    
-            "E_Hose and E_Hose != 'garterbelt'", "images/EmmaSprite/EmmaSprite_FJFoot_Stocking.png",
+            "EmmaX.Hose and EmmaX.Hose != 'garterbelt'", "images/EmmaSprite/EmmaSprite_FJFoot_Stocking.png",
             "True", "images/EmmaSprite/EmmaSprite_FJFoot.png",
             )    
         transform_anchor True
@@ -3721,10 +3720,10 @@ image Emma_FJ_Legs_4:
         #her basic legs left thigh
         ConditionSwitch(
             #pants    
-            "E_Legs == 'pants' and not E_Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png",   
-            "E_Legs == 'yoga pants' and not E_Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png", 
-            "E_Hose == 'pantyhose' and not E_Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Pantyhose.png",
-            "E_Hose == 'stockings' or E_Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Stocking.png",
+            "EmmaX.Legs == 'pants' and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png",   
+            "EmmaX.Legs == 'yoga pants' and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Yoga.png", 
+            "EmmaX.Hose == 'pantyhose' and not EmmaX.Upskirt", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Pantyhose.png",
+            "EmmaX.Hose == 'stockings' or EmmaX.Hose == 'stockings and garterbelt'", "images/EmmaSprite/EmmaSprite_FJLeftThigh_Stocking.png",
             "True", "images/EmmaSprite/EmmaSprite_FJLeftThigh.png", 
             )    
         transform_anchor True
@@ -3756,7 +3755,7 @@ image Emma_FJ_Legs_4:
         #her basic legs left foot 
         ConditionSwitch(
             #Foot    
-            "E_Hose and E_Hose != 'garterbelt'", "images/EmmaSprite/EmmaSprite_FJFoot_Stocking.png",
+            "EmmaX.Hose and EmmaX.Hose != 'garterbelt'", "images/EmmaSprite/EmmaSprite_FJFoot_Stocking.png",
             "True", "images/EmmaSprite/EmmaSprite_FJFoot.png",
             )    
         transform_anchor True
@@ -3792,7 +3791,7 @@ image Zero_Emma_FootCock:
     #cock used in Emma's FJ animation
     contains:
         ConditionSwitch(  
-                "P_Sprite", "Blowcock", 
+                "Player.Sprite", "Blowcock", 
                 "True", Null(),
                 )          
     pos (200,1000) 
@@ -3805,16 +3804,16 @@ image Emma_FJ_Calf:
     contains:        
         ConditionSwitch(
             #calf    
-            "E_Hose and E_Hose != 'garterbelt'", "images/EmmaSprite/EmmaSprite_FJLeftCalf_Stocking.png",
+            "EmmaX.Hose and EmmaX.Hose != 'garterbelt'", "images/EmmaSprite/EmmaSprite_FJLeftCalf_Stocking.png",
             "True", "images/EmmaSprite/EmmaSprite_FJLeftCalf.png",
             )            
     contains:
         #her basic legs left calf 
         ConditionSwitch(
             #pants    
-            "not E_Legs or E_Upskirt", Null(), 
-            "E_Legs == 'pants'", "images/EmmaSprite/EmmaSprite_FJLeftCalf_Pants.png",   
-            "E_Legs == 'yoga pants'", "images/EmmaSprite/EmmaSprite_FJLeftCalf_Yoga.png", 
+            "not EmmaX.Legs or EmmaX.Upskirt", Null(), 
+            "EmmaX.Legs == 'pants'", "images/EmmaSprite/EmmaSprite_FJLeftCalf_Pants.png",   
+            "EmmaX.Legs == 'yoga pants'", "images/EmmaSprite/EmmaSprite_FJLeftCalf_Yoga.png", 
             "True", Null(),
             )   
     anchor (.31,.63)#.3.6
@@ -3834,7 +3833,7 @@ label Emma_FJ_Launch(Line = 0):    # The sequence to launch the Emma footjob ani
     show Emma_FJ_Animation zorder 150:  
         alpha 0
         pos (950,200)  
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
         alpha 1
         ease 1 zoom .8 xpos 580 yoffset 150
     pause 1
@@ -3842,7 +3841,7 @@ label Emma_FJ_Launch(Line = 0):    # The sequence to launch the Emma footjob ani
     show Emma_FJ_Chair zorder 10:
         alpha 1
         xpos 590
-    show Emma_Sprite zorder EmmaLayer:
+    show Emma_Sprite zorder EmmaX.Layer:
         alpha 0
     $ Speed = 0    
     show Emma_FJ_Animation zorder 150:  
@@ -3850,28 +3849,28 @@ label Emma_FJ_Launch(Line = 0):    # The sequence to launch the Emma footjob ani
     pause 0.5
     show Emma_FJ_Animation zorder 150: 
         alpha 1        
-    $ P_Sprite = 1
+    $ Player.Sprite = 1
     return
     
 label Emma_FJ_Reset: # The sequence to the Emma animations from Titfuck to default
     if not renpy.showing("Emma_FJ_Animation"):
         return
     call Emma_Hide 
-    $ P_Sprite = 0
+    $ Player.Sprite = 0
     
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
         zoom .8 xpos 580 yoffset 150 #offset (-100,50)      
-    show Emma_Sprite zorder EmmaLayer:
+    show Emma_Sprite zorder EmmaX.Layer:
         alpha 1
-        ease .5 zoom 1 xpos E_SpriteLoc yoffset 0 alpha 1  
+        ease .5 zoom 1 xpos EmmaX.SpriteLoc yoffset 0 alpha 1  
     pause .5
     
     hide Emma_FJ_Chair zorder 10
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
         alpha 1
-        zoom 1 offset (0,0) xpos E_SpriteLoc 
+        zoom 1 offset (0,0) xpos EmmaX.SpriteLoc 
         
-    "Emma stands back up."
+    "[EmmaX.Name] stands back up."
     return
 
 # End Emma Footjob animations  / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /       
@@ -3935,58 +3934,58 @@ image Emma_At_Podium:
         
         
         
-label E_Kissing_Launch(T = Trigger):    
+label Emma_Kissing_Launch(T = Trigger):    
     call Emma_Hide
     $ Trigger = T
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer
-    show Emma_Sprite at SpriteLoc(StageCenter) zorder EmmaLayer:
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer
+    show Emma_Sprite at SpriteLoc(StageCenter) zorder EmmaX.Layer:
         ease 0.5 offset (0,0) zoom 2 alpha 1
     return
     
-label E_Kissing_Smooch:   
-    call EmmaFace("kiss")  
-    show Emma_Sprite at SpriteLoc(StageCenter) zorder EmmaLayer:
+label Emma_Kissing_Smooch:  
+    $ EmmaX.FaceChange("kiss")
+    show Emma_Sprite at SpriteLoc(StageCenter) zorder EmmaX.Layer:
         ease 0.5 xpos StageCenter offset (0,0) zoom 2 alpha 1
         pause 1
-        ease 0.5 xpos E_SpriteLoc zoom 1      
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
+        ease 0.5 xpos EmmaX.SpriteLoc zoom 1      
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
         zoom 1
-    call EmmaFace("sexy")  
+    $ EmmaX.FaceChange("sexy") 
     return
             
-label E_Breasts_Launch(T = Trigger):    
+label Emma_Breasts_Launch(T = Trigger):    
     call Emma_Hide
     $ Trigger = T
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
 #        ease 0.5 offset (-100,-200) zoom 2
         ease 0.5 pos (700,-50) offset (0,0) zoom 2 alpha 1
     return
         
-label E_Pussy_Launch(T = Trigger):
+label Emma_Pussy_Launch(T = Trigger):
     call Emma_Hide    
     $ Trigger = T
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
         ease 0.5 pos (700,-400) offset (0,0) zoom 2 alpha 1
     return
         
-label E_Pos_Reset(Pose = 0):     
-    if E_Loc != bg_current:
+label Emma_Pos_Reset(Pose = 0):     
+    if EmmaX.Loc != bg_current:
             return
     call Emma_Hide 
-    show Emma_Sprite at SpriteLoc(E_SpriteLoc) zorder EmmaLayer:
+    show Emma_Sprite at SpriteLoc(EmmaX.SpriteLoc) zorder EmmaX.Layer:
         ease .5 offset (0,0) anchor (0.5, 0.0) zoom 1 alpha 1 xzoom 1 yzoom 1
-    show Emma_Sprite zorder EmmaLayer:
+    show Emma_Sprite zorder EmmaX.Layer:
         offset (0,0) 
         anchor (0.5, 0.0)
         zoom 1   
         xzoom 1 
         yzoom 1
         alpha 1
-        pos (E_SpriteLoc,50)
+        pos (EmmaX.SpriteLoc,50)
     $ Trigger = Pose
     return
     
-label Emma_Hide:
+label Emma_Hide(Sprite=0):
         if renpy.showing("Emma_SexSprite"):
             call Emma_Sex_Reset
         hide Emma_SexSprite
@@ -3994,11 +3993,13 @@ label Emma_Hide:
         hide Emma_BJ_Animation
         hide Emma_TJ_Animation 
         hide Emma_FJ_Animation 
+        if Sprite:
+                hide Emma_Sprite    
         return
 
 # Interface items //////////////////////////////////////////////////////////////////////////////
 
-image GropeLeftBreast_E:    
+image GropeLeftBreast_Emma:    
     contains:
         subpixel True
         "UI_Hand"
@@ -4012,7 +4013,7 @@ image GropeLeftBreast_E:
             ease 1 rotate 90
             repeat
 
-image GropeRightBreast_E:    
+image GropeRightBreast_Emma:    
     contains:
         subpixel True
         "UI_Hand"
@@ -4028,7 +4029,7 @@ image GropeRightBreast_E:
             repeat
 
 #image GropeBreast:
-image LickRightBreast_E:   
+image LickRightBreast_Emma:   
     contains:
         subpixel True
         "UI_Tongue"
@@ -4044,7 +4045,7 @@ image LickRightBreast_E:
             ease 1.5 rotate 30 pos (105,375)#(115,400)
             repeat
             
-image LickLeftBreast_E:   
+image LickLeftBreast_Emma:   
     contains:
         subpixel True
         "UI_Tongue"
@@ -4060,7 +4061,7 @@ image LickLeftBreast_E:
             ease 1.5 rotate 30 pos (205,370)#(200,410)
             repeat
 
-image GropeThigh_E: 
+image GropeThigh_Emma: 
     contains:
         subpixel True
         "UI_Hand"
@@ -4075,7 +4076,7 @@ image GropeThigh_E:
             ease 1 rotate 100 pos (180,670)   
             repeat
 
-image GropePussy_E: 
+image GropePussy_Emma: 
     contains:
         subpixel True
         "UI_Hand"
@@ -4094,7 +4095,7 @@ image GropePussy_E:
                 ease 1 rotate 170 pos (200,600)             
             repeat
 
-image FingerPussy_E: 
+image FingerPussy_Emma: 
     contains:
         subpixel True
         "UI_Finger"       
@@ -4123,7 +4124,7 @@ image FingerPussy_E:
                 ease .25 rotate 50 pos (210,665)
             repeat
             
-image Lickpussy_E:   
+image Lickpussy_Emma:   
     contains:
         subpixel True
         "UI_Tongue"        
@@ -4139,7 +4140,7 @@ image Lickpussy_E:
             easein 1 rotate 10 pos (230,625) #(240,680)
             repeat
 
-image VibratorRightBreast_E: 
+image VibratorRightBreast_Emma: 
     contains:
         subpixel True
         "UI_Vibrator"  
@@ -4155,7 +4156,7 @@ image VibratorRightBreast_E:
             pause .25
             repeat
 
-image VibratorLeftBreast_E: 
+image VibratorLeftBreast_Emma: 
     contains:
         subpixel True
         "UI_Vibrator"  
@@ -4171,7 +4172,7 @@ image VibratorLeftBreast_E:
             pause .25
             repeat
             
-image VibratorPussy_E: 
+image VibratorPussy_Emma: 
     contains:
         subpixel True
         "UI_Vibrator"  
@@ -4187,7 +4188,7 @@ image VibratorPussy_E:
             pause .25
             repeat
 
-image VibratorAnal_E: 
+image VibratorAnal_Emma: 
     contains:
         subpixel True
         "UI_Vibrator"  
@@ -4203,7 +4204,7 @@ image VibratorAnal_E:
             pause .25
             repeat
             
-image VibratorPussyInsert_E: 
+image VibratorPussyInsert_Emma: 
     contains:
         subpixel True
         "UI_Vibrator"  
@@ -4213,7 +4214,7 @@ image VibratorPussyInsert_E:
         alpha 0.5
         rotate 0
 
-image VibratorAnalInsert_E: 
+image VibratorAnalInsert_Emma: 
     contains:
         subpixel True
         "UI_Vibrator"  
@@ -4226,13 +4227,13 @@ image VibratorAnalInsert_E:
 
 
 #Lesbian action animations.
-image GirlGropeBothBreast_E: 
+image GirlGropeBothBreast_Emma: 
     contains:
-        "GirlGropeLeftBreast_E"
+        "GirlGropeLeftBreast_Emma"
     contains:
-        "GirlGropeRightBreast_E"
+        "GirlGropeRightBreast_Emma"
     
-image GirlGropeLeftBreast_E:  
+image GirlGropeLeftBreast_Emma:  
     contains:
         subpixel True
         "UI_GirlHand"
@@ -4246,7 +4247,7 @@ image GirlGropeLeftBreast_E:
             ease 1 rotate -20 pos (240,370)
             repeat
 
-image GirlGropeRightBreast_E:    
+image GirlGropeRightBreast_Emma:    
     contains:
         subpixel True
         "UI_GirlHand"
@@ -4261,7 +4262,7 @@ image GirlGropeRightBreast_E:
             ease 1 rotate -10 pos (90,380)
             repeat
 
-image GirlGropeThigh_E: 
+image GirlGropeThigh_Emma: 
     contains:
         subpixel True
         "UI_GirlHand"
@@ -4283,15 +4284,15 @@ image GirlGropeThigh_E:
             ease .5 xpos 210
             repeat
 
-image GirlGropePussy_ESelf:
+image GirlGropePussy_EmmaSelf:
     contains:
-        "GirlGropePussy_E"
+        "GirlGropePussy_Emma"
         anchor (0.5,0.5)
         rotate -40
 #        yzoom -1
         pos (120,530)
     
-image GirlGropePussy_E: 
+image GirlGropePussy_Emma: 
     contains:
         subpixel True
         "UI_GirlHand"
@@ -4325,7 +4326,7 @@ image GirlGropePussy_E:
                 ease .3 rotate 200 pos (205,600)
             repeat
 
-image GirlFingerPussy_E: 
+image GirlFingerPussy_Emma: 
     contains:
         subpixel True
         "UI_GirlFinger"       
@@ -4359,441 +4360,4 @@ image GirlFingerPussy_E:
                 ease .3 rotate 200 pos (220,665)
             repeat
 
-# Start Emma Faces / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
-label EmmaFace(Emote = E_Emote, B = E_Blush, M = 0, Mouth = 0, Eyes = 0, Brows = 0):
-        # Emote is the chosen emote, B is the lush state
-        # M is whether the character is in a  manic state                 
-        $ Emote = E_Emote if Emote == 5 else Emote
-        $ B = E_Blush if B == 5 else B
         
-        if (E_Forced or "angry" in E_RecentActions) and Emote in ("normal", "bemused", "sexy", "sly", "smile", "startled"):
-                $ Emote = "angry"     
-        elif E_ForcedCount > 0 and Emote in ("normal", "bemused", "sexy", "sly", "smile", "startled"):
-                $ Emote = "sad"  
-            
-        if Emote == "normal":
-                $ E_Mouth = "normal"
-                $ E_Brows = "normal"
-                $ E_Eyes = "normal"
-        elif Emote == "angry":
-                $ E_Mouth = "sad"
-                $ E_Brows = "angry"
-                $ E_Eyes = "sexy"
-        elif Emote == "bemused":
-                $ E_Mouth = "normal"
-                $ E_Brows = "sad"
-                $ E_Eyes = "squint"
-        elif Emote == "closed":
-                $ E_Mouth = "normal"
-                $ E_Brows = "sad"
-                $ E_Eyes = "closed"  
-        elif Emote == "confused":
-                $ E_Mouth = "kiss"
-                $ E_Brows = "confused"
-                $ E_Eyes = "squint"
-        elif Emote == "kiss":
-                $ E_Mouth = "kiss"
-                $ E_Brows = "sad"
-                $ E_Eyes = "closed"
-        elif Emote == "tongue":
-                $ E_Mouth = "tongue"
-                $ E_Brows = "sad"
-                $ E_Eyes = "stunned" #"stunned"
-        elif Emote == "manic":
-                $ E_Mouth = "smile"
-                $ E_Brows = "sad"
-                $ E_Eyes = "surprised"
-                $ E_Blush = 1
-        elif Emote == "sad":
-                $ E_Mouth = "sad"
-                $ E_Brows = "sad"
-                $ E_Eyes = "sexy"
-        elif Emote == "sadside":
-                $ E_Mouth = "sad"
-                $ E_Brows = "sad"
-                $ E_Eyes = "side"
-        elif Emote == "sexy":
-                $ E_Mouth = "lipbite"
-                $ E_Brows = "normal"
-                $ E_Eyes = "squint"
-        elif Emote == "smile":
-                $ E_Mouth = "smile"
-                $ E_Brows = "normal"
-                $ E_Eyes = "normal"
-        elif Emote == "sucking":
-                $ E_Mouth = "sucking"
-                $ E_Brows = "surprised"
-                $ E_Eyes = "closed"
-        elif Emote == "surprised":
-                $ E_Mouth = "kiss"
-                $ E_Brows = "surprised"
-                $ E_Eyes = "surprised"
-        elif Emote == "startled":
-                $ E_Mouth = "smile"
-                $ E_Brows = "surprised"
-                $ E_Eyes = "surprised"
-        elif Emote == "down":
-                $ E_Mouth = "sad"
-                $ E_Brows = "sad"
-                $ E_Eyes = "down"  
-        elif Emote == "perplexed":
-                $ E_Mouth = "smile"
-                $ E_Brows = "sad"
-                $ E_Eyes = "normal"
-        elif Emote == "sly":
-                $ E_Mouth = "smirk"
-                $ E_Brows = "normal"
-                $ E_Eyes = "squint"
-            
-        if M:
-                $ E_Eyes = "surprised"        
-        if B > 1:
-                $ E_Blush = 2
-        elif B:
-                $ E_Blush = 1
-        else:
-                $ E_Blush = 0
-        
-        if Mouth:
-                $ E_Mouth = Mouth
-        if Eyes:
-                $ E_Eyes = Eyes
-        if Brows:
-                $ E_Brows = Brows
-        
-        return
-        
-        
-# Emma's Wardrobe //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-label EmmaWardrobe:
-    menu:      
-        "View":
-            while True:
-                menu:
-                    "Default":
-                        call E_Pos_Reset
-                    "Face":
-                        call E_Kissing_Launch(0)
-                    "Body":
-                        call E_Pussy_Launch(0)
-                    "Back":
-                        jump EmmaWardrobe 
-        # Outfits
-#        "Teacher outfit":
-#            $ E_Outfit = "teacher"
-#            call EmmaOutfit
-#        "Super outfit":
-#            $ E_Outfit = "costume"
-#            call EmmaOutfit
-        "Nude":
-            $ E_Over = 0
-            $ E_Chest = 0
-            $ E_Legs = 0
-            $ E_Panties = 0
-            $ E_Gloves = 0
-            $ E_Neck = 0
-#            $ E_Outfit = "nude"
-#            call EmmaOutfit
-        "Over":              
-            while True:
-                menu:
-                    # Overshirts    
-                    "Remove [E_Over]" if E_Over:
-                        $ E_Over = 0
-                    "Add Jacket":
-                        $ E_Over = "jacket"  
-                    "Add Towel":
-                        $ E_Over = "towel" 
-                    "Add nighty":
-                        $ E_Over = "nighty"   
-                    "Toggle up-top":
-                        if E_Uptop:
-                            $ E_Uptop = 0
-                        else:
-                            $ E_Uptop = 1  
-                    "Toggle Arms":
-                        if Emma_Arms == 1:
-                            $ Emma_Arms = 2
-                        else:
-                            $ Emma_Arms = 1 
-                    "Back":
-                        jump EmmaWardrobe                
-        "Tops":            
-            while True:
-                menu:
-                    # Tops    
-                    "Remove [E_Chest]" if E_Chest:
-                        $ E_Chest = 0
-                    "Add corset":
-                        $ E_Chest = "corset"
-                    "Add sports bra":
-                        $ E_Chest = "sports bra"
-#                    "Add buttoned tank top" if E_Over != "mesh top":
-#                        $ E_Chest = "buttoned tank"
-                    "Add lace bra":
-                        $ E_Chest = "lace bra"
-                    "Add bikini":
-                        $ E_Chest = "bikini top"
-#                    "Add bra":
-#                        $ E_Chest = "bra"                            
-                    "Toggle Piercings":
-                        if E_Pierce == "ring":
-                            $ E_Pierce = "barbell"
-                        elif E_Pierce == "barbell":
-                            $ E_Pierce = 0
-                        else:
-                            $ E_Pierce = "ring"   
-                    "Toggle up-top":
-                        if E_Uptop:
-                            $ E_Uptop = 0
-                        else:
-                            $ E_Uptop = 1 
-                    "Toggle Arms":
-                        if Emma_Arms == 1:
-                            $ Emma_Arms = 2
-                        else:
-                            $ Emma_Arms = 1
-                    "Back":
-                        jump EmmaWardrobe             
-        
-        "Legs":            
-            while True:
-                menu:
-                    # Legs   
-                    "Remove legs" if E_Legs:     
-                        $ E_Legs = 0
-                    "Add pants":
-                        $ E_Legs = "pants"
-                        $ E_Upskirt = 0
-                    "Add yoga pants":
-                        $ E_Legs = "yoga pants"
-                        $ E_Upskirt = 0
-                    "Add skirt":
-                        $ E_Legs = "skirt"
-                        $ E_Upskirt = 0
-                    "Toggle upskirt":
-                        if E_Upskirt:
-                            $ E_Upskirt = 0
-                        else:
-                            $ E_Upskirt = 1
-                    "Back":
-                        jump EmmaWardrobe    
-        
-        "Underwear":            
-            while True:
-                menu:
-                    # Underwear
-                    "Hose":
-                        menu:
-                            "Add hose":     
-                                $ E_Hose = "stockings"  
-                            "Add garter":     
-                                $ E_Hose = "garterbelt"  
-                            "Add stockings and garter":     
-                                $ E_Hose = "stockings and garterbelt"  
-                            "Add pantyhose":     
-                                $ E_Hose = "pantyhose"   
-#                            "Add tights":     
-#                                $ E_Hose = "tights"   
-#                            "Add ripped hose":     
-#                                $ E_Hose = "ripped pantyhose"   
-#                            "Add ripped tights":     
-#                                $ E_Hose = "ripped tights"   
-#                            "Add tights":     
-#                                $ E_Hose = "tights"    
-                            "Remove hose" if E_Hose:     
-                                $ E_Hose = 0  
-
-                    "toggle boots":    
-                        if not E_Boots:
-                            $ E_Boots = "thigh boots"   
-                        else:
-                            $ E_Boots = 0     
-                        
-                    "Remove panties" if E_Panties:     
-                        $ E_Panties = 0     
-                    "Add black panties":
-                        $ E_Panties = "white panties"
-#                    "Add shorts":
-#                        $ E_Panties = "shorts"
-                    "Add sports panties":
-                        $ E_Panties = "sports panties"  
-                    "Add bikini panties":
-                        $ E_Panties = "bikini bottoms"  
-                    "Add lace panties":
-                        $ E_Panties = "lace panties"    
-                    "pull down-up panties":
-                        if E_PantiesDown:
-                            $ E_PantiesDown = 0
-                        else:
-                            $ E_PantiesDown = 1
-                    "Back":
-                        jump EmmaWardrobe    
-        "Misc":
-            while True:
-                menu: 
-                    "Emotions":
-                        call EmmaEmotionEditor
-                    "Toggle Arms":
-                        if Emma_Arms == 1:
-                            $ Emma_Arms = 2
-                        else:
-                            $ Emma_Arms = 1
-                    "Toggle Wetness":
-                        if not E_Wet:
-                            $ E_Wet = 1
-                        elif E_Wet == 1:
-                            $ E_Wet = 2
-                        else:
-                            $ E_Wet  = 0
-                    "Toggle wet look":
-                        if not E_Water:
-                            $ E_Water = 1
-                        elif E_Water == 1:
-                            $ E_Water = 3
-                        else:
-                            $ E_Water  = 0
-                    "Toggle pubes":
-                        if not E_Pubes:
-                            $ E_Pubes = 1
-                        else:
-                            $ E_Pubes = 0
-                    "Toggle Pussy Spunk":
-                        if "in" in E_Spunk:
-                            $ E_Spunk.remove("in")
-                        else:
-                            $ E_Spunk.append("in")
-                    "Toggle Piercings":
-                        if E_Pierce == "ring":
-                            $ E_Pierce = "barbell"
-                        elif E_Pierce == "barbell":
-                            $ E_Pierce = 0
-                        else:
-                            $ E_Pierce = "ring"
-                    "Add choker" if not E_Neck:
-                        $ E_Neck = "choker"
-                    "Remove choker" if E_Neck:
-                        $ E_Neck = 0
-                        
-                    "Add Gloves" if not E_Arms:
-                        $ E_Arms = "white gloves"
-                    "Remove Gloves" if E_Arms:
-                        $ E_Arms = 0
-                    "Back":
-                        jump EmmaWardrobe               
-#        "Set Custom Outfit #1.":
-#            $ E_Custom[0] = 1
-#            $ E_Custom[1] = E_Arms
-#            $ E_Custom[2] = E_Legs
-#            $ E_Custom[3] = E_Over
-#            $ E_Custom[4] = E_Under #fix, this can be changed to something else, no longer necessary
-#            $ E_Custom[5] = E_Chest
-#            $ E_Custom[6] = E_Panties 
-#            $ E_Custom[7] = E_Pubes 
-#            $ E_Custom[8] = E_Hair
-#            $ E_Custom[9] = E_Hose
-#        "Wear Custom Outfit #[E_Custom[0]]." if E_Custom[0]:
-#            $ Line = E_Outfit
-#            $ E_Outfit = "custom1"
-#            call RogueOutfit
-#            $ E_Outfit = Line
-        "Nothing":
-            return
-    jump EmmaWardrobe
-return
-
-label EmmaEmotionEditor(CountStore = "normal"):
-    menu:
-        "Emotions1: Normal Angry Smiling Sexy Surprised Bemused Manic.":        
-            menu:
-                "Normal":
-                    $ E_Emote = "normal"
-                    call EmmaFace
-                "Angry":
-                    $ E_Emote = "angry"
-                    call EmmaFace
-                "Smiling":
-                    $ E_Emote = "smile"
-                    call EmmaFace
-                "Sexy":
-                    $ E_Emote = "sexy"
-                    call EmmaFace
-                "Suprised":
-                    $ E_Emote = "surprised"
-                    call EmmaFace
-                "Bemused":
-                    $ E_Emote = "bemused"
-                    call EmmaFace
-                "Manic":
-                    $ E_Emote = "manic"
-                    call EmmaFace
-                    
-        "Emotions2: Sad Sucking Kiss Tongue Confused Closed Down.":  
-            menu:
-                "Sad":
-                    $ E_Emote = "sad"
-                    call EmmaFace
-                "Sucking":
-                    $ E_Emote = "sucking"
-                    call EmmaFace
-                "kiss":
-                    $ E_Emote = "kiss"
-                    call EmmaFace
-                "Tongue":
-                    $ E_Emote = "tongue"
-                    call EmmaFace
-                "confused":
-                    $ E_Emote = "confused"
-                    call EmmaFace
-                "Closed":
-                    $ E_Emote = "closed"
-                    call EmmaFace
-                "Down":
-                    $ E_Emote = "down"
-                    call EmmaFace
-                    
-        "Emotions3: Sadside Startled Perplexed Sly":  
-            menu:
-                "Sadside":
-                    $ E_Emote = "sadside"
-                    call EmmaFace
-                "Startled":
-                    $ E_Emote = "startled"
-                    call EmmaFace
-                "Perplexed":
-                    $ E_Emote = "perplexed"
-                    call EmmaFace
-                "Sly":
-                    $ E_Emote = "sly"
-                    call EmmaFace
-        "Toggle Mouth Spunk":
-            if "mouth" in E_Spunk:
-                $ E_Spunk.remove("mouth")
-            else:
-                $ E_Spunk.append("mouth")
-        "Toggle hand Spunk":
-            if "hand" in E_Spunk:
-                $ E_Spunk.remove("hand")
-            else:
-                $ E_Spunk.append("hand")
-                
-        "Toggle Facial Spunk":
-            if "facial" in E_Spunk and "hair" not in E_Spunk:
-                $ E_Spunk.append("hair")
-            elif "facial" in E_Spunk:
-                $ E_Spunk.remove("facial")                
-                $ E_Spunk.remove("hair")
-            else:
-                $ E_Spunk.append("facial")
-            
-        "Blush":
-            if E_Blush == 2:
-                $ E_Blush = 1
-            elif E_Blush:
-                $ E_Blush = 0
-            else:
-                $ E_Blush = 2  
-        "Exit.":
-            return
-    jump EmmaEmotionEditor
-return

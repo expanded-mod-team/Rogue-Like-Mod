@@ -1,275 +1,369 @@
 ﻿
-label Group_Strip_Study:
-    if "Rogue" in Party and "stripstudy" not in R_History:
-            $ R_History.append("stripstudy")
-    if "Kitty" in Party and "stripstudy" not in K_History:
-            $ K_History.append("stripstudy")
-    if "Emma" in Party and "stripstudy" not in E_History:
-            $ E_History.append("stripstudy")
-    if "Laura" in Party and "stripstudy" not in L_History:
-            $ L_History.append("stripstudy")
-    
+# Start Main Phase / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+label Group_Strip_Study(BO=[],QuizOrder=[]):    
     $ Count = 0
     $ Count2 = 1
     $ QuizOrder = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]  # The entire list of objects. . .
     $ renpy.random.shuffle(QuizOrder)  # . . .shuffled randomly. . .
-    if "Emma" in Party and Party[0] != "Emma": 
+    if EmmaX in Party and Party[0] != EmmaX: 
             # Forces Emma into the lead
             $ Party.reverse()
             call Shift_Focus(Party[0])
-            
-    if Party[0] == "Rogue":
-            ch_r "Alright, [R_Petname], I'll make this simple. I'll ask you a quiz question, get it right, I take something off. . ."
+          
+    # intros
+    if Party[0] == RogueX:
+            if not RogueX.Over and not RogueX.Legs and RogueX.PantiesNum <= 5:
+                    #if she's mostly naked, cheat
+                    $ RogueX.FaceChange("sly")                                
+                    ch_r "Well, I did consider suggesting we do some \"strip studying,\". . ." 
+                    $ RogueX.Eyes = "down"
+                    ch_r "but it looks like I got ahead of myself. . ."
+                    $ RogueX.Eyes = "squint"
+                    ch_r "Did you have anything else in mind?"                                
+                    call Rogue_SexMenu 
+                    return
+            else:
+                    "[RogueX.Name] moves a bit closer to you, and then suggests \"strip studying.\""
+            ch_r "Alright, [RogueX.Petname], I'll make this simple. I'll ask you a quiz question, get it right, I take something off. . ."
             ch_r "Get three wrong, and we're done for the night. Good luck."
-    elif Party[0] == "Kitty": 
-            call KittyFace("perplexed", 2)
-            ch_k "Ok, so[K_like]if you get a question right. . . I'll take off a piece of clothing. . ."
+    elif Party[0] == KittyX: 
+            "[KittyX.Name] takes the book from your hand, and sets it aside."
+            if not KittyX.Over and not KittyX.Legs:
+                    #if she's mostly naked, cheat
+                    $ KittyX.FaceChange("sly")                                
+                    ch_k "I was[KittyX.like]thinking about maybe \"strip studying,\". . ." 
+                    $ KittyX.Eyes = "down"
+                    ch_k "but it would be a pretty short game. . ."
+                    $ KittyX.Eyes = "squint"
+                    ch_k "Was there something you'd rather do?"                                
+                    call Kitty_SexMenu   
+            else:
+                    "She then asks if maybe you want to do some \"strip studying?\""
+            $ KittyX.FaceChange("perplexed", 2)
+            ch_k "Ok, so[KittyX.like]if you get a question right. . . I'll take off a piece of clothing. . ."
             ch_k "But you only get three tries." 
-            call KittyFace("sly", 1)
-    elif Party[0] == "Emma":    
+            $ KittyX.FaceChange("sly", 1)
+    elif Party[0] == EmmaX:    
+            call Emma_StripStudy_Intro #special intro for Emma. . .
+            if not _return:
+                    #if you aren't on board, it reverts to the previous scene
+                    return
             ch_e "I take the education process very seriously."    
-            call EmmaFace("bemused", Eyes="side")
+            $ EmmaX.FaceChange("bemused", Eyes="side")
             ch_e "So you get a question right. . . "
             ch_e ". . ."
-            call EmmaFace("sly")
+            $ EmmaX.FaceChange("sly")
             ch_e "I'll take off a piece of clothing. . ."
             ch_e "But you only get three tries." 
-    elif Party[0] == "Laura":
-            ch_l "Ok, I'll question you."
-            ch_l "Get it right, I take off some clothes."
-            ch_l "You get three strikes, make them count."
+    elif Party[0] == LauraX:
+            #Laura does not do Strip Study solo, she's not interested.
+            $ LauraX.FaceChange("sly", 1)
+            "[LauraX.Name] takes the book from your hand, and sets it aside."
+            ch_l "I'm kinda bored, did you just wanna feel me up or something?"
+            menu:
+                "Sure?":
+                        ch_l "Good."
+                        "Laura grabs your hand and presses it against her breast."
+                        call Date_Sex_Break(LauraX,Second)
+                        if _return == 4:                            
+                                "Laura stops what she's doing."
+                                ch_l "Be that way."     
+                                return                                    
+                        if _return == 3:
+                                #if the other girl took off. . .
+                                menu:
+                                    ch_l "Keep going?"
+                                    "Go ahead.":
+                                            ch_l "Un."
+                                    "We should stop.":
+                                            ch_l "Grr."
+                                            return    
+                        call Laura_FB_Prep
+                        if Situation: 
+                                #if she quits back having wanted to try something else. . .
+                                jump Laura_SexMenu
+                "I really think we should be studying.":            
+                        $ LauraX.FaceChange("perplexed", 1)
+                        ch_l "?"           
+                        $ LauraX.Statup("Love", 80, -5)
+                        $ LauraX.Statup("Obed", 70, 10)
+                        $ LauraX.Statup("Inbt", 70, -5)
+                        if ApprovalCheck(LauraX,600,"L"): 
+                                $ LauraX.FaceChange("sadside", 1)
+                        else:
+                                $ LauraX.FaceChange("angry", 1)                
+                        ch_l "Huh. Ok. Be that way."            
+            return
+    # end Intro
     
+    $ BO = Party[:]
+    while BO:            
+            $ BO[0].AddWord(1,0,"stripstudy",0,"stripstudy") #adds to Daily and History
+            $ BO.remove(BO[0])
+            
     if len(Party) >= 2:
-        if Cnt == 3:
-                #if from the Emma menu she didn't agree to participate. . .
-                pass
-        elif ApprovalCheck(Party[1], 1300) or ApprovalCheck(Party[1], 500,"I"):
-                if Party[1] == "Rogue":
-                    ch_r "I guess we'll take turns."
-                elif Party[1] == "Kitty": 
-                    ch_k "So[K_like]I guess we take turns?" 
-                elif Party[1] == "Emma":    
-                    "Let Oni know that Emma was in second please." 
-                elif Party[1] == "Laura":
-                    ch_l "I will also take a turn."
-        else:
-            #she refuses            
-            if Party[1] == "Rogue":
-                ch_r "I'm not comfortable with this."
-            elif Party[1] == "Kitty": 
-                ch_k "Um, I'm not really into this?" 
-            elif Party[1] == "Emma":    
-                "Let Oni know that Emma was in second please." 
-            elif Party[1] == "Laura":
-                ch_l "I don't think so."
-            "[Party[1]] leaves the room"
-            call Remove_Girl(Party[1])
+            if Cnt == 3:
+                    #if from the Emma menu she didn't agree to participate. . .
+                    pass
+            elif ApprovalCheck(Party[1], 1300) or ApprovalCheck(Party[1], 500,"I"):
+                    if Party[1] == RogueX:
+                            ch_r "I guess we'll take turns."
+                    elif Party[1] == KittyX: 
+                            ch_k "So[KittyX.like]I guess we take turns?" 
+                    elif Party[1] == EmmaX:    
+                            "Let Oni know that Emma was in second please." 
+                    elif Party[1] == LauraX:
+                            ch_l "I will also take a turn."
+            else:
+                    #she refuses            
+                    if Party[1] == RogueX:
+                            ch_r "I'm not comfortable with this."
+                    elif Party[1] == KittyX: 
+                            ch_k "Um, I'm not really into this?" 
+                    elif Party[1] == EmmaX:    
+                            "Let Oni know that Emma was in second please." 
+                    elif Party[1] == LauraX:
+                            ch_l "I don't think so."
+                    "[Party[1].Name] leaves the room"
+                    call Remove_Girl(Party[1])
     
     #Primary loop
     while Count2:        
-        #"Question [Count2]. . ."
-        if Party[0] == "Rogue":
-                call Quiz_Question_Rogue
-        elif Party[0] == "Kitty":
-                call Quiz_Question_Kitty
-        elif Party[0] == "Emma":    
-                call Quiz_Question_Emma
-        elif Party[0] == "Laura":
-                call Quiz_Question_Laura     
-                                  
-        $ Count2 += 1
-        
-        if _return:
-            if Party[0] == "Rogue":
-                    call Rogue_Strip_Study_Right
-            elif Party[0] == "Kitty":
-                    call Kitty_Strip_Study_Right
-            elif Party[0] == "Emma":    
-                    call Emma_Strip_Study_Right
-            elif Party[0] == "Laura":
-                    call Laura_Strip_Study_Right 
-        else:
+            #"Question [Count2]. . ."
+            call expression Party[0].Tag + "_Quiz_Question"
+                                      
+            $ Count2 += 1
+            
+            if _return:            
+                    call Strip_Study_Right
+            else:
                     $ Count += 1
                     call Strip_Study_Wrong   
-            
-        if len(Party) >= 2 and Cnt != 3:
-            #if there are multiple girls, alternate        
-            $ Party.reverse()
-            call Shift_Focus(Party[0])
-        
-    return
-
-label Strip_Study_Wrong:
-    call AnyFace(Party[0],"sly", 1)
-    if Count == 1:        
-            if Party[0] == "Rogue":
-                    ch_r "Bzzt, too bad, [R_Petname]."
-            elif Party[0] == "Kitty":
-                    ch_k "Nope."
-            elif Party[0] == "Emma":    
-                    ch_e "Unfortunately. . . no."
-            elif Party[0] == "Laura":
-                    ch_l "What?"
-    elif Count == 2:
-            if Party[0] == "Rogue":
-                    ch_r "Oh, you're really not good at this. Come on, you've only got one more shot."
-            elif Party[0] == "Kitty":
-                    ch_k "{i}So{/i} close. One more try."
-            elif Party[0] == "Emma":    
-                    ch_e "I'm afraid not, one more try."
-            elif Party[0] == "Laura":
-                    ch_l ". . . how did you even. . ."
-    elif Count > 2:
-            if Party[0] == "Rogue":
-                    ch_r "And you are out of here! Sorry, [R_Petname], thanks for playing, you're done."
-            elif Party[0] == "Kitty":
-                    ch_k "Aw, too bad, so sad. Maybe next time."
-            elif Party[0] == "Emma":    
-                    ch_e "Pity, I expected better of you."
-            elif Party[0] == "Laura":
-                    ch_l "What? Fuck this."
-            $ Count2 = 0
-    return
-    
-
-
-label Rogue_Strip_Study:
-    if not R_Over and not R_Legs and R_Panties != "shorts":
-            #if she's mostly naked, cheat
-            call RogueFace("sly")                                
-            ch_r "Well, I did consider suggesting we do some \"strip studying,\". . ." 
-            $ R_Eyes = "down"
-            ch_r "but it looks like I got ahead of myself. . ."
-            $ R_Eyes = "squint"
-            ch_r "Did you have anything else in mind?"                                
-            call Rogue_SexMenu 
-            return
-    else:
-            "Rogue moves a bit closer to you, and then suggests \"strip studying.\""
-            
-    jump Group_Strip_Study
-    
-    $ Count = 0
-    $ Count2 = 1
-    $ QuizOrder = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]  # The entire list of objects. . .
-    $ renpy.random.shuffle(QuizOrder)  # . . .shuffled randomly. . .    
-    
-    while Count2:        
-        "Question [Count2],"
-        call Quiz_Question_Rogue
-        $ Count2 += 1
-        if _return:
-            call Rogue_Strip_Study_Right
-        else:
-            $ Count += 1
-            call Rogue_Strip_Study_Wrong        
-    return
-            
-label Rogue_Strip_Study_Right:
-    if R_Hose:  # Will she lose the hose?
-            $ Line = R_Hose           
-            $ R_Hose = 0
-            "She slowly removes her [Line]. . ."
-            call Statup("Rogue", "Lust", 50, 3)
-            return    
-        
-    if R_Over: #will she lose the top?
-        if R_SeenChest or (R_Chest and ApprovalCheck("Rogue", 300)) or ApprovalCheck("Rogue", 850):
-            call Statup("Rogue", "Inbt", 25, 1)
-            call Statup("Rogue", "Inbt", 50, 1)
-            $ Line = R_Over           
-            $ R_Over = 0
-            "She pulls her [Line] off and throws it aside."   
-            if not R_Chest:                            
-                call Rogue_First_Topless(1)              
-        else:
-            ch_r "You know, I don't really think I'm ready for this, sorry [R_Petname]. I shouldn't have led you on."
-            $ Count2 = 0
-        return   
-        
-    if R_Legs:   #will she lose the pants/skirt?
-        if (R_SeenPanties and R_SeenPussy) or (R_Panties and (ApprovalCheck("Rogue", 700) or R_SeenPanties)) or ApprovalCheck("Rogue", 950):  
-            call Statup("Rogue", "Lust", 50, 5)
-            call Statup("Rogue", "Inbt", 30, 1)
-            call Statup("Rogue", "Inbt", 50, 1)
-            $ Line = R_Legs           
-            $ R_Legs = 0
-            if Line == "skirt":
-                "She unzips her skirt and slides it off."
-            else:
-                "She unzips her jeans and slides them down her legs." 
-            if R_Panties:
-                if not R_SeenPanties:   
-                    call Statup("Rogue", "Inbt", 200, 2)
-                    call Statup("Rogue", "Inbt", 50, 3)  
-                    $ R_SeenPanties = 1
-            else:
-                #R seen pussy
-                $ R_Blush = 1
-                "You notice that she apparently isn't wearing any panties, and she flushes a bit."
-                call Rogue_First_Bottomless(1)
+                    if Count2 == 0 and len(Party) >= 2 and not Party[1].ClothingCheck:
+                            #if you failed out, but the other girl is nude. . .
+                            menu:
+                                "Well, [Party[1].Name], you and I could still have some fun. . .":
+                                        $ Tempmod = 50
+                                        call expression Party[0].Tag + "_SexMenu"
+                                "Bummer":
+                                        pass
                 
-        else:
-            ch_r "You know, I don't really think I'm ready for this, sorry [R_Petname]. I shouldn't have led you on."
-            $ Count2 = 0
-        return     
+            if len(Party) >= 2 and Cnt != 3 and not Party[1].ClothingCheck:
+                    #if there are multiple girls, and the other girl is not nude, alternate        
+                    $ Party.reverse()
+                    call Shift_Focus(Party[0])            
+    #Loop ends when Count2 is 0 due to failures, returns to sender
     
-    if R_Chest: # Will she go topless?
-        if ApprovalCheck("Rogue", 900) or (R_SeenChest and ApprovalCheck("Rogue", 600)):
-            call Statup("Rogue", "Lust", 60, 5)
-            call Statup("Rogue", "Inbt", 50, 2)
-            call Statup("Rogue", "Inbt", 200, 1)
-            $ Line = R_Chest           
-            $ R_Chest = 0
-            "She pulls her [Line] over her head and tosses it aside."  
-            if not R_SeenChest:   
-                call Statup("Rogue", "Inbt", 200, 3)
-                call Statup("Rogue", "Inbt", 50, 1)  
-                call Rogue_First_Topless(1)
-            call Statup("Player", "Focus", 80, 15)
-        else:
-             ch_r "I know a deal's a deal, but I'd like to keep my top on, ok [R_Petname]? Sorry about that."
-             $ Count2 = 0
-        return  
-            
-    if R_Panties: # Will she go bottomless?
-        if ApprovalCheck("Rogue", 950) or (R_SeenPussy and ApprovalCheck("Rogue", 600)):    
-            call Statup("Rogue", "Lust", 70, 10)
-            call Statup("Rogue", "Inbt", 70, 2)
-            call Statup("Rogue", "Inbt", 200, 2)    
-            $ Line = R_Panties           
-            $ R_Panties = 0
-            "She slides her [Line] off, leaving her pussy bare."    
-            if not R_SeenPussy:
-                call Statup("Rogue", "Inbt", 50, 4)
-                call Statup("Rogue", "Inbt", 200, 4)
-                call Rogue_First_Bottomless(1)
-            call Statup("Player", "Focus", 75, 20)
-        else:
-             ch_r "Look, this has gone a bit far, [R_Petname]. I'd like to call it a night."
-             $ Count2 = 0
-        return  
-            
-    ch_r "Well, that's another right answer, but I don't have a stitch left to take off. . ."     
-    $ Count2 = 0
-    $ Tempmod = 50
-    call Rogue_SexMenu    
-    ch_r "Well I sure enjoyed that."
-    $ Count2 = 0
     return
-    
-label Rogue_Strip_Study_Wrong:
-    if Count == 1:
-        ch_r "Bzzt, too bad, [R_Petname]."
-    elif Count == 2:
-        ch_r "Oh, you're really not good at this. Come on, you've only got one more shot."
-    elif Count > 2:
-        ch_r "And you are out of here! Sorry, [R_Petname], thanks for playing, you're done."
-        $ Count2 = 0
+
+# End Main Phase / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+
+
+# Start "Question right" / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+label Strip_Study_Right:
+        if Party[0].Hose: 
+                # Will she lose the hose?
+                $ Line = Party[0].Hose           
+                $ Party[0].Hose = 0
+                "She slowly removes her [Line]. . ."
+                $ Party[0].Statup("Lust", 50, 3)
+                return    
+            
+        if Party[0].Over: 
+            #will she lose the top?
+            if Party[0].SeenChest or (Party[0].Chest and ApprovalCheck(Party[0], 300)) or ApprovalCheck(Party[0], 850):
+                $ Party[0].Statup("Inbt", 25, 1)
+                $ Party[0].Statup("Inbt", 50, 1)
+                $ Line = Party[0].Over           
+                $ Party[0].Over = 0
+                "She pulls her [Line] off and throws it aside."   
+                if not Party[0].Chest:                            
+                    call expression Party[0].Tag + "_First_Topless"              
+            else:
+                if Party[0] == RogueX:
+                        ch_r "You know, I don't really think I'm ready for this, sorry [Party[0].Petname]. I shouldn't have led you on."             
+                elif Party[0] == KittyX:
+                        ch_k "Sorry,I don't mean to be a tease, but I just can't handle this yet."  
+                elif Party[0] == EmmaX:
+                        ch_e "Sorry, I don't mean to be a tease, but I doubt you can handle this yet."  
+                elif Party[0] == LauraX:
+                        $ LauraX.FaceChange("sly", 2)
+                        ch_l "Heh, got you going, right?."  
+                        $ LauraX.FaceChange("bemused", 1)
+                $ Count2 = 0
+            return   
+            
+        if Party[0].Legs:   
+            #will she lose the pants/skirt?
+            if (Party[0].SeenPanties and Party[0].SeenPussy) or (Party[0].Panties and (ApprovalCheck(Party[0], 700) or Party[0].SeenPanties)) or ApprovalCheck(Party[0], 950):  
+                    $ Party[0].Statup("Lust", 50, 5)
+                    $ Party[0].Statup("Inbt", 30, 1)
+                    $ Party[0].Statup("Inbt", 50, 1)
+                    $ Line = Party[0].Legs           
+                    $ Party[0].Legs = 0
+                    "She unfastens her [Line] and slides them down her legs." 
+                    if Party[0].Panties:
+                        if not Party[0].SeenPanties:   
+                                $ Party[0].Statup("Inbt", 200, 2)
+                                $ Party[0].Statup("Inbt", 50, 3)  
+                                $ Party[0].SeenPanties = 1
+                    else:
+                        #R seen pussy
+                        $ Party[0].Blush = 1
+                        "You notice that she apparently isn't wearing any panties, and she flushes a bit."
+                        call expression Party[0].Tag + "_First_Bottomless"
+            else:
+                    if Party[0] == RogueX:    
+                            ch_r "You know, I don't really think I'm ready for this, sorry [Party[0].Petname]. I shouldn't have led you on."         
+                    elif Party[0] == KittyX:
+                            ch_k "Sorry,I don't mean to be a tease, but I just can't handle this yet."  
+                    elif Party[0] == EmmaX:
+                            ch_e "Sorry, I don't mean to be a tease, but I doubt you can handle this yet."  
+                    elif Party[0] == LauraX:                    
+                            ch_l "Nah, that's all for now." 
+                    $ Count2 = 0
+            return     
         
-    return
+        if Party[0].Chest: # Will she go topless?
+            if ApprovalCheck(Party[0], 900) or (Party[0].SeenChest and ApprovalCheck(Party[0], 600)):
+                    $ Party[0].Statup("Lust", 60, 5)
+                    $ Party[0].Statup("Inbt", 50, 2)
+                    $ Party[0].Statup("Inbt", 200, 1)
+                    $ Line = Party[0].Chest           
+                    $ Party[0].Chest = 0
+                    "She pulls her [Line] over her head and tosses it aside."  
+                    if not Party[0].SeenChest:   
+                            $ Party[0].Statup("Inbt", 200, 3)
+                            $ Party[0].Statup("Inbt", 50, 1)  
+                            call expression Party[0].Tag + "_First_Topless"
+                    $ Player.Statup("Focus", 80, 15)
+            else:
+                    if Party[0] == RogueX:       
+                            ch_r "I know a deal's a deal, but I'd like to keep my top on, ok [Party[0].Petname]? Sorry about that."      
+                    elif Party[0] == KittyX:
+                            ch_k "So. . . I know this is a bit late to mention it, but I'd like to keep my top on?"
+                    elif Party[0] == EmmaX:
+                            $ EmmaX.FaceChange("perplexed", 1)
+                            ch_e "Hmm. . . better than I thought." 
+                            $ EmmaX.FaceChange("sly", 1)
+                            ch_e "But I doubt you're ready for this yet."
+                    elif Party[0] == LauraX:
+                             ch_l "Yeah, that's enough for now."
+                    $ Count2 = 0
+            return  
+                
+        if Party[0].Panties: # Will she go bottomless?
+            if ApprovalCheck(Party[0], 950) or (Party[0].SeenPussy and ApprovalCheck(Party[0], 600)):    
+                    $ Party[0].Statup("Lust", 70, 10)
+                    $ Party[0].Statup("Inbt", 70, 2)
+                    $ Party[0].Statup("Inbt", 200, 2)    
+                    $ Line = Party[0].Panties           
+                    $ Party[0].Panties = 0
+                    "She slides her [Line] off, leaving her pussy bare."    
+                    if not Party[0].SeenPussy:
+                            $ Party[0].Statup("Inbt", 50, 4)
+                            $ Party[0].Statup("Inbt", 200, 4)
+                            call expression Party[0].Tag + "_First_Bottomless"
+                    $ Player.Statup("Focus", 75, 20)
+            else:
+                    if Party[0] == RogueX:   
+                            ch_r "Look, this has gone a bit far, [Party[0].Petname]. I'd like to call it a night."          
+                    elif Party[0] == KittyX:
+                            ch_k "Wow, I. . . I'm not really ready for this sort of thing, I'm sorry!"
+                    elif Party[0] == EmmaX:
+                            $ EmmaX.FaceChange("perplexed", 1)
+                            ch_e "Hmm. . . better than I thought." 
+                            $ EmmaX.FaceChange("sly", 1)
+                            ch_e "But I doubt you're ready for this yet."
+                    elif Party[0] == LauraX:             
+                            $ LauraX.FaceChange("perplexed", 2)
+                            ch_l "I think you've had enough."
+                            $ LauraX.FaceChange("perplexed", 1)
+                    $ Count2 = 0
+            return  
+                
+        if Party[0] == RogueX:          
+                $ KittyX.FaceChange("sly", 1)    
+                ch_r "Well, that's another right answer, but I don't have a stitch left to take off. . ."    
+        elif Party[0] == KittyX:
+                ch_k "So. . . you got that one right. . ."
+                $ KittyX.Eyes = "down"
+                ch_k ". . . but I'm not[KittyX.like]wearing anything else. . ."        
+                $ KittyX.FaceChange("sly", 1)
+        elif Party[0] == EmmaX:
+                $ EmmaX.FaceChange("sly", 1)
+                ch_e "Hmm. . . another correct answer. . ."
+                $ EmmaX.Eyes = "down"
+                ch_e ". . . but I don't have anything else to remove. . ."     
+                $ EmmaX.FaceChange("sly", 1)
+        elif Party[0] == LauraX:
+                $ LauraX.FaceChange("sly", 1)
+                ch_l "So. . . you got that one right. . ."
+                $ LauraX.Eyes = "down"
+                ch_l ". . . but it looks like I'm out of clothes. . ."     
+                $ LauraX.FaceChange("sly", 1)
+        if len(Party) >= 2:
+                menu:
+                    "Well I could think of something else you could do. . .":
+                            pass
+                    "It looks like [Party[1].Name] has some questions for me. . ." if Party[1].ClothingCheck: 
+                            #if the other girl has anything on. . .
+                            return
+        $ Count2 = 0
+        $ Tempmod = 50
+        call expression Party[0].Tag + "_SexMenu"
+        if Party[0] == RogueX:    
+                ch_r "Well I sure enjoyed that."         
+        elif Party[0] == KittyX:
+                ch_k "I think I learned a few things there. . ."
+        elif Party[0] == EmmaX:
+                ch_e "I hope you picked up a few things. . ."
+        elif Party[0] == LauraX:
+                ch_l "Well, better than studying. . ."
+        $ Count2 = 0
+        return
+# End "Question right" / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+      
+            
+# Start "Question wrong" / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+label Strip_Study_Wrong:
+        $ Party[0].FaceChange("sly", 1)
+        if Count == 1:        
+                if Party[0] == RogueX:
+                        ch_r "Bzzt, too bad, [RogueX.Petname]."
+                elif Party[0] == KittyX:
+                        ch_k "Nope."
+                elif Party[0] == EmmaX:    
+                        ch_e "Unfortunately. . . no."
+                elif Party[0] == LauraX:
+                        ch_l "What?"
+        elif Count == 2:
+                if Party[0] == RogueX:
+                        ch_r "Oh, you're really not good at this. Come on, you've only got one more shot."
+                elif Party[0] == KittyX:
+                        ch_k "{i}So{/i} close. One more try."
+                elif Party[0] == EmmaX:    
+                        ch_e "I'm afraid not, one more try."
+                elif Party[0] == LauraX:
+                        ch_l ". . . how did you even. . ."
+        elif Count > 2:
+                if Party[0] == RogueX:
+                        ch_r "And you are out of here! Sorry, [RogueX.Petname], thanks for playing, you're done."
+                elif Party[0] == KittyX:
+                        ch_k "Aw, too bad, so sad. Maybe next time."
+                elif Party[0] == EmmaX:    
+                        ch_e "Pity, I expected better of you."
+                elif Party[0] == LauraX:
+                        ch_l "What? Fuck this."
+                $ Count2 = 0
+        return
     
-label Quiz_Question_Rogue:    
+# End "Question wrong" / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+
+# Rogue Questions / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+label Rogue_Quiz_Question:    
     if QuizOrder[Count2] == 1:
         menu:
             ch_r "Who was the first person who I used my powers on?"
@@ -333,7 +427,7 @@ label Quiz_Question_Rogue:
             "B. Avalanche":
                 return 0
             "C. Toad":
-                "That's right, [R_Petname], I slammed that frog tongue in a car door"
+                "That's right, [RogueX.Petname], I slammed that frog tongue in a car door"
                 "Better not make me angry."
                 return 1
             "D. Quicksilver":
@@ -344,160 +438,12 @@ label Quiz_Question_Rogue:
     return 1
 
 
-#////////////////////////////////////////////////////////////////////////////////////
-
-#////////////////////////////////////////////////////////////////////////////////////
-
-label Kitty_Strip_Study:
-    "Kitty takes the book from your hand, and sets it aside."
-    if not K_Over and not K_Legs:
-            #if she's mostly naked, cheat
-            call KittyFace("sly")                                
-            ch_k "I was[K_like]thinking about maybe \"strip studying,\". . ." 
-            $ K_Eyes = "down"
-            ch_k "but it would be a pretty short game. . ."
-            $ K_Eyes = "squint"
-            ch_k "Was there something you'd rather do?"                                
-            call Kitty_SexMenu   
-    else:
-            "She then asks if maybe you want to do some \"strip studying?\""
+# Kitty Questions / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
     
-    jump Group_Strip_Study
-    
-    $ Count = 0
-    $ Count2 = 1
-    $ QuizOrder = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]  # The entire list of objects. . .
-    $ renpy.random.shuffle(QuizOrder)  # . . .shuffled randomly. . .   
-    call KittyFace("perplexed", 2)
-    ch_k "Ok, so[K_like]if you get a question right. . . I'll take off a piece of clothing. . ."
-    ch_k "But you only get three tries." 
-    call KittyFace("sly", 1)
-    while Count2:        
-        "Question [Count2],"
-        call Quiz_Question_Kitty
-        $ Count2 += 1
-        if _return:
-            call Kitty_Strip_Study_Right
-        else:
-            $ Count += 1
-            call Kitty_Strip_Study_Wrong        
-    return
-            
-label Kitty_Strip_Study_Right:
-    if K_Hose:  # Will she lose the hose?   
-            $ Line = K_Hose           
-            $ K_Hose = 0
-            "She slowly removes her [Line]. . ."
-            call Statup("Kitty", "Lust", 50, 3)
-            return    
-        
-    if K_Over: #will she lose the top?
-        if K_SeenChest or (K_Chest and ApprovalCheck("Kitty", 300)) or ApprovalCheck("Kitty", 850):
-            call Statup("Kitty", "Inbt", 25, 1)
-            call Statup("Kitty", "Inbt", 50, 1)        
-            $ Line = K_Over             
-            $ K_Over = 0
-            "She lets her [Line] drop to the floor."    
-            if not K_Chest:                            
-                call Kitty_First_Topless(1)            
-        else:  
-            call KittyFace("perplexed", 2)
-            ch_k "Sorry,I don't mean to be a tease, but I just can't handle this yet."  
-            call KittyFace("bemused", 1)
-            $ Count2 = 0
-        return   
-        
-    if K_Legs:   #will she lose the pants/skirt?
-        if (K_SeenPanties and K_SeenPussy) or (K_Panties and (ApprovalCheck("Kitty", 700) or K_SeenPanties)) or ApprovalCheck("Kitty", 950):  
-            call Statup("Kitty", "Lust", 50, 5)
-            call Statup("Kitty", "Inbt", 30, 1)
-            call Statup("Kitty", "Inbt", 50, 1)     
-            $ Line = K_Legs           
-            $ K_Legs = 0 
-            "She lets her [Line] pool at her feet."    
-            if K_Panties:
-                if not K_SeenPanties:   
-                    call Statup("Kitty", "Inbt", 200, 2)
-                    call Statup("Kitty", "Inbt", 50, 3)  
-                    $ K_SeenPanties = 1
-            else:
-                #R seen pussy
-                $ K_Blush = 2
-                "You notice that she apparently isn't wearing any panties, and she flushes a bit."
-                $ K_Blush = 1
-                call Kitty_First_Bottomless(1)
-                
-        else:
-            ch_k "Sorry, I don't mean to be a tease, but I just can't handle this yet." 
-            $ Count2 = 0
-        return     
-    
-    if K_Chest: # Will she go topless?
-        if ApprovalCheck("Kitty", 900) or (K_SeenChest and ApprovalCheck("Kitty", 600)):
-            call Statup("Kitty", "Lust", 60, 5)
-            call Statup("Kitty", "Inbt", 50, 2)
-            call Statup("Kitty", "Inbt", 200, 1)     
-            $ Line = K_Chest                         
-            $ K_Chest = 0  
-            "She lets her [Line] drop into a pile at her feet."    
-            if not K_SeenChest:   
-                call Statup("Kitty", "Inbt", 200, 3)
-                call Statup("Kitty", "Inbt", 50, 1)  
-                call Kitty_First_Topless(1)
-            call Statup("Player", "Focus", 80, 15)
-        else:
-             ch_k "So. . . I know this is a bit late to mention it, but I'd like to keep my top on?"
-             $ Count2 = 0
-        return  
-            
-    if K_Panties: # Will she go bottomless?
-        if ApprovalCheck("Kitty", 950) or (K_SeenPussy and ApprovalCheck("Kitty", 600)):    
-            call Statup("Kitty", "Lust", 70, 10)
-            call Statup("Kitty", "Inbt", 70, 2)
-            call Statup("Kitty", "Inbt", 200, 2)    
-            $ Line = K_Panties                        
-            $ K_Panties = 0    
-            "She shrugs and her [Line] drop to the floor, leaving her pussy bare."  
-            if not K_SeenPussy:
-                call Statup("Kitty", "Inbt", 50, 4)
-                call Statup("Kitty", "Inbt", 200, 4)
-                call Kitty_First_Bottomless(1)
-            call Statup("Player", "Focus", 75, 20)
-        else:
-            call KittyFace("perplexed", 2)
-            ch_k "Wow, I. . . I'm not really ready for this sort of thing, I'm sorry!"
-            call KittyFace("perplexed", 1)
-            $ Count2 = 0
-        return  
-            
-    call KittyFace("sly", 1)
-    ch_k "So. . . you got that one right. . ."
-    $ K_Eyes = "down"
-    ch_k ". . . but I'm not[K_like]wearing anything else. . ."     
-    call KittyFace("sly", 1)
-    $ Count2 = 0
-    $ Tempmod = 50
-    call Kitty_SexMenu    
-    ch_k "I think I learned a few things there. . ."
-    $ Count2 = 0
-    return
-    
-label Kitty_Strip_Study_Wrong:
-    call KittyFace("sly", 1)
-    if Count == 1:
-        ch_k "Nope."
-    elif Count == 2:
-        ch_k "{i}So{/i} close. One more try."
-    elif Count > 2:
-        ch_k "Aw, too bad, so sad. Maybe next time."
-        $ Count2 = 0
-        
-    return
-
-label Quiz_Question_Kitty:    
+label Kitty_Quiz_Question:    
     if QuizOrder[Count2] == 1:
         menu:
-            ch_k "Ok, do you[K_like]know where I come from? What's my home town?"
+            ch_k "Ok, do you[KittyX.like]know where I come from? What's my home town?"
             "A. Chicago, Illinois": 
                 return 0 
             "B. Deerfield, Illinois": 
@@ -518,7 +464,7 @@ label Quiz_Question_Kitty:
             "D. Shifting": 
                 return 0 
     if QuizOrder[Count2] == 3: 
-        ch_k "So. . . don't laugh, but I have this stuffed animal I sleep with[K_like]every night."
+        ch_k "So. . . don't laugh, but I have this stuffed animal I sleep with[KittyX.like]every night."
         menu:
             ch_k "Know his name?"
             "A. Draco": 
@@ -593,7 +539,7 @@ label Quiz_Question_Kitty:
                 return 1 
     if QuizOrder[Count2] == 9: 
         menu:
-            ch_k "Okay[K_like]..not that I'd know, but do you know the remedy for stink bomb aroma?"
+            ch_k "Okay[KittyX.like]..not that I'd know, but do you know the remedy for stink bomb aroma?"
             "A. A hot shower": 
                 return 0 
             "B. Methyl Ethyl Ketone": 
@@ -603,7 +549,7 @@ label Quiz_Question_Kitty:
             "D. Tomato Juice": 
                 return 0 
     if QuizOrder[Count2] == 10: 
-        ch_k "When I'm using my powers, I'm not[K_like]{i}totally{/i} invulnerable."
+        ch_k "When I'm using my powers, I'm not[KittyX.like]{i}totally{/i} invulnerable."
         menu:
             ch_k "Who has powers that can still affect me?"
             "A. Blob": 
@@ -619,192 +565,8 @@ label Quiz_Question_Kitty:
     "She asked an obscure question but you answer the question correctly."
     return 1
     
-#label Quiz:
-#    $ Count = 0                                         #This is the number of times you've gotten a wrong answer. 
-#    $ Count2 = 1                                        #this is the position in the quis so far. 
-#    $ QuizOrder = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] # The entire list of objects. . .
-#    $ renpy.random.shuffle(QuizOrder)                   # . . .shuffled randomly. . .    This is optional, and if you want to skip randomization then you can just increment a counter instead of this.
-    
-#    while Count2:                                       #This cycles so long as Count2 is greater than zero
-#        "Question [Count2],"
-#        call Quiz_Question
-#        $ Count2 += 1                                   #This increments to the next question in the list after ti asks each one
-#        if _return:                                     #the _return variable is whatever the Quiz Questions lable returns.
-#            "You got it right!"
-#            $ Score += 1                                #This tallies the right answers as you make them
-#        else:
-#            "Bzzt, Wrong answer"
-#            $ Count += 1
-#        if Count2 >= 14: #set this to one under the total number of questions
-#            "You're done. Your score is [Score] out of 15."            
-#            $ Count2 = 0           
-#        elif Count > 2:                                 #this kicks you out if you get three wrong, remove that if you don't want it. 
-#            "Too bad, you're done"
-#            $ Count2 = 0                                #This breaks the cycle and returns the player to where he started the quiz. 
-#    return
-    
-#label Quiz_Question:
-#    if QuizOrder[Count2] == 1:                          #This asks the first question, set each following question to a number.
-#        menu:
-#            "Question"
-#            "A. ":
-#                return 1                                #the correct answer sends a 1, the incorrect answers send back a zero. 
-#            "B. ":
-#                return 0
-#            "C. ":
-#                return 0
-#            "D. ":
-#                return 0
-
-
-#////////////////////////////////////////////////////////////////////////////////////
-
-label Emma_Strip_Study:
-    call EmmaFace("bemused")
-    ch_e "I take the education process very seriously."    
-    call EmmaFace("bemused", Eyes="side")
-    ch_e "So you get a question right. . . "
-    ch_e ". . ."
-    call EmmaFace("sly")
-    ch_e "I'll take off a piece of clothing. . ."
-    ch_e "But you only get three tries." 
-    
-    jump Group_Strip_Study
-    
-    $ Count = 0
-    $ Count2 = 1
-    $ QuizOrder = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]  # The entire list of objects. . .
-    $ renpy.random.shuffle(QuizOrder)  # . . .shuffled randomly. . .   
-    
-    while Count2:        
-        "Question [Count2],"
-        call Quiz_Question_Emma
-        $ Count2 += 1
-        if _return:
-            call Emma_Strip_Study_Right
-        else:
-            $ Count += 1
-            call Emma_Strip_Study_Wrong        
-    return
-            
-label Emma_Strip_Study_Right:
-    if E_Hose:  # Will she lose the hose?        
-            $ Line = E_Hose           
-            $ E_Hose = 0
-            "She slowly removes her [Line]. . ."
-            call Statup("Emma", "Lust", 50, 3)
-            return    
-        
-    if E_Over: #will she lose the top?
-        if E_SeenChest or (E_Chest and ApprovalCheck("Emma", 300)) or ApprovalCheck("Emma", 750):
-            call Statup("Emma", "Inbt", 25, 1)
-            call Statup("Emma", "Inbt", 50, 1)         
-            $ Line = E_Over        
-            $ E_Over = 0
-            "She shrugs off her [Line] and lets it fall to the floor."    
-            if not E_Chest:                            
-                call Emma_First_Topless(1)
-            
-        else:  
-            call EmmaFace("sly", 1)
-            ch_e "Sorry, I don't mean to be a tease, but I doubt you can handle this yet."  
-            call EmmaFace("bemused", 1)
-            $ Count2 = 0
-        return   
-        
-    if E_Legs:   #will she lose the pants/skirt?
-        if (E_SeenPanties and E_SeenPussy) or (E_Panties and (ApprovalCheck("Emma", 700) or E_SeenPanties)) or ApprovalCheck("Emma", 950):  
-            call Statup("Emma", "Lust", 50, 5)
-            call Statup("Emma", "Inbt", 30, 1)
-            call Statup("Emma", "Inbt", 50, 1)        
-            $ Line = E_Legs    
-            $ E_Legs = 0 
-            "She strips off her [Line] and drops them at her feet."  
-            if E_Panties:
-                if not E_SeenPanties:   
-                    call Statup("Emma", "Inbt", 200, 2)
-                    call Statup("Emma", "Inbt", 50, 3)  
-                    $ E_SeenPanties = 1
-            else:
-                #R seen pussy
-                call EmmaFace("sly", 1)
-                "You notice that she apparently isn't wearing any panties."
-                $ E_Blush = 0
-                call Emma_First_Bottomless(1)
-                
-        else:
-            call EmmaFace("sly", 1)
-            ch_e "Sorry, I don't mean to be a tease, but I doubt you can handle this yet." 
-            $ Count2 = 0
-        return     
-    
-    if E_Chest: # Will she go topless?
-        if ApprovalCheck("Emma", 800) or (E_SeenChest and ApprovalCheck("Emma", 500)):
-            call Statup("Emma", "Lust", 60, 5)
-            call Statup("Emma", "Inbt", 50, 2)
-            call Statup("Emma", "Inbt", 200, 1)        
-            $ Line = E_Chest               
-            $ E_Chest = 0  
-            "She pulls off her [Line] and drops it at her feet."     
-            if not E_SeenChest:   
-                call Statup("Emma", "Inbt", 200, 3)
-                call Statup("Emma", "Inbt", 50, 1)  
-                call Emma_First_Topless(1)
-            call Statup("Player", "Focus", 80, 15)
-        else:
-            call EmmaFace("perplexed", 1)
-            ch_e "Hmm. . . better than I thought." 
-            call EmmaFace("sly", 1)
-            ch_e "But I doubt you're ready for this yet."
-            $ Count2 = 0
-        return  
-            
-    if E_Panties: # Will she go bottomless?
-        if ApprovalCheck("Emma", 950) or (E_SeenPussy and ApprovalCheck("Emma", 600)):    
-            call Statup("Emma", "Lust", 70, 10)
-            call Statup("Emma", "Inbt", 70, 2)
-            call Statup("Emma", "Inbt", 200, 2)            
-            $ Line = E_Panties            
-            $ E_Panties = 0   
-            "She tugs off her [Line] and drops them to the floor, leaving her pussy bare." 
-            if not E_SeenPussy:
-                call Statup("Emma", "Inbt", 50, 4)
-                call Statup("Emma", "Inbt", 200, 4)
-                call Emma_First_Bottomless(1)
-            call Statup("Player", "Focus", 75, 20)
-        else:
-            call EmmaFace("perplexed", 1)
-            ch_e "Hmm. . . better than I thought." 
-            call EmmaFace("sly", 1)
-            ch_e "But I doubt you're ready for this yet."
-            $ Count2 = 0
-        return  
-            
-    call EmmaFace("sly", 1)
-    ch_e "Hmm. . . another correct answer. . ."
-    $ E_Eyes = "down"
-    ch_e ". . . but I don't have anything else to remove. . ."     
-    call EmmaFace("sly", 1)
-    $ Count2 = 0
-    $ Tempmod = 50
-    call Emma_SexMenu    
-    ch_e "I hope you picked up a few things. . ."
-    $ Count2 = 0
-    return
-    
-label Emma_Strip_Study_Wrong:
-    call EmmaFace("sly", 1)
-    if Count == 1:
-        ch_e "Unfortunately. . . no."
-    elif Count == 2:
-        ch_e "I'm afraid not, one more try."
-    elif Count > 2:
-        ch_e "Pity, I expected better of you."
-        $ Count2 = 0
-    return
-
-
-label Quiz_Question_Emma:   
+# Emma Questions / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+label Emma_Quiz_Question:   
     ch_e "Question [Count2]. . ." 
     if QuizOrder[Count2] == 1:
         menu:
@@ -896,15 +658,15 @@ label Quiz_Question_Emma:
             "B. Shaved into an \"X\"": 
                 return 0 
             "C. I don't know":    
-                call EmmaFace("sadside", 1)
-                if not E_SeenPussy:
+                $ EmmaX.FaceChange("sadside", 1)
+                if not EmmaX.SeenPussy:
                     ch_e "Boo, I thought you might at least take a guess. . ." 
                 else:                    
                     ch_e "Clearly you weren't paying enough attention."
-                call EmmaFace("normal")
+                $ EmmaX.FaceChange("normal")
                 return 0 
             "D. Waxed clean":    
-                call EmmaFace("sly", 1)
+                $ EmmaX.FaceChange("sly", 1)
                 ch_e "Someone was paying attention. . ."    
                 return 1 
     if QuizOrder[Count2] == 9: 
@@ -933,158 +695,10 @@ label Quiz_Question_Emma:
  #remove this once I have enough questions
     "She asked an obscure question but you answer the question correctly."
     return 1
-    
-    
-label Laura_Strip_Study:
-    #Laura does not do Strip Study solo, she's not interested.
-    call LauraFace("sly", 1)
-    "Laura takes the book from your hand, and sets it aside."
-    ch_l "I'm kinda bored, did you just wanna feel me up or something?"
-    menu:
-        "Sure?":
-                ch_l "Good."
-                "Laura grabs your hand and presses it against her breast."
-                call Date_Sex_Break("Laura",Second)
-                if _return == 4:                            
-                        "Laura stops what she's doing."
-                        ch_l "Be that way."     
-                        return                                    
-                if _return == 3:
-                        #if the other girl took off. . .
-                        menu:
-                            ch_l "Keep going?"
-                            "Go ahead.":
-                                    ch_l "Un."
-                            "We should stop.":
-                                    ch_l "Grr."
-                                    return    
-                call L_FB_Prep
-                if Situation: 
-                    #if she quits back having wanted to try something else. . .
-                    jump Laura_SexMenu
-        "I really think we should be studying.":            
-                call LauraFace("perplexed", 1)
-                ch_l "?"           
-                call Statup("Laura", "Love", 80, -5)
-                call Statup("Laura", "Obed", 70, 10)
-                call Statup("Laura", "Inbt", 70, -5)
-                if ApprovalCheck("Laura",600,"L"): 
-                        call LauraFace("sadside", 1)
-                else:
-                        call LauraFace("angry", 1)                
-                ch_l "Huh. Ok. Be that way."            
-    return
-    
 
-label Laura_Strip_Study_Right:
-    if L_Hose:  # Will she lose the hose?   
-            $ Line = L_Hose           
-            $ L_Hose = 0
-            "She pulls down her [Line]. . ."
-            call Statup("Laura", "Lust", 50, 3)
-            return    
-        
-    if L_Over: #will she lose the top?
-        if L_SeenChest or (L_Chest and ApprovalCheck("Laura", 300)) or ApprovalCheck("Laura", 850):
-            call Statup("Laura", "Inbt", 25, 1)
-            call Statup("Laura", "Inbt", 50, 1)        
-            $ Line = L_Over             
-            $ L_Over = 0
-            "She throws her [Line] to the floor."   
-            if not L_Chest:                            
-                call Laura_First_Topless(1)
-        else:  
-            call LauraFace("sly", 2)
-            ch_l "Heh, got you going, right?."  
-            call LauraFace("bemused", 1)
-            $ Count2 = 0
-        return   
-        
-    if L_Legs:   #will she lose the pants/skirt?
-        if (L_SeenPanties and L_SeenPussy) or (L_Panties and (ApprovalCheck("Laura", 700) or L_SeenPanties)) or ApprovalCheck("Laura", 950):  
-            call Statup("Laura", "Lust", 50, 5)
-            call Statup("Laura", "Inbt", 30, 1)
-            call Statup("Laura", "Inbt", 50, 1)     
-            $ Line = L_Legs           
-            $ L_Legs = 0 
-            "She drops her [Line] at her feet."    
-            if L_Panties:
-                if not L_SeenPanties:   
-                    call Statup("Laura", "Inbt", 200, 2)
-                    call Statup("Laura", "Inbt", 50, 3)  
-                    $ L_SeenPanties = 1
-            else:
-                #R seen pussy
-                "You notice that she apparently isn't wearing any panties."
-                call Laura_First_Bottomless(1)                
-        else:
-            ch_l "Nah, that's all for now." 
-            $ Count2 = 0
-        return     
-    
-    if L_Chest: # Will she go topless?
-        if ApprovalCheck("Laura", 900) or (L_SeenChest and ApprovalCheck("Laura", 600)):
-            call Statup("Laura", "Lust", 60, 5)
-            call Statup("Laura", "Inbt", 50, 2)
-            call Statup("Laura", "Inbt", 200, 1)     
-            $ Line = L_Chest                         
-            $ L_Chest = 0  
-            "She tugs off her [Line] and tosses it at her feet."    
-            if not L_SeenChest:   
-                call Statup("Laura", "Inbt", 200, 3)
-                call Statup("Laura", "Inbt", 50, 1)  
-                call Laura_First_Topless(1)
-            call Statup("Player", "Focus", 80, 15)
-        else:
-             ch_l "Yeah, that's enough for now."
-             $ Count2 = 0
-        return  
-            
-    if L_Panties: # Will she go bottomless?
-        if ApprovalCheck("Laura", 950) or (L_SeenPussy and ApprovalCheck("Laura", 600)):    
-            call Statup("Laura", "Lust", 70, 10)
-            call Statup("Laura", "Inbt", 70, 2)
-            call Statup("Laura", "Inbt", 200, 2)    
-            $ Line = L_Panties                        
-            $ L_Panties = 0    
-            "She pulls off her [Line] and drops them to the floor, leaving her pussy bare."  
-            if not L_SeenPussy:
-                call Statup("Laura", "Inbt", 50, 4)
-                call Statup("Laura", "Inbt", 200, 4)
-                call Laura_First_Bottomless(1)
-            call Statup("Player", "Focus", 75, 20)
-        else:
-            call LauraFace("perplexed", 2)
-            ch_l "I think you've had enough."
-            call LauraFace("perplexed", 1)
-            $ Count2 = 0
-        return  
-            
-    call LauraFace("sly", 1)
-    ch_l "So. . . you got that one right. . ."
-    $ L_Eyes = "down"
-    ch_l ". . . but it looks like I'm out of clothes. . ."     
-    call LauraFace("sly", 1)
-    $ Count2 = 0
-    $ Tempmod = 50
-    call Laura_SexMenu    
-    ch_l "Well, better than studying. . ."
-    $ Count2 = 0
-    return
-    
-label Laura_Strip_Study_Wrong:
-    call LauraFace("sly", 1)
-    if Count == 1:
-        ch_l "What?"
-    elif Count == 2:
-        ch_l ". . . how did you even. . ."
-    elif Count > 2:
-        ch_l "What? Fuck this."
-        $ Count2 = 0
-        
-    return
+# Laura Questions / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
-label Quiz_Question_Laura:    
+label Laura_Quiz_Question:    
     if QuizOrder[Count2] == 1:
         menu:
             ch_l "I don't know. . . what color are my eyes?"
@@ -1097,12 +711,12 @@ label Quiz_Question_Laura:
             "D. Red": 
                 return 0 
     if QuizOrder[Count2] == 2:    
-        call LauraFace("perplexed",1,Eyes="side")
+        $ LauraX.FaceChange("perplexed",1,Eyes="side")
         ch_l "Um. . ."
-        call LauraFace("sly")      
+        $ LauraX.FaceChange("sly")      
         menu: 
             ch_l "Say my name."
-            "A. [L_Pet]": 
+            "A. [LauraX.Pet]": 
                 ch_l "Close enough."
                 return 1 
             "B. Esme": 
@@ -1127,18 +741,18 @@ label Quiz_Question_Laura:
         menu:                
             ch_l "What number am I thinking of?"
             "A. 23?": 
-                call LauraFace("surprised")
+                $ LauraX.FaceChange("surprised")
                 ch_l "How did you guess?"
-                call LauraFace("sly")
+                $ LauraX.FaceChange("sly")
                 return 1 
             "B. 2?": 
-                call LauraFace("sly")
+                $ LauraX.FaceChange("sly")
                 ch_l "Mmmm, you and me?"
                 return 1
             "C. 8?": 
-                call LauraFace("perplexed")
+                $ LauraX.FaceChange("perplexed")
                 ch_l ". . . What? Why?"
-                call LauraFace("bemused")
+                $ LauraX.FaceChange("bemused")
                 return 0 
             "D. Green?": 
                 ch_l ". . ."
@@ -1193,7 +807,7 @@ label Quiz_Question_Laura:
 #                return 1 
 #    if QuizOrder[Count2] == 9: 
 #        menu:
-#            ch_l "Okay[L_like]..not that I'd know, but do you know the remedy for stink bomb aroma?"
+#            ch_l "Okay[LauraX.like]..not that I'd know, but do you know the remedy for stink bomb aroma?"
 #            "A. A hot shower": 
 #                return 0 
 #            "B. Methyl Ethyl Ketone": 
@@ -1203,7 +817,7 @@ label Quiz_Question_Laura:
 #            "D. Tomato Juice": 
 #                return 0 
 #    if QuizOrder[Count2] == 10: 
-#        ch_l "When I'm using my powers, I'm not[L_like]{i}totally{/i} invulnerable."
+#        ch_l "When I'm using my powers, I'm not[LauraX.like]{i}totally{/i} invulnerable."
 #        menu:
 #            ch_l "Who has powers that can still affect me?"
 #            "A. Blob": 
@@ -1218,41 +832,203 @@ label Quiz_Question_Laura:
  #remove this once I have enough questions
     ch_l ". . . I can't think of anything, skip my turn."
     return 1
-    
-#label Quiz:
-#    $ Count = 0                                         #This is the number of times you've gotten a wrong answer. 
-#    $ Count2 = 1                                        #this is the position in the quis so far. 
-#    $ QuizOrder = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] # The entire list of objects. . .
-#    $ renpy.random.shuffle(QuizOrder)                   # . . .shuffled randomly. . .    This is optional, and if you want to skip randomization then you can just increment a counter instead of this.
-    
-#    while Count2:                                       #This cycles so long as Count2 is greater than zero
-#        "Question [Count2],"
-#        call Quiz_Question
-#        $ Count2 += 1                                   #This increments to the next question in the list after ti asks each one
-#        if _return:                                     #the _return variable is whatever the Quiz Questions lable returns.
-#            "You got it right!"
-#            $ Score += 1                                #This tallies the right answers as you make them
-#        else:
-#            "Bzzt, Wrong answer"
-#            $ Count += 1
-#        if Count2 >= 14: #set this to one under the total number of questions
-#            "You're done. Your score is [Score] out of 15."            
-#            $ Count2 = 0           
-#        elif Count > 2:                                 #this kicks you out if you get three wrong, remove that if you don't want it. 
-#            "Too bad, you're done"
-#            $ Count2 = 0                                #This breaks the cycle and returns the player to where he started the quiz. 
-#    return
-    
-#label Quiz_Question:
-#    if QuizOrder[Count2] == 1:                          #This asks the first question, set each following question to a number.
-#        menu:
-#            "Question"
-#            "A. ":
-#                return 1                                #the correct answer sends a 1, the incorrect answers send back a zero. 
-#            "B. ":
-#                return 0
-#            "C. ":
-#                return 0
-#            "D. ":
-#                return 0
           
+# End of  Questions / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+
+# Emma Intro / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+label Emma_StripStudy_Intro:     
+    if Party[0] != EmmaX:
+            $ Party.reverse()                  
+    call Shift_Focus(Party[0])           
+    if not EmmaX.Over and not EmmaX.Legs:
+            #if she's mostly naked, cheat
+            $ EmmaX.FaceChange("sly")                                
+            ch_e "I was considering some way of. . . motivating you. . ." 
+            $ EmmaX.Eyes = "down"
+            ch_e "but but I suppose we're already past that. . ."
+            $ EmmaX.Eyes = "squint"
+            ch_e "Do you have any ideas?"                                
+            call Emma_SexMenu   
+    else:
+            "[EmmaX.Name] moves a bit closer to you. . ."
+            ch_e "I was curious, [EmmaX.Petname]. . ."
+            ch_e "do you feel that a little \"motivation\" might help you to learn?"
+            if "stripstudy" not in EmmaX.History:
+                menu:
+                    extend ""                                        
+                    "What sort of motivation?": 
+                        if "frisky" not in EmmaX.History:
+                            $ EmmaX.FaceChange("sly") 
+                            $ Line = "ask"                                                
+                        else:                                   
+                            $ EmmaX.Statup("Obed", 80, 3)
+                            $ EmmaX.FaceChange("confused",1)  
+                            "She strokes at the edges of her clothes."
+                            ch_e "You aren't going to make me say it, are you. . ."
+                            menu:
+                                extend ""
+                                "Um. . . oh, OH! Yeah, sounds good. [[Strip tutoring]":
+                                            $ Line = "strip"
+                                "Looks like I am. . .":
+                                    if ApprovalCheck(EmmaX, 500, "O"):                              
+                                            $ EmmaX.Statup("Obed", 80, 5)
+                                            $ EmmaX.Statup("Inbt", 50, 5)  
+                                            $ EmmaX.FaceChange("sly", 2)  
+                                            $ Line = "ask"
+                                    elif ApprovalCheck(EmmaX, 500, "LO"):
+                                            $ EmmaX.FaceChange("confused", 2)            
+                                            $ EmmaX.Statup("Love", 70, -5) 
+                                            $ EmmaX.Statup("Obed", 80, 5)  
+                                            ch_e "Very well. . ."
+                                            $ Line = "ask"                                                            
+                                    else:          
+                                            $ EmmaX.Statup("Love", 200, -5) 
+                                            $ EmmaX.Statup("Inbt", 50, -5)  
+                                            $ EmmaX.FaceChange("angry", 1)  
+                                            ch_e "Oh, never mind then."
+                                ". . .":
+                                    if ApprovalCheck(EmmaX, 400, "O"):           
+                                            $ EmmaX.FaceChange("confused", 2)            
+                                            $ EmmaX.Statup("Inbt", 50, 5)  
+                                            $ Line = "ask"
+                                    elif ApprovalCheck(EmmaX, 500, "LO"):
+                                            $ EmmaX.FaceChange("confused", 1, Brows="angry")           
+                                            $ EmmaX.Statup("Obed", 50, 5)
+                                            $ EmmaX.Statup("Inbt", 50, 5)  
+                                            $ Line = "ask"                                                            
+                                    else:          
+                                            $ EmmaX.Statup("Love", 200, -5) 
+                                            $ EmmaX.Statup("Inbt", 50, -5)  
+                                            $ EmmaX.FaceChange("angry", 1)  
+                                            ch_e "Oh, never mind then."
+                            
+                    "I think it might." if "frisky" in EmmaX.History:
+                            $ EmmaX.FaceChange("sly")           
+                            $ EmmaX.Statup("Love", 80, 5) 
+                            $ EmmaX.Statup("Obed", 80, 3)
+                            $ EmmaX.Statup("Inbt", 50, 5)  
+                            ch_e "I was hoping you would. . ."
+                            $ Line = "strip"                                            
+                    "No, I've got this.":
+                            $ EmmaX.FaceChange("confused", Eyes="side")    
+                            if "frisky" in EmmaX.History:
+                                    $ EmmaX.Statup("Love", 200, -10) 
+                                    $ EmmaX.Statup("Obed", 80, 5)
+                                    $ EmmaX.Statup("Inbt", 50, -5)   
+                            else:
+                                    $ EmmaX.Statup("Love", 200, -5) 
+                                    $ EmmaX.Statup("Inbt", 50, -5)   
+                            ch_e "Oh. . . Very well then."
+                            $ EmmaX.FaceChange("confused")  
+                if Line == "ask":
+                    ch_e "Well, perhaps I could quiz you about mutant psychology. . ."
+                    $ EmmaX.Eyes = "side"
+                    ch_e "and, perhaps, if you were to get a question right. . ."
+                    $ EmmaX.Eyes = "squint"
+                    ch_e "I could. . ."
+                    menu:
+                        extend ""
+                        "Take off some clothes?":
+                                $ EmmaX.Statup("Inbt", 50, 5)   
+                                ch_e "Yes."
+                                $ Line = "strip"
+                        "Yes? . .":
+                                if ApprovalCheck(EmmaX, 500, "O"):
+                                    $ EmmaX.FaceChange("confused", 2) 
+                                    if "frisky" in EmmaX.History:
+                                            $ EmmaX.Statup("Love", 200, -5) 
+                                            $ EmmaX.Statup("Obed", 80, 10)   
+                                    else:
+                                            $ EmmaX.Statup("Obed", 80, 5)
+                                            $ EmmaX.Statup("Inbt", 50, -5)  
+                                    $ Line = "ask"
+                                elif ApprovalCheck(EmmaX, 500, "LO"):
+                                    $ EmmaX.FaceChange("confused", 1, Brows="angry") 
+                                    if "frisky" in EmmaX.History:
+                                            $ EmmaX.Statup("Love", 200, -5) 
+                                            $ EmmaX.Statup("Obed", 80, 5)  
+                                    else:
+                                            $ EmmaX.Statup("Obed", 80, 5)
+                                            $ EmmaX.Statup("Inbt", 50, -5)  
+                                    $ Line = "ask"            
+                        ". . .":
+                                if ApprovalCheck(EmmaX, 500, "O"):
+                                    $ EmmaX.FaceChange("confused", 2) 
+                                    if "frisky" in EmmaX.History:
+                                            $ EmmaX.Statup("Obed", 50, 5)
+                                            $ EmmaX.Statup("Inbt", 50, -5)   
+                                    else:
+                                            $ EmmaX.Statup("Obed", 50, 5)
+                                            $ EmmaX.Statup("Inbt", 50, -5)  
+                                    $ Line = "ask"
+                                elif ApprovalCheck(EmmaX, 500, "LO"):
+                                    $ EmmaX.FaceChange("confused", 1, Brows="angry") 
+                                    if "frisky" in EmmaX.History:
+                                            $ EmmaX.Statup("Love", 200, -5) 
+                                            $ EmmaX.Statup("Obed", 50, 5)
+                                            $ EmmaX.Statup("Inbt", 50, -5)   
+                                    else:
+                                            $ EmmaX.Statup("Obed", 50, 5)
+                                            $ EmmaX.Statup("Inbt", 50, -5)  
+                                    $ Line = "ask"   
+                    if Line == "ask":
+                                    $ EmmaX.FaceChange("bemused", Eyes="side") 
+                                    ch_e "Take off some clothes. . ."
+                                    $ Line = "strip"
+                    $ EmmaX.FaceChange("sly", Brows="confused") 
+                    menu:
+                        ch_e "Would that interest you?"
+                        "Definitely!":
+                            $ EmmaX.FaceChange("sly",Mouth="smile")    
+                            $ EmmaX.Statup("Love", 50, 5)
+                            $ EmmaX.Statup("Love", 80, 5) 
+                            $ EmmaX.Statup("Inbt", 50, 5)                                               
+                        "Yeah.":
+                            $ EmmaX.FaceChange("sly")     
+                            $ EmmaX.Statup("Love", 80, 3) 
+                            $ EmmaX.Statup("Obed", 50, 3)
+                            $ EmmaX.Statup("Inbt", 50, 3)                                              
+                        "No thanks.":
+                            if "frisky" in EmmaX.History:
+                                    $ EmmaX.Statup("Love", 200, -10) 
+                                    $ EmmaX.Statup("Obed", 80, 10)
+                                    $ EmmaX.Statup("Inbt", 50, -5)   
+                            else:
+                                    $ EmmaX.Statup("Love", 200, -5) 
+                                    $ EmmaX.Statup("Obed", 80, 5)
+                                    $ EmmaX.Statup("Inbt", 50, -5)  
+                            $ EmmaX.FaceChange("angry") 
+                            ch_e "Hrm."
+                            $ Line = "no"
+                    
+            if Line == "strip":
+                    $ EmmaX.FaceChange("sly", 0) 
+                    if len(Party) >= 2:
+                        ch_e "And you, [Party[1].Name]? Care to participate?"                     
+                        call Date_Sex_Break(EmmaX,Party[1])
+                        if _return == 4:
+                                #you stop it because of the other girl
+                                ch_e "Well I suppose we can. . . postone that."
+                                return
+                        elif _return == 3:
+                                #the other girl is mad
+                                ch_e "Well I suppose that answers that."
+                                $ Cnt = 3
+                        elif _return == 2:
+                                #the other girl will watch
+                                ch_e "I suppose you can just watch then. . ."    
+                                $ Cnt = 3                                                
+                        elif _return == 1 and len(Party) >= 2:
+                                if Party[1] == RogueX:
+                                    ch_r "I guess I could join in."
+                                elif Party[1] == KittyX:
+                                    ch_k "It could be fun. . ."
+                                elif Party[1] == LauraX:
+                                    ch_l "Yeah, ok. . ."
+                    return 1
+            else: 
+                    return 0
+    return 0
+# End Emma_Strip_Study Intro / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /

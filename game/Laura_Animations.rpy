@@ -6,25 +6,25 @@ image Laura_Sprite:
         (0,0), "Laura_Sprite_HairBack", 
         (0,0), ConditionSwitch(            
             #panties down back        
-            "not L_Panties or not L_PantiesDown or (L_Legs and L_Legs != 'skirt' and not L_Upskirt)", Null(), 
-            "L_Panties == 'wolvie panties'", "images/LauraSprite/Laura_Sprite_Panties_Wolvie_Back.png",   
-            "L_Panties == 'bikini bottoms'", "images/LauraSprite/Laura_Sprite_Panties_Bikini_Back.png",   
+            "not LauraX.Panties or not LauraX.PantiesDown or (LauraX.Legs and LauraX.Legs != 'skirt' and not LauraX.Upskirt)", Null(), 
+            "LauraX.Panties == 'wolvie panties'", "images/LauraSprite/Laura_Sprite_Panties_Wolvie_Back.png",   
+            "LauraX.Panties == 'bikini bottoms'", "images/LauraSprite/Laura_Sprite_Panties_Bikini_Back.png",   
             "True", "images/LauraSprite/Laura_Sprite_Panties_Lace_Back.png",   
             ), 
         (0,0), ConditionSwitch(
             #backside of arms
-            "Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Arm_Back2.png",   
-            "True", "images/LauraSprite/Laura_Sprite_Arm_Back1.png", #if L_Arms == 1 
+            "LauraX.ArmPose == 2", "images/LauraSprite/Laura_Sprite_Arm_Back2.png",   
+            "True", "images/LauraSprite/Laura_Sprite_Arm_Back1.png", #if LauraX.Arms == 1 
             ),     
 #        (0,0), ConditionSwitch(
 #            #arms wristband
-#            "L_Arms == 'wrists'", "images/LauraSprite/Laura_Sprite_Wrist_Right.png", # one hand up
+#            "LauraX.Arms == 'wrists'", "images/LauraSprite/Laura_Sprite_Wrist_Right.png", # one hand up
 #            "True", Null(),     
 #            ), 
         (0,0), ConditionSwitch(
             #L Over under
-            "L_Uptop and L_Over == 'jacket'", "images/LauraSprite/Laura_Sprite_Jacket_Back_Up.png", # one hand up
-            "L_Over == 'jacket'", "images/LauraSprite/Laura_Sprite_Jacket_Back.png", # one hand up
+            "LauraX.Uptop and LauraX.Over == 'jacket'", "images/LauraSprite/Laura_Sprite_Jacket_Back_Up.png", # one hand up
+            "LauraX.Over == 'jacket'", "images/LauraSprite/Laura_Sprite_Jacket_Back.png", # one hand up
             "True", Null(),     
             ), 
         #body
@@ -33,232 +33,232 @@ image Laura_Sprite:
         #shifted here
         (0,0), ConditionSwitch(
             #arms midlayer
-            "Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Arm_Mid2.png",         # one hand up
-            "True", "images/LauraSprite/Laura_Sprite_Arm_Mid1.png", #if L_Arms == 1   # Crossed        
+            "LauraX.ArmPose == 2", "images/LauraSprite/Laura_Sprite_Arm_Mid2.png",         # one hand up
+            "True", "images/LauraSprite/Laura_Sprite_Arm_Mid1.png", #if LauraX.Arms == 1   # Crossed        
             ),  
         # tits
         (0,0), "images/LauraSprite/Laura_Sprite_Tits.png", 
         (0,0), ConditionSwitch(
             #Water effect 
-            "L_Water and Laura_Arms == 1", "images/LauraSprite/Laura_Sprite_Water1.png",   
-            "L_Water", "images/LauraSprite/Laura_Sprite_Water2.png",   
+            "LauraX.Water and LauraX.ArmPose == 1", "images/LauraSprite/Laura_Sprite_Water1.png",   
+            "LauraX.Water", "images/LauraSprite/Laura_Sprite_Water2.png",   
             "True", Null(),        
             ),       
         (0,0), ConditionSwitch(
             #arms wristband
-            "L_Arms == 'wrists' and Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Wrist2.png", # one hand up
-            "L_Arms == 'wrists'", "images/LauraSprite/Laura_Sprite_Wrist1.png", # one hand up
+            "LauraX.Arms == 'wrists' and LauraX.ArmPose == 2", "images/LauraSprite/Laura_Sprite_Wrist2.png", # one hand up
+            "LauraX.Arms == 'wrists'", "images/LauraSprite/Laura_Sprite_Wrist1.png", # one hand up
             "True", Null(),     
             ),   
         #shifted here
         
         (145,560), ConditionSwitch(    #(225,560)                                                                     
             #Personal Wetness            
-            "not L_Wet", Null(),
-            "L_Legs and L_Legs != 'skirt' and not L_Upskirt", Null(),   
-            "L_Panties and not L_PantiesDown and L_Wet <= 1", Null(),   
-            "L_Wet == 1", ConditionSwitch( #Wet = 1
-                    "L_Panties and L_PantiesDown", AlphaMask("Wet_Drip","Laura_Drip_MaskP"),  
-                    "L_Legs and L_Legs != 'skirt'", AlphaMask("Wet_Drip","Laura_Drip_MaskP"),
+            "not LauraX.Wet", Null(),
+            "LauraX.Legs and LauraX.Legs != 'skirt' and not LauraX.Upskirt", Null(),   
+            "LauraX.Panties and not LauraX.PantiesDown and LauraX.Wet <= 1", Null(),   
+            "LauraX.Wet == 1", ConditionSwitch( #Wet = 1
+                    "LauraX.Panties and LauraX.PantiesDown", AlphaMask("Wet_Drip","Laura_Drip_MaskP"),  
+                    "LauraX.Legs and LauraX.Legs != 'skirt'", AlphaMask("Wet_Drip","Laura_Drip_MaskP"),
                     "True", AlphaMask("Wet_Drip","Laura_Drip_Mask"), #only plays if nothing is in the way
                     ),
             "True", ConditionSwitch( #Wet = 2+
-                    "L_Panties and L_PantiesDown", AlphaMask("Wet_Drip2","Laura_Drip_MaskP"),
-                    "L_Legs and L_Legs != 'skirt'", AlphaMask("Wet_Drip2","Laura_Drip_MaskP"),
-                    "L_Panties", AlphaMask("Wet_Drip","Laura_Drip_Mask"), #"Wet_Drip2",# 
+                    "LauraX.Panties and LauraX.PantiesDown", AlphaMask("Wet_Drip2","Laura_Drip_MaskP"),
+                    "LauraX.Legs and LauraX.Legs != 'skirt'", AlphaMask("Wet_Drip2","Laura_Drip_MaskP"),
+                    "LauraX.Panties", AlphaMask("Wet_Drip","Laura_Drip_Mask"), #"Wet_Drip2",# 
                     "True", AlphaMask("Wet_Drip2","Laura_Drip_Mask"), #only plays if nothing is in the way
                     ),
             ),
         (145,560), ConditionSwitch(    #(225,560)                                                                     
             #dripping spunk            
-            "'in' not in L_Spunk and 'anal' not in L_Spunk", Null(),
-            "L_Legs and L_Legs != 'skirt' and not L_Upskirt", Null(),   
-            "L_Panties and not L_PantiesDown and L_Wet <= 1", Null(),   
+            "'in' not in LauraX.Spunk and 'anal' not in LauraX.Spunk", Null(),
+            "LauraX.Legs and LauraX.Legs != 'skirt' and not LauraX.Upskirt", Null(),   
+            "LauraX.Panties and not LauraX.PantiesDown and LauraX.Wet <= 1", Null(),   
             "True", ConditionSwitch( #Wet = 2+
-                    "L_Panties and L_PantiesDown", AlphaMask("Spunk_Drip2","Laura_Drip_MaskP"),
-#                    "L_Legs and L_Legs != 'skirt'", AlphaMask("Spunk_Drip2","Laura_Drip_MaskP"), #add if pantes have down art
-                    "L_Panties", AlphaMask("Spunk_Drip","Laura_Drip_Mask"), #"Wet_Drip2",# 
+                    "LauraX.Panties and LauraX.PantiesDown", AlphaMask("Spunk_Drip2","Laura_Drip_MaskP"),
+#                    "LauraX.Legs and LauraX.Legs != 'skirt'", AlphaMask("Spunk_Drip2","Laura_Drip_MaskP"), #add if pantes have down art
+                    "LauraX.Panties", AlphaMask("Spunk_Drip","Laura_Drip_Mask"), #"Wet_Drip2",# 
                     "True", AlphaMask("Spunk_Drip2","Laura_Drip_Mask"), #only plays if nothing is in the way
                     ),
             ),
         (0,0), ConditionSwitch(
             #pubes 
-            "L_Pubes", "images/LauraSprite/Laura_Sprite_Pubes.png",   
+            "LauraX.Pubes", "images/LauraSprite/Laura_Sprite_Pubes.png",   
             "True", Null(),        
             ),      
         (0,0), ConditionSwitch(
             #nude lower piercings        
-            "not L_Pierce", Null(),  
-            "L_Panties and not L_PantiesDown", Null(), 
-            "L_Legs != 'skirt' and L_Legs and not L_Upskirt", Null(), #skirt if wearing a skirt
-            "L_Pierce == 'barbell'", "images/LauraSprite/Laura_Sprite_Barbell_Pussy.png",  
-            "L_Pierce == 'ring'", "images/LauraSprite/Laura_Sprite_Ring_Pussy.png",  
+            "not LauraX.Pierce", Null(),  
+            "LauraX.Panties and not LauraX.PantiesDown", Null(), 
+            "LauraX.Legs != 'skirt' and LauraX.Legs and not LauraX.Upskirt", Null(), #skirt if wearing a skirt
+            "LauraX.Pierce == 'barbell'", "images/LauraSprite/Laura_Sprite_Barbell_Pussy.png",  
+            "LauraX.Pierce == 'ring'", "images/LauraSprite/Laura_Sprite_Ring_Pussy.png",  
             "True", Null(), 
             ),  
         (0,0), ConditionSwitch(
             #stockings    
-            "L_Hose == 'stockings' or L_Hose == 'stockings and garterbelt'", "images/LauraSprite/Laura_Sprite_Stockings.png",
+            "LauraX.Hose == 'stockings' or LauraX.Hose == 'stockings and garterbelt'", "images/LauraSprite/Laura_Sprite_Stockings.png",
             "True", Null(),
             ),     
         (0,0), ConditionSwitch(
             #garterbelt    
-            "L_Hose == 'stockings and garterbelt' or L_Hose == 'garterbelt'", "images/LauraSprite/Laura_Sprite_Garters.png",
+            "LauraX.Hose == 'stockings and garterbelt' or LauraX.Hose == 'garterbelt'", "images/LauraSprite/Laura_Sprite_Garters.png",
             "True", Null(),
             ),              
         (0,0), ConditionSwitch(
             #panties    
-            "not L_Panties", Null(),
-            "L_PantiesDown", ConditionSwitch(                   
+            "not LauraX.Panties", Null(),
+            "LauraX.PantiesDown", ConditionSwitch(                   
                     #if the panties are down
-                    "not L_Legs or L_Upskirt or L_Legs == 'skirt'", ConditionSwitch(                   
+                    "not LauraX.Legs or LauraX.Upskirt or LauraX.Legs == 'skirt'", ConditionSwitch(                   
                             #if she's wearing a skirt or nothing else                    
-                            "L_Panties == 'wolvie panties' and L_Wet", "images/LauraSprite/Laura_Sprite_Panties_Wolvie_Down_W.png", 
-                            "L_Panties == 'wolvie panties'", "images/LauraSprite/Laura_Sprite_Panties_Wolvie_Down.png",                             
-                            "L_Panties == 'lace panties'", "images/LauraSprite/Laura_Sprite_Panties_Lace_Down.png", 
-                            "L_Panties == 'bikini bottoms'", "images/LauraSprite/Laura_Sprite_Panties_Bikini_Down.png", 
+                            "LauraX.Panties == 'wolvie panties' and LauraX.Wet", "images/LauraSprite/Laura_Sprite_Panties_Wolvie_Down_W.png", 
+                            "LauraX.Panties == 'wolvie panties'", "images/LauraSprite/Laura_Sprite_Panties_Wolvie_Down.png",                             
+                            "LauraX.Panties == 'lace panties'", "images/LauraSprite/Laura_Sprite_Panties_Lace_Down.png", 
+                            "LauraX.Panties == 'bikini bottoms'", "images/LauraSprite/Laura_Sprite_Panties_Bikini_Down.png", 
                             "True", "images/LauraSprite/Laura_Sprite_Panties_Lace_Down.png", #fix
                             ),         
                     "True", Null(),
                     ),                    
             "True", ConditionSwitch(                
                     #if she's got panties and they are not down
-                    "L_Wet", ConditionSwitch(   
+                    "LauraX.Wet", ConditionSwitch(   
                         #if she's  wet                            
-                        "L_Panties == 'wolvie panties'", "images/LauraSprite/Laura_Sprite_Panties_Wolvie_W.png",
-                        "L_Panties == 'lace panties'", "images/LauraSprite/Laura_Sprite_Panties_Lace.png", 
-                        "L_Panties == 'bikini bottoms'", "images/LauraSprite/Laura_Sprite_Panties_Bikini.png", 
+                        "LauraX.Panties == 'wolvie panties'", "images/LauraSprite/Laura_Sprite_Panties_Wolvie_W.png",
+                        "LauraX.Panties == 'lace panties'", "images/LauraSprite/Laura_Sprite_Panties_Lace.png", 
+                        "LauraX.Panties == 'bikini bottoms'", "images/LauraSprite/Laura_Sprite_Panties_Bikini.png", 
                         "True", "images/LauraSprite/Laura_Sprite_Panties_Leather.png", 
                         ),
                     "True", ConditionSwitch(   
                         #if she's not wet                            
-                        "L_Panties == 'wolvie panties'", "images/LauraSprite/Laura_Sprite_Panties_Wolvie.png",
-                        "L_Panties == 'lace panties'", "images/LauraSprite/Laura_Sprite_Panties_Lace.png", 
-                        "L_Panties == 'bikini bottoms'", "images/LauraSprite/Laura_Sprite_Panties_Bikini.png", 
+                        "LauraX.Panties == 'wolvie panties'", "images/LauraSprite/Laura_Sprite_Panties_Wolvie.png",
+                        "LauraX.Panties == 'lace panties'", "images/LauraSprite/Laura_Sprite_Panties_Lace.png", 
+                        "LauraX.Panties == 'bikini bottoms'", "images/LauraSprite/Laura_Sprite_Panties_Bikini.png", 
                         "True", "images/LauraSprite/Laura_Sprite_Panties_Leather.png", 
                         ),                    
                     ),    
             ),            
         (0,0), ConditionSwitch(
             #pants    
-            "not L_Legs", Null(),
-            "L_Upskirt", ConditionSwitch(                
+            "not LauraX.Legs", Null(),
+            "LauraX.Upskirt", ConditionSwitch(                
                         #if the skirt's up or pants down 
-                        "L_Legs == 'skirt'", "images/LauraSprite/Laura_Sprite_Skirt_Up.png", 
+                        "LauraX.Legs == 'skirt'", "images/LauraSprite/Laura_Sprite_Skirt_Up.png", 
                         "True", Null(),                       
                         ),                    
             "True", ConditionSwitch(                
                     #if it's the ring pericings
-                    "L_Wet", ConditionSwitch(   
+                    "LauraX.Wet", ConditionSwitch(   
                         #if she's not wet
-                        "L_Legs == 'leather pants'", "images/LauraSprite/Laura_Sprite_Pants_Leather.png",  
-                        "L_Legs == 'mesh pants'", "images/LauraSprite/Laura_Sprite_Pants_Mesh.png",   
-#                        "L_Legs == 'yoga pants'", "images/LauraSprite/Laura_Sprite_Pants_YogaWet.png",       
-                        "L_Legs == 'skirt'", "images/LauraSprite/Laura_Sprite_Skirt.png", 
+                        "LauraX.Legs == 'leather pants'", "images/LauraSprite/Laura_Sprite_Pants_Leather.png",  
+                        "LauraX.Legs == 'mesh pants'", "images/LauraSprite/Laura_Sprite_Pants_Mesh.png",   
+#                        "LauraX.Legs == 'yoga pants'", "images/LauraSprite/Laura_Sprite_Pants_YogaWet.png",       
+                        "LauraX.Legs == 'skirt'", "images/LauraSprite/Laura_Sprite_Skirt.png", 
                         "True", Null(),
                         ),                    
                     "True", ConditionSwitch(   
                         #if she's wet
-                        "L_Legs == 'leather pants'", "images/LauraSprite/Laura_Sprite_Pants_Leather.png",   
-                        "L_Legs == 'mesh pants'", "images/LauraSprite/Laura_Sprite_Pants_Mesh.png",  
-#                        "L_Legs == 'yoga pants'", "images/LauraSprite/Laura_Sprite_Pants_Yoga.png",       
-                        "L_Legs == 'skirt'", "images/LauraSprite/Laura_Sprite_Skirt.png", 
+                        "LauraX.Legs == 'leather pants'", "images/LauraSprite/Laura_Sprite_Pants_Leather.png",   
+                        "LauraX.Legs == 'mesh pants'", "images/LauraSprite/Laura_Sprite_Pants_Mesh.png",  
+#                        "LauraX.Legs == 'yoga pants'", "images/LauraSprite/Laura_Sprite_Pants_Yoga.png",       
+                        "LauraX.Legs == 'skirt'", "images/LauraSprite/Laura_Sprite_Skirt.png", 
                         "True", Null(),
                         ),                    
                     ),                  
             ),    
         (0,0), ConditionSwitch(
             #clothed lower piercings         
-            "L_Legs == 'skirt'", Null(),
-            "L_Pierce == 'barbell'", ConditionSwitch(   
+            "LauraX.Legs == 'skirt'", Null(),
+            "LauraX.Pierce == 'barbell'", ConditionSwitch(   
                     #if it's the barbell pericings 
-                    "L_Legs and not L_Upskirt", "images/LauraSprite/Laura_Sprite_Barbell_PussyC.png",  
-                    "L_Panties and not L_PantiesDown", "images/LauraSprite/Laura_Sprite_Barbell_PussyC.png", 
+                    "LauraX.Legs and not LauraX.Upskirt", "images/LauraSprite/Laura_Sprite_Barbell_PussyC.png",  
+                    "LauraX.Panties and not LauraX.PantiesDown", "images/LauraSprite/Laura_Sprite_Barbell_PussyC.png", 
                     "True", Null(),
                     ),    
-            "L_Pierce == 'ring'", ConditionSwitch(   
+            "LauraX.Pierce == 'ring'", ConditionSwitch(   
                     #if it's the ring pericings
-                    "L_Legs and not L_Upskirt", "images/LauraSprite/Laura_Sprite_Ring_PussyC.png",  
-                    "L_Panties and not L_PantiesDown", "images/LauraSprite/Laura_Sprite_Ring_PussyC.png", 
+                    "LauraX.Legs and not LauraX.Upskirt", "images/LauraSprite/Laura_Sprite_Ring_PussyC.png",  
+                    "LauraX.Panties and not LauraX.PantiesDown", "images/LauraSprite/Laura_Sprite_Ring_PussyC.png", 
                     "True", Null(),
                     ),
             "True", Null(), 
             ),    
         (0,0), ConditionSwitch(
             #Personal Wetness            
-            "not L_Wet", Null(),
-            "L_Legs and L_Wet <= 1", Null(),
-            "L_Legs == 'skirt'", Null(),
-            "True", "images/LauraSprite/Laura_Sprite_Wetness.png",       #L_Wet >1
+            "not LauraX.Wet", Null(),
+            "LauraX.Legs and LauraX.Wet <= 1", Null(),
+            "LauraX.Legs == 'skirt'", Null(),
+            "True", "images/LauraSprite/Laura_Sprite_Wetness.png",       #LauraX.Wet >1
             ),     
         (0,0), ConditionSwitch(
             #pussy spunk 
-            "L_Legs and not L_Upskirt", Null(),
-            "'in' in L_Spunk or 'anal' in L_Spunk", "images/LauraSprite/Laura_Sprite_Spunk_Pussy.png",
+            "LauraX.Legs and not LauraX.Upskirt", Null(),
+            "'in' in LauraX.Spunk or 'anal' in LauraX.Spunk", "images/LauraSprite/Laura_Sprite_Spunk_Pussy.png",
             "True", Null(), 
             ),  
         #where arms and tits were before
         (0,0), ConditionSwitch(
             #nude peircings      
-            "not L_Pierce", Null(),  
-            "L_Pierce == 'barbell'", "images/LauraSprite/Laura_Sprite_Barbell_Tits.png",   
-            "L_Pierce == 'ring'", "images/LauraSprite/Laura_Sprite_Ring_Tits.png",               
+            "not LauraX.Pierce", Null(),  
+            "LauraX.Pierce == 'barbell'", "images/LauraSprite/Laura_Sprite_Barbell_Tits.png",   
+            "LauraX.Pierce == 'ring'", "images/LauraSprite/Laura_Sprite_Ring_Tits.png",               
             "True", Null(),              
             ),    
         (0,0), ConditionSwitch(               
             #neck            
-            "L_Neck == 'leash choker'", "images/LauraSprite/Laura_Sprite_Neck_Leash.png",       
+            "LauraX.Neck == 'leash choker'", "images/LauraSprite/Laura_Sprite_Neck_Leash.png",       
             "True", Null(), 
             ),  
         (0,0), ConditionSwitch(                                                                        
             #Chest layer
-            "L_Uptop", ConditionSwitch(
+            "LauraX.Uptop", ConditionSwitch(
                     # if top is up. . .
-                    "L_Chest == 'leather bra'", "images/LauraSprite/Laura_Sprite_Bra_Leather_Up.png", 
-                    "L_Chest == 'wolvie top'", "images/LauraSprite/Laura_Sprite_Top_Wolvie_Up.png",   
-                    "L_Chest == 'bikini top'", "images/LauraSprite/Laura_Sprite_Top_Bikini_Up.png",   
-                    "L_Chest == 'corset'", "images/LauraSprite/Laura_Sprite_Top_Corset_Up.png",   
-                    "L_Chest == 'lace corset'", "images/LauraSprite/Laura_Sprite_Top_Corset_Lace_Up.png",   
+                    "LauraX.Chest == 'leather bra'", "images/LauraSprite/Laura_Sprite_Bra_Leather_Up.png", 
+                    "LauraX.Chest == 'wolvie top'", "images/LauraSprite/Laura_Sprite_Top_Wolvie_Up.png",   
+                    "LauraX.Chest == 'bikini top'", "images/LauraSprite/Laura_Sprite_Top_Bikini_Up.png",   
+                    "LauraX.Chest == 'corset'", "images/LauraSprite/Laura_Sprite_Top_Corset_Up.png",   
+                    "LauraX.Chest == 'lace corset'", "images/LauraSprite/Laura_Sprite_Top_Corset_Lace_Up.png",   
                     "True", Null(),     
                     ),     
-            "L_Chest == 'leather bra'", "images/LauraSprite/Laura_Sprite_Bra_Leather.png", 
-            "L_Chest == 'wolvie top'", "images/LauraSprite/Laura_Sprite_Top_Wolvie.png",   
-            "L_Chest == 'bikini top'", "images/LauraSprite/Laura_Sprite_Top_Bikini.png",   
-            "L_Chest == 'corset'", "images/LauraSprite/Laura_Sprite_Top_Corset.png",   
-            "L_Chest == 'lace corset'", "images/LauraSprite/Laura_Sprite_Top_Corset_Lace.png",   
+            "LauraX.Chest == 'leather bra'", "images/LauraSprite/Laura_Sprite_Bra_Leather.png", 
+            "LauraX.Chest == 'wolvie top'", "images/LauraSprite/Laura_Sprite_Top_Wolvie.png",   
+            "LauraX.Chest == 'bikini top'", "images/LauraSprite/Laura_Sprite_Top_Bikini.png",   
+            "LauraX.Chest == 'corset'", "images/LauraSprite/Laura_Sprite_Top_Corset.png",   
+            "LauraX.Chest == 'lace corset'", "images/LauraSprite/Laura_Sprite_Top_Corset_Lace.png",   
             "True", Null(),              
             ),     
 
         (0,0), ConditionSwitch(
             #L Over
-            "L_Uptop", ConditionSwitch(
+            "LauraX.Uptop", ConditionSwitch(
                     # if top is up. . .
-                    "L_Over == 'jacket' and Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Jacket_A2_Up.png", # one hand up
-                    "L_Over == 'jacket'", "images/LauraSprite/Laura_Sprite_Jacket_A1_Up.png", # one hand up
-#                    "L_Over == 'towel'", "images/LauraSprite/Laura_Sprite_Towel.png",
+                    "LauraX.Over == 'jacket' and LauraX.ArmPose == 2", "images/LauraSprite/Laura_Sprite_Jacket_A2_Up.png", # one hand up
+                    "LauraX.Over == 'jacket'", "images/LauraSprite/Laura_Sprite_Jacket_A1_Up.png", # one hand up
+#                    "LauraX.Over == 'towel'", "images/LauraSprite/Laura_Sprite_Towel.png",
                     "True", Null(),     
                     ),                
-            "L_Over == 'jacket' and Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Jacket_A2.png", # one hand up
-            "L_Over == 'jacket'", "images/LauraSprite/Laura_Sprite_Jacket_A1.png", # one hand up
-            "L_Over == 'towel'", "images/LauraSprite/Laura_Sprite_Towel.png",
+            "LauraX.Over == 'jacket' and LauraX.ArmPose == 2", "images/LauraSprite/Laura_Sprite_Jacket_A2.png", # one hand up
+            "LauraX.Over == 'jacket'", "images/LauraSprite/Laura_Sprite_Jacket_A1.png", # one hand up
+            "LauraX.Over == 'towel'", "images/LauraSprite/Laura_Sprite_Towel.png",
             "True", Null(),     
             ),         
         (0,0), ConditionSwitch(                                                                        
             #clothed peircings        
-            "not L_Pierce or (not L_Over and not L_Chest)", Null(),  
-            "L_Over == 'jacket'", Null(),
-            "L_Pierce == 'barbell'",  "images/LauraSprite/Laura_Sprite_Barbell_TitsC.png", 
-            "L_Pierce == 'ring'", "images/LauraSprite/Laura_Sprite_Ring_TitsC.png", 
+            "not LauraX.Pierce or (not LauraX.Over and not LauraX.Chest)", Null(),  
+            "LauraX.Over == 'jacket'", Null(),
+            "LauraX.Pierce == 'barbell'",  "images/LauraSprite/Laura_Sprite_Barbell_TitsC.png", 
+            "LauraX.Pierce == 'ring'", "images/LauraSprite/Laura_Sprite_Ring_TitsC.png", 
             "True", Null(), 
             ),   
                 
         (0,0), ConditionSwitch(
             #belly spunk 
-            "'belly' in L_Spunk", "images/LauraSprite/Laura_Sprite_Spunk_Belly.png",
+            "'belly' in LauraX.Spunk", "images/LauraSprite/Laura_Sprite_Spunk_Belly.png",
             "True", Null(), 
             ),    
         (0,0), ConditionSwitch(
             #breast spunk      
-            "'tits' in L_Spunk", "images/LauraSprite/Laura_Sprite_Spunk_Tits.png",  
+            "'tits' in LauraX.Spunk", "images/LauraSprite/Laura_Sprite_Spunk_Tits.png",  
             "True", Null(),  
             ),   
         #Head
@@ -270,72 +270,72 @@ image Laura_Sprite:
             ),         
         (0,0), ConditionSwitch(
             #arms toplayer
-            "Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Arm_Left2.png", # one hand up
+            "LauraX.ArmPose == 2", "images/LauraSprite/Laura_Sprite_Arm_Left2.png", # one hand up
             "True", Null(),     
             ), 
         (0,0), ConditionSwitch(
             #Water effect 
-            "L_Water and Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Water2top.png",  
+            "LauraX.Water and LauraX.ArmPose == 2", "images/LauraSprite/Laura_Sprite_Water2top.png",  
             "True", Null(),     
             ), 
         (0,0), ConditionSwitch(
             #arms wristband
-            "Laura_Arms == 2 and L_Arms == 'wrists'", "images/LauraSprite/Laura_Sprite_Wrist_Left2.png", # one hand up
+            "LauraX.ArmPose == 2 and LauraX.Arms == 'wrists'", "images/LauraSprite/Laura_Sprite_Wrist_Left2.png", # one hand up
             "True", Null(),     
             ), 
         (0,0), ConditionSwitch(
             #jacket arm toplayer
-            "L_Over == 'jacket' and Laura_Arms == 2", "images/LauraSprite/Laura_Sprite_Jacket_A2Top.png", # one hand up
+            "LauraX.Over == 'jacket' and LauraX.ArmPose == 2", "images/LauraSprite/Laura_Sprite_Jacket_A2Top.png", # one hand up
             "True", Null(),     
             ), 
         (0,0), ConditionSwitch(
             #claws
-            "Laura_Arms == 2 and L_Claws", "images/LauraSprite/Laura_Sprite_Claws2.png", # one hand up
+            "LauraX.ArmPose == 2 and LauraX.Claws", "images/LauraSprite/Laura_Sprite_Claws2.png", # one hand up
             "True", Null(),     
             ), 
         
         (0,0), ConditionSwitch( 
             #hand spunk 
-            "Laura_Arms == 2 or 'hand' not in L_Spunk", Null(),  
+            "LauraX.ArmPose == 2 or 'hand' not in LauraX.Spunk", Null(),  
             "True", "images/LauraSprite/Laura_Sprite_Spunk_Hand.png",   
             ),  
 #        (0,0), ConditionSwitch(                                                                         #Props
-#            "not L_Held or Laura_Arms != 2", Null(), 
-#            "Laura_Arms == 2 and L_Held == 'phone'", "images/LauraSprite/Laura_held_phone.png",
-#            "Laura_Arms == 2 and L_Held == 'dildo'", "images/LauraSprite/Laura_held_dildo.png",
-#            "Laura_Arms == 2 and L_Held == 'vibrator'", "images/LauraSprite/Laura_held_vibrator.png",
-#            "Laura_Arms == 2 and L_Held == 'panties'", "images/LauraSprite/Laura_held_panties.png",
+#            "not LauraX.Held or LauraX.ArmPose != 2", Null(), 
+#            "LauraX.ArmPose == 2 and LauraX.Held == 'phone'", "images/LauraSprite/Laura_held_phone.png",
+#            "LauraX.ArmPose == 2 and LauraX.Held == 'dildo'", "images/LauraSprite/Laura_held_dildo.png",
+#            "LauraX.ArmPose == 2 and LauraX.Held == 'vibrator'", "images/LauraSprite/Laura_held_vibrator.png",
+#            "LauraX.ArmPose == 2 and LauraX.Held == 'panties'", "images/LauraSprite/Laura_held_panties.png",
 #            "True", Null(), 
 #            ),        
         (0,0), ConditionSwitch(
             #UI tool for When Laura is masturbating using Trigger3 actions
-            "Trigger == 'lesbian' or not Trigger3 or Ch_Focus != 'Laura'", Null(),
+            "Trigger == 'lesbian' or not Trigger3 or Ch_Focus != LauraX", Null(),
             
             #this is not a lesbian thing, and a trigger is set, and Laura is the primary. . .
-            "Trigger3 == 'fondle pussy'", "GirlGropePussy_LSelf",  
+            "Trigger3 == 'fondle pussy'", "GirlGropePussy_LauraSelf",  
             "Trigger3 == 'fondle breasts'", ConditionSwitch(                                                                      
-                    "Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts'", "GirlGropeLeftBreast_L", 
+                    "Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts'", "GirlGropeLeftBreast_Laura", 
                         #When zero is working the right breast, fondle left
-                    "Trigger == 'fondle breasts' or Trigger == 'suck breasts'", "GirlGropeRightBreast_L",   
+                    "Trigger == 'fondle breasts' or Trigger == 'suck breasts'", "GirlGropeRightBreast_Laura",   
                         #When zero is working the left breast, fondle right
-                    "True", "GirlGropeBothBreast_L",
+                    "True", "GirlGropeBothBreast_Laura",
                         #else, fondle both
                     ),  
-            "Trigger3 == 'vibrator breasts'", "VibratorRightBreast_L",     
-            "Trigger3 == 'vibrator pussy'", "VibratorPussy_L",
-            "Trigger3 == 'vibrator pussy insert'", "VibratorPussy_L",
-            "Trigger3 == 'vibrator anal'", "VibratorAnal_L",
-            "Trigger3 == 'vibrator anal insert'", "VibratorPussy_L",            
+            "Trigger3 == 'vibrator breasts'", "VibratorRightBreast_Laura",     
+            "Trigger3 == 'vibrator pussy'", "VibratorPussy_Laura",
+            "Trigger3 == 'vibrator pussy insert'", "VibratorPussy_Laura",
+            "Trigger3 == 'vibrator anal'", "VibratorAnal_Laura",
+            "Trigger3 == 'vibrator anal insert'", "VibratorPussy_Laura",            
             "True", Null(),             
             ),                        
         (0,0), ConditionSwitch(  
             #UI tool for Trigger5(Threesome masutrbation) actions
-            "not Trigger5 or Trigger4 != 'masturbation' or Ch_Focus == 'Laura'", Null(), 
+            "not Trigger5 or Trigger4 != 'masturbation' or Ch_Focus == LauraX", Null(), 
             
             #Laura is not primary, and T4 is masturbation, and a T5 is selected
-            "Trigger5 == 'fondle pussy' and Trigger != 'sex' and L_Lust >= 70", "GirlFingerPussy_L",
-            "Trigger5 == 'fondle pussy'", "GirlGropePussy_L",            
-            "Trigger5 == 'fondle breasts'", "GirlGropeRightBreast_L",
+            "Trigger5 == 'fondle pussy' and Trigger != 'sex' and LauraX.Lust >= 70", "GirlFingerPussy_Laura",
+            "Trigger5 == 'fondle pussy'", "GirlGropePussy_Laura",            
+            "Trigger5 == 'fondle breasts'", "GirlGropeRightBreast_Laura",
             "Trigger5 == 'vibrator breasts'", "VibratorRightBreast",     
             "Trigger5 == 'vibrator pussy'", "VibratorPussy",
             "Trigger5 == 'vibrator pussy insert'", "VibratorPussy",
@@ -346,60 +346,60 @@ image Laura_Sprite:
         (0,0), ConditionSwitch( 
             #UI tool for Trigger1(primary) actions
             #Laura is primary and a sex trigger is active
-            "not Trigger or Ch_Focus != 'Laura'", Null(),            
-            "Trigger == 'vibrator breasts'", "VibratorLeftBreast_L",
-            "Trigger == 'fondle thighs'", "GropeThigh_L",            
-            "Trigger == 'fondle breasts'", "GropeLeftBreast_L",
-            "Trigger == 'suck breasts'", "LickRightBreast_L",
-            "Trigger == 'fondle pussy' and Speed == 2", "FingerPussy_L",
-            "Trigger == 'fondle pussy'", "GropePussy_L",
-            "Trigger == 'lick pussy'", "Lickpussy_L",
-            "Trigger == 'vibrator pussy'", "VibratorPussy_L",
-            "Trigger == 'vibrator pussy insert'", "VibratorPussy_L",
-            "Trigger == 'vibrator anal'", "VibratorAnal_L",
-            "Trigger == 'vibrator anal insert'", "VibratorPussy_L",            
+            "not Trigger or Ch_Focus != LauraX", Null(),            
+            "Trigger == 'vibrator breasts'", "VibratorLeftBreast_Laura",
+            "Trigger == 'fondle thighs'", "GropeThigh_Laura",            
+            "Trigger == 'fondle breasts'", "GropeLeftBreast_Laura",
+            "Trigger == 'suck breasts'", "LickRightBreast_Laura",
+            "Trigger == 'fondle pussy' and Speed == 2", "FingerPussy_Laura",
+            "Trigger == 'fondle pussy'", "GropePussy_Laura",
+            "Trigger == 'lick pussy'", "Lickpussy_Laura",
+            "Trigger == 'vibrator pussy'", "VibratorPussy_Laura",
+            "Trigger == 'vibrator pussy insert'", "VibratorPussy_Laura",
+            "Trigger == 'vibrator anal'", "VibratorAnal_Laura",
+            "Trigger == 'vibrator anal insert'", "VibratorPussy_Laura",            
             "True", Null(), 
             ),            
         (0,0), ConditionSwitch(                
             #UI tool for Trigger2(secondary) actions
-            "not Trigger2 or Ch_Focus != 'Laura'", Null(),
+            "not Trigger2 or Ch_Focus != LauraX", Null(),
             
             #Laura is primary and an offhand trigger is active            
             "Trigger2 == 'fondle breasts'", ConditionSwitch(                                                                      
-                    "Trigger2 == 'fondle breasts' and Trigger == 'suck breasts'", "GropeLeftBreast_L", 
+                    "Trigger2 == 'fondle breasts' and Trigger == 'suck breasts'", "GropeLeftBreast_Laura", 
                         #When zero is sucking on the right breast, fondle left
-                    "True", "GropeRightBreast_L",
+                    "True", "GropeRightBreast_Laura",
                         #else, fondle right
                     ),  
-            "Trigger2 == 'vibrator breasts' and Trigger == 'suck breasts'", "VibratorLeftBreast_L",       
+            "Trigger2 == 'vibrator breasts' and Trigger == 'suck breasts'", "VibratorLeftBreast_Laura",       
                 #When sucking right breast, vibrator left            
             "Trigger2 == Trigger", Null(),
                 #When both triggers are the same, do nothing              
-            "Trigger2 == 'suck breasts'", "LickLeftBreast_L",        
-            "Trigger2 == 'fondle pussy'", "GropePussy_L",
-            "Trigger2 == 'lick pussy'", "Lickpussy_L",       
-            "Trigger2 == 'vibrator breasts'", "VibratorRightBreast_L",
-            "Trigger2 == 'vibrator pussy'", "VibratorPussy_L",
-            "Trigger2 == 'vibrator pussy insert'", "VibratorPussy_L",
-            "Trigger2 == 'vibrator anal'", "VibratorAnal_L",
-            "Trigger2 == 'vibrator anal insert'", "VibratorPussy_L",            
+            "Trigger2 == 'suck breasts'", "LickLeftBreast_Laura",        
+            "Trigger2 == 'fondle pussy'", "GropePussy_Laura",
+            "Trigger2 == 'lick pussy'", "Lickpussy_Laura",       
+            "Trigger2 == 'vibrator breasts'", "VibratorRightBreast_Laura",
+            "Trigger2 == 'vibrator pussy'", "VibratorPussy_Laura",
+            "Trigger2 == 'vibrator pussy insert'", "VibratorPussy_Laura",
+            "Trigger2 == 'vibrator anal'", "VibratorAnal_Laura",
+            "Trigger2 == 'vibrator anal insert'", "VibratorPussy_Laura",            
             "True", Null(), 
             ),    
         (0,0), ConditionSwitch(  
             #UI tool for Trigger4(Threesome) actions (ie Rogue's hand on her)
-            "not Trigger4 or Ch_Focus != 'Laura'", Null(),
+            "not Trigger4 or Ch_Focus != LauraX", Null(),
             
             # There is a threesome trigger set and Laura is the target of it
-            "Trigger4 == 'fondle pussy' and Trigger != 'sex' and L_Lust >= 70", "GirlFingerPussy_L",
-            "Trigger4 == 'fondle pussy'", "GirlGropePussy_L",            
-            "Trigger4 == 'lick pussy'", "Lickpussy_L",
-            "Trigger4 == 'suck breasts' and (Trigger2 != 'suck breasts' or Trigger == 'suck breasts')", "LickLeftBreast_L", 
-            "Trigger4 == 'suck breasts'", "LickRightBreast_L",      
+            "Trigger4 == 'fondle pussy' and Trigger != 'sex' and LauraX.Lust >= 70", "GirlFingerPussy_Laura",
+            "Trigger4 == 'fondle pussy'", "GirlGropePussy_Laura",            
+            "Trigger4 == 'lick pussy'", "Lickpussy_Laura",
+            "Trigger4 == 'suck breasts' and (Trigger2 != 'suck breasts' or Trigger == 'suck breasts')", "LickLeftBreast_Laura", 
+            "Trigger4 == 'suck breasts'", "LickRightBreast_Laura",      
             "Trigger4 == 'fondle breasts'", ConditionSwitch( 
-                    "Trigger == 'fondle breasts' or Trigger == 'suck breasts'", "GirlGropeLeftBreast_L", #When zero is working the right breast, fondle left                                                  
-#                    "Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts'", "GirlGropeRightBreast_L",  #When zero is working the left breast, fondle right                                         
-#                    "Trigger3 == 'fondle breasts' or Trigger3 == 'suck breasts'", "GirlGropeRightBreast_L", #When zero is working the left breast, fondle right 
-                    "True", "GirlGropeRightBreast_L",#else, fondle right
+                    "Trigger == 'fondle breasts' or Trigger == 'suck breasts'", "GirlGropeLeftBreast_Laura", #When zero is working the right breast, fondle left                                                  
+#                    "Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts'", "GirlGropeRightBreast_Laura",  #When zero is working the left breast, fondle right                                         
+#                    "Trigger3 == 'fondle breasts' or Trigger3 == 'suck breasts'", "GirlGropeRightBreast_Laura", #When zero is working the left breast, fondle right 
+                    "True", "GirlGropeRightBreast_Laura",#else, fondle right
                     ),       
             "Trigger4 == 'vibrator breasts'", "VibratorRightBreast",     
             "Trigger4 == 'vibrator pussy'", "VibratorPussy",
@@ -410,22 +410,22 @@ image Laura_Sprite:
             ),
         (0,0), ConditionSwitch(             
             #UI tool for Trigger3(lesbian) actions (ie Rogue's hand on her when Laura is secondary)
-            "Trigger != 'lesbian' or Ch_Focus == 'Laura' or not Trigger3", Null(),            
+            "Trigger != 'lesbian' or Ch_Focus == LauraX or not Trigger3", Null(),            
             
             # If there is a Trigger3 and Laura is not the focus
-            "Trigger3 == 'fondle pussy' and Trigger != 'sex' and L_Lust >= 70", "GirlFingerPussy_L",
-            "Trigger3 == 'fondle pussy'", "GirlGropePussy_L",            
-            "Trigger3 == 'lick pussy'", "Lickpussy_L",
-            "Trigger3 == 'suck breasts' and (Trigger2 != 'suck breasts' or Trigger == 'suck breasts')", "LickLeftBreast_L", 
-            "Trigger3 == 'suck breasts'", "LickRightBreast_L",            
+            "Trigger3 == 'fondle pussy' and Trigger != 'sex' and LauraX.Lust >= 70", "GirlFingerPussy_Laura",
+            "Trigger3 == 'fondle pussy'", "GirlGropePussy_Laura",            
+            "Trigger3 == 'lick pussy'", "Lickpussy_Laura",
+            "Trigger3 == 'suck breasts' and (Trigger2 != 'suck breasts' or Trigger == 'suck breasts')", "LickLeftBreast_Laura", 
+            "Trigger3 == 'suck breasts'", "LickRightBreast_Laura",            
             "Trigger3 == 'fondle breasts'", ConditionSwitch( 
-                    "Trigger == 'fondle breasts' or Trigger == 'suck breasts'", "GirlGropeLeftBreast_L",                    
+                    "Trigger == 'fondle breasts' or Trigger == 'suck breasts'", "GirlGropeLeftBreast_Laura",                    
                         #When zero is working the right breast, fondle left                                                  
-                    "Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts'", "GirlGropeRightBreast_L", 
+                    "Trigger2 == 'fondle breasts' or Trigger2 == 'suck breasts'", "GirlGropeRightBreast_Laura", 
                         #When zero is working the left breast, fondle right                                         
-                    "Trigger3 == 'fondle breasts' or Trigger3 == 'suck breasts'", "GirlGropeLeftBreast_L", 
+                    "Trigger3 == 'fondle breasts' or Trigger3 == 'suck breasts'", "GirlGropeLeftBreast_Laura", 
                         #When zero is working the right breast, fondle left 
-                    "True", "GirlGropeRightBreast_L",                    
+                    "True", "GirlGropeRightBreast_Laura",                    
                         #else, fondle right
                     ),                             
             "Trigger3 == 'vibrator breasts'", "VibratorRightBreast",               
@@ -443,11 +443,11 @@ image Laura_Sprite:
 image Laura_Sprite_HairBack: 
     ConditionSwitch(
             #hair back 
-            "not L_Hair", Null(),
+            "not LauraX.Hair", Null(),
             "renpy.showing('Laura_BJ_Animation')", Null(), 
 #            "renpy.showing('Laura_SexSprite')", "images/LauraSex/Laura_Sprite_Hair_Long_UnderSex.png",
-            "L_Hair == 'wet' or L_Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Under.png",
-            "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Under.png",   
+            "LauraX.Hair == 'wet' or LauraX.Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Under.png",
+            "LauraX.Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Under.png",   
             "True", Null(),        
             ),   
 #    "images/LauraSprite/Laura_Sprite_Hair_Long_Under.png"       
@@ -457,11 +457,11 @@ image Laura_Sprite_HairBack:
 image Laura_Sprite_HairMid: 
     ConditionSwitch(
             #hair back 
-            "not L_Hair", Null(),
+            "not LauraX.Hair", Null(),
             "renpy.showing('Laura_BJ_Animation')", Null(), 
 #            "renpy.showing('Laura_SexSprite')", "images/LauraSex/Laura_Sprite_Hair_Long_UnderSex.png",
-            "L_Hair == 'wet' or L_Water", Null(),
-            "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Mid.png",   
+            "LauraX.Hair == 'wet' or LauraX.Water", Null(),
+            "LauraX.Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Mid.png",   
             "True", Null(),        
             ),     
     anchor (0.6, 0.0)                
@@ -470,10 +470,10 @@ image Laura_Sprite_HairMid:
 image Laura_Sprite_HairTop: 
     ConditionSwitch(
             #hair back 
-            "not L_Hair", Null(),
+            "not LauraX.Hair", Null(),
             "renpy.showing('Laura_SexSprite')", "images/LauraSex/Laura_Sprite_Hair_Long_OverSex.png",
-            "L_Hair == 'wet' or L_Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Over.png",
-            "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Over.png",
+            "LauraX.Hair == 'wet' or LauraX.Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Over.png",
+            "LauraX.Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Over.png",
             "True", Null(),        
             ),   
 #    "images/LauraSprite/Laura_Sprite_Hair_Long_Under.png"       
@@ -490,98 +490,98 @@ image Laura_Sprite_Head:
                 ),         
         (0,0), ConditionSwitch(
                 # Face background plate
-                "L_Blush == 2", "images/LauraSprite/Laura_Sprite_Head_Blush2.png", 
-                "L_Blush", "images/LauraSprite/Laura_Sprite_Head_Blush.png",  
+                "LauraX.Blush == 2", "images/LauraSprite/Laura_Sprite_Head_Blush2.png", 
+                "LauraX.Blush", "images/LauraSprite/Laura_Sprite_Head_Blush.png",  
                 "True", "images/LauraSprite/Laura_Sprite_Head.png",                        
                 ),        
         (0,0), ConditionSwitch(#chin spunk
-            "'chin' not in L_Spunk", Null(),
+            "'chin' not in LauraX.Spunk", Null(),
             "renpy.showing('Laura_BJ_Animation') and Speed >= 2", Null(),
             "True", "images/LauraSprite/Laura_Sprite_Spunk_Chin.png",            
             ),                
         (0,0), ConditionSwitch(#Mouths 
             "renpy.showing('Laura_BJ_Animation')", "images/LauraSprite/Laura_Sprite_Mouth_SuckingBJ.png", #and Speed >= 2
-            "L_Mouth == 'normal'", "images/LauraSprite/Laura_Sprite_Mouth_Normal.png",
-            "L_Mouth == 'lipbite'", "images/LauraSprite/Laura_Sprite_Mouth_Lipbite.png",
-            "L_Mouth == 'sucking'", "images/LauraSprite/Laura_Sprite_Mouth_Sucking.png",            
-            "L_Mouth == 'kiss'", "images/LauraSprite/Laura_Sprite_Mouth_Kiss.png",
-            "L_Mouth == 'sad'", "images/LauraSprite/Laura_Sprite_Mouth_Sad.png",
-            "L_Mouth == 'smile'", "images/LauraSprite/Laura_Sprite_Mouth_Smile.png",
-            "L_Mouth == 'surprised'", "images/LauraSprite/Laura_Sprite_Mouth_Surprised.png",            
-            "L_Mouth == 'tongue'", "images/LauraSprite/Laura_Sprite_Mouth_Tongue.png",                
-            "L_Mouth == 'grimace'", "images/LauraSprite/Laura_Sprite_Mouth_Smile.png",              
-            "L_Mouth == 'smirk'", "images/LauraSprite/Laura_Sprite_Mouth_Smirk.png",                    
-#            "L_Mouth == 'smirk'", "images/LauraSprite/Laura_Sprite_Mouth_Normal.png",         
+            "LauraX.Mouth == 'normal'", "images/LauraSprite/Laura_Sprite_Mouth_Normal.png",
+            "LauraX.Mouth == 'lipbite'", "images/LauraSprite/Laura_Sprite_Mouth_Lipbite.png",
+            "LauraX.Mouth == 'sucking'", "images/LauraSprite/Laura_Sprite_Mouth_Sucking.png",            
+            "LauraX.Mouth == 'kiss'", "images/LauraSprite/Laura_Sprite_Mouth_Kiss.png",
+            "LauraX.Mouth == 'sad'", "images/LauraSprite/Laura_Sprite_Mouth_Sad.png",
+            "LauraX.Mouth == 'smile'", "images/LauraSprite/Laura_Sprite_Mouth_Smile.png",
+            "LauraX.Mouth == 'surprised'", "images/LauraSprite/Laura_Sprite_Mouth_Surprised.png",            
+            "LauraX.Mouth == 'tongue'", "images/LauraSprite/Laura_Sprite_Mouth_Tongue.png",                
+            "LauraX.Mouth == 'grimace'", "images/LauraSprite/Laura_Sprite_Mouth_Smile.png",              
+            "LauraX.Mouth == 'smirk'", "images/LauraSprite/Laura_Sprite_Mouth_Smirk.png",                    
+#            "LauraX.Mouth == 'smirk'", "images/LauraSprite/Laura_Sprite_Mouth_Normal.png",         
             "True", "images/LauraSprite/Laura_Sprite_Mouth_Normal.png",
             ),         
         (0,0), ConditionSwitch(#Mouth spunk 
-            "'mouth' not in L_Spunk", Null(),
+            "'mouth' not in LauraX.Spunk", Null(),
             "renpy.showing('Laura_BJ_Animation')", "images/LauraSprite/Laura_Sprite_Spunk_MouthSuck.png", #and Speed >= 2
-            "L_Mouth == 'normal'", "images/LauraSprite/Laura_Sprite_Spunk_MouthNeutral.png",
-            "L_Mouth == 'lipbite'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmirk.png",
-            "L_Mouth == 'sucking'", "images/LauraSprite/Laura_Sprite_Spunk_MouthTongue.png",            
-            "L_Mouth == 'kiss'", "images/LauraSprite/Laura_Sprite_Spunk_MouthKiss.png",
-            "L_Mouth == 'sad'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSad.png",
-            "L_Mouth == 'smile'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmile.png",
-            "L_Mouth == 'surprised'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSad.png",            
-            "L_Mouth == 'tongue'", "images/LauraSprite/Laura_Sprite_Spunk_MouthTongue.png",                
-            "L_Mouth == 'grimace'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmile.png",              
-            "L_Mouth == 'smirk'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmirk.png",      
+            "LauraX.Mouth == 'normal'", "images/LauraSprite/Laura_Sprite_Spunk_MouthNeutral.png",
+            "LauraX.Mouth == 'lipbite'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmirk.png",
+            "LauraX.Mouth == 'sucking'", "images/LauraSprite/Laura_Sprite_Spunk_MouthTongue.png",            
+            "LauraX.Mouth == 'kiss'", "images/LauraSprite/Laura_Sprite_Spunk_MouthKiss.png",
+            "LauraX.Mouth == 'sad'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSad.png",
+            "LauraX.Mouth == 'smile'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmile.png",
+            "LauraX.Mouth == 'surprised'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSad.png",            
+            "LauraX.Mouth == 'tongue'", "images/LauraSprite/Laura_Sprite_Spunk_MouthTongue.png",                
+            "LauraX.Mouth == 'grimace'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmile.png",              
+            "LauraX.Mouth == 'smirk'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmirk.png",      
             "True", "images/LauraSprite/Laura_Sprite_Spunk_MouthNeutral.png",
             ),                                                        
         (0,0), ConditionSwitch(                                                                       
             #brows
-            "L_Blush >= 2", ConditionSwitch(
-                    "L_Brows == 'normal'", "images/LauraSprite/Laura_Sprite_Brows_Normal_B.png",
-                    "L_Brows == 'angry'", "images/LauraSprite/Laura_Sprite_Brows_Angry_B.png",
-                    "L_Brows == 'sad'", "images/LauraSprite/Laura_Sprite_Brows_Sad_B.png",
-                    "L_Brows == 'surprised'", "images/LauraSprite/Laura_Sprite_Brows_Surprised_B.png",        
-                    "L_Brows == 'confused'", "images/LauraSprite/Laura_Sprite_Brows_Confused_B.png",
+            "LauraX.Blush >= 2", ConditionSwitch(
+                    "LauraX.Brows == 'normal'", "images/LauraSprite/Laura_Sprite_Brows_Normal_B.png",
+                    "LauraX.Brows == 'angry'", "images/LauraSprite/Laura_Sprite_Brows_Angry_B.png",
+                    "LauraX.Brows == 'sad'", "images/LauraSprite/Laura_Sprite_Brows_Sad_B.png",
+                    "LauraX.Brows == 'surprised'", "images/LauraSprite/Laura_Sprite_Brows_Surprised_B.png",        
+                    "LauraX.Brows == 'confused'", "images/LauraSprite/Laura_Sprite_Brows_Confused_B.png",
                     "True", "images/LauraSprite/Laura_Sprite_Brows_Normal_B.png",
                     ),
             "True", ConditionSwitch(
-                    "L_Brows == 'normal'", "images/LauraSprite/Laura_Sprite_Brows_Normal.png",
-                    "L_Brows == 'angry'", "images/LauraSprite/Laura_Sprite_Brows_Angry.png",
-                    "L_Brows == 'sad'", "images/LauraSprite/Laura_Sprite_Brows_Sad.png",
-                    "L_Brows == 'surprised'", "images/LauraSprite/Laura_Sprite_Brows_Surprised.png",        
-                    "L_Brows == 'confused'", "images/LauraSprite/Laura_Sprite_Brows_Confused.png",
+                    "LauraX.Brows == 'normal'", "images/LauraSprite/Laura_Sprite_Brows_Normal.png",
+                    "LauraX.Brows == 'angry'", "images/LauraSprite/Laura_Sprite_Brows_Angry.png",
+                    "LauraX.Brows == 'sad'", "images/LauraSprite/Laura_Sprite_Brows_Sad.png",
+                    "LauraX.Brows == 'surprised'", "images/LauraSprite/Laura_Sprite_Brows_Surprised.png",        
+                    "LauraX.Brows == 'confused'", "images/LauraSprite/Laura_Sprite_Brows_Confused.png",
                     "True", "images/LauraSprite/Laura_Sprite_Brows_Normal.png",
                     ),
             ),        
         (0,0), "Laura Blink",     #Eyes    
         (0,0), ConditionSwitch(                
             #Hair mid
-            "L_Over == 'jacket'", Null(),            
+            "LauraX.Over == 'jacket'", Null(),            
             "renpy.showing('Laura_TJ_Animation')", Null(),
             "renpy.showing('Laura_Sex_Animation')", Null(),     
-            "L_Hair == 'wet' or L_Water", Null(),
-            "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Mid.png",
+            "LauraX.Hair == 'wet' or LauraX.Water", Null(),
+            "LauraX.Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Mid.png",
             "True", Null(),
             ),           
 #        (0,0), ConditionSwitch(
 #            #Face Water
-#            "not L_Water", Null(),
+#            "not LauraX.Water", Null(),
 #            "True", "images/LauraSprite/Laura_Sprite_Wet_Head.png",
 #            ),  
         (0,0), ConditionSwitch(                                                                         
             #Hair over
-            "not L_Hair", Null(),
+            "not LauraX.Hair", Null(),
             "renpy.showing('Laura_TJ_Animation')", Null(),
             "renpy.showing('Laura_SexSprite')", "images/LauraSex/Laura_Sprite_Hair_Long_OverSex.png",
-            "L_Hair == 'wet' or L_Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Over.png",
-            "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Over.png",
+            "LauraX.Hair == 'wet' or LauraX.Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Over.png",
+            "LauraX.Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Over.png",
             "True", Null(),
             ),    
         (0,0), ConditionSwitch(
             #Hair Water
-            "not L_Water", Null(),
+            "not LauraX.Water", Null(),
             "True", "images/LauraSprite/Laura_Sprite_Head_Wet.png",
 #            "True", "images/LauraSprite/Laura_Sprite_Hair_Wet.png",
             ),
         (0,0), ConditionSwitch(
             #facial spunk               
-            "'hair' in L_Spunk", "images/LauraSprite/Laura_Sprite_Spunk_Facial2.png",  
-            "'facial' in L_Spunk", "images/LauraSprite/Laura_Sprite_Spunk_Facial1.png",            
+            "'hair' in LauraX.Spunk", "images/LauraSprite/Laura_Sprite_Spunk_Facial2.png",  
+            "'facial' in LauraX.Spunk", "images/LauraSprite/Laura_Sprite_Spunk_Facial1.png",            
             "True", Null(),            
             ),  
         )                
@@ -590,16 +590,16 @@ image Laura_Sprite_Head:
 
 image Laura Blink:            
     ConditionSwitch(
-    "L_Eyes == 'sexy'", "images/LauraSprite/Laura_Sprite_Eyes_Squint.png",
-    "L_Eyes == 'side'", "images/LauraSprite/Laura_Sprite_Eyes_Side.png",
-    "L_Eyes == 'surprised'", "images/LauraSprite/Laura_Sprite_Eyes_Surprised.png",
-    "L_Eyes == 'normal'", "images/LauraSprite/Laura_Sprite_Eyes_Normal.png",    
-    "L_Eyes == 'stunned'", "images/LauraSprite/Laura_Sprite_Eyes_Stunned.png",
-    "L_Eyes == 'down'", "images/LauraSprite/Laura_Sprite_Eyes_Down.png",
-    "L_Eyes == 'closed'", "images/LauraSprite/Laura_Sprite_Eyes_Closed.png",
-    "L_Eyes == 'leftside'", "images/LauraSprite/Laura_Sprite_Eyes_Leftside.png",
-    "L_Eyes == 'manic'", "images/LauraSprite/Laura_Sprite_Eyes_Normal.png",
-    "L_Eyes == 'squint'", "Laura_Squint",
+    "LauraX.Eyes == 'sexy'", "images/LauraSprite/Laura_Sprite_Eyes_Squint.png",
+    "LauraX.Eyes == 'side'", "images/LauraSprite/Laura_Sprite_Eyes_Side.png",
+    "LauraX.Eyes == 'surprised'", "images/LauraSprite/Laura_Sprite_Eyes_Surprised.png",
+    "LauraX.Eyes == 'normal'", "images/LauraSprite/Laura_Sprite_Eyes_Normal.png",    
+    "LauraX.Eyes == 'stunned'", "images/LauraSprite/Laura_Sprite_Eyes_Stunned.png",
+    "LauraX.Eyes == 'down'", "images/LauraSprite/Laura_Sprite_Eyes_Down.png",
+    "LauraX.Eyes == 'closed'", "images/LauraSprite/Laura_Sprite_Eyes_Closed.png",
+    "LauraX.Eyes == 'leftside'", "images/LauraSprite/Laura_Sprite_Eyes_Leftside.png",
+    "LauraX.Eyes == 'manic'", "images/LauraSprite/Laura_Sprite_Eyes_Normal.png",
+    "LauraX.Eyes == 'squint'", "Laura_Squint",
     "True", "images/LauraSprite/Laura_Sprite_Eyes_Normal.png", 
     ),
     choice:
@@ -653,7 +653,7 @@ image Laura_SexSprite:
     contains:
         ConditionSwitch(                                                              
             # Laura's upper body
-            "P_Cock == 'in'", ConditionSwitch(                                                               
+            "Player.Cock == 'in'", ConditionSwitch(                                                               
                     # If during sex
                     "Speed == 1", "Laura_Sex_Body_S1",#heading
                     "Speed == 2", "Laura_Sex_Body_S2",#slow
@@ -661,7 +661,7 @@ image Laura_SexSprite:
                     "Speed >= 4", "Laura_Sex_Body_S4",#cumming
                     "True",       "Laura_Sex_Body_S0",#Static
                     ),
-            "P_Cock == 'anal'", ConditionSwitch(                                                              
+            "Player.Cock == 'anal'", ConditionSwitch(                                                              
 #                    # If during Anal
                     "Speed == 1", "Laura_Sex_Body_A1",#heading
                     "Speed == 2", "Laura_Sex_Body_A2",#slow
@@ -669,9 +669,9 @@ image Laura_SexSprite:
                     "Speed >= 4", "Laura_Sex_Body_A4",#cumming
                     "True",       "Laura_Sex_Body_A0",#Static
                     ),                    
-            "P_Cock == 'foot'", ConditionSwitch(                                      
+            "Player.Cock == 'foot'", ConditionSwitch(                                      
                     # If during Footjob
-                    "not P_Sprite","Laura_Sex_Body_F0",#Static
+                    "not Player.Sprite","Laura_Sex_Body_F0",#Static
                     "Speed == 1", "Laura_Sex_Body_F1",#heading
                     "Speed >= 4", "Laura_Sex_Body_F0",#cumming
                     "Speed >= 2", "Laura_Sex_Body_F2",#slow
@@ -680,7 +680,7 @@ image Laura_SexSprite:
             
             "True", ConditionSwitch(                                                              
                     # If neither
-                    "not P_Sprite","Laura_Sex_Body_H0",#Static
+                    "not Player.Sprite","Laura_Sex_Body_H0",#Static
                     "Speed == 1", "Laura_Sex_Body_H1",#slow
                     "Speed == 4", "Laura_Sex_Body_H0",#cumming
                     "Speed >= 2", "Laura_Sex_Body_H2",#fast
@@ -690,7 +690,7 @@ image Laura_SexSprite:
     contains:
         ConditionSwitch(                                                               
             # Laura's lower body
-            "P_Cock == 'in'", ConditionSwitch(                                                               
+            "Player.Cock == 'in'", ConditionSwitch(                                                               
                     # If during sex
                     "Speed == 1", "Laura_Sex_Legs_S1",#heading
                     "Speed == 2", "Laura_Sex_Legs_S2",#slow
@@ -698,7 +698,7 @@ image Laura_SexSprite:
                     "Speed >= 4", "Laura_Sex_Legs_S4",#cumming
                     "True", "Laura_Sex_Legs_S0",#Static
                     ),
-            "P_Cock == 'anal'", ConditionSwitch(                                                              
+            "Player.Cock == 'anal'", ConditionSwitch(                                                              
                     # If during Anal
                     "Speed == 1", "Laura_Sex_Legs_A1",#heading
                     "Speed == 2", "Laura_Sex_Legs_A2",#slow
@@ -706,9 +706,9 @@ image Laura_SexSprite:
                     "Speed >= 4", "Laura_Sex_Legs_A4",#cumming
                     "True", "Laura_Sex_Legs_A0",#Static
                     ),
-            "P_Cock == 'foot'", ConditionSwitch(                                      
+            "Player.Cock == 'foot'", ConditionSwitch(                                      
                     # If during Footjob
-                    "not P_Sprite","Laura_Sex_Legs_F0",#Static
+                    "not Player.Sprite","Laura_Sex_Legs_F0",#Static
                     "Speed == 1", "Laura_Sex_Legs_F1",#heading
                     "Speed >= 4", "Laura_Sex_Legs_F0",#cumming
                     "Speed >= 2", "Laura_Sex_Legs_F2",#slow
@@ -716,7 +716,7 @@ image Laura_SexSprite:
                     ),     
             "True", ConditionSwitch(                                                               
                     # If neither
-                    "not P_Sprite","Laura_Sex_Legs_H0",#Static
+                    "not Player.Sprite","Laura_Sex_Legs_H0",#Static
                     "Speed == 1", "Laura_Sex_Legs_H1",#heading
                     "Speed == 4", "Laura_Sex_Legs_H0",#cumming
                     "Speed >= 2", "Laura_Sex_Legs_H2",#slow
@@ -757,21 +757,21 @@ image Laura_Sex_Body:
 #            "images/LauraSex/Laura_Sex_Hand.png"
                     
             ConditionSwitch(
-                    "P_Cock == 'foot'", Null(), 
+                    "Player.Cock == 'foot'", Null(), 
                     "True", "images/LauraSex/Laura_Sex_Hand.png"       
                     ) 
     contains:
             # Over under layer
         ConditionSwitch(   
-            "not L_Over", Null(), 
-            "L_Uptop", ConditionSwitch(   
+            "not LauraX.Over", Null(), 
+            "LauraX.Uptop", ConditionSwitch(   
                     #if uptop                       
-                    "L_Over == 'jacket'", "images/LauraSex/Laura_Sex_Jacket_Back_Up.png",
+                    "LauraX.Over == 'jacket'", "images/LauraSex/Laura_Sex_Jacket_Back_Up.png",
                     "True", Null(),
                     ),                
             "True", ConditionSwitch(
                     #if not uptop        
-                    "L_Over == 'jacket'", "images/LauraSex/Laura_Sex_Jacket_Back.png",
+                    "LauraX.Over == 'jacket'", "images/LauraSex/Laura_Sex_Jacket_Back.png",
                     "True", Null(),
                     ),    
             )
@@ -781,84 +781,84 @@ image Laura_Sex_Body:
     contains:
             # piercings tits
         ConditionSwitch(   
-            "not L_Pierce", Null(),
-            "L_Pierce == 'barbell'", "images/LauraSex/Laura_Sex_Barbell_Tits.png", 
-            "L_Pierce == 'ring'", "images/LauraSex/Laura_Sex_Ring_Tits.png", 
+            "not LauraX.Pierce", Null(),
+            "LauraX.Pierce == 'barbell'", "images/LauraSex/Laura_Sex_Barbell_Tits.png", 
+            "LauraX.Pierce == 'ring'", "images/LauraSex/Laura_Sex_Ring_Tits.png", 
             "True", Null(), 
             )
     contains:
             # Chest clothing layer
         ConditionSwitch(    
-            "L_Neck == 'leash choker'", "images/LauraSex/Laura_Sex_Leash.png", 
+            "LauraX.Neck == 'leash choker'", "images/LauraSex/Laura_Sex_Leash.png", 
             "True", Null(),  
             )
     contains:
             # garters
         ConditionSwitch(    
-            "L_Hose == 'stockings and garterbelt' or L_Hose == 'garterbelt'", "images/LauraSex/Laura_Sex_Garter.png", 
+            "LauraX.Hose == 'stockings and garterbelt' or LauraX.Hose == 'garterbelt'", "images/LauraSex/Laura_Sex_Garter.png", 
             "True", Null(),  
             )
     contains:
             # Chest clothing layer
         ConditionSwitch(    
-            "not L_Chest", Null(),              
-            "L_Uptop",ConditionSwitch(  
+            "not LauraX.Chest", Null(),              
+            "LauraX.Uptop",ConditionSwitch(  
                     #if the top is up. . .
-                    "not L_Chest", Null(),  
-                    "L_Chest == 'leather bra'", "images/LauraSex/Laura_Sex_Bra_Leather_Up.png", 
-                    "L_Chest == 'wolvie top'", "images/LauraSex/Laura_Sex_Top_Wolvie_Up.png", 
-                    "L_Chest == 'corset'", "images/LauraSex/Laura_Sex_Corset_Up.png",   
-                    "L_Chest == 'lace corset'", "images/LauraSex/Laura_Sex_Corset_Lace_Up.png",   
-                    "L_Chest == 'bikini top'", "images/LauraSex/Laura_Sex_Top_Bikini_Up.png",  
-#                    "L_Chest == 'sports bra'", "images/LauraSex/Laura_Sex_Bra_Sports_Up.png",  
-#                    "L_Chest == 'lace bra'", "images/LauraSex/Laura_Sex_Bra_Lace_Up.png",  
+                    "not LauraX.Chest", Null(),  
+                    "LauraX.Chest == 'leather bra'", "images/LauraSex/Laura_Sex_Bra_Leather_Up.png", 
+                    "LauraX.Chest == 'wolvie top'", "images/LauraSex/Laura_Sex_Top_Wolvie_Up.png", 
+                    "LauraX.Chest == 'corset'", "images/LauraSex/Laura_Sex_Corset_Up.png",   
+                    "LauraX.Chest == 'lace corset'", "images/LauraSex/Laura_Sex_Corset_Lace_Up.png",   
+                    "LauraX.Chest == 'bikini top'", "images/LauraSex/Laura_Sex_Top_Bikini_Up.png",  
+#                    "LauraX.Chest == 'sports bra'", "images/LauraSex/Laura_Sex_Bra_Sports_Up.png",  
+#                    "LauraX.Chest == 'lace bra'", "images/LauraSex/Laura_Sex_Bra_Lace_Up.png",  
                     "True", Null(),  
                     ),     
             # else. . .
-            "L_Chest == 'leather bra'", "images/LauraSex/Laura_Sex_Bra_Leather.png", 
-            "L_Chest == 'wolvie top'", "images/LauraSex/Laura_Sex_Top_Wolvie.png", 
-            "L_Chest == 'corset'", "images/LauraSex/Laura_Sex_Corset.png",   
-            "L_Chest == 'lace corset'", "images/LauraSex/Laura_Sex_Corset_Lace.png",   
-            "L_Chest == 'bikini top'", "images/LauraSex/Laura_Sex_Top_Bikini.png",  
-#            "L_Chest == 'sports bra'", "images/LauraSex/Laura_Sex_Bra_Sports.png",  
-#            "L_Chest == 'lace bra'", "images/LauraSex/Laura_Sex_Bra_Lace.png",  
+            "LauraX.Chest == 'leather bra'", "images/LauraSex/Laura_Sex_Bra_Leather.png", 
+            "LauraX.Chest == 'wolvie top'", "images/LauraSex/Laura_Sex_Top_Wolvie.png", 
+            "LauraX.Chest == 'corset'", "images/LauraSex/Laura_Sex_Corset.png",   
+            "LauraX.Chest == 'lace corset'", "images/LauraSex/Laura_Sex_Corset_Lace.png",   
+            "LauraX.Chest == 'bikini top'", "images/LauraSex/Laura_Sex_Top_Bikini.png",  
+#            "LauraX.Chest == 'sports bra'", "images/LauraSex/Laura_Sex_Bra_Sports.png",  
+#            "LauraX.Chest == 'lace bra'", "images/LauraSex/Laura_Sex_Bra_Lace.png",  
             "True", Null(),  
             )
     contains:
             # piercings tits over clothes
         ConditionSwitch(   
-            "not L_Pierce or L_Uptop", Null(),
-            "L_Pierce == 'barbell'", "images/LauraSex/Laura_Sex_Barbell_Tits_C.png", 
-            "L_Pierce == 'ring'", "images/LauraSex/Laura_Sex_Ring_Tits_C.png", 
+            "not LauraX.Pierce or LauraX.Uptop", Null(),
+            "LauraX.Pierce == 'barbell'", "images/LauraSex/Laura_Sex_Barbell_Tits_C.png", 
+            "LauraX.Pierce == 'ring'", "images/LauraSex/Laura_Sex_Ring_Tits_C.png", 
             "True", Null(), 
             )
     contains:
             # Over clothing layer
         ConditionSwitch(   
-            "not L_Over", Null(), 
-            "L_Uptop", ConditionSwitch(   
+            "not LauraX.Over", Null(), 
+            "LauraX.Uptop", ConditionSwitch(   
                     #if uptop                       
-                    "L_Over == 'jacket'", "images/LauraSex/Laura_Sex_Jacket_Up.png",
-#                    "L_Over == 'towel'", "images/LauraSex/Laura_Sex_Towel_Up.png",
+                    "LauraX.Over == 'jacket'", "images/LauraSex/Laura_Sex_Jacket_Up.png",
+#                    "LauraX.Over == 'towel'", "images/LauraSex/Laura_Sex_Towel_Up.png",
                     "True", Null(),
                     ),                
             "True", ConditionSwitch(
                     #if not uptop        
-                    "L_Over == 'jacket'", "images/LauraSex/Laura_Sex_Jacket.png",
-#                    "L_Over == 'towel'", "images/LauraSex/Laura_Sex_Towel.png",
+                    "LauraX.Over == 'jacket'", "images/LauraSex/Laura_Sex_Jacket.png",
+#                    "LauraX.Over == 'towel'", "images/LauraSex/Laura_Sex_Towel.png",
                     "True", Null(),
                     ),    
             )
     contains:
             # spunk
         ConditionSwitch(    
-            "'belly' in L_Spunk", "images/LauraSex/Laura_Sex_Spunk_Belly.png", 
+            "'belly' in LauraX.Spunk", "images/LauraSex/Laura_Sex_Spunk_Belly.png", 
             "True", Null(),
             ) 
     contains:
             # spunk on tits
             ConditionSwitch(    
-                "'tits' not in L_Spunk", Null(),
+                "'tits' not in LauraX.Spunk", Null(),
                 "True", "images/LauraSex/Laura_Sex_Spunk_Tits.png",
                 )     
     contains:
@@ -874,119 +874,119 @@ image Laura_Sex_Legs:
     contains:
             # legs under
         ConditionSwitch(    
-            "L_Legs == 'skirt'", "images/LauraSex/Laura_Sex_Skirt_Back.png",  
+            "LauraX.Legs == 'skirt'", "images/LauraSex/Laura_Sex_Skirt_Back.png",  
             "True", Null(),
             )
 #    contains:
 #            # spunk
 #        ConditionSwitch(    
-#            "'anal' in L_Spunk or 'in' in L_Spunk", "images/LauraSex/Laura_Spunk_Sex.png", 
+#            "'anal' in LauraX.Spunk or 'in' in LauraX.Spunk", "images/LauraSex/Laura_Spunk_Sex.png", 
 #            "True", Null(),
 #            )
     contains:
             # Legs base
         ConditionSwitch(    
-            "P_Cock == 'foot'", "images/LauraSex/Laura_Sex_Legs_Foot.png", 
+            "Player.Cock == 'foot'", "images/LauraSex/Laura_Sex_Legs_Foot.png", 
             "True", "images/LauraSex/Laura_Sex_Legs_High.png", 
             )
     contains:
             # anus
         ConditionSwitch(    
-            "P_Cock == 'anal' and Speed > 1", "images/LauraSex/Laura_Sex_Anus_L.png", #and speed above heading?
-            "P_Cock == 'anal' and Speed > 0", "images/LauraSex/Laura_Sex_Anus_M.png", #and speed above heading?
-            "'anal' in L_Spunk", "images/LauraSex/Laura_Sex_Anus_M.png", # If it's full. . .
+            "Player.Cock == 'anal' and Speed > 1", "images/LauraSex/Laura_Sex_Anus_L.png", #and speed above heading?
+            "Player.Cock == 'anal' and Speed > 0", "images/LauraSex/Laura_Sex_Anus_M.png", #and speed above heading?
+            "'anal' in LauraX.Spunk", "images/LauraSex/Laura_Sex_Anus_M.png", # If it's full. . .
             "True", "images/LauraSex/Laura_Sex_Anus_S.png", 
             )  
     contains:
             # anal spunk
         ConditionSwitch(    
-            "'anal' not in L_Spunk", Null(),
-            "P_Cock == 'anal' and Speed > 1", "images/LauraSex/Laura_Sex_Spunk_Anal_U.png", #speed above heading?
+            "'anal' not in LauraX.Spunk", Null(),
+            "Player.Cock == 'anal' and Speed > 1", "images/LauraSex/Laura_Sex_Spunk_Anal_U.png", #speed above heading?
             "True", "images/LauraSex/Laura_Sex_Spunk_Anal.png", 
             ) 
     contains:
             # pussy
         ConditionSwitch(    
-            "P_Cock == 'in' and Speed > 1", "images/LauraSex/Laura_Sex_Pussy_Open.png", #and speed above heading?
-            "P_Cock == 'in' and Speed > 0", "images/LauraSex/Laura_Sex_Pussy_Mid.png", #and speed heading?
+            "Player.Cock == 'in' and Speed > 1", "images/LauraSex/Laura_Sex_Pussy_Open.png", #and speed above heading?
+            "Player.Cock == 'in' and Speed > 0", "images/LauraSex/Laura_Sex_Pussy_Mid.png", #and speed heading?
             "True", "images/LauraSex/Laura_Sex_Pussy_Closed.png", 
             )  
     contains:
             # pussy wetness
         ConditionSwitch(    
-            "not L_Wet", Null(),
+            "not LauraX.Wet", Null(),
             "True", "images/LauraSex/Laura_Sex_Wet.png", 
             ) 
     contains:
             # pussy spunk
         ConditionSwitch(    
-            "'in' not in L_Spunk", Null(),
-            "P_Cock == 'in' and Speed > 1", "images/LauraSex/Laura_Sex_Spunk_Pussy_Open.png", #and speed above heading?
+            "'in' not in LauraX.Spunk", Null(),
+            "Player.Cock == 'in' and Speed > 1", "images/LauraSex/Laura_Sex_Spunk_Pussy_Open.png", #and speed above heading?
             "True", "images/LauraSex/Laura_Sex_Spunk_Pussy.png", 
             ) 
     contains:
             # pubes
         ConditionSwitch(    
-            "not L_Pubes", Null(),
-            "P_Cock == 'in' and Speed > 1", "images/LauraSex/Laura_Sex_Pubes_Open.png", #and speed above heading?
-            "P_Cock == 'in' and Speed > 0", "images/LauraSex/Laura_Sex_Pubes_Mid.png", #and speed heading?
+            "not LauraX.Pubes", Null(),
+            "Player.Cock == 'in' and Speed > 1", "images/LauraSex/Laura_Sex_Pubes_Open.png", #and speed above heading?
+            "Player.Cock == 'in' and Speed > 0", "images/LauraSex/Laura_Sex_Pubes_Mid.png", #and speed heading?
             "True", "images/LauraSex/Laura_Sex_Pubes_Closed.png", 
             )  
     contains:
             # piercings
         ConditionSwitch(    
-            "L_Pierce == 'barbell' and P_Cock == 'in' and Speed > 1", "images/LauraSex/Laura_Sex_Barbell_Pussy_O.png", #and speed above heading?
-            "L_Pierce == 'barbell'", "images/LauraSex/Laura_Sex_Barbell_Pussy.png", 
-            "L_Pierce == 'ring' and P_Cock == 'in' and Speed > 1", "images/LauraSex/Laura_Sex_Ring_Pussy_O.png", #and speed above heading?
-            "L_Pierce == 'ring'", "images/LauraSex/Laura_Sex_Ring_Pussy.png",
+            "LauraX.Pierce == 'barbell' and Player.Cock == 'in' and Speed > 1", "images/LauraSex/Laura_Sex_Barbell_Pussy_O.png", #and speed above heading?
+            "LauraX.Pierce == 'barbell'", "images/LauraSex/Laura_Sex_Barbell_Pussy.png", 
+            "LauraX.Pierce == 'ring' and Player.Cock == 'in' and Speed > 1", "images/LauraSex/Laura_Sex_Ring_Pussy_O.png", #and speed above heading?
+            "LauraX.Pierce == 'ring'", "images/LauraSex/Laura_Sex_Ring_Pussy.png",
             "True", Null(), 
             )       
     contains:
             # panties
         ConditionSwitch(    
-            "L_PantiesDown", Null(),
-#            "L_Panties == 'wolvie panties' and L_Wet", "images/LauraSex/Laura_Sex_Panties_Sport_SW.png", 
-            "L_Panties == 'bikini bottoms'", "images/LauraSex/Laura_Sex_Panties_Bikini.png", 
-            "L_Panties == 'wolvie panties'", "images/LauraSex/Laura_Sex_Panties_Wolvie.png", 
-            "L_Panties == 'lace panties'", "images/LauraSex/Laura_Sex_Panties_Lace.png", 
-            "L_Panties", "images/LauraSex/Laura_Sex_Panties_Black.png", 
+            "LauraX.PantiesDown", Null(),
+#            "LauraX.Panties == 'wolvie panties' and LauraX.Wet", "images/LauraSex/Laura_Sex_Panties_Sport_SW.png", 
+            "LauraX.Panties == 'bikini bottoms'", "images/LauraSex/Laura_Sex_Panties_Bikini.png", 
+            "LauraX.Panties == 'wolvie panties'", "images/LauraSex/Laura_Sex_Panties_Wolvie.png", 
+            "LauraX.Panties == 'lace panties'", "images/LauraSex/Laura_Sex_Panties_Lace.png", 
+            "LauraX.Panties", "images/LauraSex/Laura_Sex_Panties_Black.png", 
             "True", Null(),
             )         
     contains:
             # hose base layer
         ConditionSwitch(    
-            "P_Cock == 'foot' and (L_Hose == 'stockings and garterbelt' or L_Hose == 'stockings')", "images/LauraSex/Laura_Sex_Stockings_Base_Foot.png", 
-            "L_Hose == 'stockings and garterbelt' or L_Hose == 'stockings'", "images/LauraSex/Laura_Sex_Stockings_Base_Up.png", 
+            "Player.Cock == 'foot' and (LauraX.Hose == 'stockings and garterbelt' or LauraX.Hose == 'stockings')", "images/LauraSex/Laura_Sex_Stockings_Base_Foot.png", 
+            "LauraX.Hose == 'stockings and garterbelt' or LauraX.Hose == 'stockings'", "images/LauraSex/Laura_Sex_Stockings_Base_Up.png", 
             "True", Null(),
             )              
     contains:
             # legs
         ConditionSwitch(    
-            "L_Legs == 'skirt'", "images/LauraSex/Laura_Sex_Skirt.png", 
-            "L_Upskirt", Null(),
-            "L_Legs == 'leather pants' and P_Cock == 'foot'", "images/LauraSex/Laura_Sex_Pants_Base_Foot.png", 
-            "L_Legs == 'leather pants'", "images/LauraSex/Laura_Sex_Pants_Base_Up.png", 
+            "LauraX.Legs == 'skirt'", "images/LauraSex/Laura_Sex_Skirt.png", 
+            "LauraX.Upskirt", Null(),
+            "LauraX.Legs == 'leather pants' and Player.Cock == 'foot'", "images/LauraSex/Laura_Sex_Pants_Base_Foot.png", 
+            "LauraX.Legs == 'leather pants'", "images/LauraSex/Laura_Sex_Pants_Base_Up.png", 
             "True", Null(),
             )
     contains:
             # piercings
         ConditionSwitch(    
-#            "L_Panties and L_PantiesDown", Null(), #don't show if panties are down
-#            "L_Legs == 'skirt' or (L_Legs and L_Upskirt)", Null(), #don't show if pants are down
-            "L_Pierce == 'barbell'", "images/LauraSex/Laura_Sex_Barbell_Pussy_C.png", 
-            "L_Pierce == 'ring'", "images/LauraSex/Laura_Sex_Ring_Pussy_C.png",
+#            "LauraX.Panties and LauraX.PantiesDown", Null(), #don't show if panties are down
+#            "LauraX.Legs == 'skirt' or (LauraX.Legs and LauraX.Upskirt)", Null(), #don't show if pants are down
+            "LauraX.Pierce == 'barbell'", "images/LauraSex/Laura_Sex_Barbell_Pussy_C.png", 
+            "LauraX.Pierce == 'ring'", "images/LauraSex/Laura_Sex_Ring_Pussy_C.png",
             "True", Null(), 
             ) 
 #    contains:
 #            # Over
 #        ConditionSwitch(    
-#            "L_Over == 'nighty'", "images/LauraSex/Laura_Sex_Nighty_Pussy.png", 
+#            "LauraX.Over == 'nighty'", "images/LauraSex/Laura_Sex_Nighty_Pussy.png", 
 #            "True", Null(),
 #            )
     contains:
             # Feet
         ConditionSwitch(    
-            "P_Cock == 'foot'", "Laura_Footjob_Foot", 
+            "Player.Cock == 'foot'", "Laura_Footjob_Foot", 
             "True", "Laura_Sex_Foot", 
             )
     transform_anchor True
@@ -1004,14 +1004,14 @@ image Laura_Sex_Foot:
     contains:
             # hose/foot
         ConditionSwitch(    
-            "L_Hose == 'stockings and garterbelt' or L_Hose == 'stockings'", "images/LauraSex/Laura_Sex_Stockings_Up.png", 
+            "LauraX.Hose == 'stockings and garterbelt' or LauraX.Hose == 'stockings'", "images/LauraSex/Laura_Sex_Stockings_Up.png", 
             "True", "images/LauraSex/Laura_Sex_FootHigh.png" #base
             )              
     contains:
             # legs
         ConditionSwitch(    
-            "L_Upskirt", Null(),
-            "L_Legs == 'leather pants'", "images/LauraSex/Laura_Sex_Pants_Up.png", 
+            "LauraX.Upskirt", Null(),
+            "LauraX.Legs == 'leather pants'", "images/LauraSex/Laura_Sex_Pants_Up.png", 
             "True", Null(),
             )     
         xoffset  -2 #this shouldn't be needed, but otherwise there's a gap between the knee and leg. 
@@ -1025,14 +1025,14 @@ image Laura_Sex_Foot:
 #    contains:
 #            # hose/base
 #        ConditionSwitch(    
-#            "L_Hose == 'stockings and garterbelt' or L_Hose == 'stockings'", "images/LauraSex/Laura_Sex_Stockings_Foot.png", 
+#            "LauraX.Hose == 'stockings and garterbelt' or LauraX.Hose == 'stockings'", "images/LauraSex/Laura_Sex_Stockings_Foot.png", 
 #            "True", "images/LauraSex/Laura_Sex_Foot.png"
 #            )              
 #    contains:
 #            # legs
 #        ConditionSwitch(    
-#            "L_Upskirt", Null(),
-#            "L_Legs == 'leather pants'", "images/LauraSex/Laura_Sex_Pants_Foot.png", 
+#            "LauraX.Upskirt", Null(),
+#            "LauraX.Legs == 'leather pants'", "images/LauraSex/Laura_Sex_Pants_Foot.png", 
 #            "True", Null(),
 #            )      
 #    transform_anchor True
@@ -1215,7 +1215,7 @@ image Laura_Sex_Legs_S2:
     contains:
             # spunk
             ConditionSwitch(    
-                "'in' not in L_Spunk", Null(),
+                "'in' not in LauraX.Spunk", Null(),
                 "True", "images/LauraSex/Laura_Sex_Spunk_Anal_O.png", 
                 ) 
             subpixel True                
@@ -1294,7 +1294,7 @@ image Laura_Sex_Legs_S3:
     contains:
             # spunk
             ConditionSwitch(    
-                "'in' not in L_Spunk", Null(),
+                "'in' not in LauraX.Spunk", Null(),
                 "True", "images/LauraSex/Laura_Sex_Spunk_Anal_O.png", 
                 ) 
             subpixel True                
@@ -1366,7 +1366,7 @@ image Laura_Sex_Legs_S4:
     contains:
             # spunk
             ConditionSwitch(    
-                "'in' not in L_Spunk", Null(),
+                "'in' not in LauraX.Spunk", Null(),
                 "True", "images/LauraSex/Laura_Sex_Spunk_Anal_O.png", 
                 ) 
             subpixel True
@@ -1562,7 +1562,7 @@ image Laura_Sex_Legs_A2:
     contains:
             # spunk
             ConditionSwitch(    
-                "'anal' not in L_Spunk", Null(),
+                "'anal' not in LauraX.Spunk", Null(),
                 "True", "images/LauraSex/Laura_Sex_Spunk_Anal_O.png", 
                 ) 
             subpixel True
@@ -1633,7 +1633,7 @@ image Laura_Sex_Legs_A3:
     contains:
             # Spunk
             ConditionSwitch(    
-                "'anal' not in L_Spunk", Null(),
+                "'anal' not in LauraX.Spunk", Null(),
                 "True", "images/LauraSex/Laura_Sex_Spunk_Anal_O.png", 
                 ) 
             subpixel True
@@ -1705,7 +1705,7 @@ image Laura_Sex_Legs_A4:
     contains:
             # spunk
             ConditionSwitch(    
-                "'anal' not in L_Spunk", Null(),
+                "'anal' not in LauraX.Spunk", Null(),
                 "True", "images/LauraSex/Laura_Sex_Spunk_Anal_O.png", 
                 ) 
             subpixel True
@@ -1785,7 +1785,7 @@ image Laura_Sex_Zero_Anim_H0:
     contains:
         subpixel True
         ConditionSwitch(            
-            "P_Sprite", "Zero_Doggy_Insert",# Zero's cock, changes color and properties
+            "Player.Sprite", "Zero_Doggy_Insert",# Zero's cock, changes color and properties
             "True", Null(),
             )    
         
@@ -1943,14 +1943,14 @@ image Laura_Footjob_Foot:
     contains:
             # hose/base
         ConditionSwitch(    
-            "L_Hose == 'stockings and garterbelt' or L_Hose == 'stockings'", "images/LauraSex/Laura_Sex_Stockings_Foot.png", 
+            "LauraX.Hose == 'stockings and garterbelt' or LauraX.Hose == 'stockings'", "images/LauraSex/Laura_Sex_Stockings_Foot.png", 
             "True", "images/LauraSex/Laura_Sex_Foot.png"
             )              
     contains:
             # legs
         ConditionSwitch(    
-            "L_Upskirt", Null(),
-            "L_Legs == 'leather pants'", "images/LauraSex/Laura_Sex_Pants_Foot.png", 
+            "LauraX.Upskirt", Null(),
+            "LauraX.Legs == 'leather pants'", "images/LauraSex/Laura_Sex_Pants_Foot.png", 
             "True", Null(),
             )      
     offset (1105,140) #
@@ -2204,33 +2204,6 @@ image Laura_SexMaskX:
         "images/LauraSex/Laura_Sex_MaskPussyX.png"
         pos (200,303)#(0,0)#(-300,-300) #
         anchor (.5,.5)
-#        block:
-#            ease 0.5 ypos 490#270 #bottom
-#            pause 0.5
-#            ease 1 ypos 540#320 #top
-#            repeat
-#        block:
-#                    ease 1 xzoom .5
-#                    ease 1 xzoom 1
-#                    repeat
-#        block:
-#                    ease .5 pos(0,0)
-#                    ease .5 pos(0,2000)
-#                    ease .5 pos(200,0)
-#                    ease .5 pos(200,2000)
-#                    ease .25 pos(400,0)
-#                    ease .25 pos(400,2000)
-#                    ease .25 pos(600,0)
-#                    ease .25 pos(600,2000)
-#                    ease .25 pos(800,0)
-#                    ease .25 pos(800,2000)
-#                    ease .25 pos(1000,0)
-#                    ease .25 pos(1000,2000)
-#                    ease .25 pos(1200,0)
-#                    ease .25 pos(1200,2000)
-#                    ease .25 pos(1400,0)
-#                    ease .25 pos(1400,2000)
-#                    repeat
     zoom 1 
 #    transform_anchor True
     anchor (0.5,0.5)
@@ -2321,55 +2294,57 @@ image Laura_Mega_Mask:
 
 
 label Laura_Sex_Launch(Line = "solo"): 
-    if Line == "sex":        
-        $ P_Cock = "in"
-    elif Line == "anal":
-        $ P_Cock = "anal"
-    elif Line == "solo":   
-        $ P_Sprite = 0
-        $ P_Cock = "out"
-    elif Line == "hotdog":          
-        $ P_Cock = "out"
-    elif Line == "foot":          
-        $ P_Cock = "foot"
-    if not Trigger:
-        $ Trigger = Line
-    if renpy.showing("Laura_SexSprite"):
-        return 
-    $ P_Sprite = 1
-    hide Laura_Sprite      
-    if renpy.showing("Laura_BJ_Animation"):
-        hide Laura_BJ_Animation
-    if renpy.showing("Laura_HJ_Animation"):
-        hide Laura_HJ_Animation
-    if renpy.showing("Laura_TJ_Animation"):
-        hide Laura_TJ_Animation
-    call Speed_Shift(0) 
-    
-    if Trigger == "in" or Trigger == "anal": 
-            if L_Legs:          #temporary, change or remove when other clothing options are available
-                $ L_Upskirt = 1
-            if L_Panties:       #temporary, change or remove when other clothing options are available
-                $ L_PantiesDown = 1
-                        
-    show Laura_SexSprite zorder 150:
-        pos (450,500)
-    with dissolve
-    return
+        if Line == "sex":        
+            $ Player.Cock = "in"
+        elif Line == "anal":
+            $ Player.Cock = "anal"
+        elif Line == "solo":   
+            $ Player.Sprite = 0
+            $ Player.Cock = "out"
+        elif Line == "hotdog":          
+            $ Player.Cock = "out"
+        elif Line == "foot":          
+            $ Player.Cock = "foot"
+        if not Trigger:
+            $ Trigger = Line
+        if renpy.showing("Laura_SexSprite"):
+            return 
+        $ Player.Sprite = 1
+        hide Laura_Sprite      
+        if renpy.showing("Laura_BJ_Animation"):
+            hide Laura_BJ_Animation
+        if renpy.showing("Laura_HJ_Animation"):
+            hide Laura_HJ_Animation
+        if renpy.showing("Laura_TJ_Animation"):
+            hide Laura_TJ_Animation
+        call Speed_Shift(0) 
+        
+        if Trigger == "in" or Trigger == "anal": 
+                if LauraX.Legs or LauraX.HoseNum() >= 5:      
+                    $ LauraX.Upskirt = 1
+                if LauraX.Panties:     
+                    $ LauraX.PantiesDown = 1
+                            
+        show Laura_SexSprite zorder 150:
+            pos (450,500)
+        with dissolve
+        return
     
 label Laura_Sex_Reset:
-    if not renpy.showing("Laura_SexSprite"):
+        if not renpy.showing("Laura_SexSprite"):
+            return
+        $ LauraX.ArmPose = 2     
+        hide Laura_SexSprite  
+        call Laura_Hide 
+        show Laura_Sprite at SpriteLoc(LauraX.SpriteLoc) zorder LauraX.Layer:
+            alpha 1
+            zoom 1 offset (0,0) 
+            anchor (0.5, 0.0)
+        with dissolve
+        $ Speed = 0
         return
-    $ Laura_Arms = 2     
-    hide Laura_SexSprite  
-    call Laura_Hide 
-    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
-        alpha 1
-        zoom 1 offset (0,0) 
-        anchor (0.5, 0.0)
-    with dissolve
-    $ Speed = 0
-    return
+label Laura_Doggy_Reset:
+        return
 
 
 # Laura's BJ Scenes / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
@@ -2386,7 +2361,7 @@ image Laura_BJ_Animation:
     contains:
         ConditionSwitch(
             # Laura's upper body
-#            "P_Sprite", ConditionSwitch(                                                               
+#            "Player.Sprite", ConditionSwitch(                                                               
 #                    # If during sex
             "Speed == 1", "Laura_BJ_Body_1",#Licking
             "Speed == 2", "Laura_BJ_Body_2",#Heading
@@ -2420,9 +2395,9 @@ image Laura_Sprite_BJ_HairBack:
 #    "images/LauraSprite/Laura_Sprite_Hair_Long_Under.png"      
     ConditionSwitch(                                                                         
             #Hair over
-            "not L_Hair", Null(),
-            "L_Hair == 'wet' or L_Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Under.png",
-            "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Under.png",
+            "not LauraX.Hair", Null(),
+            "LauraX.Hair == 'wet' or LauraX.Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Under.png",
+            "LauraX.Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Under.png",
             "True", Null(),
             )        
                     
@@ -2432,49 +2407,49 @@ image Laura_Sprite_BJ_Head:
         (806,806),         
         (0,0), ConditionSwitch(
                 # Face background plate
-                "L_Blush == 2", "images/LauraSprite/Laura_Sprite_Head_Blush2.png", 
-                "L_Blush", "images/LauraSprite/Laura_Sprite_Head_Blush.png",  
+                "LauraX.Blush == 2", "images/LauraSprite/Laura_Sprite_Head_Blush2.png", 
+                "LauraX.Blush", "images/LauraSprite/Laura_Sprite_Head_Blush.png",  
                 "True", "images/LauraSprite/Laura_Sprite_Head.png",                        
                 ),        
         (0,0), ConditionSwitch(#chin spunk
-            "'chin' not in L_Spunk", Null(),
+            "'chin' not in LauraX.Spunk", Null(),
             "Speed >= 2", Null(),
             "True", "images/LauraSprite/Laura_Sprite_Spunk_Chin.png",
             ),    
         (0,0), ConditionSwitch(#Mouths 
             "Speed >= 2", "images/LauraSprite/Laura_Sprite_Mouth_SuckingBJ.png",   #sucking       
             "Speed == 1", "images/LauraSprite/Laura_Sprite_Mouth_Tongue.png",     #licking 
-            "L_Mouth == 'normal'", "images/LauraSprite/Laura_Sprite_Mouth_Normal.png",
-            "L_Mouth == 'lipbite'", "images/LauraSprite/Laura_Sprite_Mouth_Lipbite.png",
-            "L_Mouth == 'sucking'", "images/LauraSprite/Laura_Sprite_Mouth_Sucking.png",            
-            "L_Mouth == 'kiss'", "images/LauraSprite/Laura_Sprite_Mouth_Kiss.png",
-            "L_Mouth == 'sad'", "images/LauraSprite/Laura_Sprite_Mouth_Sad.png",
-            "L_Mouth == 'smile'", "images/LauraSprite/Laura_Sprite_Mouth_Smile.png",
-            "L_Mouth == 'surprised'", "images/LauraSprite/Laura_Sprite_Mouth_Surprised.png",            
-            "L_Mouth == 'tongue'", "images/LauraSprite/Laura_Sprite_Mouth_Tongue.png",                
-            "L_Mouth == 'grimace'", "images/LauraSprite/Laura_Sprite_Mouth_Smile.png",              
-            "L_Mouth == 'smirk'", "images/LauraSprite/Laura_Sprite_Mouth_Smirk.png",                    
-#            "L_Mouth == 'smirk'", "images/LauraSprite/Laura_Sprite_Mouth_Normal.png",         
+            "LauraX.Mouth == 'normal'", "images/LauraSprite/Laura_Sprite_Mouth_Normal.png",
+            "LauraX.Mouth == 'lipbite'", "images/LauraSprite/Laura_Sprite_Mouth_Lipbite.png",
+            "LauraX.Mouth == 'sucking'", "images/LauraSprite/Laura_Sprite_Mouth_Sucking.png",            
+            "LauraX.Mouth == 'kiss'", "images/LauraSprite/Laura_Sprite_Mouth_Kiss.png",
+            "LauraX.Mouth == 'sad'", "images/LauraSprite/Laura_Sprite_Mouth_Sad.png",
+            "LauraX.Mouth == 'smile'", "images/LauraSprite/Laura_Sprite_Mouth_Smile.png",
+            "LauraX.Mouth == 'surprised'", "images/LauraSprite/Laura_Sprite_Mouth_Surprised.png",            
+            "LauraX.Mouth == 'tongue'", "images/LauraSprite/Laura_Sprite_Mouth_Tongue.png",                
+            "LauraX.Mouth == 'grimace'", "images/LauraSprite/Laura_Sprite_Mouth_Smile.png",              
+            "LauraX.Mouth == 'smirk'", "images/LauraSprite/Laura_Sprite_Mouth_Smirk.png",                    
+#            "LauraX.Mouth == 'smirk'", "images/LauraSprite/Laura_Sprite_Mouth_Normal.png",         
             "True", "images/LauraSprite/Laura_Sprite_Mouth_Normal.png",
             ),         
         (0,0), ConditionSwitch(#Mouth spunk 
-            "'mouth' not in L_Spunk", Null(),
+            "'mouth' not in LauraX.Spunk", Null(),
             "Speed >= 2", "images/LauraSprite/Laura_Sprite_Spunk_MouthSuck.png",   #sucking       
             "Speed == 1", "images/LauraSprite/Laura_Sprite_Spunk_MouthTongue.png",     #licking             
-            "L_Mouth == 'normal'", "images/LauraSprite/Laura_Sprite_Spunk_MouthNeutral.png",
-            "L_Mouth == 'lipbite'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmirk.png",
-            "L_Mouth == 'sucking'", "images/LauraSprite/Laura_Sprite_Spunk_MouthTongue.png",            
-            "L_Mouth == 'kiss'", "images/LauraSprite/Laura_Sprite_Spunk_MouthKiss.png",
-            "L_Mouth == 'sad'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSad.png",
-            "L_Mouth == 'smile'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmile.png",
-            "L_Mouth == 'surprised'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSad.png",            
-            "L_Mouth == 'tongue'", "images/LauraSprite/Laura_Sprite_Spunk_MouthTongue.png",                
-            "L_Mouth == 'grimace'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmile.png",              
-            "L_Mouth == 'smirk'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmirk.png",      
+            "LauraX.Mouth == 'normal'", "images/LauraSprite/Laura_Sprite_Spunk_MouthNeutral.png",
+            "LauraX.Mouth == 'lipbite'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmirk.png",
+            "LauraX.Mouth == 'sucking'", "images/LauraSprite/Laura_Sprite_Spunk_MouthTongue.png",            
+            "LauraX.Mouth == 'kiss'", "images/LauraSprite/Laura_Sprite_Spunk_MouthKiss.png",
+            "LauraX.Mouth == 'sad'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSad.png",
+            "LauraX.Mouth == 'smile'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmile.png",
+            "LauraX.Mouth == 'surprised'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSad.png",            
+            "LauraX.Mouth == 'tongue'", "images/LauraSprite/Laura_Sprite_Spunk_MouthTongue.png",                
+            "LauraX.Mouth == 'grimace'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmile.png",              
+            "LauraX.Mouth == 'smirk'", "images/LauraSprite/Laura_Sprite_Spunk_MouthSmirk.png",      
             "True", "images/LauraSprite/Laura_Sprite_Spunk_MouthNeutral.png",
             ),     
         (0,0), ConditionSwitch(#Mouth spunk over 
-            "Speed >= 2 and 'mouth' in L_Spunk", "images/LauraSprite/Laura_Sprite_SpunkSuckingO.png",   #sucking  
+            "Speed >= 2 and 'mouth' in LauraX.Spunk", "images/LauraSprite/Laura_Sprite_SpunkSuckingO.png",   #sucking  
             "True", Null(),
             ),    
         (0,0), ConditionSwitch(#wet tongue
@@ -2483,53 +2458,53 @@ image Laura_Sprite_BJ_Head:
             ),                                                              
         (0,0), ConditionSwitch(                                                                       
             #brows
-            "L_Blush >= 2", ConditionSwitch(
-                    "L_Brows == 'normal'", "images/LauraSprite/Laura_Sprite_Brows_Normal_B.png",
-                    "L_Brows == 'angry'", "images/LauraSprite/Laura_Sprite_Brows_Angry_B.png",
-                    "L_Brows == 'sad'", "images/LauraSprite/Laura_Sprite_Brows_Sad_B.png",
-                    "L_Brows == 'surprised'", "images/LauraSprite/Laura_Sprite_Brows_Surprised_B.png",        
-                    "L_Brows == 'confused'", "images/LauraSprite/Laura_Sprite_Brows_Confused_B.png",
+            "LauraX.Blush >= 2", ConditionSwitch(
+                    "LauraX.Brows == 'normal'", "images/LauraSprite/Laura_Sprite_Brows_Normal_B.png",
+                    "LauraX.Brows == 'angry'", "images/LauraSprite/Laura_Sprite_Brows_Angry_B.png",
+                    "LauraX.Brows == 'sad'", "images/LauraSprite/Laura_Sprite_Brows_Sad_B.png",
+                    "LauraX.Brows == 'surprised'", "images/LauraSprite/Laura_Sprite_Brows_Surprised_B.png",        
+                    "LauraX.Brows == 'confused'", "images/LauraSprite/Laura_Sprite_Brows_Confused_B.png",
                     "True", "images/LauraSprite/Laura_Sprite_Brows_Normal_B.png",
                     ),
             "True", ConditionSwitch(
-                    "L_Brows == 'normal'", "images/LauraSprite/Laura_Sprite_Brows_Normal.png",
-                    "L_Brows == 'angry'", "images/LauraSprite/Laura_Sprite_Brows_Angry.png",
-                    "L_Brows == 'sad'", "images/LauraSprite/Laura_Sprite_Brows_Sad.png",
-                    "L_Brows == 'surprised'", "images/LauraSprite/Laura_Sprite_Brows_Surprised.png",        
-                    "L_Brows == 'confused'", "images/LauraSprite/Laura_Sprite_Brows_Confused.png",
+                    "LauraX.Brows == 'normal'", "images/LauraSprite/Laura_Sprite_Brows_Normal.png",
+                    "LauraX.Brows == 'angry'", "images/LauraSprite/Laura_Sprite_Brows_Angry.png",
+                    "LauraX.Brows == 'sad'", "images/LauraSprite/Laura_Sprite_Brows_Sad.png",
+                    "LauraX.Brows == 'surprised'", "images/LauraSprite/Laura_Sprite_Brows_Surprised.png",        
+                    "LauraX.Brows == 'confused'", "images/LauraSprite/Laura_Sprite_Brows_Confused.png",
                     "True", "images/LauraSprite/Laura_Sprite_Brows_Normal.png",
                     ),
             ),        
         (0,0), "Laura Blink",     #Eyes    
         (0,0), ConditionSwitch(                
             #Hair mid
-            "L_Over == 'jacket'", Null(),
-            "L_Hair == 'wet' or L_Water", Null(),
-            "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Mid.png",
+            "LauraX.Over == 'jacket'", Null(),
+            "LauraX.Hair == 'wet' or LauraX.Water", Null(),
+            "LauraX.Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Mid.png",
             "True", Null(),
             ),       
 #        (0,0), ConditionSwitch(
 #            #Face Water
-#            "not L_Water", Null(),
+#            "not LauraX.Water", Null(),
 #            "True", "images/LauraSprite/Laura_Sprite_Wet_Head.png",
 #            ),
         (0,0), ConditionSwitch(                                                                         
             #Hair over
-            "not L_Hair", Null(),
-            "L_Hair == 'wet' or L_Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Over.png",
-            "L_Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Over.png",
+            "not LauraX.Hair", Null(),
+            "LauraX.Hair == 'wet' or LauraX.Water", "images/LauraSprite/Laura_Sprite_Hair_Wet_Over.png",
+            "LauraX.Hair", "images/LauraSprite/Laura_Sprite_Hair_Long_Over.png",
             "True", Null(),
             ),        
         (0,0), ConditionSwitch(
             #Hair Water
-            "not L_Water", Null(),
+            "not LauraX.Water", Null(),
             "True", "images/LauraSprite/Laura_Sprite_Head_Wet.png",
 #            "True", "images/LauraSprite/Laura_Sprite_Hair_Wet.png",
             ),
         (0,0), ConditionSwitch(
             #facial spunk               
-            "'hair' in L_Spunk", "images/LauraSprite/Laura_Sprite_Spunk_Facial2.png",  
-            "'facial' in L_Spunk", "images/LauraSprite/Laura_Sprite_Spunk_Facial1.png",            
+            "'hair' in LauraX.Spunk", "images/LauraSprite/Laura_Sprite_Spunk_Facial2.png",  
+            "'facial' in LauraX.Spunk", "images/LauraSprite/Laura_Sprite_Spunk_Facial1.png",            
             "True", Null(),
             ),  
         )                
@@ -2610,7 +2585,7 @@ image Laura_BJ_Body_0:
     contains:
             #zero's cock
 #            ConditionSwitch(    
-#                "P_Sprite", "Blowcock",
+#                "Player.Sprite", "Blowcock",
 #                "True", AlphaMask("Blowcock", "Laura_BlowCock_Mask"), #Null(),
 #                )      
             AlphaMask("Blowcock", "Laura_BlowCock_Mask")
@@ -2724,7 +2699,7 @@ image Laura_BJ_Body_1:
     contains:
             #zero's cock
 #            ConditionSwitch(    
-#                "P_Sprite", "Blowcock",
+#                "Player.Sprite", "Blowcock",
 #                "True", AlphaMask("Blowcock", "Laura_BlowCock_Mask"), #Null(),
 #                )      
             AlphaMask("Blowcock", "Laura_BlowCock_Mask")
@@ -2835,7 +2810,7 @@ image Laura_BJ_Body_2:
     contains:
             #zero's cock
 #            ConditionSwitch(    
-#                "P_Sprite", "Blowcock",
+#                "Player.Sprite", "Blowcock",
 #                "True", AlphaMask("Blowcock", "Laura_BlowCock_Mask"), #Null(),
 #                )      
             AlphaMask("Blowcock", "Laura_BlowCock_Mask")
@@ -2991,7 +2966,7 @@ image Laura_BJ_Body_3:
     contains:
             #zero's cock
 #            ConditionSwitch(    
-#                "P_Sprite", "Blowcock",
+#                "Player.Sprite", "Blowcock",
 #                "True", AlphaMask("Blowcock", "Laura_BlowCock_Mask"), #Null(),
 #                )      
             AlphaMask("Blowcock", "Laura_BlowCock_Mask_3")
@@ -3144,7 +3119,7 @@ image Laura_BJ_Body_4:
     contains:
             #zero's cock
 #            ConditionSwitch(    
-#                "P_Sprite", "Blowcock",
+#                "Player.Sprite", "Blowcock",
 #                "True", AlphaMask("Blowcock", "Laura_BlowCock_Mask"), #Null(),
 #                )      
             AlphaMask("Blowcock", "Laura_BlowCock_Mask_4")
@@ -3287,7 +3262,7 @@ image Laura_BJ_Body_5:
     contains:
             #zero's cock
 #            ConditionSwitch(    
-#                "P_Sprite", "Blowcock",
+#                "Player.Sprite", "Blowcock",
 #                "True", AlphaMask("Blowcock", "Laura_BlowCock_Mask"), #Null(),
 #                )      
             AlphaMask("Blowcock", "Laura_BlowCock_Mask")
@@ -3443,7 +3418,7 @@ image Laura_BJ_Body_6:
     contains:
             #zero's cock
 #            ConditionSwitch(    
-#                "P_Sprite", "Blowcock",
+#                "Player.Sprite", "Blowcock",
 #                "True", AlphaMask("Blowcock", "Laura_BlowCock_Mask"), #Null(),
 #                )      
             AlphaMask("Blowcock", "Laura_BlowCock_Mask_6")
@@ -3500,40 +3475,40 @@ image Laura_BJ_Body_6:
                                                                #BJ Launchers  
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-label Laura_BJ_Launch(Line = 0):    # The sequence to launch the Laura BJ animations 
-    $ Laura_Arms = 1
+label Laura_BJ_Launch(Line = 0):    
+    # The sequence to launch the Laura BJ animations 
+    $ LauraX.ArmPose = 1
     if renpy.showing("Laura_BJ_Animation"):
         return
     
     call Laura_Hide
     if Line == "L" or Line == "cum":
-        show Laura_Sprite at SpriteLoc(StageCenter) zorder LauraLayer:
+        show Laura_Sprite at SpriteLoc(StageCenter) zorder LauraX.Layer:
             alpha 1
             ease 1 zoom 2.5 offset (150,80) 
         with dissolve
     else:
-        show Laura_Sprite at SpriteLoc(StageCenter) zorder LauraLayer:
+        show Laura_Sprite at SpriteLoc(StageCenter) zorder LauraX.Layer:
             alpha 1
             zoom 2.5 offset (150,80) 
         with dissolve
         
     $ Speed = 0
-    if Taboo and Line == "L": # Laura gets started. . .
-            if R_Loc == bg_current:
-                "Laura looks back at Rogue to see if she's watching."
-            elif K_Loc == bg_current:
-                "Laura looks back at Kitty to see if she's watching."
-            else:
-                "Laura casually glaces around to see if anyone notices what she's doing"
-            "She then bends down and puts your cock to her mouth."
-    elif Line == "L":    
-            "Laura smoothly bends down and places your cock against her cheek."    
+    if Line == "L": # Laura gets started. . .
+            if Taboo: 
+                if len(Present) >= 2:
+                    if Present[0] != LauraX:
+                            "[LauraX.Name] looks back at [Present[0].Name] to see if she's watching."
+                    elif Present[1] != LauraX:
+                            "[LauraX.Name] looks back at [Present[1].Name] to see if she's watching."
+                else:
+                            "[LauraX.Name] casually glances around to see if anyone can see her."
+            "[LauraX.Name] smoothly bends down and places your cock against her cheek."   
             
-    
     if Line != "cum":
         $ Trigger = "blow"
     
-    show Laura_Sprite zorder LauraLayer:
+    show Laura_Sprite zorder LauraX.Layer:
         alpha 0
     show Laura_BJ_Animation zorder 150: 
         pos (645,510) 
@@ -3546,17 +3521,17 @@ label Laura_BJ_Reset: # The sequence to the Laura animations from BJ to default
     call Laura_Hide 
     $ Speed = 0
     
-    show Laura_Sprite at SpriteLoc(StageCenter) zorder LauraLayer:
+    show Laura_Sprite at SpriteLoc(StageCenter) zorder LauraX.Layer:
         alpha 1
         zoom 2.5 offset (150,80) 
     with dissolve
     
-    show Laura_Sprite zorder LauraLayer:
+    show Laura_Sprite zorder LauraX.Layer:
         alpha 1
         ease 1 zoom 1.5 offset (-50,50)
         pause .5
         ease .5 zoom 1 offset (0,0)      
-    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
+    show Laura_Sprite at SpriteLoc(LauraX.SpriteLoc) zorder LauraX.Layer:
         alpha 1
         zoom 1 offset (0,0)    
     return  
@@ -3565,8 +3540,8 @@ label Laura_BJ_Reset: # The sequence to the Laura animations from BJ to default
 
 
 
-# Start Emma Handjob Animations / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
-# Core Emma Handjob element //////////////////////////////////////////////////////////////////////                                         Core Emma HJ element
+# Start Laura Handjob Animations / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+# Core Laura Handjob element //////////////////////////////////////////////////////////////////////   
 
 image Laura_Hand_Under:
     "images/LauraSprite/handlaura2.png"
@@ -3649,14 +3624,16 @@ transform Handcock_2L():
     
 image Laura_HJ_Animation:  
     contains:
-        ConditionSwitch(                                                # backside of the hand
+        ConditionSwitch(                                                
+            # backside of the hand
             "not Speed", Transform("Laura_Hand_Under"), 
             "Speed == 1", At("Laura_Hand_Under", Laura_Hand_1()),
             "Speed >= 2", At("Laura_Hand_Under", Laura_Hand_2()),            
             "Speed", Null(),
             ),  
     contains:
-        ConditionSwitch(                                                # cock
+        ConditionSwitch(                                                
+            # cock
             "not Speed", Transform("Zero_Handcock"), 
             "Speed == 1", At("Zero_Handcock", Handcock_1L()),
             "Speed >= 2", At("Zero_Handcock", Handcock_2L()), 
@@ -3664,7 +3641,8 @@ image Laura_HJ_Animation:
             ),  
         offset (0,0)
     contains:
-        ConditionSwitch(                                                # fingers of the hand
+        ConditionSwitch(                                               
+            # fingers of the hand
             "not Speed", Transform("Laura_Hand_Over"), 
             "Speed == 1", At("Laura_Hand_Over", Laura_Hand_1()),
             "Speed >= 2", At("Laura_Hand_Over", Laura_Hand_2()), 
@@ -3680,11 +3658,11 @@ label Laura_HJ_Launch(Line = 0):
         return
     call Laura_Hide
     if Line == "L":      
-        show Laura_Sprite at SpriteLoc(StageRight) zorder LauraLayer:
+        show Laura_Sprite at SpriteLoc(StageRight) zorder LauraX.Layer:
             alpha 1
             ease 1 zoom 1.7 offset (-150,200)#(0,200)
     else:     
-        show Laura_Sprite at SpriteLoc(StageRight) zorder LauraLayer:
+        show Laura_Sprite at SpriteLoc(StageRight) zorder LauraX.Layer:
             alpha 1
             ease 1 zoom 1.7 offset (-150,200)#(0,200)
         with dissolve
@@ -3695,28 +3673,28 @@ label Laura_HJ_Launch(Line = 0):
     else:
         $ Speed = 1
     pause .5
-    $ Laura_Arms = 1
+    $ LauraX.ArmPose = 1
     show Laura_HJ_Animation at SpriteLoc(StageCenter) zorder 150 with easeinbottom:
         #xoffset 150
         offset (250,250)#(100,250)
     return
     
-label Laura_HJ_Reset: # The sequence to the Rogue animations from handjob to default
+label Laura_HJ_Reset: # The sequence to the Laura animations from handjob to default
     if not renpy.showing("Laura_HJ_Animation"):
         return    
     $ Speed = 0            
-    $ Laura_Arms = 1
+    $ LauraX.ArmPose = 1
     hide Laura_HJ_Animation with easeoutbottom
     call Laura_Hide 
-    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
+    show Laura_Sprite at SpriteLoc(LauraX.SpriteLoc) zorder LauraX.Layer:
         alpha 1
         zoom 1.7 offset (-50,200)
-    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
+    show Laura_Sprite at SpriteLoc(LauraX.SpriteLoc) zorder LauraX.Layer:
         alpha 1
         ease 1 zoom 1.5 offset (-150,50)
         pause .5
         ease .5 zoom 1 offset (0,0) 
-    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
+    show Laura_Sprite at SpriteLoc(LauraX.SpriteLoc) zorder LauraX.Layer:
         alpha 1
         zoom 1 offset (0,0)     
     return
@@ -3735,7 +3713,7 @@ image Laura_TJ_Animation:
             contains:
                 ConditionSwitch(                                                              
                     # Laura's upper body     
-                    "not P_Sprite","Laura_TJ_0",#Static
+                    "not Player.Sprite","Laura_TJ_0",#Static
                     "Speed == 1", "Laura_TJ_1",#slow
                     "Speed == 4", "Laura_TJ_4",#cumming high
                     "Speed == 5", "Laura_TJ_5",#cumming low
@@ -3801,12 +3779,12 @@ image Laura_TJ_Body:
                 "images/LauraSex/Laura_Titjob_Body.png"  
             contains:               
                 ConditionSwitch(
-                        "not L_Neck",Null(),                                
-                        "True",       "images/LauraSex/Laura_Titjob_Neck_[L_Neck].png",
+                        "not LauraX.Neck",Null(),                                
+                        "True",       "images/LauraSex/Laura_Titjob_Neck_[LauraX.Neck].png",
                         )      
             contains:               
                 ConditionSwitch(
-                        "'tits' not in L_Spunk",Null(),                                
+                        "'tits' not in LauraX.Spunk",Null(),                                
                         "True",       "images/LauraSex/Laura_Titjob_Spunk_Chest.png",
                         )                 
             transform_anchor True
@@ -3822,14 +3800,14 @@ image Laura_TJ_LeftArm:
                 "images/LauraSex/Laura_Titjob_LeftHand.png" 
             contains:               
                 ConditionSwitch(
-                        "not L_Arms",Null(),                                
-                        "True",       "images/LauraSex/Laura_Titjob_[L_Arms].png",
+                        "not LauraX.Arms",Null(),                                
+                        "True",       "images/LauraSex/Laura_Titjob_[LauraX.Arms].png",
                         )   
             contains:
                 # Left Piercings
                 ConditionSwitch(
-                        "not L_Pierce",Null(),        
-                        "True",       "images/LauraSex/Laura_Titjob_Left_[L_Pierce].png",
+                        "not LauraX.Pierce",Null(),        
+                        "True",       "images/LauraSex/Laura_Titjob_Left_[LauraX.Pierce].png",
                         )    
     
 # Animations start / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
@@ -3885,7 +3863,7 @@ image Laura_TJ_0:
                     "images/LauraSex/Laura_Titjob_RightTit.png"            
                 contains:
                     ConditionSwitch(
-                            "'tits' not in L_Spunk",Null(),                                
+                            "'tits' not in LauraX.Spunk",Null(),                                
                             "True",       "images/LauraSex/Laura_Titjob_Spunk_Right.png",
                             )      
                 subpixel True       
@@ -3904,8 +3882,8 @@ image Laura_TJ_0:
                 contains:
                     # Right Piercings                    
                     ConditionSwitch(
-                            "not L_Pierce",Null(),                                
-                            "True",       "images/LauraSex/Laura_Titjob_Right_[L_Pierce].png",
+                            "not LauraX.Pierce",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Right_[LauraX.Pierce].png",
                             )                           
                 subpixel True     
                 pos (0,-15) #top (0,-10)  
@@ -3954,7 +3932,7 @@ image Laura_TJ_0:
                     "images/LauraSex/Laura_Titjob_LeftTit.png"    
                 contains:
                     ConditionSwitch(
-                            "'tits' not in L_Spunk",Null(),                                
+                            "'tits' not in LauraX.Spunk",Null(),                                
                             "True",       "images/LauraSex/Laura_Titjob_Spunk_Left.png",
                             )                            
                 subpixel True       
@@ -3974,8 +3952,8 @@ image Laura_TJ_0:
 #                contains:
 #                    # Left Piercings
 #                    ConditionSwitch(
-#                            "not L_Pierce",Null(),        
-#                            "True",       "images/LauraSex/Laura_Titjob_Left_[L_Pierce].png",
+#                            "not LauraX.Pierce",Null(),        
+#                            "True",       "images/LauraSex/Laura_Titjob_Left_[LauraX.Pierce].png",
 #                            )  
                 subpixel True       
                 pos (0,0) #top (0,-10)   
@@ -4078,7 +4056,7 @@ image Laura_TJ_1:
                     "images/LauraSex/Laura_Titjob_RightTit.png"            
                 contains:
                     ConditionSwitch(
-                            "'tits' not in L_Spunk",Null(),                                
+                            "'tits' not in LauraX.Spunk",Null(),                                
                             "True",       "images/LauraSex/Laura_Titjob_Spunk_Right.png",
                             )        
                 subpixel True       
@@ -4098,8 +4076,8 @@ image Laura_TJ_1:
                 contains:
                     # Right Piercings                    
                     ConditionSwitch(
-                            "not L_Pierce",Null(),                                
-                            "True",       "images/LauraSex/Laura_Titjob_Right_[L_Pierce].png",
+                            "not LauraX.Pierce",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Right_[LauraX.Pierce].png",
                             )                           
                 subpixel True     
                 pos (0,150) #top (0,-10)  
@@ -4154,7 +4132,7 @@ image Laura_TJ_1:
                     "images/LauraSex/Laura_Titjob_LeftTit.png"      
                 contains:
                     ConditionSwitch(
-                            "'tits' not in L_Spunk",Null(),                                
+                            "'tits' not in LauraX.Spunk",Null(),                                
                             "True",       "images/LauraSex/Laura_Titjob_Spunk_Left.png",
                             )                           
                 subpixel True       
@@ -4266,7 +4244,7 @@ image Laura_TJ_2:
                     "images/LauraSex/Laura_Titjob_RightTit.png"            
                 contains:
                     ConditionSwitch(
-                            "'tits' not in L_Spunk",Null(),                                
+                            "'tits' not in LauraX.Spunk",Null(),                                
                             "True",       "images/LauraSex/Laura_Titjob_Spunk_Right.png",
                             )      
                 subpixel True       
@@ -4285,8 +4263,8 @@ image Laura_TJ_2:
                 contains:
                     # Right Piercings                    
                     ConditionSwitch(
-                            "not L_Pierce",Null(),                                
-                            "True",       "images/LauraSex/Laura_Titjob_Right_[L_Pierce].png",
+                            "not LauraX.Pierce",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Right_[LauraX.Pierce].png",
                             )                           
                 subpixel True     
                 pos (0,80) #top (0,-10)  
@@ -4335,7 +4313,7 @@ image Laura_TJ_2:
                     "images/LauraSex/Laura_Titjob_LeftTit.png"        
                 contains:
                     ConditionSwitch(
-                            "'tits' not in L_Spunk",Null(),                                
+                            "'tits' not in LauraX.Spunk",Null(),                                
                             "True",       "images/LauraSex/Laura_Titjob_Spunk_Left.png",
                             )                         
                 subpixel True       
@@ -4446,7 +4424,7 @@ image Laura_TJ_4:
                     "images/LauraSex/Laura_Titjob_RightTit.png"            
                 contains:
                     ConditionSwitch(
-                            "'tits' not in L_Spunk",Null(),                                
+                            "'tits' not in LauraX.Spunk",Null(),                                
                             "True",       "images/LauraSex/Laura_Titjob_Spunk_Right.png",
                             )        
                 subpixel True       
@@ -4465,8 +4443,8 @@ image Laura_TJ_4:
                 contains:
                     # Right Piercings                    
                     ConditionSwitch(
-                            "not L_Pierce",Null(),                                
-                            "True",       "images/LauraSex/Laura_Titjob_Right_[L_Pierce].png",
+                            "not LauraX.Pierce",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Right_[LauraX.Pierce].png",
                             )                           
                 subpixel True     
                 pos (0,0) #top (0,-10)  
@@ -4515,7 +4493,7 @@ image Laura_TJ_4:
                     "images/LauraSex/Laura_Titjob_LeftTit.png"        
                 contains:
                     ConditionSwitch(
-                            "'tits' not in L_Spunk",Null(),                                
+                            "'tits' not in LauraX.Spunk",Null(),                                
                             "True",       "images/LauraSex/Laura_Titjob_Spunk_Left.png",
                             )                         
                 subpixel True       
@@ -4643,7 +4621,7 @@ image Laura_TJ_5:
                     "images/LauraSex/Laura_Titjob_RightTit.png"            
                 contains:
                     ConditionSwitch(
-                            "'tits' not in L_Spunk",Null(),                                
+                            "'tits' not in LauraX.Spunk",Null(),                                
                             "True",       "images/LauraSex/Laura_Titjob_Spunk_Right.png",
                             )       
                 subpixel True       
@@ -4663,8 +4641,8 @@ image Laura_TJ_5:
                 contains:
                     # Right Piercings                    
                     ConditionSwitch(
-                            "not L_Pierce",Null(),                                
-                            "True",       "images/LauraSex/Laura_Titjob_Right_[L_Pierce].png",
+                            "not LauraX.Pierce",Null(),                                
+                            "True",       "images/LauraSex/Laura_Titjob_Right_[LauraX.Pierce].png",
                             )                           
                 subpixel True     
                 pos (-80,-180)
@@ -4708,7 +4686,7 @@ image Laura_TJ_5:
                     "images/LauraSex/Laura_Titjob_LeftTit.png"         
                 contains:
                     ConditionSwitch(
-                            "'tits' not in L_Spunk",Null(),                                
+                            "'tits' not in LauraX.Spunk",Null(),                                
                             "True",       "images/LauraSex/Laura_Titjob_Spunk_Left.png",
                             )                           
                 subpixel True   
@@ -4768,59 +4746,63 @@ label Laura_TJ_Launch(Line = 0):    # The sequence to launch the Laura Titfuck a
     if renpy.showing("Laura_TJ_Animation"):
         return
     call Laura_Hide
-    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
+    show Laura_Sprite at SpriteLoc(LauraX.SpriteLoc) zorder LauraX.Layer:
         alpha 1
         ease 1 zoom 2.3 xpos 750 yoffset -100
-#    if Taboo: # Laura gets started. . .
-#        if R_Loc == bg_current:
-#            "Laura looks back at Rogue to see if she's watching."
-#        elif L_Loc == bg_current:
-#            "Laura looks back at Laura to see if she's watching."
-#        else:
-#            "Laura looks around to see if anyone can see her."
+    if Line == "L": # Laura gets started. . .
+            if Taboo: 
+                if len(Present) >= 2:
+                    if Present[0] != LauraX:
+                            "[LauraX.Name] looks back at [Present[0].Name] to see if she's watching."
+                    elif Present[1] != LauraX:
+                            "[LauraX.Name] looks back at [Present[1].Name] to see if she's watching."
+                else:
+                            "[LauraX.Name] casually glances around to see if anyone can see her."
+            "[LauraX.Name] bends over and places your cock between her breasts."   
     
-    if L_Chest and L_Over:
-        "She throws off her [L_Over] and her [L_Chest]."                
-    elif L_Over:
-        "She throws off her [L_Over], baring her breasts underneath."
-    elif L_Chest:
-        "She tugs off her [L_Chest] and throws it aside."
-    $ L_Over = 0
-    $ L_Chest = 0
-    $ Laura_Arms = 0
+    if LauraX.Chest and LauraX.Over:
+        "She throws off her [LauraX.Over] and her [LauraX.Chest]."                
+    elif LauraX.Over:
+        "She throws off her [LauraX.Over], baring her breasts underneath."
+    elif LauraX.Chest:
+        "She tugs off her [LauraX.Chest] and throws it aside."
+    $ LauraX.Over = 0
+    $ LauraX.Chest = 0
+    $ LauraX.ArmPose = 0
     
-    call Laura_First_Topless      #restore if topless          
+    call Laura_First_Topless           
      
     show blackscreen onlayer black with dissolve   
-    show Laura_Sprite zorder LauraLayer:
+    show Laura_Sprite zorder LauraX.Layer:
         alpha 0
     $ Speed = 0
     if Line != "cum":
         $ Trigger = "titjob"
     show Laura_TJ_Animation zorder 150:
         pos (700,520) #700,420)
-    $ P_Sprite = 1
+    $ Player.Sprite = 1
     hide blackscreen onlayer black with dissolve
     return
     
-label Laura_TJ_Reset: # The sequence to the Laura animations from Titfuck to default
+label Laura_TJ_Reset: 
+    # The sequence to the Laura animations from Titfuck to default
     if not renpy.showing("Laura_TJ_Animation"):
         return
 #    hide Laura_TJ_Animation
     call Laura_Hide 
-    $ P_Sprite = 0
+    $ Player.Sprite = 0
     
-    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
+    show Laura_Sprite at SpriteLoc(LauraX.SpriteLoc) zorder LauraX.Layer:
         zoom 2.3 xpos 750 yoffset -100
-    show Laura_Sprite zorder LauraLayer:
+    show Laura_Sprite zorder LauraX.Layer:
         alpha 1
         ease 1 zoom 1.5 xpos 700 yoffset 50
         pause .5
-        ease .5 zoom 1 xpos L_SpriteLoc yoffset 0         
+        ease .5 zoom 1 xpos LauraX.SpriteLoc yoffset 0         
     "Laura pulls back"
-    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
+    show Laura_Sprite at SpriteLoc(LauraX.SpriteLoc) zorder LauraX.Layer:
         alpha 1
-        zoom 1 offset (0,0) xpos L_SpriteLoc  
+        zoom 1 offset (0,0) xpos LauraX.SpriteLoc  
     return
             
 # End Laura TJ Animations / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
@@ -4835,69 +4817,71 @@ label Laura_TJ_Reset: # The sequence to the Laura animations from Titfuck to def
        
         
         
-label L_Kissing_Launch(T = Trigger):    
+label Laura_Kissing_Launch(T = Trigger):    
     call Laura_Hide
     $ Trigger = T
-    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer
-    show Laura_Sprite at SpriteLoc(StageCenter) zorder LauraLayer:
+    show Laura_Sprite at SpriteLoc(LauraX.SpriteLoc) zorder LauraX.Layer
+    show Laura_Sprite at SpriteLoc(StageCenter) zorder LauraX.Layer:
         ease 0.5 offset (0,0) zoom 2 alpha 1
     return
     
-label L_Kissing_Smooch:   
-    call LauraFace("kiss")  
-    show Laura_Sprite at SpriteLoc(StageCenter) zorder LauraLayer:
+label Laura_Kissing_Smooch:   
+    $ LauraX.FaceChange("kiss")
+    show Laura_Sprite at SpriteLoc(StageCenter) zorder LauraX.Layer:
         ease 0.5 xpos StageCenter offset (0,0) zoom 2 alpha 1
         pause 1
-        ease 0.5 xpos L_SpriteLoc zoom 1      
-    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
+        ease 0.5 xpos LauraX.SpriteLoc zoom 1      
+    show Laura_Sprite at SpriteLoc(LauraX.SpriteLoc) zorder LauraX.Layer:
         zoom 1
-    call LauraFace("sexy")  
+    $ LauraX.FaceChange("sexy") 
     return
             
-label L_Breasts_Launch(T = Trigger):    
+label Laura_Breasts_Launch(T = Trigger):    
     call Laura_Hide
     $ Trigger = T
-    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
+    show Laura_Sprite at SpriteLoc(LauraX.SpriteLoc) zorder LauraX.Layer:
 #        ease 0.5 offset (-100,-200) zoom 2
         ease 0.5 pos (700,-50) offset (0,0) zoom 2 alpha 1
     return
         
-label L_Pussy_Launch(T = Trigger):
+label Laura_Pussy_Launch(T = Trigger):
     call Laura_Hide    
     $ Trigger = T
-    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
+    show Laura_Sprite at SpriteLoc(LauraX.SpriteLoc) zorder LauraX.Layer:
         ease 0.5 pos (700,-400) offset (0,0) zoom 2 alpha 1
     return
         
-label L_Pos_Reset(Pose = 0):  
-    if L_Loc != bg_current:
+label Laura_Pos_Reset(Pose = 0):  
+    if LauraX.Loc != bg_current:
             return
     call Laura_Hide 
-    show Laura_Sprite at SpriteLoc(L_SpriteLoc) zorder LauraLayer:
-        ease .5 offset (0,0) anchor (0.5, 0.0) zoom 1 alpha 1 xzoom 1 yzoom 1
-    show Laura_Sprite zorder LauraLayer:
-        offset (0,0) 
-        anchor (0.5, 0.0)
-        zoom 1  
-        xzoom 1 
-        yzoom 1 
-        alpha 1
-        pos (L_SpriteLoc,50)
+    show Laura_Sprite at SpriteLoc(LauraX.SpriteLoc) zorder LauraX.Layer:
+            ease .5 offset (0,0) anchor (0.5, 0.0) zoom 1 alpha 1 xzoom 1 yzoom 1
+    show Laura_Sprite zorder LauraX.Layer:
+            offset (0,0) 
+            anchor (0.5, 0.0)
+            zoom 1  
+            xzoom 1 
+            yzoom 1 
+            alpha 1
+            pos (LauraX.SpriteLoc,50)
     $ Trigger = Pose
     return
     
-label Laura_Hide:
+label Laura_Hide(Sprite=0):
         if renpy.showing("Laura_SexSprite"):
             call Laura_Sex_Reset
         hide Laura_SexSprite
         hide Laura_HJ_Animation
         hide Laura_BJ_Animation
         hide Laura_TJ_Animation 
+        if Sprite:
+                hide Laura_Sprite    
         return
 
 # Interface items //////////////////////////////////////////////////////////////////////////////
 
-image GropeLeftBreast_L:    
+image GropeLeftBreast_Laura:    
     contains:
         subpixel True
         "UI_Hand"
@@ -4911,7 +4895,7 @@ image GropeLeftBreast_L:
             ease 1 rotate 60
             repeat
 
-image GropeRightBreast_L:    
+image GropeRightBreast_Laura:    
     contains:
         subpixel True
         "UI_Hand"
@@ -4927,7 +4911,7 @@ image GropeRightBreast_L:
             repeat
 
 #image GropeBreast:
-image LickRightBreast_L:   
+image LickRightBreast_Laura:   
     contains:
         subpixel True
         "UI_Tongue"
@@ -4943,7 +4927,7 @@ image LickRightBreast_L:
             ease 1.5 rotate 30 pos (95,355)#(105,375) bottom
             repeat
             
-image LickLeftBreast_L:   
+image LickLeftBreast_Laura:   
     contains:
         subpixel True
         "UI_Tongue"
@@ -4959,7 +4943,7 @@ image LickLeftBreast_L:
             ease 1.5 rotate 30 pos (195,360)#(200,410)
             repeat
 
-image GropeThigh_L: 
+image GropeThigh_Laura: 
     contains:
         subpixel True
         "UI_Hand"
@@ -4974,7 +4958,7 @@ image GropeThigh_L:
             ease 1 rotate 100 pos (115,690)   
             repeat
 
-image GropePussy_L: 
+image GropePussy_Laura: 
     contains:
         subpixel True
         "UI_Hand"
@@ -4993,7 +4977,7 @@ image GropePussy_L:
                 ease 1 rotate 170 pos (120,620)             
             repeat
 
-image FingerPussy_L: 
+image FingerPussy_Laura: 
     contains:
         subpixel True
         "UI_Finger"       
@@ -5022,7 +5006,7 @@ image FingerPussy_L:
                 ease .25 rotate 50 pos (140,700)
             repeat
             
-image Lickpussy_L:   
+image Lickpussy_Laura:   
     contains:
         subpixel True
         "UI_Tongue"        
@@ -5038,7 +5022,7 @@ image Lickpussy_L:
             easein 1 rotate 10 pos (155,650) #(230,625)
             repeat
 
-image VibratorRightBreast_L: 
+image VibratorRightBreast_Laura: 
     contains:
         subpixel True
         "UI_Vibrator"  
@@ -5054,7 +5038,7 @@ image VibratorRightBreast_L:
             pause .25
             repeat
 
-image VibratorLeftBreast_L: 
+image VibratorLeftBreast_Laura: 
     contains:
         subpixel True
         "UI_Vibrator"  
@@ -5070,7 +5054,7 @@ image VibratorLeftBreast_L:
             pause .25
             repeat
             
-image VibratorPussy_L: 
+image VibratorPussy_Laura: 
     contains:
         subpixel True
         "UI_Vibrator"  
@@ -5086,7 +5070,7 @@ image VibratorPussy_L:
             pause .25
             repeat
 
-image VibratorAnal_L: 
+image VibratorAnal_Laura: 
     contains:
         subpixel True
         "UI_Vibrator"  
@@ -5102,7 +5086,7 @@ image VibratorAnal_L:
             pause .25
             repeat
             
-image VibratorPussyInsert_L: 
+image VibratorPussyInsert_Laura: 
     contains:
         subpixel True
         "UI_Vibrator"  
@@ -5112,7 +5096,7 @@ image VibratorPussyInsert_L:
         alpha 0.5
         rotate 0
 
-image VibratorAnalInsert_L: 
+image VibratorAnalInsert_Laura: 
     contains:
         subpixel True
         "UI_Vibrator"  
@@ -5125,13 +5109,13 @@ image VibratorAnalInsert_L:
 
 
 #Lesbian action animations.
-image GirlGropeBothBreast_L: 
+image GirlGropeBothBreast_Laura: 
     contains:
-        "GirlGropeLeftBreast_L"
+        "GirlGropeLeftBreast_Laura"
     contains:
-        "GirlGropeRightBreast_L"
+        "GirlGropeRightBreast_Laura"
     
-image GirlGropeLeftBreast_L:  
+image GirlGropeLeftBreast_Laura:  
     contains:
         subpixel True
         "UI_GirlHand"
@@ -5145,7 +5129,7 @@ image GirlGropeLeftBreast_L:
             ease 1 rotate -10 pos (220,370)
             repeat
 
-image GirlGropeRightBreast_L:    
+image GirlGropeRightBreast_Laura:    
     contains:
         subpixel True
         "UI_GirlHand"
@@ -5160,7 +5144,7 @@ image GirlGropeRightBreast_L:
             ease 1 rotate -10 pos (90,370)
             repeat
 
-image GirlGropeThigh_L: 
+image GirlGropeThigh_Laura: 
     contains:
         subpixel True
         "UI_GirlHand"
@@ -5182,15 +5166,15 @@ image GirlGropeThigh_L:
             ease .5 xpos 210
             repeat
 
-image GirlGropePussy_LSelf:
+image GirlGropePussy_LauraSelf:
     contains:
-        "GirlGropePussy_L"
+        "GirlGropePussy_Laura"
         anchor (0.5,0.5)
         rotate -40
 #        yzoom -1
         pos (100,500) #(120,530)
     
-image GirlGropePussy_L: 
+image GirlGropePussy_Laura: 
     contains:
         subpixel True
         "UI_GirlHand"
@@ -5224,7 +5208,7 @@ image GirlGropePussy_L:
                 ease .3 rotate 200 pos (130,600)
             repeat
 
-image GirlFingerPussy_L: 
+image GirlFingerPussy_Laura: 
     contains:
         subpixel True
         "UI_GirlFinger"       
@@ -5258,539 +5242,539 @@ image GirlFingerPussy_L:
                 ease .3 rotate 200 ypos 630
             repeat
 
-# Start Laura Faces / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
-label LauraFace(Emote = L_Emote, B = L_Blush, M = 0, Mouth = 0, Eyes = 0, Brows = 0):
-        # Emote is the chosen emote, B is the lush state
-        # M is whether the character is in a  manic state                 
-        $ Emote = L_Emote if Emote == 5 else Emote
-        $ B = L_Blush if B == 5 else B
+## Start Laura Faces / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+#label LauraFace(Emote = LauraX.Emote, B = LauraX.Blush, M = 0, Mouth = 0, Eyes = 0, Brows = 0):
+#        # Emote is the chosen emote, B is the lush state
+#        # M is whether the character is in a  manic state                 
+#        $ Emote = LauraX.Emote if Emote == 5 else Emote
+#        $ B = LauraX.Blush if B == 5 else B
         
-        if (L_Forced or "angry" in L_RecentActions) and Emote in ("normal", "bemused", "sexy", "sly", "smile", "startled"):
-                $ Emote = "angry"     
-        elif L_ForcedCount > 0 and Emote in ("normal", "bemused", "sexy", "sly", "smile", "startled"):
-                $ Emote = "sad"  
+#        if (LauraX.Forced or "angry" in LauraX.RecentActions) and Emote in ("normal", "bemused", "sexy", "sly", "smile", "startled"):
+#                $ Emote = "angry"     
+#        elif LauraX.ForcedCount > 0 and Emote in ("normal", "bemused", "sexy", "sly", "smile", "startled"):
+#                $ Emote = "sad"  
             
-        if Emote == "normal":
-                $ L_Mouth = "normal"
-                $ L_Brows = "normal"
-                $ L_Eyes = "normal"
-        elif Emote == "angry":
-                $ L_Mouth = "kiss"
-                $ L_Brows = "angry"
-                $ L_Eyes = "sexy"
-        elif Emote == "bemused":
-                $ L_Mouth = "lipbite"
-                $ L_Brows = "sad"
-                $ L_Eyes = "squint"
-        elif Emote == "closed":
-                $ L_Mouth = "normal"
-                $ L_Brows = "sad"
-                $ L_Eyes = "closed"  
-        elif Emote == "confused":
-                $ L_Mouth = "kiss"
-                $ L_Brows = "confused"
-                $ L_Eyes = "squint"
-        elif Emote == "kiss":
-                $ L_Mouth = "kiss"
-                $ L_Brows = "sad"
-                $ L_Eyes = "closed"
-        elif Emote == "tongue":
-                $ L_Mouth = "tongue"
-                $ L_Brows = "sad"
-                $ L_Eyes = "stunned" #"stunned"
-        elif Emote == "manic":
-                $ L_Mouth = "lipbite"
-                $ L_Brows = "sad"
-                $ L_Eyes = "surprised"
-                $ L_Blush = 1
-        elif Emote == "sad":
-                $ L_Mouth = "sad"
-                $ L_Brows = "sad"
-                $ L_Eyes = "sexy"
-        elif Emote == "sadside":
-                $ L_Mouth = "sad"
-                $ L_Brows = "sad"
-                $ L_Eyes = "side"
-        elif Emote == "sexy":
-                $ L_Mouth = "lipbite"
-                $ L_Brows = "sad"
-                $ L_Eyes = "squint"
-        elif Emote == "smile":
-                if L_Love >= 700:
-                    $ L_Mouth = "smile"
-                else:
-                    $ L_Mouth = "smirk"                
-                $ L_Brows = "normal"
-                $ L_Eyes = "normal"
-        elif Emote == "sucking":
-                $ L_Mouth = "sucking"
-                $ L_Brows = "sad"
-                $ L_Eyes = "closed"
-        elif Emote == "surprised":
-                $ L_Mouth = "kiss"
-                $ L_Brows = "surprised"
-                $ L_Eyes = "surprised"
-        elif Emote == "startled":
-                $ L_Mouth = "smile"
-                $ L_Brows = "surprised"
-                $ L_Eyes = "surprised"
-        elif Emote == "down":
-                $ L_Mouth = "sad"
-                $ L_Brows = "sad"
-                $ L_Eyes = "down"  
-        elif Emote == "perplexed":
-                $ L_Mouth = "smile"
-                $ L_Brows = "sad"
-                $ L_Eyes = "surprised"
-        elif Emote == "sly":
-                if L_Love >= 700:
-                    $ L_Mouth = "smile"
-                else:
-                    $ L_Mouth = "smirk" 
-                $ L_Brows = "confused"
-                $ L_Eyes = "squint"
+#        if Emote == "normal":
+#                $ LauraX.Mouth = "normal"
+#                $ LauraX.Brows = "normal"
+#                $ LauraX.Eyes = "normal"
+#        elif Emote == "angry":
+#                $ LauraX.Mouth = "kiss"
+#                $ LauraX.Brows = "angry"
+#                $ LauraX.Eyes = "sexy"
+#        elif Emote == "bemused":
+#                $ LauraX.Mouth = "lipbite"
+#                $ LauraX.Brows = "sad"
+#                $ LauraX.Eyes = "squint"
+#        elif Emote == "closed":
+#                $ LauraX.Mouth = "normal"
+#                $ LauraX.Brows = "sad"
+#                $ LauraX.Eyes = "closed"  
+#        elif Emote == "confused":
+#                $ LauraX.Mouth = "kiss"
+#                $ LauraX.Brows = "confused"
+#                $ LauraX.Eyes = "squint"
+#        elif Emote == "kiss":
+#                $ LauraX.Mouth = "kiss"
+#                $ LauraX.Brows = "sad"
+#                $ LauraX.Eyes = "closed"
+#        elif Emote == "tongue":
+#                $ LauraX.Mouth = "tongue"
+#                $ LauraX.Brows = "sad"
+#                $ LauraX.Eyes = "stunned" #"stunned"
+#        elif Emote == "manic":
+#                $ LauraX.Mouth = "lipbite"
+#                $ LauraX.Brows = "sad"
+#                $ LauraX.Eyes = "surprised"
+#                $ LauraX.Blush = 1
+#        elif Emote == "sad":
+#                $ LauraX.Mouth = "sad"
+#                $ LauraX.Brows = "sad"
+#                $ LauraX.Eyes = "sexy"
+#        elif Emote == "sadside":
+#                $ LauraX.Mouth = "sad"
+#                $ LauraX.Brows = "sad"
+#                $ LauraX.Eyes = "side"
+#        elif Emote == "sexy":
+#                $ LauraX.Mouth = "lipbite"
+#                $ LauraX.Brows = "sad"
+#                $ LauraX.Eyes = "squint"
+#        elif Emote == "smile":
+#                if LauraX.Love >= 700:
+#                    $ LauraX.Mouth = "smile"
+#                else:
+#                    $ LauraX.Mouth = "smirk"                
+#                $ LauraX.Brows = "normal"
+#                $ LauraX.Eyes = "normal"
+#        elif Emote == "sucking":
+#                $ LauraX.Mouth = "sucking"
+#                $ LauraX.Brows = "sad"
+#                $ LauraX.Eyes = "closed"
+#        elif Emote == "surprised":
+#                $ LauraX.Mouth = "kiss"
+#                $ LauraX.Brows = "surprised"
+#                $ LauraX.Eyes = "surprised"
+#        elif Emote == "startled":
+#                $ LauraX.Mouth = "smile"
+#                $ LauraX.Brows = "surprised"
+#                $ LauraX.Eyes = "surprised"
+#        elif Emote == "down":
+#                $ LauraX.Mouth = "sad"
+#                $ LauraX.Brows = "sad"
+#                $ LauraX.Eyes = "down"  
+#        elif Emote == "perplexed":
+#                $ LauraX.Mouth = "smile"
+#                $ LauraX.Brows = "sad"
+#                $ LauraX.Eyes = "surprised"
+#        elif Emote == "sly":
+#                if LauraX.Love >= 700:
+#                    $ LauraX.Mouth = "smile"
+#                else:
+#                    $ LauraX.Mouth = "smirk" 
+#                $ LauraX.Brows = "confused"
+#                $ LauraX.Eyes = "squint"
             
-        if M:
-                $ L_Eyes = "surprised"        
-        if B > 1:
-                $ L_Blush = 2
-        elif B:
-                $ L_Blush = 1
-        else:
-                $ L_Blush = 0
+#        if M:
+#                $ LauraX.Eyes = "surprised"        
+#        if B > 1:
+#                $ LauraX.Blush = 2
+#        elif B:
+#                $ LauraX.Blush = 1
+#        else:
+#                $ LauraX.Blush = 0
         
-        if Mouth:
-                $ L_Mouth = Mouth
-        if Eyes:
-                $ L_Eyes = Eyes
-        if Brows:
-                $ L_Brows = Brows
+#        if Mouth:
+#                $ LauraX.Mouth = Mouth
+#        if Eyes:
+#                $ LauraX.Eyes = Eyes
+#        if Brows:
+#                $ LauraX.Brows = Brows
         
-        return
+#        return
         
         
-# Laura's Wardrobe //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-label LauraWardrobe:
-    menu:      
-        "View":
-            while True:
-                menu:
-                    "Default":
-                        call L_Pos_Reset
-                    "Face":
-                        call L_Kissing_Launch(0)
-                    "Body":
-                        call L_Pussy_Launch(0)
-                    "Back":
-                        jump LauraWardrobe 
-        # Outfits
-#        "Teacher outfit":
-#            $ L_Outfit = "teacher"
-#            call LauraOutfit
-#        "Super outfit":
-#            $ L_Outfit = "costume"
-#            call LauraOutfit
-        "Nude":
-            $ L_Over = 0
-            $ L_Chest = 0
-            $ L_Legs = 0
-            $ L_Panties = 0
-            $ L_Gloves = 0
-            $ L_Neck = 0
-#            $ L_Outfit = "nude"
-#            call LauraOutfit
-        "Over":              
-            while True:
-                menu:
-                    # Overshirts    
-                    "Remove [L_Over]" if L_Over:
-                        $ L_Over = 0
-                    "Add Jacket":
-                        $ L_Over = "jacket"  
-                    "Add Towel":
-                        $ L_Over = "towel" 
-                    "Toggle up-top":
-                        if L_Uptop:
-                            $ L_Uptop = 0
-                        else:
-                            $ L_Uptop = 1   
-                    "Back":
-                        jump LauraWardrobe                
-        "Chests":            
-            while True:
-                menu:
-                    # Tops    
-                    "Remove [L_Chest]" if L_Chest:
-                        $ L_Chest = 0
-                    "Add leather bra":
-                        $ L_Chest = "leather bra"
-                    "Add wolvie top":
-                        $ L_Chest = "wolvie top"
-                    "Add bikini top":
-                        $ L_Chest = "bikini top"
-                    "Add corset":
-                        $ L_Chest = "corset"
-                    "Add lace corset":
-                        $ L_Chest = "lace corset"                       
-                    "Toggle Piercings":
-                        if L_Pierce == "ring":
-                            $ L_Pierce = "barbell"
-                        elif L_Pierce == "barbell":
-                            $ L_Pierce = 0
-                        else:
-                            $ L_Pierce = "ring"
-                    "Toggle up-top":
-                        if L_Uptop:
-                            $ L_Uptop = 0
-                        else:
-                            $ L_Uptop = 1   
-                    "Back":
-                        jump LauraWardrobe             
-        
-        "Legs":            
-            while True:
-                menu:
-                    # Legs   
-                    "Remove legs" if L_Legs:     
-                        $ L_Legs = 0
-                    "Add leather pants":
-                        $ L_Legs = "leather pants"
-                        $ L_Upskirt = 0
-                    "Add mesh pants":
-                        $ L_Legs = "mesh pants"
-                        $ L_Upskirt = 0
-                    "Add skirt":
-                        $ L_Legs = "skirt"
-                    "Toggle upskirt":
-                        if L_Upskirt:
-                            $ L_Upskirt = 0
-                        else:
-                            $ L_Upskirt = 1
-                    "Back":
-                        jump LauraWardrobe    
-        
-        "Underwear":            
-            while True:
-                menu:
-                    # Underwear
-                    "Hose":
-                        menu:
-                            "Add hose":     
-                                $ L_Hose = "stockings"  
-                            "Add garter":     
-                                $ L_Hose = "garterbelt"  
-                            "Add stockings and garter":     
-                                $ L_Hose = "stockings and garterbelt"  
-#                            "Add pantyhose":     
-#                                $ L_Hose = "pantyhose"   
-#                            "Add tights":     
-#                                $ L_Hose = "tights"   
-#                            "Add ripped hose":     
-#                                $ L_Hose = "ripped pantyhose"   
-#                            "Add ripped tights":     
-#                                $ L_Hose = "ripped tights"   
-#                            "Add tights":     
-#                                $ L_Hose = "tights"    
-                            "Remove hose" if L_Hose:     
-                                $ L_Hose = 0  
-
-#                    "toggle boots":    
-#                        if not L_Boots:
-#                            $ L_Boots = "thigh boots"   
+## Laura's Wardrobe //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#label LauraWardrobe:
+#    menu:      
+#        "View":
+#            while True:
+#                menu:
+#                    "Default":
+#                        call Laura_Pos_Reset
+#                    "Face":
+#                        call Laura_Kissing_Launch(0)
+#                    "Body":
+#                        call Laura_Pussy_Launch(0)
+#                    "Back":
+#                        jump LauraWardrobe 
+#        # Outfits
+##        "Teacher outfit":
+##            $ LauraX.Outfit = "teacher"
+##            call LauraOutfit
+##        "Super outfit":
+##            $ LauraX.Outfit = "costume"
+##            call LauraOutfit
+#        "Nude":
+#            $ LauraX.Over = 0
+#            $ LauraX.Chest = 0
+#            $ LauraX.Legs = 0
+#            $ LauraX.Panties = 0
+#            $ LauraX.Gloves = 0
+#            $ LauraX.Neck = 0
+##            $ LauraX.Outfit = "nude"
+##            call LauraOutfit
+#        "Over":              
+#            while True:
+#                menu:
+#                    # Overshirts    
+#                    "Remove [LauraX.Over]" if LauraX.Over:
+#                        $ LauraX.Over = 0
+#                    "Add Jacket":
+#                        $ LauraX.Over = "jacket"  
+#                    "Add Towel":
+#                        $ LauraX.Over = "towel" 
+#                    "Toggle up-top":
+#                        if LauraX.Uptop:
+#                            $ LauraX.Uptop = 0
 #                        else:
-#                            $ L_Boots = 0     
-                        
-                    "Remove panties" if L_Panties:     
-                        $ L_Panties = 0     
-                    "Add black panties":
-                        $ L_Panties = "black panties"
-#                    "Add shorts":
-#                        $ L_Panties = "shorts"
-                    "Add wolvie panties":
-                        $ L_Panties = "wolvie panties"  
-                    "Add bikini bottoms":
-                        $ L_Panties = "bikini bottoms"  
-                    "Add lace panties":
-                        $ L_Panties = "lace panties"    
-                    "pull down-up panties":
-                        if L_PantiesDown:
-                            $ L_PantiesDown = 0
-                        else:
-                            $ L_PantiesDown = 1
-                    "Back":
-                        jump LauraWardrobe    
-        "Face":
-            while True:
-                menu: 
-                    "Brows=[L_Brows], Eyes=[L_Eyes], Mouth=[L_Mouth]"
-                    "Emotions":
-                            call LauraEmotionEditor
-                    "Toggle Brows":
-                            if L_Brows == "normal":
-                                $ L_Brows = "angry"
-                            elif L_Brows == "angry":
-                                $ L_Brows = "confused"
-                            elif L_Brows == "confused":
-                                $ L_Brows = "sad"
-                            elif L_Brows == "sad":
-                                $ L_Brows = "surprised"
-                            else:
-                                $ L_Brows = "normal"
-                    "Toggle Eyes Emotions":
-                            if L_Eyes == "normal":                          
-                                $ L_Eyes = "surprised"
-                            elif L_Eyes == "surprised":
-                                $ L_Eyes = "sexy"
-                            elif L_Eyes == "sexy":
-                                $ L_Eyes = "squint"
-                            elif L_Eyes == "squint":
-                                $ L_Eyes = "closed"
-                            else:
-                                $ L_Eyes = "normal"
-                    "Toggle Eyes Directions":
-                            if L_Eyes == "normal":
-                                $ L_Eyes = "side"
-                            elif L_Eyes == "side":
-                                $ L_Eyes = "down"
-                            elif L_Eyes == "down":
-                                $ L_Eyes = "leftside"
-                            elif L_Eyes == "leftside":
-                                $ L_Eyes = "stunned"
-                            else:
-                                $ L_Eyes = "normal"  
-                    "Toggle Mouth Normal":
-                            if L_Mouth  == "normal":
-                                $ L_Mouth = "sad"
-                            elif L_Mouth == "sad":
-                                $ L_Mouth = "smile"
-                            elif L_Mouth == "smile":
-                                $ L_Mouth = "surprised"
-                            else:
-                                $ L_Mouth = "normal"  
-                    "Toggle Mouth Sexy":
-                            if L_Mouth  == "normal":
-                                $ L_Mouth = "kiss"
-                            elif L_Mouth == "kiss":
-                                $ L_Mouth = "sucking"
-                            elif L_Mouth == "sucking":
-                                $ L_Mouth = "tongue"
-                            elif L_Mouth == "tongue":
-                                $ L_Mouth = "lipbite"
-                            else:
-                                $ L_Mouth = "normal"  
-                    "Toggle Blush":
-                        if L_Blush == 1:
-                            $ L_Blush = 2
-                        elif L_Blush:
-                            $ L_Blush = 0
-                        else:
-                            $ L_Blush = 1
-                            
-                    "Back":
-                            jump LauraWardrobe    
-        "Misc":
-            while True:
-                menu: 
-                    "Toggle Arm pose":
-                        if Laura_Arms == 1:
-                            $ Laura_Arms = 2
-                        else:
-                            $ Laura_Arms = 1
-                    "Toggle Claws":
-                        if L_Claws:
-                            $ L_Claws = 0
-                        else:
-                            $ L_Claws = 1
-                    "Toggle Wetness" if True:
-                        if not L_Wet:
-                            $ L_Wet = 1
-                        elif L_Wet == 1:
-                            $ L_Wet = 2
-                        else:
-                            $ L_Wet  = 0
-                    "Toggle wet look" if True:
-                        if not L_Water:
-                            $ L_Water = 1
-                        elif L_Water == 1:
-                            $ L_Water = 3
-                        else:
-                            $ L_Water  = 0
-                    "Toggle pubes":
-                        if not L_Pubes:
-                            $ L_Pubes = 1
-                        else:
-                            $ L_Pubes = 0
-                    "Spunk":
-                        menu:                            
-                            "Toggle Mouth Spunk":
-                                if "mouth" in L_Spunk:
-                                    $ L_Spunk.remove("mouth")
-                                else:
-                                    $ L_Spunk.append("mouth")
-                            "Toggle hand Spunk":
-                                if "hand" in L_Spunk:
-                                    $ L_Spunk.remove("hand")
-                                else:
-                                    $ L_Spunk.append("hand")                                    
-                            "Toggle Facial Spunk":
-                                if "facial" in L_Spunk and "hair" not in L_Spunk:
-                                    $ L_Spunk.append("hair")
-                                elif "facial" in L_Spunk:
-                                    $ L_Spunk.remove("facial")                
-                                    $ L_Spunk.remove("hair")
-                                else:
-                                    $ L_Spunk.append("facial")                
-                            "Toggle Pussy Spunk" if True:
-                                if "in" in L_Spunk:
-                                    $ L_Spunk.remove("in")
-                                else:
-                                    $ L_Spunk.append("in")             
-                            "Toggle Anal Spunk" if True:
-                                if "anal" in L_Spunk:
-                                    $ L_Spunk.remove("anal")
-                                else:
-                                    $ L_Spunk.append("anal")        
-                            "Toggle Belly Spunk" if True:
-                                if "belly" in L_Spunk:
-                                    $ L_Spunk.remove("belly")
-                                else:
-                                    $ L_Spunk.append("belly")        
-                            "Toggle Tits Spunk" if True:
-                                if "tits" in L_Spunk:
-                                    $ L_Spunk.remove("tits")
-                                else:
-                                    $ L_Spunk.append("tits")
-                    "Toggle Piercings":
-                        if L_Pierce == "ring":
-                            $ L_Pierce = "barbell"
-                        elif L_Pierce == "barbell":
-                            $ L_Pierce = 0
-                        else:
-                            $ L_Pierce = "ring"
-                    "Add leash choker" if not L_Neck:
-                        $ L_Neck = "leash choker"
-                    "Remove choker" if L_Neck:
-                        $ L_Neck = 0
-                        
-                    "Add wristbands" if not L_Arms:
-                        $ L_Arms = "wrists"
-                    "Remove Gloves" if L_Arms:
-                        $ L_Arms = 0
-                    "Back":
-                        jump LauraWardrobe               
-#        "Set Custom Outfit #1.":
-#            $ L_Custom[0] = 1
-#            $ L_Custom[1] = L_Arms
-#            $ L_Custom[2] = L_Legs
-#            $ L_Custom[3] = L_Over
-#            $ L_Custom[4] = L_Under #fix, this can be changed to something else, no longer necessary
-#            $ L_Custom[5] = L_Chest
-#            $ L_Custom[6] = L_Panties 
-#            $ L_Custom[7] = L_Pubes 
-#            $ L_Custom[8] = L_Hair
-#            $ L_Custom[9] = L_Hose
-#        "Wear Custom Outfit #[L_Custom[0]]." if L_Custom[0]:
-#            $ Line = L_Outfit
-#            $ L_Outfit = "custom1"
-#            call RogueOutfit
-#            $ L_Outfit = Line
-        "Nothing":
-            return
-    jump LauraWardrobe
-return
+#                            $ LauraX.Uptop = 1   
+#                    "Back":
+#                        jump LauraWardrobe                
+#        "Chests":            
+#            while True:
+#                menu:
+#                    # Tops    
+#                    "Remove [LauraX.Chest]" if LauraX.Chest:
+#                        $ LauraX.Chest = 0
+#                    "Add leather bra":
+#                        $ LauraX.Chest = "leather bra"
+#                    "Add wolvie top":
+#                        $ LauraX.Chest = "wolvie top"
+#                    "Add bikini top":
+#                        $ LauraX.Chest = "bikini top"
+#                    "Add corset":
+#                        $ LauraX.Chest = "corset"
+#                    "Add lace corset":
+#                        $ LauraX.Chest = "lace corset"                       
+#                    "Toggle Piercings":
+#                        if LauraX.Pierce == "ring":
+#                            $ LauraX.Pierce = "barbell"
+#                        elif LauraX.Pierce == "barbell":
+#                            $ LauraX.Pierce = 0
+#                        else:
+#                            $ LauraX.Pierce = "ring"
+#                    "Toggle up-top":
+#                        if LauraX.Uptop:
+#                            $ LauraX.Uptop = 0
+#                        else:
+#                            $ LauraX.Uptop = 1   
+#                    "Back":
+#                        jump LauraWardrobe             
+        
+#        "Legs":            
+#            while True:
+#                menu:
+#                    # Legs   
+#                    "Remove legs" if LauraX.Legs:     
+#                        $ LauraX.Legs = 0
+#                    "Add leather pants":
+#                        $ LauraX.Legs = "leather pants"
+#                        $ LauraX.Upskirt = 0
+#                    "Add mesh pants":
+#                        $ LauraX.Legs = "mesh pants"
+#                        $ LauraX.Upskirt = 0
+#                    "Add skirt":
+#                        $ LauraX.Legs = "skirt"
+#                    "Toggle upskirt":
+#                        if LauraX.Upskirt:
+#                            $ LauraX.Upskirt = 0
+#                        else:
+#                            $ LauraX.Upskirt = 1
+#                    "Back":
+#                        jump LauraWardrobe    
+        
+#        "Underwear":            
+#            while True:
+#                menu:
+#                    # Underwear
+#                    "Hose":
+#                        menu:
+#                            "Add hose":     
+#                                $ LauraX.Hose = "stockings"  
+#                            "Add garter":     
+#                                $ LauraX.Hose = "garterbelt"  
+#                            "Add stockings and garter":     
+#                                $ LauraX.Hose = "stockings and garterbelt"  
+##                            "Add pantyhose":     
+##                                $ LauraX.Hose = "pantyhose"   
+##                            "Add tights":     
+##                                $ LauraX.Hose = "tights"   
+##                            "Add ripped hose":     
+##                                $ LauraX.Hose = "ripped pantyhose"   
+##                            "Add ripped tights":     
+##                                $ LauraX.Hose = "ripped tights"   
+##                            "Add tights":     
+##                                $ LauraX.Hose = "tights"    
+#                            "Remove hose" if LauraX.Hose:     
+#                                $ LauraX.Hose = 0  
 
-label LauraEmotionEditor(CountStore = "normal"):
-    menu:
-        "Emotions1: Normal Angry Smiling Sexy Surprised Bemused Manic.":        
-            menu:
-                "Normal":
-                    $ L_Emote = "normal"
-                    call LauraFace
-                "Angry":
-                    $ L_Emote = "angry"
-                    call LauraFace
-                "Smiling":
-                    $ L_Emote = "smile"
-                    call LauraFace
-                "Sexy":
-                    $ L_Emote = "sexy"
-                    call LauraFace
-                "Suprised":
-                    $ L_Emote = "surprised"
-                    call LauraFace
-                "Bemused":
-                    $ L_Emote = "bemused"
-                    call LauraFace
-                "Manic":
-                    $ L_Emote = "manic"
-                    call LauraFace
+##                    "toggle boots":    
+##                        if not LauraX.Boots:
+##                            $ LauraX.Boots = "thigh boots"   
+##                        else:
+##                            $ LauraX.Boots = 0     
+                        
+#                    "Remove panties" if LauraX.Panties:     
+#                        $ LauraX.Panties = 0     
+#                    "Add black panties":
+#                        $ LauraX.Panties = "black panties"
+##                    "Add shorts":
+##                        $ LauraX.Panties = "shorts"
+#                    "Add wolvie panties":
+#                        $ LauraX.Panties = "wolvie panties"  
+#                    "Add bikini bottoms":
+#                        $ LauraX.Panties = "bikini bottoms"  
+#                    "Add lace panties":
+#                        $ LauraX.Panties = "lace panties"    
+#                    "pull down-up panties":
+#                        if LauraX.PantiesDown:
+#                            $ LauraX.PantiesDown = 0
+#                        else:
+#                            $ LauraX.PantiesDown = 1
+#                    "Back":
+#                        jump LauraWardrobe    
+#        "Face":
+#            while True:
+#                menu: 
+#                    "Brows=[LauraX.Brows], Eyes=[LauraX.Eyes], Mouth=[LauraX.Mouth]"
+#                    "Emotions":
+#                            call LauraEmotionEditor
+#                    "Toggle Brows":
+#                            if LauraX.Brows == "normal":
+#                                $ LauraX.Brows = "angry"
+#                            elif LauraX.Brows == "angry":
+#                                $ LauraX.Brows = "confused"
+#                            elif LauraX.Brows == "confused":
+#                                $ LauraX.Brows = "sad"
+#                            elif LauraX.Brows == "sad":
+#                                $ LauraX.Brows = "surprised"
+#                            else:
+#                                $ LauraX.Brows = "normal"
+#                    "Toggle Eyes Emotions":
+#                            if LauraX.Eyes == "normal":                          
+#                                $ LauraX.Eyes = "surprised"
+#                            elif LauraX.Eyes == "surprised":
+#                                $ LauraX.Eyes = "sexy"
+#                            elif LauraX.Eyes == "sexy":
+#                                $ LauraX.Eyes = "squint"
+#                            elif LauraX.Eyes == "squint":
+#                                $ LauraX.Eyes = "closed"
+#                            else:
+#                                $ LauraX.Eyes = "normal"
+#                    "Toggle Eyes Directions":
+#                            if LauraX.Eyes == "normal":
+#                                $ LauraX.Eyes = "side"
+#                            elif LauraX.Eyes == "side":
+#                                $ LauraX.Eyes = "down"
+#                            elif LauraX.Eyes == "down":
+#                                $ LauraX.Eyes = "leftside"
+#                            elif LauraX.Eyes == "leftside":
+#                                $ LauraX.Eyes = "stunned"
+#                            else:
+#                                $ LauraX.Eyes = "normal"  
+#                    "Toggle Mouth Normal":
+#                            if LauraX.Mouth  == "normal":
+#                                $ LauraX.Mouth = "sad"
+#                            elif LauraX.Mouth == "sad":
+#                                $ LauraX.Mouth = "smile"
+#                            elif LauraX.Mouth == "smile":
+#                                $ LauraX.Mouth = "surprised"
+#                            else:
+#                                $ LauraX.Mouth = "normal"  
+#                    "Toggle Mouth Sexy":
+#                            if LauraX.Mouth  == "normal":
+#                                $ LauraX.Mouth = "kiss"
+#                            elif LauraX.Mouth == "kiss":
+#                                $ LauraX.Mouth = "sucking"
+#                            elif LauraX.Mouth == "sucking":
+#                                $ LauraX.Mouth = "tongue"
+#                            elif LauraX.Mouth == "tongue":
+#                                $ LauraX.Mouth = "lipbite"
+#                            else:
+#                                $ LauraX.Mouth = "normal"  
+#                    "Toggle Blush":
+#                        if LauraX.Blush == 1:
+#                            $ LauraX.Blush = 2
+#                        elif LauraX.Blush:
+#                            $ LauraX.Blush = 0
+#                        else:
+#                            $ LauraX.Blush = 1
+                            
+#                    "Back":
+#                            jump LauraWardrobe    
+#        "Misc":
+#            while True:
+#                menu: 
+#                    "Toggle Arm pose":
+#                        if LauraX.ArmPose == 1:
+#                            $ LauraX.ArmPose = 2
+#                        else:
+#                            $ LauraX.ArmPose = 1
+#                    "Toggle Claws":
+#                        if LauraX.Claws:
+#                            $ LauraX.Claws = 0
+#                        else:
+#                            $ LauraX.Claws = 1
+#                    "Toggle Wetness" if True:
+#                        if not LauraX.Wet:
+#                            $ LauraX.Wet = 1
+#                        elif LauraX.Wet == 1:
+#                            $ LauraX.Wet = 2
+#                        else:
+#                            $ LauraX.Wet  = 0
+#                    "Toggle wet look" if True:
+#                        if not LauraX.Water:
+#                            $ LauraX.Water = 1
+#                        elif LauraX.Water == 1:
+#                            $ LauraX.Water = 3
+#                        else:
+#                            $ LauraX.Water  = 0
+#                    "Toggle pubes":
+#                        if not LauraX.Pubes:
+#                            $ LauraX.Pubes = 1
+#                        else:
+#                            $ LauraX.Pubes = 0
+#                    "Spunk":
+#                        menu:                            
+#                            "Toggle Mouth Spunk":
+#                                if "mouth" in LauraX.Spunk:
+#                                    $ LauraX.Spunk.remove("mouth")
+#                                else:
+#                                    $ LauraX.Spunk.append("mouth")
+#                            "Toggle hand Spunk":
+#                                if "hand" in LauraX.Spunk:
+#                                    $ LauraX.Spunk.remove("hand")
+#                                else:
+#                                    $ LauraX.Spunk.append("hand")                                    
+#                            "Toggle Facial Spunk":
+#                                if "facial" in LauraX.Spunk and "hair" not in LauraX.Spunk:
+#                                    $ LauraX.Spunk.append("hair")
+#                                elif "facial" in LauraX.Spunk:
+#                                    $ LauraX.Spunk.remove("facial")                
+#                                    $ LauraX.Spunk.remove("hair")
+#                                else:
+#                                    $ LauraX.Spunk.append("facial")                
+#                            "Toggle Pussy Spunk" if True:
+#                                if "in" in LauraX.Spunk:
+#                                    $ LauraX.Spunk.remove("in")
+#                                else:
+#                                    $ LauraX.Spunk.append("in")             
+#                            "Toggle Anal Spunk" if True:
+#                                if "anal" in LauraX.Spunk:
+#                                    $ LauraX.Spunk.remove("anal")
+#                                else:
+#                                    $ LauraX.Spunk.append("anal")        
+#                            "Toggle Belly Spunk" if True:
+#                                if "belly" in LauraX.Spunk:
+#                                    $ LauraX.Spunk.remove("belly")
+#                                else:
+#                                    $ LauraX.Spunk.append("belly")        
+#                            "Toggle Tits Spunk" if True:
+#                                if "tits" in LauraX.Spunk:
+#                                    $ LauraX.Spunk.remove("tits")
+#                                else:
+#                                    $ LauraX.Spunk.append("tits")
+#                    "Toggle Piercings":
+#                        if LauraX.Pierce == "ring":
+#                            $ LauraX.Pierce = "barbell"
+#                        elif LauraX.Pierce == "barbell":
+#                            $ LauraX.Pierce = 0
+#                        else:
+#                            $ LauraX.Pierce = "ring"
+#                    "Add leash choker" if not LauraX.Neck:
+#                        $ LauraX.Neck = "leash choker"
+#                    "Remove choker" if LauraX.Neck:
+#                        $ LauraX.Neck = 0
+                        
+#                    "Add wristbands" if not LauraX.Arms:
+#                        $ LauraX.Arms = "wrists"
+#                    "Remove Gloves" if LauraX.Arms:
+#                        $ LauraX.Arms = 0
+#                    "Back":
+#                        jump LauraWardrobe               
+##        "Set Custom Outfit #1.":
+##            $ LauraX.Custom[0] = 1
+##            $ LauraX.Custom[1] = LauraX.Arms
+##            $ LauraX.Custom[2] = LauraX.Legs
+##            $ LauraX.Custom[3] = LauraX.Over
+##            $ LauraX.Custom[4] = LauraX.Under #fix, this can be changed to something else, no longer necessary
+##            $ LauraX.Custom[5] = LauraX.Chest
+##            $ LauraX.Custom[6] = LauraX.Panties 
+##            $ LauraX.Custom[7] = LauraX.Pubes 
+##            $ LauraX.Custom[8] = LauraX.Hair
+##            $ LauraX.Custom[9] = LauraX.Hose
+##        "Wear Custom Outfit #[LauraX.Custom[0]]." if LauraX.Custom[0]:
+##            $ Line = LauraX.Outfit
+##            $ LauraX.Outfit = "custom1"
+##            call RogueOutfit
+##            $ LauraX.Outfit = Line
+#        "Nothing":
+#            return
+#    jump LauraWardrobe
+#return
+
+#label LauraEmotionEditor(CountStore = "normal"):
+#    menu:
+#        "Emotions1: Normal Angry Smiling Sexy Surprised Bemused Manic.":        
+#            menu:
+#                "Normal":
+#                    $ LauraX.Emote = "normal"
+#                    call LauraFace
+#                "Angry":
+#                    $ LauraX.Emote = "angry"
+#                    call LauraFace
+#                "Smiling":
+#                    $ LauraX.Emote = "smile"
+#                    call LauraFace
+#                "Sexy":
+#                    $ LauraX.Emote = "sexy"
+#                    call LauraFace
+#                "Suprised":
+#                    $ LauraX.Emote = "surprised"
+#                    call LauraFace
+#                "Bemused":
+#                    $ LauraX.Emote = "bemused"
+#                    call LauraFace
+#                "Manic":
+#                    $ LauraX.Emote = "manic"
+#                    call LauraFace
                     
-        "Emotions2: Sad Sucking Kiss Tongue Confused Closed Down.":  
-            menu:
-                "Sad":
-                    $ L_Emote = "sad"
-                    call LauraFace
-                "Sucking":
-                    $ L_Emote = "sucking"
-                    call LauraFace
-                "kiss":
-                    $ L_Emote = "kiss"
-                    call LauraFace
-                "Tongue":
-                    $ L_Emote = "tongue"
-                    call LauraFace
-                "confused":
-                    $ L_Emote = "confused"
-                    call LauraFace
-                "Closed":
-                    $ L_Emote = "closed"
-                    call LauraFace
-                "Down":
-                    $ L_Emote = "down"
-                    call LauraFace
+#        "Emotions2: Sad Sucking Kiss Tongue Confused Closed Down.":  
+#            menu:
+#                "Sad":
+#                    $ LauraX.Emote = "sad"
+#                    call LauraFace
+#                "Sucking":
+#                    $ LauraX.Emote = "sucking"
+#                    call LauraFace
+#                "kiss":
+#                    $ LauraX.Emote = "kiss"
+#                    call LauraFace
+#                "Tongue":
+#                    $ LauraX.Emote = "tongue"
+#                    call LauraFace
+#                "confused":
+#                    $ LauraX.Emote = "confused"
+#                    call LauraFace
+#                "Closed":
+#                    $ LauraX.Emote = "closed"
+#                    call LauraFace
+#                "Down":
+#                    $ LauraX.Emote = "down"
+#                    call LauraFace
                     
-        "Emotions3: Sadside Startled Perplexed Sly":  
-            menu:
-                "Sadside":
-                    $ L_Emote = "sadside"
-                    call LauraFace
-                "Startled":
-                    $ L_Emote = "startled"
-                    call LauraFace
-                "Perplexed":
-                    $ L_Emote = "perplexed"
-                    call LauraFace
-                "Sly":
-                    $ L_Emote = "sly"
-                    call LauraFace
-        "Toggle Mouth Spunk":
-            if "mouth" in L_Spunk:
-                $ L_Spunk.remove("mouth")
-            else:
-                $ L_Spunk.append("mouth")
-        "Toggle hand Spunk":
-            if "hand" in L_Spunk:
-                $ L_Spunk.remove("hand")
-            else:
-                $ L_Spunk.append("hand")
+#        "Emotions3: Sadside Startled Perplexed Sly":  
+#            menu:
+#                "Sadside":
+#                    $ LauraX.Emote = "sadside"
+#                    call LauraFace
+#                "Startled":
+#                    $ LauraX.Emote = "startled"
+#                    call LauraFace
+#                "Perplexed":
+#                    $ LauraX.Emote = "perplexed"
+#                    call LauraFace
+#                "Sly":
+#                    $ LauraX.Emote = "sly"
+#                    call LauraFace
+#        "Toggle Mouth Spunk":
+#            if "mouth" in LauraX.Spunk:
+#                $ LauraX.Spunk.remove("mouth")
+#            else:
+#                $ LauraX.Spunk.append("mouth")
+#        "Toggle hand Spunk":
+#            if "hand" in LauraX.Spunk:
+#                $ LauraX.Spunk.remove("hand")
+#            else:
+#                $ LauraX.Spunk.append("hand")
                 
-        "Toggle Facial Spunk":
-            if "facial" in L_Spunk and "hair" not in L_Spunk:
-                $ L_Spunk.append("hair")
-            elif "facial" in L_Spunk:
-                $ L_Spunk.remove("facial")                
-                $ L_Spunk.remove("hair")
-            else:
-                $ L_Spunk.append("facial")
+#        "Toggle Facial Spunk":
+#            if "facial" in LauraX.Spunk and "hair" not in LauraX.Spunk:
+#                $ LauraX.Spunk.append("hair")
+#            elif "facial" in LauraX.Spunk:
+#                $ LauraX.Spunk.remove("facial")                
+#                $ LauraX.Spunk.remove("hair")
+#            else:
+#                $ LauraX.Spunk.append("facial")
             
-        "Blush":
-            if L_Blush == 2:
-                $ L_Blush = 0
-            elif L_Blush:
-                $ L_Blush = 2
-            else:
-                $ L_Blush = 1  
-        "Exit.":
-            return
-    jump LauraEmotionEditor
+#        "Blush":
+#            if LauraX.Blush == 2:
+#                $ LauraX.Blush = 0
+#            elif LauraX.Blush:
+#                $ LauraX.Blush = 2
+#            else:
+#                $ LauraX.Blush = 1  
+#        "Exit.":
+#            return
+#    jump LauraEmotionEditor
 return

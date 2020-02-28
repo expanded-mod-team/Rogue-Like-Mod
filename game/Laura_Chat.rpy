@@ -1,393 +1,180 @@
 ﻿# star Laura chat interface
-label Laura_Chat_Set(Preset=0):
-    if "met" not in L_History:
-            "Who?"
-            return    
-    if "Laura" not in Digits and L_Loc != bg_current and "Laura" not in Nearby:
-            "You don't have her number."
-            return
-    if Preset:   
-            ch_p "Hey [LauraName]. . ."
-            call Shift_Focus("Laura")
-            if L_Loc != bg_current:
-                        show Cellphone at SpriteLoc(StageLeft)
-            else:
-                        hide Cellphone            
-            if Preset == "chat":
-                    $ renpy.pop_call() #removes the call to chat subroutine
-                    $ renpy.pop_call() #This removes the callback to the previous chat session
-            elif Preset == "settings":
-                    $ renpy.pop_call() #This removes the callback to the previous chat session
-                    $ renpy.pop_call() #this removes the callback to the previous settings menu testing. . .
-                    call Laura_Settings  
-            elif Preset == "wardrobe":
-                    $ renpy.pop_call() #This removes the callback to the previous chat session
-                    $ renpy.pop_call() #this removes the callback to the previous settings menu
-                    $ renpy.pop_call() #this removes the callback to the previous settings menu testing. . .
-                    ch_p "I wanted to talk about your outfit. . ."
-                    call Taboo_Level
-                    if L_Taboo:
-                            if "exhibitionist" in L_Traits:
-                                ch_l "Yes? . ."  
-                            elif ApprovalCheck("Laura", 900, TabM=4) or ApprovalCheck("Laura", 400, "I", TabM=3): 
-                                ch_l "I don't think I'm supposed to undress around here. . ."
-                            else:
-                                ch_l "I don't think I'm supposed to undress around here. . ."
-                                ch_l "Can we talk about this in our rooms?"
-                                jump Laura_Chat
-                            call Laura_Clothes
-                    elif ApprovalCheck("Laura", 600, "L") or ApprovalCheck("Laura", 300, "O"):
-                                ch_l "Oh? What about them?"
-                                call Laura_Clothes
-                    else:
-                                ch_l "I don't think about my clothes much."
-                                ch_l "You shouldn't either."   
-            #end preset menu
-                 
-                        
-label Laura_Chat:
-    call LauraFace    
-    call Shift_Focus("Laura")
-    if L_Loc != bg_current:
-                show Cellphone at SpriteLoc(StageLeft)
-    else:
-                hide Cellphone
-    if "caught" in L_RecentActions:
-                ch_l "I think we should lie low for a bit."
-                return
-    if "angry" in L_RecentActions:
-                ch_l "You don't want to be around me right now."
-                return
-                
-    if L_Loc == bg_current and "scent" in P_DailyActions:
-            #if you've fucked another girl, and not showered, Laura will know.         
-            if not ApprovalCheck("Laura", 1700) and not ApprovalCheck("Laura", 600,"O"):
-                    if "Rogue" in P_DailyActions and "saw with Rogue" not in L_Traits and GirlLikeCheck("Laura","Rogue") <= 700:
-                            $ L_Traits.append("saw with Rogue")
-                    if "Kitty" in P_DailyActions and "saw with Kitty" not in L_Traits and GirlLikeCheck("Laura","Kitty") <= 700:
-                            $ L_Traits.append("saw with Kitty")                
-                    if "Emma" in P_DailyActions and "saw with Emma" not in L_Traits and GirlLikeCheck("Laura","Emma") <= 700:
-                            $ L_Traits.append("saw with Emma")
-            $ P_DailyActions.remove("scent") 
-    
-    if "les" in L_RecentActions:
-            #if she's with a girl. . .
-            ch_l "Just a minute. . ."
-            "You hear some shifting around. . ."
-            ch_l "Yeah, um. . . what was it you wanted?"
-            "You hear some muffled giggles in the background."
-            ch_l "So. . ."
-    menu:
-        ch_l "Yeah?"
-        "Come on over." if L_Loc != bg_current:
-                    if "Laura" in Nearby and bg_current != "bg showerrroom":
-                        call Swap_Nearby("Laura")            
-                    elif Room_Full():
-                        "I don't think there would be room."
-                        call Dismissed
-                    else:
-                            call Laura_Summon    
-        "Ask Laura to leave" if L_Loc == bg_current:
-                    call Laura_Dismissed    
-                    return
-                    
-        "Romance her":      
-                menu:
-                    "Flirt with her (locked)" if L_Chat[5]:  
-                                pass
-                    "Flirt with her" if not L_Chat[5]:
-                                call Laura_Flirt   
-                        
-                    "Sex Menu (locked)" if L_Loc != bg_current:
-                                pass
-                    "Sex Menu" if L_Loc == bg_current:
-                                if L_Love >= L_Obed:   
-                                    ch_p "Did you want to fool around?"  
-                                else: 
-                                    ch_p "I want to get naughty."
-                                if "angry" in L_RecentActions:  
-                                    ch_l "Bad idea right now."
-                                elif ApprovalCheck("Laura", 600, "LI"):
-                                    call LauraFace("sexy")
-                                    ch_l "Cool."
-                                    call Laura_SexMenu
-                                    return
-                                elif ApprovalCheck("Laura", 400, "OI"):
-                                    ch_l "Yes, [L_Petname]."
-                                    call Laura_SexMenu
-                                    return
-                                else:
-                                    ch_l "No thanks, [L_Petname]."   
-                    
-                    "Dirty Talk (locked)" if L_SEXP < 10:
-                                pass
-                    "Dirty Talk" if L_SEXP >= 10:
-                                ch_p "About when we get together. . ."
-                                call Laura_SexChat
-                    
-                    "Date":
-                                ch_p "Do you want to go on a date tonight?"
-                                call Laura_Date_Ask
-                    
-                    "Gifts (locked)" if L_Loc != bg_current:
-                                pass
-                    "Gifts" if L_Loc == bg_current:
-                                ch_p "I'd like to give you something."
-                                call Laura_Gifts
-                                    
-                    "Back":
-                                pass
-                        
-        "Talk with her":
-                menu:
-                    "I just wanted to talk. . .":
-                                call Laura_Chitchat   
-                                                
-                    "Relationship status":
-                                ch_p "Could we talk about us?"  
-                                if "relationship" in L_DailyActions:
-                                    ch_l "I need some time to. . .  process."
-                                elif L_Loc == bg_current:
-                                    call Laura_Relationship
-                                else:
-                                    ch_l "Sounds heavy."
-                                    ch_l "Maybe later when we're face to face?"
-            
-                    "About other girls":
-                            menu:
-                                ch_p "How do you feel about. . ."
-                                "Rogue?":
-                                    call Laura_About("Rogue")  
-                                "Kitty?" if "met" in K_History:
-                                    call Laura_About("Kitty")
-                                "Emma?" if "met" in E_History:
-                                    call Laura_About("Emma")  
-                                "About hooking up with other girls. . .":
-                                        call Laura_Monogamy
-                                "Never mind.":
-                                    pass
-            
-                    "Could I get your number?" if "Laura" not in Digits:
-                                if ApprovalCheck("Laura", 400, "L") or ApprovalCheck("Laura", 200, "I"):
-                                    ch_l "Oh, sure."
-                                    $ Digits.append("Laura") 
-                                elif ApprovalCheck("Laura", 200, "O"):
-                                    ch_l "I guess."             
-                                    $ Digits.append("Laura")
-                                else:
-                                    ch_l "Um, probably not."  
-                    "Back":
-                                pass
-        
-        "Change Laura":
-                    call Laura_Settings   
-                        
-        "Add her to party" if "Laura" not in Party and L_Loc == bg_current:
-                    ch_p "Could you follow me for a bit?"
-                    if ApprovalCheck("Laura", 650):
-                        $ Party.append("Laura")
-                        ch_l "Where to?"
-                        return
-                    elif not ApprovalCheck("Laura", 400):
-                        ch_l "No."
-                    else:
-                        ch_l "I'd rather not."
-        "Disband party" if "Laura" in Party: 
-                    ch_p "Ok, you can leave if you prefer."
-                    $ Party.remove("Laura")       
-                    call Laura_Schedule(0)                        
-                    if "leaving" in L_RecentActions:
-                        call DrainWord("Laura","leaving")
-                    if L_Loc == bg_current:
-                        ch_l "I think i'm fine here."
-                    else:
-                        ch_l "Ok, see ya then."
-                        call Set_The_Scene   
-                    return
-                
-        "Switch to. . .":
-                menu:
-                    "Rogue":
-                        call Chat("Rogue")       
-                    "Kitty":
-                        call Chat("Kitty")        
-                    "Emma":
-                        call Chat("Emma")
-                    "Never mind":
-                        pass
-                            
-        "Never mind.":
-                    ch_l "Ok."
-                    return
-    jump Laura_Chat
-
-
 #Laura Relationship ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
 label Laura_Relationship:
     while True:
         menu:
-            ch_l "What did you want to talk about?"
-            
-            "Do you want to be my girlfriend?" if "dating" not in L_Traits and "ex" not in L_Traits:
-                    $ L_DailyActions.append("relationship")
-                    if "asked boyfriend" in L_DailyActions and "angry" in L_DailyActions:
-                        call LauraFace("angry", 1)
-                        ch_l "Like I said, not interested."
-                        return
-                    elif "asked boyfriend" in L_DailyActions:
-                        call LauraFace("angry", 1)
-                        ch_l "Still a no."
-                        return
+            ch_l "What did you want to talk about?"            
+            "Do you want to be my girlfriend?" if "dating" not in LauraX.Traits and "ex" not in LauraX.Traits:
+                    $ LauraX.DailyActions.append("relationship")
+                    if "asked boyfriend" in LauraX.DailyActions and "angry" in LauraX.DailyActions:
+                            $ LauraX.FaceChange("angry", 1)
+                            ch_l "Like I said, not interested."
+                            return
+                    elif "asked boyfriend" in LauraX.DailyActions:
+                            $ LauraX.FaceChange("angry", 1)
+                            ch_l "Still a no."
+                            return
+                    elif LauraX.Break[0]:
+                            $ LauraX.FaceChange("angry", 1)
+                            ch_l "I'm not looking for a pack."
+                            if Player.Harem:   
+                                    $ LauraX.DailyActions.append("asked boyfriend")
+                                    return
+                            else:
+                                    ch_p "I'm not anymore."
                     
-                    $ L_DailyActions.append("asked boyfriend")
+                    $ LauraX.DailyActions.append("asked boyfriend")
                     
-                    if P_Harem and "LauraYes" not in P_Traits:  
-                        if len(P_Harem) >= 2:
-                            ch_l "You'd need to clear it with the others first, [L_Petname]."
+                    if Player.Harem and "LauraYes" not in Player.Traits:  
+                        if len(Player.Harem) >= 2:
+                            ch_l "You'd need to clear it with the others first, [LauraX.Petname]."
                         else:
-                            ch_l "You'd need to clear it with [P_Harem[0]] first, [L_Petname]."
+                            ch_l "You'd need to clear it with [Player.Harem[0].Name] first, [LauraX.Petname]."
                         return
                                         
-                    if L_Event[5]:
-                        call LauraFace("bemused", 1)
-                        ch_l "I asked, you said \"no\". . ."
+                    if LauraX.Event[5]:
+                            $ LauraX.FaceChange("bemused", 1)
+                            ch_l "I asked, you said \"no\". . ."
                     else:
-                        call LauraFace("surprised", 2)
-                        ch_l "Huh? . ." 
-                        call LauraFace("smile", 1)
+                            $ LauraX.FaceChange("surprised", 2)
+                            ch_l "Huh? . ." 
+                            $ LauraX.FaceChange("smile", 1)
                         
                     call Laura_OtherWoman
                     
-                    if L_Love >= 800:
-                        call LauraFace("surprised", 1)
-                        $ L_Mouth = "smile"
-                        call Statup("Laura", "Love", 200, 40)
-                        ch_l "Sure!"
-                        if "boyfriend" not in L_Petnames:
-                            $ L_Petnames.append("boyfriend")                
-                        $ L_Traits.append("dating") 
-                        if "LauraYes" in P_Traits:       
-                                    $ P_Traits.remove("LauraYes")
-                                    $ P_Harem.append("Laura")
+                    if LauraX.Love >= 800:
+                            $ LauraX.FaceChange("surprised", 1)
+                            $ LauraX.Mouth = "smile"
+                            $ LauraX.Statup("Love", 200, 40)
+                            ch_l "Sure!"
+                            if "boyfriend" not in LauraX.Petnames:
+                                    $ LauraX.Petnames.append("boyfriend")                
+                            $ LauraX.Traits.append("dating") 
+                            if "LauraYes" in Player.Traits:       
+                                    $ Player.Traits.remove("LauraYes")
+                                    $ Player.Harem.append(LauraX)
                                     call Harem_Initiation
-                        "Laura tackles you and kisses you deeply."
-                        call LauraFace("kiss", 1) 
-                        $ L_Kissed += 1
-                    elif L_Obed >= 500:
-                        call LauraFace("perplexed")
-                        ch_l "I don't know, \"dating\". . ."
-                    elif L_Inbt >= 500:
-                        call LauraFace("smile")                
-                        ch_l "Nah, this is more fun."
+                            "[LauraX.Name] tackles you and kisses you deeply."
+                            $ LauraX.FaceChange("kiss", 1) 
+                            $ LauraX.Kissed += 1
+                    elif LauraX.Obed >= 500:
+                            $ LauraX.FaceChange("perplexed")
+                            ch_l "I don't know, \"dating\". . ."
+                    elif LauraX.Inbt >= 500:
+                            $ LauraX.FaceChange("smile")                
+                            ch_l "Nah, this is more fun."
                     else:
-                        call LauraFace("perplexed", 1)
-                        ch_l "Whoa, slow down, [L_Petname]."
+                            $ LauraX.FaceChange("perplexed", 1)
+                            ch_l "Whoa, slow down, [LauraX.Petname]."
                       
-            "Do you want to get back together?" if "ex" in L_Traits:
-                    $ L_DailyActions.append("relationship")
-                    if "asked boyfriend" in L_DailyActions and "angry" in L_DailyActions:
-                        call LauraFace("angry", 1)
-                        ch_l "Like I said, not interested."
-                        return
-                    elif "asked boyfriend" in L_DailyActions:
-                        call LauraFace("angry", 1)
-                        ch_l "Still a no."
-                        return
+            "Do you want to get back together?" if "ex" in LauraX.Traits:
+                    $ LauraX.DailyActions.append("relationship")
+                    if "asked boyfriend" in LauraX.DailyActions and "angry" in LauraX.DailyActions:
+                            $ LauraX.FaceChange("angry", 1)
+                            ch_l "Like I said, not interested."
+                            return
+                    elif "asked boyfriend" in LauraX.DailyActions:
+                            $ LauraX.FaceChange("angry", 1)
+                            ch_l "Still a no."
+                            return
                     
-                    $ L_DailyActions.append("asked boyfriend")
+                    $ LauraX.DailyActions.append("asked boyfriend")
                     
-                    if P_Harem and "LauraYes" not in P_Traits:
-                        $ L_DailyActions.append("asked boyfriend")   
-                        if len(P_Harem) >= 2:
-                            ch_l "You'd need to clear it with the others first, [L_Petname]."
-                        else:
-                            ch_l "You'd need to clear it with [P_Harem[0]] first, [L_Petname]."
-                        return
+                    if Player.Harem and "LauraYes" not in Player.Traits:
+                            if len(Player.Harem) >= 2:
+                                ch_l "You'd need to clear it with the others first, [LauraX.Petname]."
+                            else:
+                                ch_l "You'd need to clear it with [Player.Harem[0].Name] first, [LauraX.Petname]."
+                            return
                         
                     $ Cnt = 0
                     call Laura_OtherWoman
                                             
-                    if L_Love >= 800:
-                        call LauraFace("surprised", 1)
-                        $ L_Mouth = "smile"
-                        call Statup("Laura", "Love", 90, 5)
-                        ch_l "Ok, you've earned another shot!"
-                        if "boyfriend" not in L_Petnames:
-                            $ L_Petnames.append("boyfriend")                
-                        $ L_Traits.append("dating")          
-                        $ L_Traits.remove("ex")
-                        if "LauraYes" in P_Traits:       
-                                    $ P_Traits.remove("LauraYes")
-                                    $ P_Harem.append("Laura")
+                    if LauraX.Love >= 800:
+                            $ LauraX.FaceChange("surprised", 1)
+                            $ LauraX.Mouth = "smile"
+                            $ LauraX.Statup("Love", 90, 5)
+                            ch_l "Ok, you've earned another shot!"
+                            if "boyfriend" not in LauraX.Petnames:
+                                        $ LauraX.Petnames.append("boyfriend")                
+                            $ LauraX.Traits.append("dating")          
+                            $ LauraX.Traits.remove("ex")
+                            if "LauraYes" in Player.Traits:       
+                                        $ Player.Traits.remove("LauraYes")
+                                        $ Player.Harem.append(LauraX)
+                                        call Harem_Initiation
+                            "[LauraX.Name] pulls you in and kisses you deeply."
+                            $ LauraX.FaceChange("kiss", 1) 
+                            $ LauraX.Kissed += 1
+                    elif LauraX.Love >= 600 and ApprovalCheck(LauraX, 1500):
+                            $ LauraX.FaceChange("smile", 1)
+                            $ LauraX.Statup("Love", 90, 5)
+                            ch_l "Um, ok, I guess."
+                            if "boyfriend" not in LauraX.Petnames:
+                                $ LauraX.Petnames.append("boyfriend")                
+                            $ LauraX.Traits.append("dating")             
+                            $ LauraX.Traits.remove("ex")    
+                            if "LauraYes" in Player.Traits:       
+                                    $ Player.Traits.remove("LauraYes")
+                                    $ Player.Harem.append(LauraX)
                                     call Harem_Initiation
-                        "Laura pulls you in and kisses you deeply."
-                        call LauraFace("kiss", 1) 
-                        $ L_Kissed += 1
-                    elif L_Love >= 600 and ApprovalCheck("Laura", 1500):
-                        call LauraFace("smile", 1)
-                        $ L_Mouth = "smile"
-                        call Statup("Laura", "Love", 90, 5)
-                        ch_l "Um, ok, I guess."
-                        if "boyfriend" not in L_Petnames:
-                            $ L_Petnames.append("boyfriend")                
-                        $ L_Traits.append("dating")             
-                        $ L_Traits.remove("ex")
-                        "Laura gives you a quick kiss."
-                        call LauraFace("kiss", 1) 
-                        $ L_Kissed += 1
-                    elif L_Obed >= 500:
-                        call LauraFace("sad")
-                        ch_l "I think it's best we keep things simple."   
-                    elif L_Inbt >= 500:
-                        call LauraFace("perplexed")                
-                        ch_l "That ruined the fun."
+                            $ LauraX.FaceChange("kiss", 1) 
+                            "[LauraX.Name] gives you a quick kiss."
+                            $ LauraX.FaceChange("sly", 1) 
+                            $ LauraX.Kissed += 1
+                    elif LauraX.Obed >= 500:
+                            $ LauraX.FaceChange("sad")
+                            ch_l "I think it's best we keep things simple."   
+                    elif LauraX.Inbt >= 500:
+                            $ LauraX.FaceChange("perplexed")                
+                            ch_l "That ruined the fun."
                     else:
-                        call LauraFace("perplexed", 1)
-                        ch_l "I can't trust you like that."
-                    
-    #        # End Back Together
+                            $ LauraX.FaceChange("perplexed", 1)
+                            ch_l "I can't trust you like that."
+                        
+                    # End Back Together
                  
-            "I wanted to ask about [[another girl]" if "Laura" in P_Harem:
+            "I wanted to ask about [[another girl]" if LauraX in Player.Harem:
                     menu:
                         "Have you reconsidered letting me date. . ."
-                        "Rogue" if "Rogue" not in P_Harem:
-                                call Poly_Start("Rogue",1)
-                        "Kitty" if "Kitty" not in P_Harem and "met" in K_History:
-                                call Poly_Start("Kitty",1)
-                        "Emma" if "Emma" not in P_Harem and "met" in E_History:
-                                call Poly_Start("Emma",1)
+                        "[RogueX.Name]" if RogueX not in Player.Harem:
+                                call Poly_Start(RogueX,1)
+                        "[KittyX.Name]" if KittyX not in Player.Harem and "met" in KittyX.History:
+                                call Poly_Start(KittyX,1)
+                        "[EmmaX.Name]" if EmmaX not in Player.Harem and "met" in EmmaX.History:
+                                call Poly_Start(EmmaX,1)
                         "Never mind":
-                                pass       
+                                pass  
                                    
-            "I think we should break up." if "dating" in L_Traits or "Laura" in P_Harem: 
-                    if "breakup talk" in L_RecentActions:
-                        ch_l "Are you joking? We just had this conversation."
-                    elif "breakup talk" in L_DailyActions:
-                        ch_l "That bored of me?" 
-                        ch_l "Not today, [L_Petname]."
-                    else:
-                        call Breakup("Laura")
+            "I think we should break up." if "dating" in LauraX.Traits or LauraX in Player.Harem: 
+                            if "breakup talk" in LauraX.RecentActions:
+                                    ch_l "Are you joking? We just had this conversation."
+                            elif "breakup talk" in LauraX.DailyActions:
+                                    ch_l "That bored of me?" 
+                                    ch_l "Not today, [LauraX.Petname]."
+                            else:
+                                    call Breakup(LauraX)
             
             "About that talk we had before. . .":
                 menu:
-                    "When you said you loved me. . ." if "lover" not in L_Traits and L_Event[6] >= 20 and L_Event[6] != 23:
+                    "When you said you loved me. . ." if "lover" not in LauraX.Traits and LauraX.Event[6] >= 20 and LauraX.Event[6] != 23:
                             call Laura_Love_Redux
                             
-                    "When you were telling me all that stuff about yourself. . ." if "lover" not in L_Traits and L_Event[6] == 23:
+                    "When you were telling me all that stuff about yourself. . ." if "lover" not in LauraX.Traits and LauraX.Event[6] == 23:
                             call Laura_Love_Redux
                             
-                    "You said you wanted me to be more in control?" if "sir" not in L_Petnames and "sir" in L_History:
-                            if "asked sub" in L_RecentActions:
+                    "You said you wanted me to be more in control?" if "sir" not in LauraX.Petnames and "sir" in LauraX.History:
+                            if "asked sub" in LauraX.RecentActions:
                                     ch_l "We just had this conversation."
-                            elif "asked sub" in L_DailyActions:
+                            elif "asked sub" in LauraX.DailyActions:
                                     ch_l "Enough of that talk for one day. . ."            
                             else:
                                     call Laura_Sub_Asked
-                    "You said you wanted me to be your Master?" if "master" not in L_Petnames and "master" in L_History:
-                            if "asked sub" in L_RecentActions:
+                    "You said you wanted me to be your Master?" if "master" not in LauraX.Petnames and "master" in LauraX.History:
+                            if "asked sub" in LauraX.RecentActions:
                                     ch_l "We just had this conversation."
-                            elif "asked sub" in L_DailyActions:
+                            elif "asked sub" in LauraX.DailyActions:
                                     ch_l "Enough of that talk for one day. . ."          
                             else:
                                     call Laura_Sub_Asked
@@ -401,326 +188,220 @@ label Laura_Relationship:
  
 label Laura_OtherWoman(Cnt = 0):
     #Other is the other woman, Poly is whether she'd be cool with a threesome
-    if not P_Harem:
-            return            
-            
-    if "Rogue" == P_Harem[0]:           
-            $Cnt = int((L_LikeRogue - 500)/2)
-    elif "Kitty" == P_Harem[0]:           
-            $Cnt = int((L_LikeKitty - 500)/2)
-    elif "Emma" == P_Harem[0]:     
-            $Cnt = int((L_LikeEmma - 500)/2)
-    else:
-            $Cnt = 100     
+    if not Player.Harem:
+            return      
+    $ Cnt = int((LauraX.GirlLikeCheck(Player.Harem[0]) - 500)/2)      
         
-    call LauraFace("perplexed")
-    if len(P_Harem) >= 2:
-        ch_l "But you're with [P_Harem[0]] right now, and you've got a whole pack going."
+    $ LauraX.FaceChange("perplexed")
+    if len(Player.Harem) >= 2:
+        ch_l "But you're with [Player.Harem[0].Name] right now, and you've got a whole pack going."
     else:    
-        ch_l "But you're with [P_Harem[0]], aren't you?"
+        ch_l "But you're with [Player.Harem[0].Name], aren't you?"
     menu: 
         extend ""
-        "She said I can be with you too." if "LauraYes" in P_Traits:
-                if ApprovalCheck("Laura", 1800, Bonus = Cnt):
-                    call LauraFace("smile", 1)
-                    if L_Love >= L_Obed:
-                        ch_l "I guess I can share you."
-                    elif L_Obed >= L_Inbt:
-                        ch_l "If that's what you want."
+        "She said I can be with you too." if "LauraYes" in Player.Traits:
+                if ApprovalCheck(LauraX, 1800, Bonus = Cnt):
+                    $ LauraX.FaceChange("smile", 1)
+                    if LauraX.Love >= LauraX.Obed:
+                            ch_l "I guess I can share you."
+                    elif LauraX.Obed >= LauraX.Inbt:
+                            ch_l "If that's what you want."
                     else:
-                        ch_l "Fine."
+                            ch_l "Fine."
                 else:
-                    call LauraFace("angry", 1)
+                    $ LauraX.FaceChange("angry", 1)
                     ch_l "Yeah, I imagine she would, but I'm not sharing."  
                     $ renpy.pop_call()                                          
                     #This causes it to jump past the previous menu on the return
         
-        "I could ask if she'd be ok with me dating you both." if "LauraYes" not in P_Traits:
-                if ApprovalCheck("Laura", 1800, Bonus = Cnt):
-                    call LauraFace("smile", 1)
-                    if L_Love >= L_Obed:
-                        ch_l "I guess I can share you."
-                    elif L_Obed >= L_Inbt:
-                        ch_l "If that's what you want."
-                    else:
-                        ch_l "Fine."    
-                    ch_l "Well ask her and tell me in the morning."
+        "I could ask if she'd be ok with me dating you both." if "LauraYes" not in Player.Traits:
+                if ApprovalCheck(LauraX, 1800, Bonus = Cnt):
+                        $ LauraX.FaceChange("smile", 1)
+                        if LauraX.Love >= LauraX.Obed:
+                            ch_l "I guess I can share you."
+                        elif LauraX.Obed >= LauraX.Inbt:
+                            ch_l "If that's what you want."
+                        else:
+                            ch_l "Fine."    
+                        ch_l "Well ask her and tell me in the morning."
                 else:
-                    call LauraFace("angry", 1)
-                    ch_l "Yeah, I imagine she would, but I'm not sharing." 
+                        $ LauraX.FaceChange("angry", 1)
+                        ch_l "Yeah, I imagine she would, but I'm not sharing." 
                 $ renpy.pop_call()
         
         "What she doesn't know won't hurt her.":
-                if not ApprovalCheck("Laura", 1800, Bonus = -Cnt): #checks if Laura likes you more than the other girl
-                    call LauraFace("angry", 1)
-                    if not ApprovalCheck("Laura", 1800):
-                        ch_l "Well it'd hurt me."
-                    else:
-                        ch_l "I don't like the sound of that."                    
-                    $ renpy.pop_call() 
-                
+                if not ApprovalCheck(LauraX, 1800, Bonus = -Cnt): #checks if Laura likes you more than the other girl
+                        $ LauraX.FaceChange("angry", 1)
+                        if not ApprovalCheck(LauraX, 1800):
+                                ch_l "Well it'd hurt me."
+                        else:
+                                ch_l "I don't like the sound of that."                    
+                        $ renpy.pop_call() 
                 else:
-                    call LauraFace("smile", 1)
-                    if L_Love >= L_Obed:
-                        ch_l "I guess I could. . ."
-                    elif L_Obed >= L_Inbt:
-                        ch_l "If that's what you want."
-                    else:
-                        ch_l "Fine."
-                    $ L_Traits.append("downlow")
+                        $ LauraX.FaceChange("smile", 1)
+                        if LauraX.Love >= LauraX.Obed:
+                                ch_l "I guess I could. . ."
+                        elif LauraX.Obed >= LauraX.Inbt:
+                                ch_l "If that's what you want."
+                        else:
+                                ch_l "Fine."
+                        $ LauraX.Traits.append("downlow")
                 
         "I can break it off with her.":
-                    call LauraFace("sad")
+                    $ LauraX.FaceChange("sad")
                     ch_l "Get back to me after."                                   
                     $ renpy.pop_call()
             
         "You're right, I was dumb to ask.":
-                    call LauraFace("sad")
+                    $ LauraX.FaceChange("sad")
                     ch_l "Yup."                    
                     $ renpy.pop_call()                   
                 
     return
     
     
-label Laura_Settings:
-    menu:
-        ch_p "Let's talk about you."
-        "Wardrobe": 
-                    ch_p "I wanted to talk about your style."
-                    call Taboo_Level 
-                    if L_Taboo:
-                            if "exhibitionist" in L_Traits:
-                                ch_l "Yes? . ."  
-                            elif ApprovalCheck("Laura", 900, TabM=4) or ApprovalCheck("Laura", 400, "I", TabM=3): 
-                                ch_l "I don't think I'm supposed to undress around here. . ."
-                            else:
-                                ch_l "I don't think I'm supposed to undress around here. . ."
-                                ch_l "Can we talk about this in our rooms?"
-                                return
-                            call Laura_Clothes
-                    elif ApprovalCheck("Laura", 900, TabM=4) or ApprovalCheck("Laura", 600, "L") or ApprovalCheck("Laura", 300, "O"):
-                                ch_l "Oh? What about them?"
-                                call Laura_Clothes
-                    else:
-                                ch_l "I don't think about my clothes much."
-                                ch_l "You shouldn't either."    
-                
-        "Shift her Personality" if ApprovalCheck("Laura", 900, "L", TabM=0) or ApprovalCheck("Laura", 900, "O", TabM=0) or ApprovalCheck("Laura", 900, "I", TabM=0):
-                    ch_p "Could we talk about us?"
-                    call Laura_Personality
-        
-        "Pet names":
-            menu:  
-                "About the name you go by. . .":
-                    menu:
-                        "Could I call you Laura?" if LauraName == "X-23":  
-                            if "Laura" not in L_History:     
-                                    if L_Love >= 500:        
-                                        call Statup("Laura", "Love", 90, 15)
-                                    call Statup("Laura", "Inbt", 50, 5)      
-                                    $ L_History.append("Laura")             
-                            if "namechange" in L_DailyActions: 
-                                    call Statup("Laura", "Love", 90, -1)
-                                    ch_l "Make up your mind!" 
-                            else:
-                                    call Statup("Laura", "Love", 90, -2)
-                                    call Statup("Laura", "Obed", 30, 5) 
-                                    ch_l "Sure, whatever."                    
-                            $ LauraName = "Laura" 
-                            $ L_DailyActions.append("namechange") 
-                        "Could I call you X-23?" if LauraName == "Laura":   
-                            if "X-23" not in L_History:     
-                                    if L_Love >= 500: 
-                                        call Statup("Laura", "Love", 90, -10)
-                                    call Statup("Laura", "Obed", 50, 5)    
-                                    call Statup("Laura", "Obed", 90, 10)          
-                                    $ L_History.append("X-23")                                     
-                            if "namechange" in L_DailyActions: 
-                                    call Statup("Laura", "Love", 90, -1)
-                                    ch_l "Make up your mind!" 
-                            else: 
-                                    ch_l "Sure, whatever."                    
-                            $ LauraName = "X-23" 
-                            $ L_DailyActions.append("namechange") 
-                        "Never mind":
-                            pass
-                            
-                            
-                "Your Pet Name":
-                    ch_p "Could we talk about my pet name?"
-                    if ApprovalCheck("Laura", 600, "L", TabM=0) or ApprovalCheck("Laura", 300, "O", TabM=0):
-                        call Laura_Names    
-                    else:
-                        $ L_Mouth = "smile"
-                        ch_l "Oh?"
-                        
-                "Her Pet Name":
-                        ch_p "I've got a pet name for you, you know?"
-                        if ApprovalCheck("Laura", 600, "L", TabM=0):
-                            ch_l "Do you?" 
-                        elif ApprovalCheck("Laura", 300, "O", TabM=0):
-                            ch_l "What did you want to call me?"
-                        else:
-                            ch_l "Yeah?"            
-                        call Laura_Pet   
-        
-                "Back":
-                        pass
-                        
-        "Follow options" if "follow" in L_Traits:
-                ch_p "You know how you ask if I want to follow you sometimes?"
-                $ Line = 0
-                menu:
-                    ch_l "Yeah?"
-                    "You can go where you want, I'll catch up later." if "freetravels" not in L_Traits:
-                        call LauraFace("perplexed")
-                        ch_l "Oh. . . okay."
-                        if "follow" not in L_DailyActions:
-                            call Statup("Laura", "Love", 90, -2)
-                            call Statup("Laura", "Obed", 30, 5) 
-                        $ L_Traits.append("freetravels")
-                        $ Line = "free"
-                            
-                    "You can ask if I want to follow you." if "asktravels" not in L_Traits:
-                        call LauraFace("perplexed")
-                        ch_l "Right. . ."
-                        if "follow" not in L_DailyActions:
-                            call Statup("Laura", "Love", 70, 2) 
-                            call Statup("Laura", "Inbt", 60, 2) 
-                        $ Line = "ask"
-                                                
-                    "Don't ever leave when I'm around." if "lockedtravels" not in L_Traits:
-                        if ApprovalCheck("Laura", 500, "O") or ApprovalCheck("Laura", 900, "L"):   
-                            call LauraFace("smile")
-                            ch_l "That's sweet."
-                            if "follow" not in L_DailyActions:
-                                if L_Love > 90:
-                                    call Statup("Laura", "Love", 99, 2)
-                                call Statup("Laura", "Obed", 60, 5)                             
-                            call Statup("Laura", "Inbt", 50, -5, 1) 
-                            $ Line = "lock"
-                        else:
-                            call LauraFace("angry")                        
-                            ch_l "Well, who cares what you think?"
-                            
-                    "Never mind.":
-                        ch_l "Right. . ."
-                        
-                if Line:
-                    $ L_DailyActions.append("follow")                
-                    if "freetravels" in L_Traits:
-                        $ L_Traits.remove("freetravels") 
-                    if "asktravels" in L_Traits:
-                        $ L_Traits.remove("asktravels") 
-                    if "lockedtravels" in L_Traits:
-                        $ L_Traits.remove("lockedtravels") 
-                
-                    if Line == "free":
-                        $ L_Traits.append("freetravels")            
-                    elif Line == "ask":
-                        $ L_Traits.append("asktravels")                
-                    elif Line == "lock":
-                        $ L_Traits.append("lockedtravels")    
-                    $ Line = 0        
-                  
-#        "Tasks" if "sir" in L_Petnames:
-#                ch_p "I have some tasks for you."
-#                call Laura_Controls
-        
-        "Switch to. . .":
-                menu:
-                    "Rogue":
-                        call Rogue_Chat_Set("settings")                    
-                    "Kitty":
-                        call Kitty_Chat_Set("settings")                 
-                    "Emma":
-                        call Emma_Chat_Set("settings")
-                    "Never mind":
-                        pass
-        "Never mind.":
-            return 
-    jump Laura_Settings
-
-# End Laura Chat
-
+label Laura_About(Check=0):
+    if Check not in TotalGirls:
+            ch_l "Who?"
+            return
+    ch_l "What do I think about her? Well. . ."    
+    if Check == RogueX:    
+            if "poly Rogue" in LauraX.Traits:  
+                ch_l "Yeah, we hook up, so. . ."    
+            elif LauraX.LikeRogue >= 900:
+                ch_l "She's got a great ass. . ."
+            elif LauraX.LikeRogue >= 800:
+                ch_l "She's got a nice shape on her. . ."    
+            elif LauraX.LikeRogue >= 700:
+                ch_l "She's good in a fight."
+            elif LauraX.LikeRogue >= 600:
+                ch_l "We get along ok."
+            elif LauraX.LikeRogue >= 500:
+                ch_l "I guess I've seen her around."
+            elif LauraX.LikeRogue >= 400:
+                ch_l "I don't want to talk about it."
+            elif LauraX.LikeRogue >= 300:
+                ch_l "Hate her." 
+            else:
+                ch_l "Bitch."
+    elif Check == KittyX:    
+            if "poly Kitty" in LauraX.Traits:  
+                ch_l "Yeah, we hook up, so. . ."    
+            elif LauraX.LikeKitty >= 900:
+                ch_l "I do like her little tits. . ."
+            elif LauraX.LikeKitty >= 800:
+                ch_l "She keeps in shape. . ."  
+            elif LauraX.LikeKitty >= 700:
+                ch_l "Tough to hold down."
+            elif LauraX.LikeKitty >= 600:
+                ch_l "She's cool."
+            elif LauraX.LikeKitty >= 500:
+                ch_l "I guess I've seen her around."
+            elif LauraX.LikeKitty >= 400:
+                ch_l "I don't want to talk about it."
+            elif LauraX.LikeKitty >= 300:
+                ch_l "Hate her." 
+            else:
+                ch_l "Bitch."
+    elif Check == EmmaX:    
+            if "poly Emma" in LauraX.Traits:  
+                ch_l "Yeah, we hook up, so. . ." 
+            elif LauraX.LikeEmma >= 900:
+                ch_l "Really great rack on her. . ."
+            elif LauraX.LikeEmma >= 800:
+                ch_l "She smells really nice. . ."    
+            elif LauraX.LikeEmma >= 700:
+                ch_l "She's nice to me after class."
+            elif LauraX.LikeEmma >= 600:
+                ch_l "She's a good teacher."
+            elif LauraX.LikeEmma >= 500:
+                ch_l "She's fine."
+            elif LauraX.LikeEmma >= 400:
+                ch_l "I could do with less of her attitude."
+            elif LauraX.LikeEmma >= 300:
+                ch_l "She needs to stay out of my head." 
+            else:
+                ch_l "Grrrrr."          
+    return    
+#End Laura_AboutEmma   
 
 label Laura_Monogamy:
         #called from Laura_Settings to ask her not to hook up with other girls    
         menu:
-            "Could you not hook up with other girls?" if "mono" not in L_Traits:
-                    if L_Thirst >= 60 and not ApprovalCheck("Laura", 1700, "LO", TabM=0):
+            "Could you not hook up with other girls?" if "mono" not in LauraX.Traits:
+                    if LauraX.Thirst >= 60 and not ApprovalCheck(LauraX, 1700, "LO", TabM=0):
                             #she's too thirsty
-                            call AnyFace("Laura","sly",1) 
-                            if "mono" not in L_DailyActions:                                                         
-                                    call Statup("Laura", "Obed", 90, -2) 
+                            $ LauraX.FaceChange("sly",1) 
+                            if "mono" not in LauraX.DailyActions:                                                         
+                                    $ LauraX.Statup("Obed", 90, -2) 
                             ch_l "I would, but you aren't around enough. . ."
                             return
-                    elif ApprovalCheck("Laura", 1200, "LO", TabM=0) and L_Love >= L_Obed:
+                    elif ApprovalCheck(LauraX, 1200, "LO", TabM=0) and LauraX.Love >= LauraX.Obed:
                             #she cares
-                            call AnyFace("Laura","sly",1) 
-                            if "mono" not in L_DailyActions:                                                         
-                                    call Statup("Laura", "Love", 90, 1) 
+                            $ LauraX.FaceChange("sly",1) 
+                            if "mono" not in LauraX.DailyActions:                                                         
+                                    $ LauraX.Statup("Love", 90, 1) 
                             ch_l "I didn't take you for the jealous type." 
                             ch_l "Fine, no side pussy. . ."
-                    elif ApprovalCheck("Laura", 700, "O", TabM=0):
+                    elif ApprovalCheck(LauraX, 700, "O", TabM=0):
                             #she is obedient
-                            call AnyFace("Laura","sly",1,Eyes="side") 
+                            $ LauraX.FaceChange("sly",1,Eyes="side") 
                             ch_l "Affirmative."
                     else:   
                             #she doesn't care
-                            call AnyFace("Laura","sly",1) 
+                            $ LauraX.FaceChange("sly",1) 
                             ch_l "Oh, you wouldn't want to see me when I'm thirsty." 
                             return                       
-                    if "mono" not in L_DailyActions:                                                         
-                            call Statup("Laura", "Obed", 90, 3) 
-                    call AnyWord("Laura",1,0,"mono") #Daily
-                    $ L_Traits.append("mono")   
-            "Don't hook up with other girls." if "mono" not in L_Traits:
-                    if ApprovalCheck("Laura", 900, "O", TabM=0):
+                    if "mono" not in LauraX.DailyActions:                                                         
+                            $ LauraX.Statup("Obed", 90, 3) 
+                    $ LauraX.AnyWord(1,0,"mono") #Daily
+                    $ LauraX.Traits.append("mono")   
+            "Don't hook up with other girls." if "mono" not in LauraX.Traits:
+                    if ApprovalCheck(LauraX, 900, "O", TabM=0):
                             #she is obedient
-                            call AnyFace("Laura","sly",1,Eyes="side") 
+                            $ LauraX.FaceChange("sly",1,Eyes="side") 
                             ch_l "Ok."
-                    elif L_Thirst >= 60 and not ApprovalCheck("Laura", 1700, "LO", TabM=0):
+                    elif LauraX.Thirst >= 60 and not ApprovalCheck(LauraX, 1700, "LO", TabM=0):
                             #she's too thirsty
-                            call AnyFace("Laura","sly",1) 
-                            if "mono" not in L_DailyActions:                                                         
-                                    call Statup("Laura", "Obed", 90, -2) 
+                            $ LauraX.FaceChange("sly",1) 
+                            if "mono" not in LauraX.DailyActions:                                                         
+                                    $ LauraX.Statup("Obed", 90, -2) 
                             ch_l "I would, but you aren't around enough. . ."
                             return
-                    elif ApprovalCheck("Laura", 600, "O", TabM=0):
+                    elif ApprovalCheck(LauraX, 600, "O", TabM=0):
                             #she is obedient
-                            call AnyFace("Laura","sly",1,Eyes="side") 
+                            $ LauraX.FaceChange("sly",1,Eyes="side") 
                             ch_l "Hey, fine, your call."
-                    elif ApprovalCheck("Laura", 1400, "LO", TabM=0):
+                    elif ApprovalCheck(LauraX, 1400, "LO", TabM=0):
                             #she cares
-                            call AnyFace("Laura","sly",1) 
+                            $ LauraX.FaceChange("sly",1) 
                             ch_l "I wouldn't come at me like that, but fine." 
                     else:   
                             #she doesn't care
-                            call AnyFace("Laura","sly",1,Brows="confused") 
+                            $ LauraX.FaceChange("sly",1,Brows="confused") 
                             ch_l "Oh, you wouldn't want to see me when I'm thirsty." 
                             return                 
-                    if "mono" not in L_DailyActions:                                                         
-                            call Statup("Laura", "Obed", 90, 3) 
-                    call AnyWord("Laura",1,0,"mono") #Daily
-                    $ L_Traits.append("mono")   
-            "It's ok if you hook up with other girls." if "mono" in L_Traits:
-                    if ApprovalCheck("Laura", 700, "O", TabM=0):
-                            call AnyFace("Laura","sly",1,Eyes="side") 
+                    if "mono" not in LauraX.DailyActions:                                                         
+                            $ LauraX.Statup("Obed", 90, 3) 
+                    $ LauraX.AnyWord(1,0,"mono") #Daily
+                    $ LauraX.Traits.append("mono")   
+            "It's ok if you hook up with other girls." if "mono" in LauraX.Traits:
+                    if ApprovalCheck(LauraX, 700, "O", TabM=0):
+                            $ LauraX.FaceChange("sly",1,Eyes="side") 
                             ch_l "Affirmative."
-                    elif ApprovalCheck("Laura", 800, "L", TabM=0):
-                            call AnyFace("Laura","sly",1) 
+                    elif ApprovalCheck(LauraX, 800, "L", TabM=0):
+                            $ LauraX.FaceChange("sly",1) 
                             ch_l "You'd better not leave me hangin. . ." 
                     else:
-                            call AnyFace("Laura","sly",1,Brows="confused") 
-                            if "mono" not in L_DailyActions:                                                         
-                                    call Statup("Laura", "Love", 90, -2)
+                            $ LauraX.FaceChange("sly",1,Brows="confused") 
+                            if "mono" not in LauraX.DailyActions:                                                         
+                                    $ LauraX.Statup("Love", 90, -2)
                             ch_l "Well call out the ladies, I've just been given permission!" 
-                    if "mono" not in L_DailyActions:                                                         
-                            call Statup("Laura", "Obed", 90, 3) 
-                    if "mono" in L_Traits:
-                            $ L_Traits.remove("mono")   
-                    call AnyWord("Laura",1,0,"mono") #Daily
+                    if "mono" not in LauraX.DailyActions:                                                         
+                            $ LauraX.Statup("Obed", 90, 3) 
+                    if "mono" in LauraX.Traits:
+                            $ LauraX.Traits.remove("mono")   
+                    $ LauraX.AnyWord(1,0,"mono") #Daily
             "Never mind.":
                 pass
         return
@@ -730,409 +411,445 @@ label Laura_Monogamy:
 label Laura_Jumped:
         #called from Laura_Settings to ask her not to jump you  
         ch_p "Hey, Remember that time you threw yourself at me?" 
-        call AnyFace("Laura","sly",1,Brows="confused") 
+        $ LauraX.FaceChange("sly",1,Brows="confused") 
         menu:
             ch_l "Yeah?"
-            "Could you maybe just ask instead?" if "chill" not in L_Traits:
-                    if L_Thirst >= 60 and not ApprovalCheck("Laura", 1500, "LO", TabM=0):
+            "Could you maybe just ask instead?" if "chill" not in LauraX.Traits:
+                    if LauraX.Thirst >= 60 and not ApprovalCheck(LauraX, 1500, "LO", TabM=0):
                             #she's too thirsty
-                            call AnyFace("Laura","sly",1) 
-                            if "chill" not in L_DailyActions:                                                         
-                                    call Statup("Laura", "Obed", 90, -2) 
+                            $ LauraX.FaceChange("sly",1) 
+                            if "chill" not in LauraX.DailyActions:                                                         
+                                    $ LauraX.Statup("Obed", 90, -2) 
                             ch_l "Not if you're going to keep dodging me. . ."
                             return
-                    elif ApprovalCheck("Laura", 1000, "LO", TabM=0) and L_Love >= L_Obed:
+                    elif ApprovalCheck(LauraX, 1000, "LO", TabM=0) and LauraX.Love >= LauraX.Obed:
                             #she cares
-                            call AnyFace("Laura","surprised",1) 
-                            if "chill" not in L_DailyActions:                                                         
-                                    call Statup("Laura", "Love", 90, 1) 
+                            $ LauraX.FaceChange("surprised",1) 
+                            if "chill" not in LauraX.DailyActions:                                                         
+                                    $ LauraX.Statup("Love", 90, 1) 
                             ch_l "Sorry, I was just horny. . ." 
-                            call AnyFace("Laura","sly",1,Eyes="side") 
+                            $ LauraX.FaceChange("sly",1,Eyes="side") 
                             ch_l "I'll try to hold back. . ."
-                    elif ApprovalCheck("Laura", 500, "O", TabM=0):
+                    elif ApprovalCheck(LauraX, 500, "O", TabM=0):
                             #she is obedient
-                            call AnyFace("Laura","sly",1,Eyes="side") 
+                            $ LauraX.FaceChange("sly",1,Eyes="side") 
                             ch_l "Sorry. . ."
                     else:   
                             #she doesn't care
-                            call AnyFace("Laura","sly",1) 
+                            $ LauraX.FaceChange("sly",1) 
                             ch_l "Only if I can't find you." 
                             return                    
-                    if "chill" not in L_DailyActions:                                                         
-                            call Statup("Laura", "Obed", 90, 3) 
-                    call AnyWord("Laura",1,0,"chill") #Daily
-                    $ L_Traits.append("chill")   
-            "Don't bother me like that." if "chill" not in L_Traits:
-                    if ApprovalCheck("Laura", 800, "O", TabM=0):
+                    if "chill" not in LauraX.DailyActions:                                                         
+                            $ LauraX.Statup("Obed", 90, 3) 
+                    $ LauraX.AnyWord(1,0,"chill") #Daily
+                    $ LauraX.Traits.append("chill")   
+            "Don't bother me like that." if "chill" not in LauraX.Traits:
+                    if ApprovalCheck(LauraX, 800, "O", TabM=0):
                             #she is obedient
-                            call AnyFace("Laura","sly",1,Eyes="side") 
+                            $ LauraX.FaceChange("sly",1,Eyes="side") 
                             ch_l "Ok."
-                    elif L_Thirst >= 60 and not ApprovalCheck("Laura", 500, "O", TabM=0):
+                    elif LauraX.Thirst >= 60 and not ApprovalCheck(LauraX, 500, "O", TabM=0):
                             #she's too thirsty
-                            call AnyFace("Laura","sly",1) 
-                            if "chill" not in L_DailyActions:                                                         
-                                    call Statup("Laura", "Obed", 90, -2) 
+                            $ LauraX.FaceChange("sly",1) 
+                            if "chill" not in LauraX.DailyActions:                                                         
+                                    $ LauraX.Statup("Obed", 90, -2) 
                             ch_l "Then don't keep dodging me. . ."
                             return
-                    elif ApprovalCheck("Laura", 400, "O", TabM=0):
+                    elif ApprovalCheck(LauraX, 400, "O", TabM=0):
                             #she is obedient
-                            call AnyFace("Laura","sly",1,Eyes="side") 
+                            $ LauraX.FaceChange("sly",1,Eyes="side") 
                             ch_l "Affirmative. . ."
-                    elif ApprovalCheck("Laura", 500, "LO", TabM=0) and not ApprovalCheck("Laura", 500, "I", TabM=0):
+                    elif ApprovalCheck(LauraX, 500, "LO", TabM=0) and not ApprovalCheck(LauraX, 500, "I", TabM=0):
                             #she cares
-                            call AnyFace("Laura","sly",1) 
+                            $ LauraX.FaceChange("sly",1) 
                             ch_l "Don't boss me around like that." 
                             ch_l "Still, I'll try to control myself. . ."
                     else:   
                             #she doesn't care
-                            call AnyFace("Laura","sly",1) 
+                            $ LauraX.FaceChange("sly",1) 
                             ch_l "Only if I can't find you." 
                             return                     
-                    if "chill" not in L_DailyActions:                                                         
-                            call Statup("Laura", "Obed", 90, 3) 
-                    call AnyWord("Laura",1,0,"chill") #Daily
-                    $ L_Traits.append("chill")   
+                    if "chill" not in LauraX.DailyActions:                                                         
+                            $ LauraX.Statup("Obed", 90, 3) 
+                    $ LauraX.AnyWord(1,0,"chill") #Daily
+                    $ LauraX.Traits.append("chill")   
             "Knock yourself out.":
-                    if ApprovalCheck("Laura", 800, "L", TabM=0):
-                            call AnyFace("Laura","sly",1) 
+                    if ApprovalCheck(LauraX, 800, "L", TabM=0):
+                            $ LauraX.FaceChange("sly",1) 
                             ch_l "Oh, I think we'll both enjoy that. . ." 
-                    elif ApprovalCheck("Laura", 700, "O", TabM=0):
-                            call AnyFace("Laura","sly",1,Eyes="side") 
+                    elif ApprovalCheck(LauraX, 700, "O", TabM=0):
+                            $ LauraX.FaceChange("sly",1,Eyes="side") 
                             ch_l "Oh yes sir."
                     else:
-                            call AnyFace("Laura","sly",1,Brows="confused") 
-                            if "chill" not in L_DailyActions:                                                         
-                                    call Statup("Laura", "Love", 90, -2)
+                            $ LauraX.FaceChange("sly",1,Brows="confused") 
+                            if "chill" not in LauraX.DailyActions:                                                         
+                                    $ LauraX.Statup("Love", 90, -2)
                             ch_l "If I'm horny, sure." 
-                    if "chill" not in L_DailyActions:                                                         
-                            call Statup("Laura", "Obed", 90, 3) 
-                    if "chill" in L_Traits:
-                            $ L_Traits.remove("chill")  
-                    call AnyWord("Laura",1,0,"chill") #Daily 
+                    if "chill" not in LauraX.DailyActions:                                                         
+                            $ LauraX.Statup("Obed", 90, 3) 
+                    if "chill" in LauraX.Traits:
+                            $ LauraX.Traits.remove("chill")  
+                    $ LauraX.AnyWord(1,0,"chill") #Daily 
             "Um, never mind.":
                 pass
         return
         
 # end Laura jumped <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
+# start laura hungry //////////////////////////////////////////////////////////
+label Laura_Hungry:
+    if LauraX.Chat[3]:
+        ch_l "[[licks her lips] I'm a little thirsty. . ."
+    elif LauraX.Chat[2]:
+        ch_l "I really enjoy that serum you whipped up."
+    else:
+        ch_l "[[licks her lips] I'm a little thirsty. . ."
+    $ LauraX.Traits.append("hungry")
+return
+
+
+# end laura hungry //////////////////////////////////////////////////////////
+
 # Laura Sexchat <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-label Laura_SexChat(Line = "Yeah, what did you want to talk about?"):
+label Laura_SexChat:
+    $ Line = "Yeah, what did you want to talk about?" if not Line else Line
     while True:
             menu:
                 ch_l "[Line]"                
                 "My favorite thing to do is. . .":
-                    if "setfav" in L_DailyActions:
+                    if "setfav" in LauraX.DailyActions:
                         ch_l "I remember."
                     else:
                         menu:
                             "Sex.":
-                                        call LauraFace("sly")
-                                        if L_PlayerFav == "sex":
-                                            call Statup("Laura", "Lust", 80, 5)
+                                        $ LauraX.FaceChange("sly")
+                                        if LauraX.PlayerFav == "sex":
+                                            $ LauraX.Statup("Lust", 80, 5)
                                             ch_l "Yeah, I know that. . ."                                
-                                        elif L_Favorite == "sex":
-                                            call Statup("Laura", "Love", 90, 5)
-                                            call Statup("Laura", "Lust", 80, 10)
+                                        elif LauraX.Favorite == "sex":
+                                            $ LauraX.Statup("Love", 90, 5)
+                                            $ LauraX.Statup("Lust", 80, 10)
                                             ch_l "I really like it too!"
-                                        elif L_Sex >= 5:
+                                        elif LauraX.Sex >= 5:
                                             ch_l "Well I don't mind that."
-                                        elif not L_Sex:
-                                            call LauraFace("perplexed")
-                                            ch_l "Who's fucking you? Is it Ms. Frost?!"
+                                        elif not LauraX.Sex:
+                                            $ LauraX.FaceChange("perplexed")
+                                            ch_l "Who's fucking you?"
                                         else:
-                                            call LauraFace("bemused")
+                                            $ LauraX.FaceChange("bemused")
                                             ch_l "Heh, um, yeah, it's nice. . ."
-                                        $ L_PlayerFav = "sex"
+                                        $ LauraX.PlayerFav = "sex"
                                         
                             "Anal.":
-                                        call LauraFace("sly")
-                                        if L_PlayerFav == "anal":
-                                            call Statup("Laura", "Lust", 80, 5)
+                                        $ LauraX.FaceChange("sly")
+                                        if LauraX.PlayerFav == "anal":
+                                            $ LauraX.Statup("Lust", 80, 5)
                                             ch_l "So you've said. . ."                                
-                                        elif L_Favorite == "anal":
-                                            call Statup("Laura", "Love", 90, 5)
-                                            call Statup("Laura", "Lust", 80, 10)
+                                        elif LauraX.Favorite == "anal":
+                                            $ LauraX.Statup("Love", 90, 5)
+                                            $ LauraX.Statup("Lust", 80, 10)
                                             ch_l "I love it too!"
-                                        elif L_Anal >= 10:
+                                        elif LauraX.Anal >= 10:
                                             ch_l "Yeah, it's. . . nice. . ."
-                                        elif not L_Anal:
-                                            call LauraFace("perplexed")
-                                            ch_l "Who's fucking you? Is it Ms. Frost?!"
+                                        elif not LauraX.Anal:
+                                            $ LauraX.FaceChange("perplexed")
+                                            ch_l "Who's fucking you?"
                                         else:
-                                            call LauraFace("bemused",Eyes="side")
+                                            $ LauraX.FaceChange("bemused",Eyes="side")
                                             ch_l "Heh, heh, yeah, um, it's ok. . ."
-                                        $ L_PlayerFav = "anal"
+                                        $ LauraX.PlayerFav = "anal"
                                         
                             "Blowjobs.":   
-                                        call LauraFace("sly")
-                                        if L_PlayerFav == "blow":
-                                            call Statup("Laura", "Lust", 80, 3)
+                                        $ LauraX.FaceChange("sly")
+                                        if LauraX.PlayerFav == "blow":
+                                            $ LauraX.Statup("Lust", 80, 3)
                                             ch_l "Yeah, I know."                                
-                                        elif L_Favorite == "blow":
-                                            call Statup("Laura", "Love", 90, 5)
-                                            call Statup("Laura", "Lust", 80, 5)
+                                        elif LauraX.Favorite == "blow":
+                                            $ LauraX.Statup("Love", 90, 5)
+                                            $ LauraX.Statup("Lust", 80, 5)
                                             ch_l "I love your dick!"
-                                        elif L_Blow >= 10:
+                                        elif LauraX.Blow >= 10:
                                             ch_l "Yeah, you're pretty tasty."
-                                        elif not L_Blow:
-                                            call LauraFace("perplexed")
-                                            ch_l "Who's sucking your dick?! Is it Ms. Frost?!"
+                                        elif not LauraX.Blow:
+                                            $ LauraX.FaceChange("perplexed")
+                                            ch_l "Who's sucking your dick?!"
                                         else:
-                                            call LauraFace("bemused")
+                                            $ LauraX.FaceChange("bemused")
                                             ch_l "I'm. . . getting used to the taste. . ."
-                                        $ L_PlayerFav = "blow"     
+                                        $ LauraX.PlayerFav = "blow"     
                                         
                             "Titjobs.":
-                                        call LauraFace("sly")   
-                                        if L_PlayerFav == "titjob":
-                                            call Statup("Laura", "Lust", 80, 5)
+                                        $ LauraX.FaceChange("sly")   
+                                        if LauraX.PlayerFav == "titjob":
+                                            $ LauraX.Statup("Lust", 80, 5)
                                             ch_l "Yeah, you've said that before. . ."                           
-                                        elif L_Favorite == "titjob":
-                                            call Statup("Laura", "Love", 90, 5)
-                                            call Statup("Laura", "Lust", 80, 7)
+                                        elif LauraX.Favorite == "titjob":
+                                            $ LauraX.Statup("Love", 90, 5)
+                                            $ LauraX.Statup("Lust", 80, 7)
                                             ch_l "Yeah, I enjoy that too. . ."
-                                        elif L_Tit >= 10:
+                                        elif LauraX.Tit >= 10:
                                             ch_l "It's certainly an interesting experience . . ."
-                                        elif not L_Tit:
-                                            call LauraFace("perplexed")
-                                            ch_l "Who's titfucking you? It's Ms. Frost, isn't it!"
+                                        elif not LauraX.Tit:
+                                            $ LauraX.FaceChange("perplexed")
+                                            ch_l "Who's titfucking you?"
                                         else:
-                                            call LauraFace("bemused")
+                                            $ LauraX.FaceChange("bemused")
                                             ch_l "That's nice of you to say. . ."
-                                            call Statup("Laura", "Love", 80, 5)
-                                            call Statup("Laura", "Inbt", 50, 10)
-                                        $ L_PlayerFav = "titjob"   
+                                            $ LauraX.Statup("Love", 80, 5)
+                                            $ LauraX.Statup("Inbt", 50, 10)
+                                        $ LauraX.PlayerFav = "titjob"   
+                                        
+                            "Footjobs.":
+                                        $ LauraXX.FaceChange("sly")
+                                        if LauraXX.PlayerFav == "foot":
+                                            $ LauraXX.Statup("Lust", 80, 5)
+                                            ch_l "Yeah, you've said that. . ."                                 
+                                        elif LauraXX.Favorite == "foot":
+                                            $ LauraXX.Statup("Love", 90, 5)
+                                            $ LauraXX.Statup("Lust", 80, 7)
+                                            ch_l "I do like using my feet. . ."
+                                        elif LauraXX.Foot >= 10:
+                                            ch_l "I like it too . . ."
+                                        elif not LauraXX.Foot:
+                                            $ LauraXX.FaceChange("perplexed")
+                                            ch_l "Who's playing footsie with you?"
+                                        else:
+                                            $ LauraXX.FaceChange("bemused")
+                                            ch_l "Yeah, it's nice. . ."
+                                        $ LauraXX.PlayerFav = "foot"  
                                         
                             "Handjobs.":
-                                        call LauraFace("sly")
-                                        if L_PlayerFav == "hand":
-                                            call Statup("Laura", "Lust", 80, 5)
+                                        $ LauraX.FaceChange("sly")
+                                        if LauraX.PlayerFav == "hand":
+                                            $ LauraX.Statup("Lust", 80, 5)
                                             ch_l "Yeah, you've said that. . ."                                
-                                        elif L_Favorite == "hand":
-                                            call Statup("Laura", "Love", 90, 5)
-                                            call Statup("Laura", "Lust", 80, 7)
+                                        elif LauraX.Favorite == "hand":
+                                            $ LauraX.Statup("Love", 90, 5)
+                                            $ LauraX.Statup("Lust", 80, 7)
                                             ch_l "You do feel pretty comfy. . ."
-                                        elif L_Hand >= 10:
+                                        elif LauraX.Hand >= 10:
                                             ch_l "I like it too . . ."
-                                        elif not L_Hand:
-                                            call LauraFace("perplexed")
-                                            ch_l "Who's jerking you off? Is it Ms. Frost?!"
+                                        elif not LauraX.Hand:
+                                            $ LauraX.FaceChange("perplexed")
+                                            ch_l "Who's jerking you off?"
                                         else:
-                                            call LauraFace("bemused")
+                                            $ LauraX.FaceChange("bemused")
                                             ch_l "Yeah, it's nice. . ."
-                                        $ L_PlayerFav = "hand"  
+                                        $ LauraX.PlayerFav = "hand"  
                                         
                             "Feeling you up.":
-                                        $ Cnt = L_FondleB + L_FondleT + L_SuckB + L_Hotdog
-                                        call LauraFace("sly")
-                                        if L_PlayerFav == "fondle":
-                                            call Statup("Laura", "Lust", 80, 3)
+                                        $ Cnt = LauraX.FondleB + LauraX.FondleT + LauraX.SuckB + LauraX.Hotdog
+                                        $ LauraX.FaceChange("sly")
+                                        if LauraX.PlayerFav == "fondle":
+                                            $ LauraX.Statup("Lust", 80, 3)
                                             ch_l "Yeah, I think we're clear on that. . ."                                
-                                        elif L_Favorite in ("hotdog","suck breasts","fondle breasts","fondle thighs"):
-                                            call Statup("Laura", "Love", 90, 5)
-                                            call Statup("Laura", "Lust", 80, 5)
+                                        elif LauraX.Favorite in ("hotdog","suck breasts","fondle breasts","fondle thighs"):
+                                            $ LauraX.Statup("Love", 90, 5)
+                                            $ LauraX.Statup("Lust", 80, 5)
                                             ch_l "I love when you touch me. . ."
                                         elif Cnt >= 10:
                                             ch_l "Yeah, it's really nice . . ."
                                         elif not Cnt:
-                                            call LauraFace("perplexed")
-                                            ch_l "Who's letting you feel her up? Is it Ms. Frost?!"
+                                            $ LauraX.FaceChange("perplexed")
+                                            ch_l "Who's letting you feel her up?"
                                         else:
-                                            call LauraFace("bemused")
+                                            $ LauraX.FaceChange("bemused")
                                             ch_l "I do like how that feels. . ."
-                                        $ L_PlayerFav = "fondle"  
+                                        $ LauraX.PlayerFav = "fondle"  
                                         $ Cnt = 0
                                 
                             "Kissing you.":
-                                        call LauraFace("sly")
-                                        if L_PlayerFav == "kiss you":
-                                            call Statup("Laura", "Love", 90, 3)
+                                        $ LauraX.FaceChange("sly")
+                                        if LauraX.PlayerFav == "kiss you":
+                                            $ LauraX.Statup("Love", 90, 3)
                                             ch_l "Such a romantic. . ."                                
-                                        elif L_Favorite == "kiss you":
-                                            call Statup("Laura", "Love", 90, 5)
-                                            call Statup("Laura", "Lust", 80, 5)
+                                        elif LauraX.Favorite == "kiss you":
+                                            $ LauraX.Statup("Love", 90, 5)
+                                            $ LauraX.Statup("Lust", 80, 5)
                                             ch_l "Hmm, the taste of you on my lips. . ."
-                                        elif L_Kissed >= 10:
+                                        elif LauraX.Kissed >= 10:
                                             ch_l "I love kissing you too . . ."
-                                        elif not L_Kissed:
-                                            call LauraFace("perplexed")
-                                            ch_l "Who are you kissing? Is it Ms. Frost?!"
+                                        elif not LauraX.Kissed:
+                                            $ LauraX.FaceChange("perplexed")
+                                            ch_l "Who are you kissing?"
                                         else:
-                                            call LauraFace("bemused")
+                                            $ LauraX.FaceChange("bemused")
                                             ch_l "I like kissing you too. . ."
-                                        $ L_PlayerFav = "kiss you" 
+                                        $ LauraX.PlayerFav = "kiss you" 
                                 
-                        $ L_DailyActions.append("setfav") 
+                        $ LauraX.DailyActions.append("setfav") 
                             
                 "What's your favorite thing to do?":
-                                if not ApprovalCheck("Laura", 800):
-                                        call LauraFace("perplexed")
+                                if not ApprovalCheck(LauraX, 800):
+                                        $ LauraX.FaceChange("perplexed")
                                         ch_l ". . ."                                    
                                 else:
-                                        if L_SEXP >= 50:
-                                            call LauraFace("sly")
+                                        if LauraX.SEXP >= 50:
+                                            $ LauraX.FaceChange("sly")
                                             ch_l "You should know. . ."   
                                         else:                 
-                                            call LauraFace("bemused")
-                                            $ L_Eyes = "side"
+                                            $ LauraX.FaceChange("bemused")
+                                            $ LauraX.Eyes = "side"
                                             ch_l "Hmm. . ."
                                             
                                             
-                                        if not L_Favorite or L_Favorite == "kiss":
+                                        if not LauraX.Favorite or LauraX.Favorite == "kiss":
                                             ch_l "Kissing?"  
-                                        elif L_Favorite == "anal":
+                                        elif LauraX.Favorite == "anal":
                                                 ch_l "Probably anal."  
-                                        elif L_Favorite == "lick ass":
+                                        elif LauraX.Favorite == "lick ass":
                                                 ch_l "When you lick my ass." 
-                                        elif L_Favorite == "insert ass":
+                                        elif LauraX.Favorite == "insert ass":
                                                 ch_l "Fingering my asshole, probably." 
-                                        elif L_Favorite == "sex":
+                                        elif LauraX.Favorite == "sex":
                                                 ch_l "Just the usual pounding." 
-                                        elif L_Favorite == "lick pussy":
+                                        elif LauraX.Favorite == "lick pussy":
                                                 ch_l "When you lick my pussy." 
-                                        elif L_Favorite == "fondle pussy":
+                                        elif LauraX.Favorite == "fondle pussy":
                                                 ch_l "When you finger me." 
-                                        elif L_Favorite == "blow":
+                                        elif LauraX.Favorite == "blow":
                                                 ch_l "I like how your cock tastes." 
-                                        elif L_Favorite == "tit":
-                                                ch_l "when I use my tits." 
-                                        elif L_Favorite == "hand":
+                                        elif LauraX.Favorite == "tit":
+                                                ch_l "When I use my tits." 
+                                        elif LauraX.Favorite == "foot":
+                                                ch_l "Footjobs are pretty fun." 
+                                        elif LauraX.Favorite == "hand":
                                                 ch_l "I like jerking you off." 
-                                        elif L_Favorite == "hotdog":
+                                        elif LauraX.Favorite == "hotdog":
                                                 ch_l "When you grind against me." 
-                                        elif L_Favorite == "suck breasts":
+                                        elif LauraX.Favorite == "suck breasts":
                                                 ch_l "When you suck my tits."  
-                                        elif L_Favorite == "fondle breasts":
+                                        elif LauraX.Favorite == "fondle breasts":
                                                 ch_l "When you grab my tits." 
-                                        elif L_Favorite == "fondle thighs":
+                                        elif LauraX.Favorite == "fondle thighs":
                                                 ch_l "When you rub my thighs."
                                         else:
                                                 ch_l "How should I know?"    
                                                 
                                 # End Laura's favorite things.
                     
-                "Don't talk as much during sex." if "vocal" in L_Traits:
-                        if "setvocal" in L_DailyActions:
-                            call LauraFace("perplexed")
+                "Don't talk as much during sex." if "vocal" in LauraX.Traits:
+                        if "setvocal" in LauraX.DailyActions:
+                            $ LauraX.FaceChange("perplexed")
                             ch_l "Make up your mind."
                         else:              
-                            if ApprovalCheck("Laura", 1000) and L_Obed <= L_Love:
-                                call LauraFace("bemused")
-                                call Statup("Laura", "Obed", 90, 1)
+                            if ApprovalCheck(LauraX, 1000) and LauraX.Obed <= LauraX.Love:
+                                $ LauraX.FaceChange("bemused")
+                                $ LauraX.Statup("Obed", 90, 1)
                                 ch_l "Stay quiet, got it."
-                                $ L_Traits.remove("vocal")   
-                            elif ApprovalCheck("Laura", 700, "O"):
-                                call LauraFace("sadside")
-                                call Statup("Laura", "Obed", 90, 1)
+                                $ LauraX.Traits.remove("vocal")   
+                            elif ApprovalCheck(LauraX, 700, "O"):
+                                $ LauraX.FaceChange("sadside")
+                                $ LauraX.Statup("Obed", 90, 1)
                                 ch_l ". . ."
-                                $ L_Traits.remove("vocal")   
-                            elif ApprovalCheck("Laura", 600):
-                                call LauraFace("sly")
-                                call Statup("Laura", "Love", 90, -3)
-                                call Statup("Laura", "Obed", 50, -1)
-                                call Statup("Laura", "Inbt", 90, 5)
-                                ch_l "Don't push it, [L_Petname]."
+                                $ LauraX.Traits.remove("vocal")   
+                            elif ApprovalCheck(LauraX, 600):
+                                $ LauraX.FaceChange("sly")
+                                $ LauraX.Statup("Love", 90, -3)
+                                $ LauraX.Statup("Obed", 50, -1)
+                                $ LauraX.Statup("Inbt", 90, 5)
+                                ch_l "Don't push it, [LauraX.Petname]."
                             else:
-                                call LauraFace("angry")
-                                call Statup("Laura", "Love", 90, -5)
-                                call Statup("Laura", "Obed", 60, -3)
-                                call Statup("Laura", "Inbt", 90, 10)
-                                ch_l "I don't take orders from you, [L_Petname]."
+                                $ LauraX.FaceChange("angry")
+                                $ LauraX.Statup("Love", 90, -5)
+                                $ LauraX.Statup("Obed", 60, -3)
+                                $ LauraX.Statup("Inbt", 90, 10)
+                                ch_l "I don't take orders from you, [LauraX.Petname]."
                                                 
-                            $ L_DailyActions.append("setvocal")   
-                "Talk dirty to me during sex." if "vocal" not in L_Traits:
-                        if "setvocal" in L_DailyActions:
-                            call LauraFace("perplexed")
+                            $ LauraX.DailyActions.append("setvocal")   
+                "Talk dirty to me during sex." if "vocal" not in LauraX.Traits:
+                        if "setvocal" in LauraX.DailyActions:
+                            $ LauraX.FaceChange("perplexed")
                             ch_l "I heard you the first time."
                         else:     
-                            if ApprovalCheck("Laura", 1000) and L_Obed <= L_Love:
-                                call LauraFace("sly")
-                                call Statup("Laura", "Obed", 90, 2)
+                            if ApprovalCheck(LauraX, 1000) and LauraX.Obed <= LauraX.Love:
+                                $ LauraX.FaceChange("sly")
+                                $ LauraX.Statup("Obed", 90, 2)
                                 ch_l "Louder? Ok. . ."
-                                $ L_Traits.append("vocal")   
-                            elif ApprovalCheck("Laura", 700, "O"):
-                                call LauraFace("sadside")
-                                call Statup("Laura", "Obed", 90, 2)
-                                ch_l "If you want, [L_Petname]."
-                                $ L_Traits.append("vocal")   
-                            elif ApprovalCheck("Laura", 600):
-                                call LauraFace("sly")
-                                call Statup("Laura", "Obed", 90, 3)
+                                $ LauraX.Traits.append("vocal")   
+                            elif ApprovalCheck(LauraX, 700, "O"):
+                                $ LauraX.FaceChange("sadside")
+                                $ LauraX.Statup("Obed", 90, 2)
+                                ch_l "If you want, [LauraX.Petname]."
+                                $ LauraX.Traits.append("vocal")   
+                            elif ApprovalCheck(LauraX, 600):
+                                $ LauraX.FaceChange("sly")
+                                $ LauraX.Statup("Obed", 90, 3)
                                 ch_l "I guess?"
-                                $ L_Traits.append("vocal")   
+                                $ LauraX.Traits.append("vocal")   
                             else:
-                                call LauraFace("angry")
-                                call Statup("Laura", "Inbt", 90, 5)
+                                $ LauraX.FaceChange("angry")
+                                $ LauraX.Statup("Inbt", 90, 5)
                                 ch_l ". . ."  
                                 
-                            $ L_DailyActions.append("setvocal")  
+                            $ LauraX.DailyActions.append("setvocal")  
                         # End Laura Dirty Talk
                     
-                "Don't do your own thing as much during sex." if "passive" not in L_Traits:
-                        if "initiative" in L_DailyActions:
-                            call LauraFace("perplexed")
+                "Don't do your own thing as much during sex." if "passive" not in LauraX.Traits:
+                        if "initiative" in LauraX.DailyActions:
+                            $ LauraX.FaceChange("perplexed")
                             ch_l "I heard you the first time."
                         else:       
-                            if ApprovalCheck("Laura", 1200) and L_Obed <= L_Love:
-                                call LauraFace("bemused")
-                                call Statup("Laura", "Obed", 90, 1)
+                            if ApprovalCheck(LauraX, 1200) and LauraX.Obed <= LauraX.Love:
+                                $ LauraX.FaceChange("bemused")
+                                $ LauraX.Statup("Obed", 90, 1)
                                 ch_l "Passive, eh?"     
-                                $ L_Traits.append("passive")                  
-                            elif ApprovalCheck("Laura", 700, "O"):
-                                call LauraFace("sadside")
-                                call Statup("Laura", "Obed", 90, 1)
+                                $ LauraX.Traits.append("passive")                  
+                            elif ApprovalCheck(LauraX, 700, "O"):
+                                $ LauraX.FaceChange("sadside")
+                                $ LauraX.Statup("Obed", 90, 1)
                                 ch_l "I'll try to hold back."
-                                $ L_Traits.append("passive")
-                            elif ApprovalCheck("Laura", 600):
-                                call LauraFace("sly")
-                                call Statup("Laura", "Love", 90, -3)
-                                call Statup("Laura", "Obed", 50, -1)
-                                call Statup("Laura", "Inbt", 90, 5)
+                                $ LauraX.Traits.append("passive")
+                            elif ApprovalCheck(LauraX, 600):
+                                $ LauraX.FaceChange("sly")
+                                $ LauraX.Statup("Love", 90, -3)
+                                $ LauraX.Statup("Obed", 50, -1)
+                                $ LauraX.Statup("Inbt", 90, 5)
                                 ch_l "Hm, no."
                             else:
-                                call LauraFace("angry")
-                                call Statup("Laura", "Love", 90, -5)
-                                call Statup("Laura", "Obed", 60, -3)
-                                call Statup("Laura", "Inbt", 90, 10)
+                                $ LauraX.FaceChange("angry")
+                                $ LauraX.Statup("Love", 90, -5)
+                                $ LauraX.Statup("Obed", 60, -3)
+                                $ LauraX.Statup("Inbt", 90, 10)
                                 ch_l "We'll see."
                                 
-                            $ L_DailyActions.append("initiative")  
-                "Take more initiative during sex." if "passive" in L_Traits:
-                        if "initiative" in L_DailyActions:
-                            call LauraFace("perplexed")
-                            ch_l "I heard you the first time."
+                            $ LauraX.DailyActions.append("initiative")  
+                "Take more initiative during sex." if "passive" in LauraX.Traits:
+                        if "initiative" in LauraX.DailyActions:
+                                $ LauraX.FaceChange("perplexed")
+                                ch_l "I heard you the first time."
                         else:   
-                            if ApprovalCheck("Laura", 1000) and L_Obed <= L_Love:
-                                call LauraFace("bemused")
-                                call Statup("Laura", "Obed", 90, 1)
+                            if ApprovalCheck(LauraX, 1000) and LauraX.Obed <= LauraX.Love:
+                                $ LauraX.FaceChange("bemused")
+                                $ LauraX.Statup("Obed", 90, 1)
                                 ch_l "More active, got it."    
-                                $ L_Traits.remove("passive")                   
-                            elif ApprovalCheck("Laura", 700, "O"):
-                                call LauraFace("sadside")
-                                call Statup("Laura", "Obed", 90, 1)
+                                $ LauraX.Traits.remove("passive")                   
+                            elif ApprovalCheck(LauraX, 700, "O"):
+                                $ LauraX.FaceChange("sadside")
+                                $ LauraX.Statup("Obed", 90, 1)
                                 ch_l "If you insist."
-                                $ L_Traits.remove("passive")    
-                            elif ApprovalCheck("Laura", 600):
-                                call LauraFace("sly")
-                                call Statup("Laura", "Obed", 90, 3)
+                                $ LauraX.Traits.remove("passive")    
+                            elif ApprovalCheck(LauraX, 600):
+                                $ LauraX.FaceChange("sly")
+                                $ LauraX.Statup("Obed", 90, 3)
                                 ch_l "We'll see."
-                                $ L_Traits.remove("passive")  
+                                $ LauraX.Traits.remove("passive")  
                             else:
-                                call LauraFace("angry")
-                                call Statup("Laura", "Inbt", 90, 5)
+                                $ LauraX.FaceChange("angry")
+                                $ LauraX.Statup("Inbt", 90, 5)
                                 ch_l "Too much work."  
                                 
-                            $ L_DailyActions.append("initiative")   
+                            $ LauraX.DailyActions.append("initiative")   
                                 
-                "About getting Jumped" if "jumped" in L_History:
-                    call Laura_Jumped
+                "About getting Jumped" if "jumped" in LauraX.History:
+                        call Laura_Jumped
                 "About when you masturbate":
-                    call NoFap("Laura")
+                    call NoFap(LauraX)
                     
                 "Never Mind" if Line == "Yeah, what did you want to talk about?":
-                    return
+                        return
                 "That's all." if Line != "Yeah, what did you want to talk about?":
-                    return
+                        return
             if Line == "Yeah, what did you want to talk about?":
                 $ Line = "Anything else?"
     return
@@ -1146,169 +863,176 @@ label Laura_Chitchat(O=0, Options = ["default","default","default"]):
         $ Options = [O]
     else:
         
-        if "Laura" not in Digits:
-                if ApprovalCheck("Laura", 500, "L") or ApprovalCheck("Laura", 250, "I"):
+        if LauraX not in Digits:
+                if ApprovalCheck(LauraX, 500, "L") or ApprovalCheck(LauraX, 250, "I"):
                     ch_l "Oh, here's my number, in case you need back-up."
-                    $ Digits.append("Laura")  
+                    $ Digits.append(LauraX)  
                     return
-                elif ApprovalCheck("Laura", 250, "O"):
+                elif ApprovalCheck(LauraX, 250, "O"):
                     ch_l "If you need to contact me, here's my number."             
-                    $ Digits.append("Laura")
+                    $ Digits.append(LauraX)
                     return
                 
-        if "hungry" not in L_Traits and (L_Swallow + L_Chat[2]) >= 10 and L_Loc == bg_current:  #She's swallowed a lot        
-                call Laura_Hungry
-                return  
+        if "hungry" not in LauraX.Traits and (LauraX.Swallow + LauraX.Chat[2]) >= 10 and LauraX.Loc == bg_current:  #She's swallowed a lot        
+                    call Laura_Hungry
+                    return  
         
+        if not Taboo or ApprovalCheck(LauraX, 800, "I"):
+                    if LauraX.Loc == bg_current and LauraX.Thirst >= 30 and "refused" not in LauraX.DailyActions and "quicksex" not in LauraX.DailyActions: 
+                            $ LauraX.FaceChange("sly",1)    
+                            ch_l "Hey, wanna bone?"
+                            call Quick_Sex(LauraX)
+                    return
 #        $ Options = ["default","default","default"]
         #adds options based on accomplishments
-#        if PunishmentX and "caught chat" not in L_DailyActions:
+#        if PunishmentX and "caught chat" not in LauraX.DailyActions:
 #            $ Options.append("caught")
-        if L_Event[0] and "key" not in L_Chat:
+        if LauraX.Event[0] and "key" not in LauraX.Chat:
             $ Options.append("key")
-        if "lover" in L_Petnames and ApprovalCheck("Laura", 900, "L"): # luvy dovey       
+        if "lover" in LauraX.Petnames and ApprovalCheck(LauraX, 900, "L"): # luvy dovey       
             $ Options.append("luv")
               
-        if "mandrill" in P_Traits and "cologne chat" not in L_DailyActions:
+        if "mandrill" in Player.Traits and "cologne chat" not in LauraX.DailyActions:
             $ Options.append("mandrill")        
-        if "purple" in P_Traits and "cologne chat" not in L_DailyActions:
+        if "purple" in Player.Traits and "cologne chat" not in LauraX.DailyActions:
             $ Options.append("purple")        
-        if "corruption" in P_Traits and "cologne chat" not in L_DailyActions:
+        if "corruption" in Player.Traits and "cologne chat" not in LauraX.DailyActions:
             $ Options.append("corruption")
         
-        if LauraName == "X-23" and "X-23" not in L_History: 
+        if "Laura" not in LauraX.Names: 
             $ Options.append("laura")
             
-        if L_Date >= 1:
+        if LauraX.Date >= 1:
             #if you've dated before
             $ Options.append("dated")
-#        if "cheek" in L_DailyActions and "cheek" not in L_Chat:
+#        if "cheek" in LauraX.DailyActions and "cheek" not in LauraX.Chat:
 #            #If you've touched her cheek today
 #            $ Options.append("cheek")
-        if L_Kissed >= 5:
+        if LauraX.Kissed >= 5:
             #if you've kissed a few times
             $ Options.append("kissed")
-        if "dangerroom" in P_DailyActions:
+        if "dangerroom" in Player.DailyActions:
             #If you've been in the danger room today
             $ Options.append("dangerroom")
-        if "showered" in L_DailyActions:
+        if "showered" in LauraX.DailyActions:
             #If you've caught Laura showering today
             $ Options.append("showercaught")
-        if "fondle breasts" in L_DailyActions or "fondle pussy" in L_DailyActions or "fondle ass" in L_DailyActions:
+        if "fondle breasts" in LauraX.DailyActions or "fondle pussy" in LauraX.DailyActions or "fondle ass" in LauraX.DailyActions:
             #If you've fondled Laura today
             $ Options.append("fondled")
-        if "Dazzler and Longshot" in L_Inventory and "256 Shades of Grey" in L_Inventory and "Avengers Tower Penthouse" in L_Inventory:   
+        if "Dazzler and Longshot" in LauraX.Inventory and "256 Shades of Grey" in LauraX.Inventory and "Avengers Tower Penthouse" in LauraX.Inventory:   
             #If you've given Laura the books
-            if "book" not in L_Chat:
+            if "book" not in LauraX.Chat:
                 $ Options.append("booked")
-        if "lace bra" in L_Inventory or "lace panties" in L_Inventory:   
+        if "lace bra" in LauraX.Inventory or "lace panties" in LauraX.Inventory:   
             #If you've given Laura the lingerie
-            if "lingerie" not in L_Chat:
+            if "lingerie" not in LauraX.Chat:
                 $ Options.append("lingerie")
-        if L_Hand:   
+        if LauraX.Hand:   
             #If Laura's given a handjob
             $ Options.append("handy")
-        if L_Swallow:   
+        if LauraX.Swallow:   
             #If Laura's swallowed before
             $ Options.append("swallowed")
-        if "cleaned" in L_DailyActions or "painted" in L_DailyActions:
+        if "cleaned" in LauraX.DailyActions or "painted" in LauraX.DailyActions:
             #If Laura's been facialed
             $ Options.append("facial")
-        if L_Sleep:
+        if LauraX.Sleep:
             #If Laura's slept over
             $ Options.append("sleep")
-        if L_CreamP or L_CreamA:
+        if LauraX.CreamP or LauraX.CreamA:
             #If Laura's been creampied
             $ Options.append("creampie")
-        if L_Sex or L_Anal:
+        if LauraX.Sex or LauraX.Anal:
             #If Laura's been sexed
             $ Options.append("sexed")
-        if L_Anal:
+        if LauraX.Anal:
             #If Laura's been analed
             $ Options.append("anal")
             
-#        if not L_Chat[0] and L_Sex:
+#        if not LauraX.Chat[0] and LauraX.Sex:
 #            $ Options.append("virgin")    
             
-#        if (bg_current == "bg laura" or bg_current == "bg player") and "relationship" not in L_DailyActions:
-#            if "lover" not in L_Petnames and ApprovalCheck("Laura", 900, "L"): # L_Event[6]        
+#        if (bg_current == "bg laura" or bg_current == "bg player") and "relationship" not in LauraX.DailyActions:
+#            if "lover" not in LauraX.Petnames and ApprovalCheck(LauraX, 900, "L"): # LauraX.Event[6]        
 #                $ Options.append("lover?")
-#            elif "sir" not in L_Petnames and ApprovalCheck("Laura", 500, "O"): # L_Event[7]
+#            elif "sir" not in LauraX.Petnames and ApprovalCheck(LauraX, 500, "O"): # LauraX.Event[7]
 #                $ Options.append("sir?")      
-#            elif "daddy" not in L_Petnames and ApprovalCheck("Laura", 750, "L") and ApprovalCheck("Laura", 500, "O") and ApprovalCheck("Laura", 500, "I"): # L_Event[5]
+#            elif "daddy" not in LauraX.Petnames and ApprovalCheck(LauraX, 750, "L") and ApprovalCheck(LauraX, 500, "O") and ApprovalCheck(LauraX, 500, "I"): # LauraX.Event[5]
 #                $ Options.append("daddy?")
-#            elif "master" not in L_Petnames and ApprovalCheck("Laura", 900, "O"): # L_Event[8]
+#            elif "master" not in LauraX.Petnames and ApprovalCheck(LauraX, 900, "O"): # LauraX.Event[8]
 #                $ Options.append("master?")
-#            elif "sex friend" not in L_Petnames and ApprovalCheck("Laura", 500, "I"): # L_Event[9]
+#            elif "sex friend" not in LauraX.Petnames and ApprovalCheck(LauraX, 500, "I"): # LauraX.Event[9]
 #                $ Options.append("sexfriend?")
-#            elif "fuck buddy" not in L_Petnames and ApprovalCheck("Laura", 900, "I"): # L_Event[10]
+#            elif "fuck buddy" not in LauraX.Petnames and ApprovalCheck(LauraX, 900, "I"): # LauraX.Event[10]
 #                $ Options.append("fuckbuddy?")  
             
         
-        if not ApprovalCheck("Laura", 300):            #She dislikes you
+        if not ApprovalCheck(LauraX, 300):            #She dislikes you
             $ Options.append("hate") 
     
     $ renpy.random.shuffle(Options)             #shuffles options and picks out the first one
     
     if Options[0] == "mandrill":                             
-        $ L_DailyActions.append("cologne chat") 
-        call LauraFace("confused")
+        $ LauraX.DailyActions.append("cologne chat") 
+        $ LauraX.FaceChange("confused")
         ch_l "(sniff, sniff). . . smalls like. . . ape . . ."
-        call LauraFace("sexy", 2)
+        $ LauraX.FaceChange("sexy", 2)
         ch_l ". . . did you want to do something later?"    
     elif Options[0] == "purple":              
-        $ L_DailyActions.append("cologne chat") 
-        call LauraFace("sly",1)
+        $ LauraX.DailyActions.append("cologne chat") 
+        $ LauraX.FaceChange("sly",1)
         ch_l "(sniff, sniff). . . what is that? . ."
-        call LauraFace("normal",0)
+        $ LauraX.FaceChange("normal",0)
         ch_l ". . . what was it you wanted?"    
     elif Options[0] == "corruption":              
-        $ L_DailyActions.append("cologne chat") 
-        call LauraFace("confused")
+        $ LauraX.DailyActions.append("cologne chat") 
+        $ LauraX.FaceChange("confused")
         ch_l "(sniff, sniff). . . that's a strong scent. . ."
-        call LauraFace("angry")
+        $ LauraX.FaceChange("angry")
         ch_l ". . . a dangerous scent. . ."
-        call LauraFace("sly")
+        $ LauraX.FaceChange("sly")
                 
     elif Options[0] == "caught": # Xavier's caught you
-            if "caught chat" in L_Chat:
+            if "caught chat" in LauraX.Chat:
                     ch_l "We should be more careful about getting caught."
-                    if not ApprovalCheck("Laura", 500, "I"):
+                    if not ApprovalCheck(LauraX, 500, "I"):
                          ch_l "Unless. . ."
             else:    
                     ch_l "Sorry we got dragged into the Professor's office like that."
-                    if not ApprovalCheck("Laura", 500, "I"):
+                    if not ApprovalCheck(LauraX, 500, "I"):
                         ch_l "I guess you wouldn't want to get it on in public anymore."
                     else:
                         ch_l "I kind of enjoyed it though. . ."
-                    $ L_Chat.append("caught chat") 
+                    $ LauraX.Chat.append("caught chat") 
     elif Options[0] == "key": # you have her key
-            if L_SEXP <= 15:
+            if LauraX.SEXP <= 15:
                 ch_l "I gave you the key for convenience, don't abuse it . ."
             else:
                 ch_l "I gave you a key, but you don't visit. . ."
-            $ L_Chat.append("key") 
+            $ LauraX.Chat.append("key") 
         
 #    elif Options[0] == "cheek":
 #            #Laura's response to having her cheek touched.
-#            ch_l "So,[L_Petname]. . .y'know how you[L_like]kinda just brushed my cheek before?"
+#            ch_l "So,[LauraX.Petname]. . .y'know how you[LauraX.like]kinda just brushed my cheek before?"
 #            ch_p "Yeah?  Was that okay?"
-#            call LauraFace("smile",1)
+#            $ LauraX.FaceChange("smile",1)
 #            ch_l "More than just {i}okay{/i}."
-#            $ L_Chat.append("cheek") 
+#            $ LauraX.Chat.append("cheek") 
     
      
     elif Options[0] == "laura":    
             #if she never told you her name. . .
             ch_l "Oh, by the way, I also go by \"Laura.\" Laura Kinney."
+            $ LauraX.Names.append("Laura")
             menu:
                 "Oh, that's nice, I think I'll call you that.":   
-                        call Statup("Laura", "Love", 70, 5) # Love              
-                        $ LauraName = "Laura" 
+                        $ LauraX.Statup("Love", 70, 5) # Love              
+                        $ LauraX.Name = "Laura" 
                 "Ok, but X-23 sounds cooler.":    
-                        call Statup("Laura", "Love", 70, -2) # Love   
-                        call Statup("Laura", "Obed", 70, 5) # Obed             
-                        $ LauraName = "X-23" 
+                        $ LauraX.Statup("Love", 70, -2) # Love   
+                        $ LauraX.Statup("Obed", 70, 5) # Obed             
+                        $ LauraX.Name = "X-23" 
                                             
     elif Options[0] == "dated":
             #Laura's response to having gone on a date with the Player.
@@ -1316,72 +1040,72 @@ label Laura_Chitchat(O=0, Options = ["default","default","default"]):
 
     elif Options[0] == "kissed":
             #Laura's response to having been kissed by the Player.
-            call LauraFace("normal",1)
-            ch_l "You're pretty good at kissing, [L_Petname]."
+            $ LauraX.FaceChange("normal",1)
+            ch_l "You're pretty good at kissing, [LauraX.Petname]."
             menu:
                 extend ""
                 "Hey. . .I'm the best there is at what I do.":
-                        call LauraFace("smile",1)
+                        $ LauraX.FaceChange("smile",1)
                         ch_l "You'll have to back that claim up."
                 "No. You think?":
                         ch_l "Do I look like a kidder?"
 
     elif Options[0] == "dangerroom":
             #Laura's response to Player working out in the Danger Room while Laura is present
-            call LauraFace("sly",1)
-            ch_l "Hey,[L_Petname].  I saw you in the Danger Room, earlier."
+            $ LauraX.FaceChange("sly",1)
+            ch_l "Hey,[LauraX.Petname].  I saw you in the Danger Room, earlier."
             ch_l "You should probably keep your left up, you were taking too many shots to the head."
 
     elif Options[0] == "showercaught":
             #Laura's response to being caught in the shower.
-            if "shower" in L_Chat: 
+            if "shower" in LauraX.Chat: 
                 ch_l "You saw me taking a shower again. . ."                       
             else:
                 ch_l "Do you make a habit of bursting into the showers?"            
-                $ L_Chat.append("shower") 
+                $ LauraX.Chat.append("shower") 
                 menu:
                     extend ""
                     "It was a total accident!  I promise!":             
-                            call Statup("Laura", "Love", 50, 5)    
-                            call Statup("Laura", "Love", 90, 2) 
-                            if ApprovalCheck("Laura", 1200):
-                                call LauraFace("sly",1)
+                            $ LauraX.Statup("Love", 50, 5)    
+                            $ LauraX.Statup("Love", 90, 2) 
+                            if ApprovalCheck(LauraX, 1200):
+                                $ LauraX.FaceChange("sly",1)
                                 ch_l "I didn't mind."
-                            call LauraFace("smile")
+                            $ LauraX.FaceChange("smile")
                             ch_l "We all make mistakes."
                     "Just with you.":        
-                            call Statup("Laura", "Obed", 40, 5)   
-                            if ApprovalCheck("Laura", 1000) or ApprovalCheck("Laura", 700, "L"):      
-                                    call Statup("Laura", "Love", 90, 3)    
-                                    call LauraFace("sly",1)
+                            $ LauraX.Statup("Obed", 40, 5)   
+                            if ApprovalCheck(LauraX, 1000) or ApprovalCheck(LauraX, 700, "L"):      
+                                    $ LauraX.Statup("Love", 90, 3)    
+                                    $ LauraX.FaceChange("sly",1)
                                     ch_l "Hmm, I guess that's a compliment."
                             else:                
-                                    call Statup("Laura", "Love", 70, -5) 
-                                    call LauraFace("angry")
+                                    $ LauraX.Statup("Love", 70, -5) 
+                                    $ LauraX.FaceChange("angry")
                                     ch_l "I think I should be insulted."                                                       
                     "Totally on purpose. I regret nothing.":
-                            if ApprovalCheck("Laura", 1200):                     
-                                    call Statup("Laura", "Love", 90, 3)          
-                                    call Statup("Laura", "Obed", 70, 10)            
-                                    call Statup("Laura", "Inbt", 50, 5) 
-                                    call LauraFace("sly",1)
+                            if ApprovalCheck(LauraX, 1200):                     
+                                    $ LauraX.Statup("Love", 90, 3)          
+                                    $ LauraX.Statup("Obed", 70, 10)            
+                                    $ LauraX.Statup("Inbt", 50, 5) 
+                                    $ LauraX.FaceChange("sly",1)
                                     ch_l "You seem to know what you want."
-                            elif ApprovalCheck("Laura", 800):                          
-                                    call Statup("Laura", "Obed", 60, 5)            
-                                    call Statup("Laura", "Inbt", 50, 5) 
-                                    call LauraFace("perplexed",2)
+                            elif ApprovalCheck(LauraX, 800):                          
+                                    $ LauraX.Statup("Obed", 60, 5)            
+                                    $ LauraX.Statup("Inbt", 50, 5) 
+                                    $ LauraX.FaceChange("perplexed",2)
                                     ch_l "I guess you show initiative."
-                                    $ L_Blush = 1
+                                    $ LauraX.Blush = 1
                             else:                
-                                    call Statup("Laura", "Love", 50, -10) 
-                                    call Statup("Laura", "Love", 80, -10)          
-                                    call Statup("Laura", "Obed", 50, 10)  
-                                    call LauraFace("angry")
+                                    $ LauraX.Statup("Love", 50, -10) 
+                                    $ LauraX.Statup("Love", 80, -10)          
+                                    $ LauraX.Statup("Obed", 50, 10)  
+                                    $ LauraX.FaceChange("angry")
                                     ch_l "That's a bit disturbing."
 
     elif Options[0] == "fondled":
             #Laura's response to being felt up.
-            if L_FondleB + L_FondleP + L_FondleA >= 15:
+            if LauraX.FondleB + LauraX.FondleP + LauraX.FondleA >= 15:
                 ch_l "I need your hands on me." 
             else:                
                 ch_l "You could feel me up, if you wanted."
@@ -1392,64 +1116,64 @@ label Laura_Chitchat(O=0, Options = ["default","default","default"]):
             menu:
                 extend ""
                 "Yeah?  Did you like them?":
-                        call LauraFace("sly",2)
+                        $ LauraX.FaceChange("sly",2)
                         ch_l "They were. . .{i}interesting{/i}."
                 "Good.  You looked like you could use to learn a thing or two from them.":                     
-                        call Statup("Laura", "Love", 90, -3)          
-                        call Statup("Laura", "Obed", 70, 5)            
-                        call Statup("Laura", "Inbt", 50, 5) 
-                        call LauraFace("angry")
+                        $ LauraX.Statup("Love", 90, -3)          
+                        $ LauraX.Statup("Obed", 70, 5)            
+                        $ LauraX.Statup("Inbt", 50, 5) 
+                        $ LauraX.FaceChange("angry")
                         ch_l "I don't see how."                
-            $ L_Blush = 1
-            $ L_Chat.append("book") 
+            $ LauraX.Blush = 1
+            $ LauraX.Chat.append("book") 
 
     elif Options[0] == "lingerie":
             #Laura's response to being given lingerie.
-            call LauraFace("sly",2)
+            $ LauraX.FaceChange("sly",2)
             ch_l "That underwear ou got me was kind of uncomfortable, but I do like the look."
-            $ L_Blush = 1
-            $ L_Chat.append("lingerie") 
+            $ LauraX.Blush = 1
+            $ LauraX.Chat.append("lingerie") 
 
     elif Options[0] == "handy":
             #Laura's response after giving the Player a handjob.
-            call LauraFace("sly",1)
+            $ LauraX.FaceChange("sly",1)
             ch_l "I was thinking about having your cock in my hand the other day. . ."
             ch_l "You seemed to enjoy it."
-            $ L_Blush = 0
+            $ LauraX.Blush = 0
 
     elif Options[0] == "blow":
-            if "blow" not in L_Chat:
+            if "blow" not in LauraX.Chat:
                     #Laura's response after giving the Player a blowjob.
-                    call LauraFace("sly",2)
+                    $ LauraX.FaceChange("sly",2)
                     ch_l "Hey, so did you like that blowjob?"
                     menu:
                         extend ""
                         "You were totally amazing.":                            
-                                    call Statup("Laura", "Love", 90, 5)            
-                                    call Statup("Laura", "Inbt", 60, 10) 
-                                    call LauraFace("normal",1)
+                                    $ LauraX.Statup("Love", 90, 5)            
+                                    $ LauraX.Statup("Inbt", 60, 10) 
+                                    $ LauraX.FaceChange("normal",1)
                                     ch_l "Cool. Cool. . . "
-                                    call LauraFace("sexy",1)
+                                    $ LauraX.FaceChange("sexy",1)
                                     ch_l "I'd like another taste sometime."
                         "Honestly? It was good. . .but you could use a little practice, I think.":
-                                if ApprovalCheck("Laura", 300, "I") or not ApprovalCheck("Laura", 800):                     
-                                    call Statup("Laura", "Love", 90, -5)          
-                                    call Statup("Laura", "Obed", 60, 10)            
-                                    call Statup("Laura", "Inbt", 50, 10) 
-                                    call LauraFace("perplexed",1)
+                                if ApprovalCheck(LauraX, 300, "I") or not ApprovalCheck(LauraX, 800):                     
+                                    $ LauraX.Statup("Love", 90, -5)          
+                                    $ LauraX.Statup("Obed", 60, 10)            
+                                    $ LauraX.Statup("Inbt", 50, 10) 
+                                    $ LauraX.FaceChange("perplexed",1)
                                     ch_l "Yeah? Sorry to disappoint."
                                 else:                              
-                                    call Statup("Laura", "Obed", 70, 15)            
-                                    call Statup("Laura", "Inbt", 50, 5) 
-                                    call LauraFace("sexy",1)
+                                    $ LauraX.Statup("Obed", 70, 15)            
+                                    $ LauraX.Statup("Inbt", 50, 5) 
+                                    $ LauraX.FaceChange("sexy",1)
                                     ch_l "Yeah? I suppose we could keep trying until I get it right."                                  
                         "I guess. If you're into weird sounds and too much teeth. Spoiler, I'm not.":                     
-                                call Statup("Laura", "Love", 90, -10)          
-                                call Statup("Laura", "Obed", 60, 10)   
-                                call LauraFace("angry",2)
+                                $ LauraX.Statup("Love", 90, -10)          
+                                $ LauraX.Statup("Obed", 60, 10)   
+                                $ LauraX.FaceChange("angry",2)
                                 ch_l "Well, good luck with that then."
-                    $ L_Blush = 1
-                    $ L_Chat.append("blow") 
+                    $ LauraX.Blush = 1
+                    $ LauraX.Chat.append("blow") 
             else:
                     $ Line = renpy.random.choice(["I gotta tell you, your dick tastes great.", 
                             "I think I nearly dislocated my jaw last time.", 
@@ -1459,21 +1183,21 @@ label Laura_Chitchat(O=0, Options = ["default","default","default"]):
 
     elif Options[0] == "swallowed":
             #Laura's response after swallowing the Player's cum.
-            if "swallow" in L_Chat:                
+            if "swallow" in LauraX.Chat:                
                 ch_l "Hey, I wouldn't mind another taste of you some time."
             else:
                 ch_l "So. . . the other day. . ."
                 ch_l "That was the first time I'd really enjoyed the taste of jiz."
-                call LauraFace("sly",1)
+                $ LauraX.FaceChange("sly",1)
                 ch_l "Good job!"
-                $ L_Chat.append("swallow") 
+                $ LauraX.Chat.append("swallow") 
 
     elif Options[0] == "facial":
             #Laura's response after taking a facial from the Player.
             ch_l "Hey. . .I know this is kind of odd. . ."
-            call LauraFace("sexy",2)
+            $ LauraX.FaceChange("sexy",2)
             ch_l "I feel so {i}good{/i} with your jiz on my face."
-            $ L_Blush = 1
+            $ LauraX.Blush = 1
 
     elif Options[0] == "sleepover":
             #Laura's response after sleeping with the Player.
@@ -1482,22 +1206,22 @@ label Laura_Chitchat(O=0, Options = ["default","default","default"]):
 
     elif Options[0] == "creampie":
             #Another of Laura's responses after having sex with the Player.
-            "Laura draws close to you so she can whisper into your ear."
+            "[LauraX.Name] draws close to you so she can whisper into your ear."
             ch_l "I can still feel you. . .running down the inside of my thigh."
 
     elif Options[0] == "sexed":
             #A final response from Laura after having sex with the Player.
             ch_l "So. . . you should know. . ."
-            call LauraFace("sexy",2)
+            $ LauraX.FaceChange("sexy",2)
             ch_l ". . .lately when I've been flicking the bean. . ."
             ch_l "I've been thinking about you inside of me."
-            $ L_Blush = 1
+            $ LauraX.Blush = 1
 
     elif Options[0] == "anal":
             #Laura's response after getting anal from the Player.
-            call LauraFace("sly")
+            $ LauraX.FaceChange("sly")
             ch_l "I did't really enjoy anal much."
-            call LauraFace("sexy",1)
+            $ LauraX.FaceChange("sexy",1)
             ch_l "Until you, at least."
         
 #    elif Options[0] == "boyfriend?":
@@ -1525,1232 +1249,110 @@ label Laura_Chitchat(O=0, Options = ["default","default","default"]):
     else: #all else fell through. . .
             $ D20 = renpy.random.randint(1, 15)        
             if D20 == 1:
-                    call LauraFace("smile")
+                    $ LauraX.FaceChange("smile")
                     ch_l "I got a good grade on that bio test."
             elif D20 == 2:
-                    call LauraFace("annoyed")
+                    $ LauraX.FaceChange("annoyed")
                     ch_l "If I have to hear him say \"I'm the best there is\" one more time, I swear I'm going ..."
             elif D20 == 3:
-                    call LauraFace("surprised")
+                    $ LauraX.FaceChange("surprised")
                     ch_l "Huh? Oh, sorry. I sort of spaced out. That's not like me."
             elif D20 == 4:
-                    call LauraFace("sad")
-                    ch_l "Oh, [L_Petname]. I was just remembering something. Don't worry about it."
+                    $ LauraX.FaceChange("sad")
+                    ch_l "Oh, [LauraX.Petname]. I was just remembering something. Don't worry about it."
             elif D20 == 5:
-                    call LauraFace("smile")
+                    $ LauraX.FaceChange("smile")
                     ch_l "I had a good nap. It's nice to be somewhere I can just doze off without worry."
             elif D20 == 6:
-                    call LauraFace("perplexed")
-                    ch_l "Oh, [L_Petname]. I think I just saw Emma Frost staring at Cyclops. That's... wierd."
+                    $ LauraX.FaceChange("perplexed")
+                    ch_l "Oh, [LauraX.Petname]. I think I just saw Emma Frost staring at Cyclops. That's... wierd."
             elif D20 == 7:
-                    call LauraFace("smile")
+                    $ LauraX.FaceChange("smile")
                     ch_l "I just got a new personal best time in the Danger Room."
             elif D20 == 8:
-                    call LauraFace("sad")
+                    $ LauraX.FaceChange("sad")
                     ch_l "I like being here, but sometimes there's just so much noise..."
             elif D20 == 9:
-                    call LauraFace("confused")
+                    $ LauraX.FaceChange("confused")
                     ch_l "I'm still trying to figure out what the mystery meat in the cafeteria was today."
                     ch_l "I have enhanced senses, this shouldn't be so difficult!"
             elif D20 == 10:
-                    call LauraFace("smile")
+                    $ LauraX.FaceChange("smile")
                     ch_l "Kitty, Rogue and some of the others asked me if I wanted to go grab some ice cream with them tomorrow."
             elif D20 == 11:
-                    call LauraFace("smile")
+                    $ LauraX.FaceChange("smile")
                     ch_l "I tried out a dance class like Kitty said. Apparently I'm good at it."
             elif D20 == 12:
-                    call LauraFace("sad")
+                    $ LauraX.FaceChange("sad")
                     ch_l "I like talking to Kitty and the others. It makes me feel, I don't know. . ."
                     ch_l "{i}not{/i} like a really dangerous mutant who could kill everyone around me if I flipped out."
             elif D20 == 13:
-                    call LauraFace("smile")
+                    $ LauraX.FaceChange("smile")
                     ch_l "Kitty and Rogue dared me to call Logan \"Dad\". I think we might've given him a heart attack."
             elif D20 == 14:
-                    call LauraFace("sad")
+                    $ LauraX.FaceChange("sad")
                     ch_l "I like going out on missions, but catching up with what's been going on while I'm gone is always a pain."
             elif D20 == 15:
-                    call LauraFace("perplexed")
+                    $ LauraX.FaceChange("perplexed")
                     ch_l "So they're called the \"Avengers\", but do they ever do any avenging?"
                     ch_l "At least the Fantastic Four really do things that are strange and fantastic."
             elif D20 == 16:
-                    call LauraFace("perplexed")
+                    $ LauraX.FaceChange("perplexed")
                     ch_l "Have you ever been to New York? Sometimes I'm surprised anyone still wants to live there."
             elif D20 == 17:
-                    call LauraFace("perplexed")
+                    $ LauraX.FaceChange("perplexed")
                     ch_l "Logan just walked up and told me that if I ever meet someone called. . ."
                     ch_l "\"Dead...Poole?\"...I should just go ahead and stab him in the face."
                     ch_l "What's up with that?"
             elif D20 == 18:
-                    call LauraFace("smile")
+                    $ LauraX.FaceChange("smile")
                     ch_l "Don't tell anyone this, but I think Cyclops is kind of wound up tight."
             elif D20 == 19:
-                    call LauraFace("confused")
+                    $ LauraX.FaceChange("confused")
                     ch_l "Do you smell something? Is that... nachos and... chocolate syrup?!"
             elif D20 == 20:
-                    call LauraFace("smile")
+                    $ LauraX.FaceChange("smile")
                     ch_l "I like being able to just talk about nothing in particular. It's... nice."
             else:
-                    call LauraFace("smile")
+                    $ LauraX.FaceChange("smile")
                     ch_l "You're fun to hang with."
         
     $ Line = 0
     return
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-label Laura_Flirt:
-    
-    if L_Loc == bg_current:         
-        $ L_Chat[5] = 1                                         #can only flirt once per cycle. 
-        menu:        
-            "Compliment her":
-                    call Compliment("Laura")
-                
-            "Say you love her":
-                    call Love_You("Laura")
-                        
-            "Touch her cheek":                                                                              
-                    call L_TouchCheek
-            
-            "Hold hands":
-                    call Hold_Hands("Laura")    
-                    
-            "Pat her head":
-                    call L_Headpat
-            "Kiss her cheek":                                                                            
-                    "You lean over, tilt her head back, and kiss her on the cheek."                
-                    if ApprovalCheck("Laura", 700, "L", TabM=1):
-                        call LauraFace("perplexed", 2) 
-                        call Statup("Laura", "Love", 90, 1)          
-                        call Statup("Laura", "Obed", 40, 2) 
-                        ch_l ". . ."
-                        call LauraFace("sexy", 1, Eyes="side") 
-                        ch_l "Huh."
-                    elif ApprovalCheck("Laura", 500, "L", TabM=1):
-                        call LauraFace("surprised", 1)
-                        call Statup("Laura", "Love", 70, 2)
-                        call Statup("Laura", "Love", 90, 1)          
-                        call Statup("Laura", "Obed", 40, 2)            
-                        call Statup("Laura", "Inbt", 20, 1) 
-                        ch_l ". . . hey!"
-                        ch_l "What's that about?"
-                    elif ApprovalCheck("Laura", 300, "L", TabM=1):                    
-                        call LauraFace("angry", 1)
-                        call Statup("Laura", "Love", 90, -1)          
-                        call Statup("Laura", "Obed", 60, 2)            
-                        call Statup("Laura", "Inbt", 40, 1) 
-                        ch_l "That's a bit forward."
-                    else: 
-                        call LauraFace("angry", 1)
-                        call Statup("Laura", "Love", 90, -5)          
-                        call Statup("Laura", "Obed", 90, 5)            
-                        call Statup("Laura", "Inbt", 40, 3) 
-                        ch_l "Keep back!"
-                    if "addict laura" in P_Traits:
-                        $ L_Addict -= 1
-                        $ L_Addictionrate += 1
-                        $ L_Addictionrate = 3 if L_Addictionrate < 3 else L_Addictionrate 
-                   
-            "Kiss her lips":                                                                                    #Kiss her
-                    if ApprovalCheck("Laura", 1000, TabM=1) or ApprovalCheck("Laura", 600, "L", TabM=1):        
-                        "You lean down, tilt her head back, and plant a kiss on her lips."
-                    elif ApprovalCheck("Laura", 1000) or ApprovalCheck("Laura", 600, "L"):  
-                        call LauraFace("bemused", 1)
-                        $ L_Eyes = "side"         
-                        call Statup("Laura", "Obed", 50, -5)            
-                        call Statup("Laura", "Inbt", 40, 2) 
-                        "You lean close for a kiss, but Laura gently elbows your ribs."
-                        ch_l "Not here, [L_Petname]." 
-                        return
-                    else:                
-                        call LauraFace("angry", 1)
-                        call Statup("Laura", "Love", 90, -15)          
-                        call Statup("Laura", "Obed", 50, -5)            
-                        call Statup("Laura", "Inbt", 40, 5) 
-                        "You lean close for a kiss, but Laura checks you onto your butt."
-                        ch_l "Keep to yourself, [L_Petname]." 
-                        return
-                    if L_Kissed:
-                            if ApprovalCheck("Laura", 800, "L", TabM=1):
-                                call LauraFace("sexy", 1)
-                                call Statup("Laura", "Love", 90, 2)          
-                                call Statup("Laura", "Obed", 50, 2)
-                                ch_l "Mmmmmmm. . ."
-                            elif ApprovalCheck("Laura", 700, "L", TabM=1):
-                                call LauraFace("sexy", 1)
-                                call Statup("Laura", "Love", 90, 2)          
-                                call Statup("Laura", "Obed", 50, 2) 
-                                ch_l "Hmm, that's nice. . ."
-                            elif ApprovalCheck("Laura", 550, "L", TabM=1):
-                                call LauraFace("surprised", 1)
-                                call Statup("Laura", "Love", 70, 1) 
-                                call Statup("Laura", "Love", 90, 2)          
-                                call Statup("Laura", "Obed", 50, 2) 
-                                ch_l "I don't know about that."
-                            elif ApprovalCheck("Laura", 300, "L", TabM=1):
-                                call LauraFace("angry", 1)
-                                call Statup("Laura", "Love", 90, -8)          
-                                call Statup("Laura", "Obed", 60, 3)            
-                                call Statup("Laura", "Inbt", 40, 2) 
-                                ch_l "Back it off, [L_Petname]."
-                            else: 
-                                call LauraFace("angry", 1)
-                                call Statup("Laura", "Love", 90, -15)          
-                                call Statup("Laura", "Obed", 90, 6)            
-                                call Statup("Laura", "Inbt", 40, 3) 
-                                ch_l "Fuck off."
-                            
-                    else:                   #If this is the first kiss
-                            if ApprovalCheck("Laura", 800, "L", TabM=1):
-                                call LauraFace("surprised", 2)
-                                call Statup("Laura", "Love", 95, 30)          
-                                call Statup("Laura", "Obed", 50, 15)
-                                call Statup("Laura", "Inbt", 50, 15)
-                                call LauraFace("normal",Eyes="side")
-                                ch_l ". . ."
-                                call LauraFace("sexy",Eyes="side")
-                                ch_l "Hmmm, that was nice. . ."
-                                call LauraFace("sexy")
-                            elif ApprovalCheck("Laura", 650, "L", TabM=1):
-                                call LauraFace("surprised", 1)
-                                call Statup("Laura", "Love", 80, 25)            
-                                call Statup("Laura", "Obed", 50, 20)
-                                call Statup("Laura", "Inbt", 50, 15)
-                                ch_l " ! "
-                                ch_l "I'm not sure what to do with that. . ."
-                            elif ApprovalCheck("Laura", 500, "L", TabM=1):
-                                call LauraFace("surprised", 1)            
-                                call Statup("Laura", "Obed", 70, 20)
-                                call Statup("Laura", "Inbt", 70, 20)
-                                ch_l "What are you thinking, [L_Petname]?!"
-                            elif ApprovalCheck("Laura", 800, TabM=1):
-                                call LauraFace("angry", 1)
-                                call Statup("Laura", "Love", 60, -10) 
-                                call Statup("Laura", "Obed", 70, 30)
-                                call Statup("Laura", "Inbt", 70, 20)
-                                ch_l "What the hell, [L_Petname]?!"
-                            else: 
-                                call LauraFace("angry", 1)
-                                call Statup("Laura", "Love", 60, -15) 
-                                call Statup("Laura", "Obed", 70, 40)
-                                call Statup("Laura", "Inbt", 70, 25)
-                                ch_l "Fuck off."
-                            
-                    $ L_Kissed += 1  
-                    if "addict laura" in P_Traits:
-                        $ L_Addict -= 1
-                        $ L_Addictionrate += 1
-                        $ L_Addictionrate = 3 if L_Addictionrate < 3 else L_Addictionrate 
-                        
-                    if ApprovalCheck("Laura", 700, TabM=1):
-                        if L_Love > L_Obed and L_Love > L_Inbt:
-                            ch_l "I think I'd like some more."
-                        elif L_Obed > L_Inbt:
-                            ch_l "Did you want to continue?"
-                        else:
-                            ch_l "We could keep going, [L_Petname]."
-                        menu:
-                            "Keep kissing?"
-                            "You know it.":
-                                call Statup("Laura", "Lust", 60, 3)  
-                                call Statup("Laura", "Love", 90, 1)
-                                call Statup("Laura", "Love", 60, 3) 
-                                call Statup("Laura", "Inbt", 50, 1)
-                                call Laura_SexAct("kissing")
-                                call Trig_Reset(1)
-                                return
-                            "Not now [[no].":
-                                call LauraFace("bemused", 1) 
-                                call Statup("Laura", "Lust", 40, 1) 
-                                call Statup("Laura", "Lust", 60, 4) 
-                                call Statup("Laura", "Obed", 70, 2)
-                                call Statup("Laura", "Inbt", 50, 1)
-                                ch_l "Ah, you were kidding."
-                            "Nope.":
-                                call LauraFace("sadside", 1)
-                                call Statup("Laura", "Love", 80, -2) 
-                                call Statup("Laura", "Obed", 70, 4)
-                                call Statup("Laura", "Inbt", 50, 1)
-                                ch_l "Ah, you were kidding."
-                    else:
-                        ch_l "Don't push me."
-                    #End Kiss her
-                
-            "Hug her":                                                                                          #Hug her
-                    if ApprovalCheck("Laura", 300, TabM=1):        
-                        "You lean over and wrap Laura in a warm hug."
-                    else:                
-                        call LauraFace("angry", 1)
-                        "You lean in with your arms wide, but Laura slips under you and takes a step back."
-                        ch_l "What's was that, [L_Petname]?" 
-                        return
-                        
-                    if L_SEXP >= 30: 
-                        call Statup("Laura", "Lust", 60, 3) 
-                        call Statup("Laura", "Love", 90, 1)          
-                        call Statup("Laura", "Obed", 90, 3)            
-                        call Statup("Laura", "Inbt", 90, 2) 
-                        call LauraFace("sexy")
-                        ch_l "I think you're flipping my switch, [L_Petname]."
-                    elif ApprovalCheck("Laura", 800, "L", TabM=1):
-                        call LauraFace("sexy")
-                        call Statup("Laura", "Love", 90, 1)          
-                        call Statup("Laura", "Obed", 40, 2)            
-                        call Statup("Laura", "Inbt", 30, 1) 
-                        ch_l "Hmmmmm. . ."
-                    elif ApprovalCheck("Laura", 550, TabM=1):
-                        call LauraFace("surprised", 1)
-                        call Statup("Laura", "Love", 90, 1)  
-                        call Statup("Laura", "Love", 70, 1)        
-                        call Statup("Laura", "Obed", 40, 2)            
-                        call Statup("Laura", "Inbt", 30, 1)  
-                        ch_l "Um, [L_Petname]? What is this?"
-                    elif ApprovalCheck("Laura", 450, TabM=1):
-                        call LauraFace("angry", 1)  
-                        call Statup("Laura", "Love", 70, 1)        
-                        call Statup("Laura", "Obed", 50, 3)            
-                        call Statup("Laura", "Inbt", 30, 2) 
-                        ch_l "This is making me uncomfortable. . ."
-                    else: 
-                        call LauraFace("angry", 1) 
-                        call Statup("Laura", "Love", 40, -4)       
-                        call Statup("Laura", "Obed", 50, 4)            
-                        call Statup("Laura", "Inbt", 30, 2) 
-                        ch_l "Hey, back off."   
-                        
-            "Slap her ass" if L_Loc == bg_current:                                                              #Slap her ass
-                    call L_Slap_Ass
-                
-            "Pinch her ass":                                                                                    #Pinch her ass
-                    call LauraFace("surprised", 1)
-                    if L_SEXP >= 5 and ApprovalCheck("Laura", 700, TabM=1):        
-                        "You come up to Laura from behind and quickly pinch her butt."
-                    else:                
-                        "You come up to Laura from behind and quickly pinch her butt."
-                        call LauraFace("angry")
-                        "She slaps your hand away and rounds on you."
-                        ch_l "What are you thinking?" 
-                        return
-                        
-                    if L_SEXP >= 40: 
-                        call Statup("Laura", "Lust", 60, 3) 
-                        call Statup("Laura", "Love", 90, 1)           
-                        call Statup("Laura", "Obed", 60, 2)          
-                        call Statup("Laura", "Obed", 90, 1)            
-                        call Statup("Laura", "Inbt", 50, 3) 
-                        call LauraFace("sexy")
-                        ch_l "Oooh! Getting rough?"
-                    elif ApprovalCheck("Laura", 800, "L", TabM=1):
-                        call LauraFace("sexy")
-                        call Statup("Laura", "Love", 90, 1)           
-                        call Statup("Laura", "Obed", 60, 2)          
-                        call Statup("Laura", "Obed", 90, 1)            
-                        call Statup("Laura", "Inbt", 50, 2) 
-                        ch_l "You like the way that feels, [L_Petname]?"
-                    elif ApprovalCheck("Laura", 1000, TabM=1):
-                        call LauraFace("surprised")
-                        call Statup("Laura", "Love", 90, 1)           
-                        call Statup("Laura", "Obed", 60, 3)          
-                        call Statup("Laura", "Obed", 90, 2)            
-                        call Statup("Laura", "Inbt", 50, 2) 
-                        ch_l "Wha?!"
-                    elif ApprovalCheck("Laura", 800, TabM=1):
-                        call LauraFace("angry")
-                        call Statup("Laura", "Love", 90, -4)           
-                        call Statup("Laura", "Obed", 60, 4)          
-                        call Statup("Laura", "Obed", 90, 3)            
-                        call Statup("Laura", "Inbt", 50, 1) 
-                        ch_l "Hey!"
-                    else: 
-                        call LauraFace("angry")
-                        call Statup("Laura", "Love", 90, -8)           
-                        call Statup("Laura", "Obed", 60, 5)          
-                        call Statup("Laura", "Obed", 90, 4)            
-                        call Statup("Laura", "Inbt", 50, 2)
-                        ch_l "Ouch! What the fuck?!"  
-                    
-                    
-            "Grab her tit":                                                                                     #Grab her tit
-                    call LauraFace("surprised", 1)
-                    if L_SEXP >= 5 and ApprovalCheck("Laura", 700, TabM=2):        
-                        "You come up to Laura and quickly honk her boob."
-                    else:             
-                        "You come up to Laura and quickly honk her boob."
-                        call LauraFace("angry")
-                        show Laura_Sprite
-                        with vpunch
-                        "She flips you onto your back."
-                        ch_l "What the fuck?!" 
-                        return
-                        
-                    if L_SEXP >= 40: 
-                        call Statup("Laura", "Lust", 60, 5) 
-                        call Statup("Laura", "Love", 90, 2) 
-                        call LauraFace("sexy")
-                        ch_l "Hmm, that's pleasant."
-                        $ Count = 10
-                    elif ApprovalCheck("Laura", 850, "L", TabM=1):
-                        call LauraFace("sexy")
-                        call Statup("Laura", "Lust", 60, 2) 
-                        call Statup("Laura", "Love", 90, 1) 
-                        ch_l "Hmm, are you enjoying that as much as I am?"
-                        $ Count = 7
-                    elif ApprovalCheck("Laura", 1200, TabM=1):
-                        call LauraFace("perplexed")  
-                        call Statup("Laura", "Lust", 60, 1)         
-                        ch_l "That's a bit inappropriate, [L_Petname]."
-                        $ Count = 5
-                    elif ApprovalCheck("Laura", 900, TabM=1):
-                        call LauraFace("angry",Eyes="down")
-                        call Statup("Laura", "Love", 90, -5)          
-                        call Statup("Laura", "Obed", 90, 4)            
-                        call Statup("Laura", "Inbt", 90, 1) 
-                        ch_l "Are you going to move that hand or will I have to?"
-                        call LauraFace("angry")
-                        $ Count = 3
-                    else: 
-                        call LauraFace("angry")
-                        call Statup("Laura", "Love", 90, -8)          
-                        call Statup("Laura", "Obed", 90, 5)            
-                        call Statup("Laura", "Inbt", 90, 2) 
-                        $ Laura_Arms = 2
-                        $ L_Claws = 1
-                        ch_l "You wanna lose that hand?" 
-                        $ Count = 2
-                              
-                    call Statup("Laura", "Obed", 70, 3)            
-                    call Statup("Laura", "Inbt", 70, 2) 
-                    ch_l "Are you satisfied?"
-                    while Count > 0:
-                        if Count == 6:
-                            call LauraFace("sexy", 1)
-                            ch_l "That's pretty comforting. . ."  
-                            call Statup("Laura", "Lust", 90, 2)       
-                            call Statup("Laura", "Inbt", 70, 1)
-                        elif Count == 3:
-                            call LauraFace("perplexed")
-                            call Statup("Laura", "Lust", 90, 1) 
-                            ch_l "I like it, but maybe stop for now?"
-                        elif Count == 2:
-                            call LauraFace("angry")
-                            call Statup("Laura", "Love", 90, -1) 
-                            ch_l "Ok, that's enough now."
-                        elif Count == 1:
-                            call LauraFace("angry")
-                            ch_l "Take a step back, [L_Petname]!"
-                            call Statup("Laura", "Love", 90, -5) 
-                            show Laura_Sprite
-                            with vpunch
-                            "She gives you a quick shove."
-                            $ Count = 1                     
-                        $ Count -= 1 if Count >= 0 else 0
-                            
-                        if Count > 0:
-                            menu:
-                                "Your hand is still on her chest."
-                                "Let go immediately":
-                                    if Count >= 7:
-                                        ch_l "I didn't really mind it. . ."  
-                                        call Statup("Laura", "Lust", 60, 2)         
-                                        call Statup("Laura", "Inbt", 70, 1) 
-                                    elif Count <= 4:
-                                        ch_l "Probably for the best."
-                                    $ Count = 0
-                                    
-                                "Honk it again and let go":
-                                    if Count >= 7:
-                                        ch_l "I didn't mind it so much. . ."          
-                                        call Statup("Laura", "Lust", 60, 4) 
-                                        call Statup("Laura", "Inbt", 70, 1)
-                                    elif Count >= 4:
-                                        ch_l "Heh."
-                                    else:
-                                        call LauraFace("angry")
-                                        ch_l "Asshole."
-                                    call Statup("Laura", "Obed", 70, 3)            
-                                    call Statup("Laura", "Inbt", 70, 2)
-                                    $ Count = 0 
-                                        
-                                "Fondle it a little":                            
-                                    if L_FondleB and ApprovalCheck("Laura", 1100, TabM=2):                                
-                                        call LauraFace("sexy",1)
-                                        $ L_Eyes = "closed"
-                                        call Statup("Laura", "Lust", 90, 5) 
-                                    else:
-                                        call LauraFace("perplexed")
-                                        call Statup("Laura", "Lust", 90, 2) 
-                                        $ Count -= 1
-                                    call Statup("Laura", "Obed", 70, 4)            
-                                    call Statup("Laura", "Inbt", 70, 2)
-                                    ch_l "Hmm. . ."
-                                    
-                                "Just leave it there.":
-                                    if Count == 5:
-                                        call LauraFace("perplexed")
-                                        call Statup("Laura", "Lust", 90, 3) 
-                                        ch_l "Huh."                            
-                                    elif Count == 2:
-                                        call LauraFace("perplexed")
-                                        call Statup("Laura", "Lust", 90, 1) 
-                                        ch_l "This is getting uncomfortable."
-                                    call Statup("Laura", "Obed", 70, 2)            
-                                    call Statup("Laura", "Inbt", 70, 1)
-                                    
-                            
-                    $ Laura_Arms = 1
-                    $ L_Claws = 0 
-                    if L_FondleB and ApprovalCheck("Laura", 1200, TabM = 3): 
-                        call LauraFace("sexy", 1)
-                        ch_l "We could keep going. . ."
-                        menu:
-                            extend ""
-                            "Yeah!":
-                                call Statup("Laura", "Lust", 60, 5) 
-                                call Statup("Laura", "Love", 90, 2)          
-                                call Statup("Laura", "Obed", 60, 3)            
-                                call Statup("Laura", "Inbt", 60, 3) 
-                                call Laura_SexAct("breasts")
-                                call Trig_Reset(1)
-                                return
-                            "Nah, that was enough.":
-                                call LauraFace("sad", 1)
-                                call Statup("Laura", "Lust", 60, 2) 
-                                call Statup("Laura", "Love", 90, -2)          
-                                call Statup("Laura", "Obed", 60, 4)            
-                                call Statup("Laura", "Inbt", 60, 2) 
-                                ch_l "Fine."
-                    elif ApprovalCheck("Laura", 900, TabM = 3):  
-                        $ L_Brows = "confused"
-                        $ L_Eyes = "sexy"
-                        $ L_Mouth = "smile"
-                        ch_l "You enjoyed that?"
-                    elif ApprovalCheck("Laura", 900): 
-                        call LauraFace("angry", 1)
-                        ch_l "You do that in public?"
-                    else:
-                        call LauraFace("angry", 1)
-                        ch_l "Keep your hands to yourself!"
-                        
-                    
-            "Rub her shoulders":                                                                                #Rub her shoulders
-                    "You come up to Laura from behind and gently rub her shoulders."
-                    if L_SEXP >= 30:
-                        call LauraFace("sexy") 
-                        call Statup("Laura", "Lust", 60, 3) 
-                        call Statup("Laura", "Love", 90, 2)
-                        "She sinks back into your hands"
-                        ch_l "Hmm, are you thinking what I'm thinking, [L_Petname]?"
-                    elif ApprovalCheck("Laura", 650, "L"):
-                        call LauraFace("sexy")
-                        call Statup("Laura", "Lust", 60, 1) 
-                        call Statup("Laura", "Love", 90, 2)
-                        ch_l "Hmmm, that's nice, [L_Petname]."
-                    elif ApprovalCheck("Laura", 500):
-                        call LauraFace("surprised", 1)
-                        call Statup("Laura", "Love", 90, 1)
-                        ch_l "Oh, hey there, [L_Petname]."
-                    elif ApprovalCheck("Laura", 400):
-                        call LauraFace("angry", 1)
-                        call Statup("Laura", "Love", 90, -1)
-                        if Taboo:
-                            ch_l "Maybe take a step back, [L_Petname]?"
-                        else:
-                            ch_l "Whoa, back it up."
-                    else: 
-                        call LauraFace("angry", 1)
-                        "She slaps your hands away."
-                        ch_l "No hands or you lose them."           
-                    call Statup("Laura", "Obed", 30, 3)            
-                    call Statup("Laura", "Inbt", 30, 2) 
-              
-            "Ask for her panties":
-                    call Laura_AskPanties
-                                        
-            "Never mind [[exit]":
-                    $ L_Chat[5] = 0  
-                    return
-    else:
-        "Laura isn't around."
-            
-    return
-
-
-
-label Laura_AskPanties(Store = 0):
-    $ Store = Tempmod  
-    $ Line = 0
-    if not L_Panties or L_Panties == "shorts":
-        if ApprovalCheck("Laura", 900):
-            call LauraFace("sexy", 1)
-            call Statup("Laura", "Lust", 80, 5) 
-            call Statup("Laura", "Lust", 60, 5) 
-            call Statup("Laura", "Lust", 40, 10)            
-            call Statup("Laura", "Inbt", 60, 5)            
-            call Statup("Laura", "Inbt", 30, 10) 
-            ch_l "I'm not wearing any."
-        elif L_Over == "towel" or not L_Legs:
-            call LauraFace("bemused", 2)
-            ch_l "Did you think I was wearing any?"            
-        else:
-            call LauraFace("bemused", 2, Eyes="side")
-            call Statup("Laura", "Lust", 80, 5) 
-            call Statup("Laura", "Lust", 60, 5) 
-            call Statup("Laura", "Lust", 40, 10)            
-            call Statup("Laura", "Inbt", 60, 5)   
-            ch_l "I'm not wearing any at the moment."         
-       
-    else:
-        if L_SeenPussy and ApprovalCheck("Laura", 500): #You've seen her Pussy.
-            $ Tempmod += 15
-        elif L_SeenPanties and ApprovalCheck("Laura", 500): #You've seen her panties.
-            $ Tempmod += 5 
-        if "exhibitionist" in L_Traits:
-            $ Tempmod += (Taboo * 5)
-        if "dating" in L_Traits or "sex friend" in L_Petnames and not Taboo:
-            $ Tempmod += 10
-        if "no bottomless" in L_RecentActions: 
-            $ Tempmod -= 20
-        
-        $ Line = 0
-        if L_Legs == "pants" or HoseNum("Laura") >= 10: 
-            if ApprovalCheck("Laura", 1000, "OI", TabM = 2) or "exhibitionist" in L_Traits:   
-                $ Line = "here"
-            elif ApprovalCheck("Laura", 900, TabM = 2):
-                $ Line = "change"
-                
-        elif L_Legs == "skirt":
-            if ApprovalCheck("Laura", 600, "OI", TabM = 2) or "exhibitionist" in L_Traits:   
-                $ Line = "here"
-            elif ApprovalCheck("Laura", 1100, TabM = 2):
-                $ Line = "change"
-                
-        else:
-            if ApprovalCheck("Laura", 1200, TabM = 2) or "exhibitionist" in L_Traits:
-                $ Line = "here"
-        
-        
-        if Line == "here":                              
-                #She's agreed to change and will do it here
-                call LauraFace("sly")                          
-                if L_Legs == "skirt":      
-                    call Statup("Laura", "Obed", 60, 4)            
-                    call Statup("Laura", "Inbt", 60, 4)
-                else: #no pants or skirt         
-                    call Statup("Laura", "Obed", 60, 6)            
-                    call Statup("Laura", "Inbt", 60, 6) 
-                
-                call Statup("Laura", "Lust", 60, 5)    
-                call Remove_Panties("Laura")
-                    
-                if Taboo:
-                    call Statup("Laura", "Lust", 60, 5) 
-                    if "exhibitionist" in L_Traits: 
-                        call Statup("Laura", "Lust", 80, 5)
-                        call Statup("Laura", "Lust", 200, 5)    
-                    call Statup("Laura", "Obed", 80, 10)            
-                    call Statup("Laura", "Inbt", 80, 10)        
-            
-        elif Line:                                      
-                    #She's agreed to change, but leaves the room to do it.       
-                    call LauraFace("bemused", 1) 
-                    menu:
-                        ch_l "Could you turn around?"
-                        "OK.": 
-                            call Statup("Laura", "Love", 90, 5) 
-                            call LauraFace("smile", 1)                                             
-                            ch_l "Thanks."
-                            call LauraFace("sly", 1) 
-                            call Statup("Laura", "Lust", 60, 2)         
-                            call Statup("Laura", "Obed", 60, 4)            
-                            call Statup("Laura", "Inbt", 60, 4)
-                            show blackscreen onlayer black 
-                            "You turn around"   
-                            $ L_DailyActions.append("pantyless")
-                            call LauraOutfit                             
-                            hide blackscreen onlayer black 
-                            if Taboo:              
-                                call Quick_Taboo("Laura")
-                            "When you turn back, she quietly hands you her balled up panties."
-                            $ Line = 0
-                            
-                        "And miss the show?":
-                            if ApprovalCheck("Laura", 1000, "LI"): 
-                                call Statup("Laura", "Lust", 70, 5)          
-                                call Statup("Laura", "Obed", 60, 5)            
-                                call Statup("Laura", "Inbt", 60, 5) 
-                                call LauraFace("sly", 1) 
-                                ch_l "Oh, you'd like to watch?"
-                            else:                 
-                                call LauraFace("angry", 1) 
-                                call Statup("Laura", "Love", 90, -5)          
-                                call Statup("Laura", "Obed", 60, -3)            
-                                call Statup("Laura", "Inbt", 60, 5) 
-                                ch_l "Yes."
-                                $ Line = 0
-                                
-                        "Nope, I'm staying.":
-                            if ApprovalCheck("Laura", 600, "OI"): 
-                                call LauraFace("bemused", 1) 
-                                call Statup("Laura", "Lust", 70, 5)          
-                                call Statup("Laura", "Obed", 60, 10)            
-                                call Statup("Laura", "Inbt", 60, 5) 
-                                ch_l "Ok."
-                                call LauraFace("sexy") 
-                            else:        
-                                call LauraFace("angry", 1) 
-                                call Statup("Laura", "Love", 90, -10)          
-                                call Statup("Laura", "Obed", 60, -5)            
-                                call Statup("Laura", "Inbt", 60, 5) 
-                                ch_l "I think that's rude under the circumstances."
-                                $ Line = 0
-                                
-                    if Line:                                            #She agreed to stay  
-                                call LauraFace("sly", 1) 
-                                if L_Legs or HoseNum("Laura") >= 10:   
-                                        call Statup("Laura", "Lust", 60, 5)         
-                                        call Statup("Laura", "Obed", 60, 3)            
-                                        call Statup("Laura", "Inbt", 60, 5)  
-                                        
-                                call Remove_Panties("Laura") 
-                                
-        else:                                           #She refuses.    
-            call LauraFace("angry", 2)                        
-            if not ApprovalCheck("Laura", 500):
-                call Statup("Laura", "Lust", 60, 5) 
-                call Statup("Laura", "Love", 90, -10)          
-                call Statup("Laura", "Obed", 60, 3)            
-                call Statup("Laura", "Inbt", 60, 3) 
-                ch_l "Why do you think I would?"
-                $ L_RecentActions.append("angry")
-                $ L_DailyActions.append("angry")   
-                
-            elif not ApprovalCheck("Laura", 500, TabM = 5):
-                call Statup("Laura", "Lust", 60, 5) 
-                call Statup("Laura", "Love", 90, -5)          
-                call Statup("Laura", "Obed", 60, 5)            
-                call Statup("Laura", "Inbt", 60, 5) 
-                ch_l "In public?"                                
-                $ L_RecentActions.append("angry")
-                $ L_DailyActions.append("angry")   
-                
-            else:
-                call LauraFace("bemused", 2)
-                call Statup("Laura", "Lust", 60, 3)            
-                call Statup("Laura", "Inbt", 60, 1)
-                if Taboo:            
-                    call Statup("Laura", "Inbt", 60, 2)
-                    
-                if L_Love >= L_Inbt or L_Obed >= L_Inbt:
-                    ch_l "Maybe someday, [L_Petname]."
-                else:
-                    call LauraFace("perplexed")       
-                    call Statup("Laura", "Obed", 60, -2)    
-                    ch_l "Why would you want that?"
-            $ L_Blush = 0
-                
-    $ Tempmod = Store       
-    $ Line = 0
-    return
-
-    # End Ask for Panties   //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-
-
-# Laura Control interface ///////////////////
-label Laura_Controls:
-    menu:
-        "I'd like you to call me something else":
-            call Laura_Names            
-            return
-        "I'd like you to come over for some action." if L_Loc != bg_current:
-            ch_l "Ok, I'll be right over."
-            $ L_Loc = bg_current 
-            call Set_The_Scene
-            call Laura_SexMenu
-            return
-        "I'd like to get busy." if L_Loc == bg_current:
-            ch_l "How do you mean?"
-            call Laura_SexMenu
-            return
-        "I want you to stop taking your own initiative." if "sub" not in L_Traits:
-            $ L_Traits.append("sub")
-            ch_l "Ok."     
-        "You can take your own initiative if you like." if "sub" in L_Traits:
-            $ L_Traits.remove("sub")
-            ch_l "Ok."             
-        "Exit.":
-            return
-    jump Laura_Controls
-return
-
-# start Laura_Gifts//////////////////////////////////////////////////////////
-label Laura_Gifts:  
-    if not P_Inventory:
-        "You don't have anything to give her."
-        return
-    menu:
-        "What would you like to give her?"
-        "Toys and books":
-            menu:
-                "Give her a dildo." if "dildo" in P_Inventory: 
-                    #If you have a Dildo, you'll give it.
-                    $ Count = L_Inventory.count("dildo")
-                    if "dildo" not in L_Inventory:                            
-                        "You give Laura the dildo."
-                        $ L_Blush = 1
-                        $ Laura_Arms = 2
-                        $ L_Held = "dildo"
-                        if ApprovalCheck("Laura", 1200) or ApprovalCheck("Laura", 500, "I"):                    
-                            call LauraFace("smile")
-                            $ P_Inventory.remove("dildo")
-                            $ L_Inventory.append("dildo")
-                            call Statup("Laura", "Love", 200, 30)
-                            call Statup("Laura", "Obed", 200, 30)
-                            call Statup("Laura", "Inbt", 200, 30)
-                            ch_l "Oh, cool, I've wanted one of these. . ."
-                            call Statup("Laura", "Lust", 89, 10)
-                            call Statup("Laura", "Lust", 89, 10)
-                        elif ApprovalCheck("Laura", 800) or ApprovalCheck("Laura", 300, "I"):
-                            call LauraFace("confused")
-                            $ P_Inventory.remove("dildo")
-                            $ L_Inventory.append("dildo")
-                            call Statup("Laura", "Love", 200, 10)
-                            call Statup("Laura", "Obed", 200, 10)
-                            call Statup("Laura", "Inbt", 200, 10)
-                            ch_l "Huh, you're a weird gift giver."  
-                            call Statup("Laura", "Lust", 89, 5)
-                            call Statup("Laura", "Lust", 89, 10)
-                            call LauraFace("smile")
-                            ch_l "It's very thoughtful though."
-                        elif "offered gift" in L_DailyActions:
-                            call LauraFace("angry")
-                            "She hands it back to you."
-                            ch_l "I said I can't take something like this."     
-                        else:
-                            call LauraFace("angry")
-                            call Statup("Laura", "Love", 50, -20)
-                            call Statup("Laura", "Obed", 20, 10)
-                            call Statup("Laura", "Inbt", 20, 20)                    
-                            ch_l "I don't think you should just be handing these out to random chicks."                     
-                            call Statup("Laura", "Lust", 89, 10)
-                            "She hands it back to you."
-                            $ L_DailyActions.append("offered gift") 
-                    elif Count == 1:
-                        ch_l "I don't know if I need another. . ."
-                    else: 
-                        ch_l "I'm running out of space at this point."
-                    $ L_Held = 0
-                    $ Laura_Arms = 1
-                    
-                    
-                "Give her the vibrator." if "vibrator" in P_Inventory: 
-                    #If you have a vibrator, you'll give it.
-                    if "vibrator" not in L_Inventory:                            
-                        "You give Laura the Shocker Vibrator."
-                        $ L_Blush = 1
-                        $ Laura_Arms = 2
-                        $ L_Held = "vibrator"
-                        if ApprovalCheck("Laura", 700):                    
-                            call LauraFace("confused")
-                            $ P_Inventory.remove("vibrator")
-                            $ L_Inventory.append("vibrator")
-                            call Statup("Laura", "Love", 200, 30)
-                            call Statup("Laura", "Obed", 200, 30)
-                            call Statup("Laura", "Inbt", 200, 30)
-                            ch_l "This is. . . [[bzzzt]- "                  
-                            call LauraFace("sly")
-                            call Statup("Laura", "Lust", 89, 10)
-                            ch_l "-some kind of sex thing, huh. . ."
-                        elif ApprovalCheck("Laura", 400):
-                            call LauraFace("confused")
-                            $ P_Inventory.remove("vibrator")
-                            $ L_Inventory.append("vibrator")
-                            call Statup("Laura", "Love", 200, 10)
-                            call Statup("Laura", "Obed", 200, 10)
-                            call Statup("Laura", "Inbt", 200, 10)
-                            ch_l "This is. . . [[bzzzt]- "                  
-                            call LauraFace("sly")
-                            call Statup("Laura", "Lust", 89, 10)
-                            ch_l "-oooh. . ."
-                        elif "offered gift" in L_DailyActions:
-                            call LauraFace("angry")
-                            "She hands it back to you."
-                            ch_l "I don't want it."  
-                        else:
-                            call LauraFace("angry")
-                            call Statup("Laura", "Love", 50, -20)
-                            call Statup("Laura", "Obed", 20, 10)
-                            call Statup("Laura", "Inbt", 20, 20)                    
-                            ch_l "I don't need it."                     
-                            call Statup("Laura", "Lust", 89, 5)
-                            "She hands it back to you."
-                            $ L_DailyActions.append("offered gift") 
-                    else: 
-                        ch_l "I already have one of these."
-                    $ L_Held = 0
-                    $ Laura_Arms = 1
-                    
-                "Give her the \"Dazzler and Longshot\" book." if "Dazzler and Longshot" in P_Inventory: 
-                    #If you have a vibrator, you'll give it.
-                    if "Dazzler and Longshot" not in L_Inventory:                            
-                        "You give Laura the book."
-                        $ L_Blush = 1
-                        if ApprovalCheck("Laura", 600, "L"):                    
-                            call LauraFace("smile")
-                            ch_l "A love story?"
-                            call Statup("Laura", "Lust", 89, 10)
-                        else:
-                            call LauraFace("confused")
-                            ch_l "Huh. Is there a movie?"  
-                            call LauraFace("bemused")       
-                        $ P_Inventory.remove("Dazzler and Longshot")
-                        $ L_Inventory.append("Dazzler and Longshot") 
-                        call Statup("Laura", "Love", 200, 50) 
-                    else: 
-                        ch_l "I already have one of those."                
-                    
-                "Give her the \"256 Shades of Grey\" book." if "256 Shades of Grey" in P_Inventory: 
-                    #If you have a book, you'll give it.
-                    if "256 Shades of Grey" not in L_Inventory:                            
-                        "You give Laura the book."
-                        $ L_Blush = 1
-                        if ApprovalCheck("Laura", 500, "O"):                    
-                            call LauraFace("bemused")
-                            ch_l "Looks dirty."
-                            call Statup("Laura", "Lust", 89, 10)
-                        else:
-                            call LauraFace("confused") 
-                            ch_l "I'll give it a look."  
-                            call LauraFace("bemused")             
-                        $ P_Inventory.remove("256 Shades of Grey")
-                        $ L_Inventory.append("256 Shades of Grey")                    
-                        call Statup("Laura", "Obed", 200, 50)  
-                    else: 
-                        ch_l "I already have one of those."                
-                    
-                "Give her the \"Avengers Tower Penthouse\" book." if "Avengers Tower Penthouse" in P_Inventory: 
-                    #If you have a book, you'll give it.
-                    if "Avengers Tower Penthouse" not in L_Inventory:                            
-                        "You give Laura the book."
-                        $ L_Blush = 1
-                        if ApprovalCheck("Laura", 500, "I"):                    
-                            call LauraFace("bemused")
-                            ch_l "This is pretty hot. . ."
-                            call Statup("Laura", "Lust", 89, 10)
-                        else:
-                            call LauraFace("confused")
-                            ch_l "Huh. . . ok."  
-                            call LauraFace("bemused")               
-                        $ P_Inventory.remove("Avengers Tower Penthouse")
-                        $ L_Inventory.append("Avengers Tower Penthouse")                    
-                        call Statup("Laura", "Inbt", 200, 50)  
-                    else: 
-                        ch_l "I already have one of those." 
-            
-                "Never mind":
-                    pass
-        "Clothing":    
-            menu:
-                "Give her the corset." if "l corset" in P_Inventory: 
-                    #If you have a bra, you'll give it.
-                    if "corset" not in L_Inventory:                            
-                        "You give Laura the corset."
-                        if ApprovalCheck("Laura", 1000):                    
-                            call LauraFace("bemused")
-                            $ P_Inventory.remove("l corset")
-                            $ L_Inventory.append("corset")
-                            call Statup("Laura", "Love", 200, 20)
-                            call Statup("Laura", "Obed", 200, 20)
-                            call Statup("Laura", "Inbt", 200, 10)
-                            ch_l "I'd look good in this, right?"
-                            call Statup("Laura", "Lust", 89, 10)
-                        elif ApprovalCheck("Laura", 700):
-                            call LauraFace("confused",1)
-                            $ P_Inventory.remove("l corset")
-                            $ L_Inventory.append("corset")
-                            call Statup("Laura", "Love", 200, 15)
-                            call Statup("Laura", "Obed", 200, 20)
-                            call Statup("Laura", "Inbt", 200, 10)
-                            ch_l "This is. . . kinda cool. . ."                    
-                            call LauraFace("bemused",1)
-                        elif ApprovalCheck("Laura", 600):
-                            call LauraFace("confused",2)
-                            $ P_Inventory.remove("l corset")
-                            $ L_Inventory.append("corset")
-                            call Statup("Laura", "Love", 200, 10)
-                            call Statup("Laura", "Obed", 200, 15)
-                            call Statup("Laura", "Inbt", 200, 15)
-                            ch_l "I don't know why you'd give me this, it's not like I'd wear it. . ."                     
-                            call LauraFace("bemused",1)
-                        elif "no gift bra" in L_DailyActions:
-                            call LauraFace("angry",2)
-                            ch_l "I just told you no."   
-                        else:
-                            call LauraFace("angry",2)
-                            call Statup("Laura", "Love", 50, -10)
-                            call Statup("Laura", "Obed", 20, 10)
-                            call Statup("Laura", "Inbt", 20, 20)  
-                            if "no gift panties" in L_DailyActions:                    
-                                ch_l "I don't want this either."                       
-                            else:                   
-                                ch_l "You have too much time on your hands."                     
-                            call Statup("Laura", "Lust", 89, 5)
-                            $ L_Blush = 1
-                            "She hands it back to you."
-                            $ L_RecentActions.append("no gift bra")                      
-                            $ L_DailyActions.append("no gift bra") 
-                    else: 
-                        ch_l "I already have one of those."                
-                  
-                "Give her the lace corset." if "l lace corset" in P_Inventory: 
-                    #If you have a bra, you'll give it.
-                    if "lace corset" not in L_Inventory:                            
-                        "You give Laura the lace corset."
-                        if ApprovalCheck("Laura", 1200):                    
-                            call LauraFace("bemused")
-                            $ P_Inventory.remove("l lace corset")
-                            $ L_Inventory.append("lace corset")
-                            call Statup("Laura", "Love", 200, 25)
-                            call Statup("Laura", "Obed", 200, 30)
-                            call Statup("Laura", "Inbt", 200, 20)
-                            ch_l "You think this'd look good on me?"
-                            call Statup("Laura", "Lust", 89, 10)
-                        elif ApprovalCheck("Laura", 1000):
-                            call LauraFace("confused",1)
-                            $ P_Inventory.remove("l lace corset")
-                            $ L_Inventory.append("lace corset")
-                            call Statup("Laura", "Love", 200, 20)
-                            call Statup("Laura", "Obed", 200, 30)
-                            call Statup("Laura", "Inbt", 200, 15)
-                            ch_l "This is. . . kinda flimsy. . ."                    
-                            call LauraFace("bemused",1)
-                        elif ApprovalCheck("Laura", 800):
-                            call LauraFace("confused",2)
-                            $ P_Inventory.remove("l lace corset")
-                            $ L_Inventory.append("lace corset")
-                            call Statup("Laura", "Love", 200, 20)
-                            call Statup("Laura", "Obed", 200, 20)
-                            call Statup("Laura", "Inbt", 200, 25)
-                            ch_l "I don't know why you'd give me this, it's not like I'd wear it. . ."                     
-                            call LauraFace("bemused",1)
-                        elif "no gift bra" in L_DailyActions:
-                            call LauraFace("angry",2)
-                            ch_l "I just told you no."   
-                        else:
-                            call LauraFace("angry",2)
-                            call Statup("Laura", "Love", 50, -10)
-                            call Statup("Laura", "Obed", 20, 10)
-                            call Statup("Laura", "Inbt", 20, 20)  
-                            if "no gift panties" in L_DailyActions:                    
-                                ch_l "I don't want this either."                       
-                            else:                   
-                                ch_l "You have too much time on your hands."                     
-                            call Statup("Laura", "Lust", 89, 5)
-                            $ L_Blush = 1
-                            "She hands it back to you."
-                            $ L_RecentActions.append("no gift bra")                      
-                            $ L_DailyActions.append("no gift bra") 
-                    else: 
-                        ch_l "I already have one of those."       
-                        
-                "Give her the lace panties." if "l lace panties" in P_Inventory: 
-                    #If you have a bra, you'll give it.
-                    if "lace panties" not in L_Inventory:                            
-                        "You give Laura the lace panties."
-                        $ L_Blush = 1
-                        if ApprovalCheck("Laura", 1200):                    
-                            call LauraFace("bemused")
-                            $ P_Inventory.remove("l lace panties")
-                            $ L_Inventory.append("lace panties")
-                            call Statup("Laura", "Love", 200, 20)
-                            call Statup("Laura", "Obed", 200, 30)
-                            call Statup("Laura", "Inbt", 200, 30)
-                            ch_l "These are pretty hot. . ."
-                            call Statup("Laura", "Lust", 89, 10)
-                        elif ApprovalCheck("Laura", 900):
-                            call LauraFace("confused",1)
-                            $ P_Inventory.remove("l lace panties")
-                            $ L_Inventory.append("lace panties")
-                            call Statup("Laura", "Love", 200, 20)
-                            call Statup("Laura", "Obed", 200, 25)
-                            call Statup("Laura", "Inbt", 200, 20)
-                            ch_l "These are kinda flimsy. . ."                  
-                            call LauraFace("bemused",1)
-                        elif ApprovalCheck("Laura", 700):
-                            call LauraFace("confused",2)
-                            $ P_Inventory.remove("l lace panties")
-                            $ L_Inventory.append("lace panties")
-                            call Statup("Laura", "Love", 200, 20)
-                            call Statup("Laura", "Obed", 200, 20)
-                            call Statup("Laura", "Inbt", 200, 25)
-                            ch_l "I don't think I'd wear these. . ."                  
-                            call LauraFace("bemused",1)
-                            ch_l "But I might need to do laundry. . ." 
-                        elif "no gift panties" in L_DailyActions:
-                            call LauraFace("angry",2)
-                            ch_l "My answer's still no, stop asking!"                      
-                        else:
-                            call LauraFace("angry",2)
-                            call Statup("Laura", "Love", 50, -15)
-                            call Statup("Laura", "Obed", 20, 10)
-                            call Statup("Laura", "Inbt", 20, 20)
-                            if "no gift bra" in L_DailyActions:                    
-                                ch_l "I don't want these either!" 
-                            elif L_SeenPanties:
-                                ch_l "Did you not like the ones I had?"                          
-                            else:
-                                ch_l "You don't need to worry about my underwear."                     
-                            call Statup("Laura", "Lust", 89, 5)
-                            $ L_Blush = 1
-                            "She hands them back to you."
-                            $ L_RecentActions.append("no gift panties")                      
-                            $ L_DailyActions.append("no gift panties") 
-                    else: 
-                        ch_l "I already have one of those."                
-                              
-                "Give her the bikini top." if "l bikini top" in P_Inventory: 
-                    #If you have a bra, you'll give it.
-                    if "bikini top" not in L_Inventory:                            
-                        "You give Laura the bikini top."
-                        $ L_Blush = 1
-                        if ApprovalCheck("Laura", 1000):                    
-                            call LauraFace("bemused")
-                            $ P_Inventory.remove("l bikini top")
-                            $ L_Inventory.append("bikini top")
-                            call Statup("Laura", "Love", 200, 20)
-                            call Statup("Laura", "Obed", 200, 10)
-                            call Statup("Laura", "Inbt", 200, 10)
-                            ch_l "\"X\", cute. . ."
-                        elif ApprovalCheck("Laura", 800):
-                            call LauraFace("confused",1)
-                            $ P_Inventory.remove("l bikini top")
-                            $ L_Inventory.append("bikini top")
-                            call Statup("Laura", "Love", 200, 20)
-                            call Statup("Laura", "Obed", 200, 15)
-                            call Statup("Laura", "Inbt", 200, 5)
-                            ch_l "Ok, cool. . ."                  
-                            call LauraFace("bemused",1)
-                        elif ApprovalCheck("Laura", 600):
-                            call LauraFace("confused",2)
-                            $ P_Inventory.remove("l bikini top")
-                            $ L_Inventory.append("bikini top")
-                            call Statup("Laura", "Love", 200, 5)
-                            call Statup("Laura", "Obed", 200, 10)
-                            call Statup("Laura", "Inbt", 200, 5)
-                            ch_l "I could use one of these. . ."                  
-                            call LauraFace("bemused",1)
-                        elif "no gift bra" in L_DailyActions:
-                            call LauraFace("angry",2)
-                            ch_l "My answer's still no, stop asking!"                      
-                        else:
-                            call LauraFace("angry",2)
-                            call Statup("Laura", "Love", 50, -5)
-                            call Statup("Laura", "Obed", 20, 5)
-                            call Statup("Laura", "Inbt", 20, 5)
-                            if "no gift panties" in L_DailyActions:                    
-                                ch_l "I don't want this either!"                       
-                            else:
-                                ch_l "Don't worry about what I wear."    
-                            $ L_Blush = 1
-                            "She hands it back to you."
-                            $ L_RecentActions.append("no gift bra")                      
-                            $ L_DailyActions.append("no gift bra") 
-                        if "bikini top" in L_Inventory and "bikini bottoms" in L_Inventory:
-                                $ L_Swim[0] = 1
-                    else: 
-                        ch_l "I already have one of those."     
-                        
-                "Give her the bikini bottoms." if "l bikini bottoms" in P_Inventory: 
-                    #If you have a bra, you'll give it.
-                    if "bikini bottoms" not in L_Inventory:                            
-                        "You give Laura the bikini bottoms."
-                        $ L_Blush = 1
-                        if ApprovalCheck("Laura", 1000):                    
-                            call LauraFace("bemused")
-                            $ P_Inventory.remove("l bikini bottoms")
-                            $ L_Inventory.append("bikini bottoms")
-                            call Statup("Laura", "Love", 200, 20)
-                            call Statup("Laura", "Obed", 200, 10)
-                            call Statup("Laura", "Inbt", 200, 10)
-                            ch_l "Huh, nice cut. . ."
-                        elif ApprovalCheck("Laura", 800):
-                            call LauraFace("confused",1)
-                            $ P_Inventory.remove("l bikini bottoms")
-                            $ L_Inventory.append("bikini bottoms")
-                            call Statup("Laura", "Love", 200, 20)
-                            call Statup("Laura", "Obed", 200, 15)
-                            call Statup("Laura", "Inbt", 200, 5)
-                            ch_l "Ok, cool. . ."                  
-                            call LauraFace("bemused",1)
-                        elif ApprovalCheck("Laura", 600):
-                            call LauraFace("confused",2)
-                            $ P_Inventory.remove("l bikini bottoms")
-                            $ L_Inventory.append("bikini bottoms")
-                            call Statup("Laura", "Love", 200, 5)
-                            call Statup("Laura", "Obed", 200, 10)
-                            call Statup("Laura", "Inbt", 200, 5)
-                            ch_l "Weird gift, but is it warm out. . ."                  
-                            call LauraFace("bemused",1)
-                        elif "no gift panties" in L_DailyActions:
-                            call LauraFace("angry",2)
-                            ch_l "My answer's still no, stop asking!"                      
-                        else:
-                            call LauraFace("angry",2)
-                            call Statup("Laura", "Love", 50, -5)
-                            call Statup("Laura", "Obed", 20, 5)
-                            call Statup("Laura", "Inbt", 20, 5)
-                            if "no gift bra" in L_DailyActions:                    
-                                ch_l "I don't want these either!"                       
-                            else:
-                                ch_l "Don't worry about what I wear."    
-                            $ L_Blush = 1
-                            "She hands them back to you."
-                            $ L_RecentActions.append("no gift panties")                      
-                            $ L_DailyActions.append("no gift panties") 
-                        if "bikini top" in L_Inventory and "bikini bottoms" in L_Inventory:
-                                $ L_Swim[0] = 1
-                    else: 
-                        ch_l "I already have one of those."      
-                        
-                "Never mind":
-                    pass
-        "Exit":
-            return
-    jump Laura_Gifts
-    return
-
 
 # start Laura_Names//////////////////////////////////////////////////////////
 label Laura_Names:    
     menu:
         ch_l "Oh? What would you like me to call you?"
         "My initial's fine.":            
-            $ L_Petname = Playername[:1]  #fix test this
-            ch_l "You got it, [L_Petname]."
+            $ LauraX.Petname = Player.Name[:1]  #fix test this
+            ch_l "You got it, [LauraX.Petname]."
         "Call me by my name.":
-            $ L_Petname = Playername            
-            ch_l "If you'd rather, [L_Petname]."
-        "Call me \"boyfriend\"." if "boyfriend" in L_Petnames:
-            $ L_Petname = "boyfriend"
-            ch_l "Sure thing, [L_Petname]."
-        "Call me \"lover\"." if "lover" in L_Petnames:
-            $ L_Petname = "lover"
-            ch_l "Oooh, love to, [L_Petname]."
-        "Call me \"sir\"." if "sir" in L_Petnames:
-            $ L_Petname = "sir"
-            ch_l "Yes, [L_Petname]."
-        "Call me \"master\"." if "master" in L_Petnames:
-            $ L_Petname = "master"
-            ch_l "As you wish, [L_Petname]."
-        "Call me \"sex friend\"." if "sex friend" in L_Petnames:
-            $ L_Petname = "sex friend"
-            ch_l "Heh, very cheeky, [L_Petname]."
-        "Call me \"fuck buddy\"." if "fuck buddy" in L_Petnames:
-            $ L_Petname = "fuck buddy"
-            ch_l "I'm game if you are, [L_Petname]."        
-        "Call me \"daddy\"." if "daddy" in L_Petnames:
-            $ L_Petname = "daddy"
-            ch_l "Oh! You bet, [L_Petname]."        
+            $ LauraX.Petname = Player.Name            
+            ch_l "If you'd rather, [LauraX.Petname]."
+        "Call me \"boyfriend\"." if "boyfriend" in LauraX.Petnames:
+            $ LauraX.Petname = "boyfriend"
+            ch_l "Sure thing, [LauraX.Petname]."
+        "Call me \"lover\"." if "lover" in LauraX.Petnames:
+            $ LauraX.Petname = "lover"
+            ch_l "Oooh, love to, [LauraX.Petname]."
+        "Call me \"sir\"." if "sir" in LauraX.Petnames:
+            $ LauraX.Petname = "sir"
+            ch_l "Yes, [LauraX.Petname]."
+        "Call me \"master\"." if "master" in LauraX.Petnames:
+            $ LauraX.Petname = "master"
+            ch_l "As you wish, [LauraX.Petname]."
+        "Call me \"sex friend\"." if "sex friend" in LauraX.Petnames:
+            $ LauraX.Petname = "sex friend"
+            ch_l "Heh, very cheeky, [LauraX.Petname]."
+        "Call me \"fuck buddy\"." if "fuck buddy" in LauraX.Petnames:
+            $ LauraX.Petname = "fuck buddy"
+            ch_l "I'm game if you are, [LauraX.Petname]."        
+        "Call me \"daddy\"." if "daddy" in LauraX.Petnames:
+            $ LauraX.Petname = "daddy"
+            ch_l "Oh! You bet, [LauraX.Petname]."        
         "Bub works.":
-            $ L_Petname = "bub"
+            $ LauraX.Petname = "bub"
             ch_l "You got it, bub."
         "Nevermind.":
             return
@@ -2765,87 +1367,87 @@ label Laura_Pet:
                 menu:
                     extend ""
                     "I think I'll just call you Laura.":
-                        $ L_Pet = "Laura"            
-                        ch_l "I don't see why not, [L_Petname]."
+                        $ LauraX.Pet = LauraX            
+                        ch_l "I don't see why not, [LauraX.Petname]."
                         
                     "I think I'll just call you X-23.":
-                        $ L_Pet = "X-23"            
-                        if ApprovalCheck("Laura", 700, "L") and not ApprovalCheck("Laura", 500, "O"):
-                                ch_l "Oh, if you say so, [L_Petname]."
+                        $ LauraX.Pet = "X-23"            
+                        if ApprovalCheck(LauraX, 700, "L") and not ApprovalCheck(LauraX, 500, "O"):
+                                ch_l "Oh, if you say so, [LauraX.Petname]."
                         else:
-                                ch_l "I don't see why not, [L_Petname]."
+                                ch_l "I don't see why not, [LauraX.Petname]."
                         
                     "I think I'll call you \"girl\".":
-                        $ L_Pet = "girl"
-                        if "boyfriend" in L_Petnames or ApprovalCheck("Laura", 600, "L"):
-                            call LauraFace("sexy", 1) 
-                            ch_l "I'm totally your girl, [L_Petname]."
+                        $ LauraX.Pet = "girl"
+                        if "boyfriend" in LauraX.Petnames or ApprovalCheck(LauraX, 600, "L"):
+                            $ LauraX.FaceChange("sexy", 1) 
+                            ch_l "I'm totally your girl, [LauraX.Petname]."
                         else:      
-                            call LauraFace("angry")           
-                            ch_l "I'm NOT your girl, [L_Petname]." 
+                            $ LauraX.FaceChange("angry")           
+                            ch_l "I'm NOT your girl, [LauraX.Petname]." 
                             
                     "I think I'll call you \"boo\".":
-                        $ L_Pet = "boo"
-                        if "boyfriend" in L_Petnames or ApprovalCheck("Laura", 700, "L"):
-                            call LauraFace("sexy", 1) 
-                            ch_l "I am your boo, [L_Petname]."
+                        $ LauraX.Pet = "boo"
+                        if "boyfriend" in LauraX.Petnames or ApprovalCheck(LauraX, 700, "L"):
+                            $ LauraX.FaceChange("sexy", 1) 
+                            ch_l "I am your boo, [LauraX.Petname]."
                         else:     
-                            call LauraFace("angry")            
-                            ch_l "I'm NOT your boo,  [L_Petname]."
+                            $ LauraX.FaceChange("angry")            
+                            ch_l "I'm NOT your boo,  [LauraX.Petname]."
                             
                     "I think I'll call you \"bae\".":
-                        $ L_Pet = "bae"
-                        if "boyfriend" in L_Petnames or ApprovalCheck("Laura", 600, "L"):
-                            call LauraFace("sexy", 1) 
-                            ch_l "I am your bae, [L_Petname]."
+                        $ LauraX.Pet = "bae"
+                        if "boyfriend" in LauraX.Petnames or ApprovalCheck(LauraX, 600, "L"):
+                            $ LauraX.FaceChange("sexy", 1) 
+                            ch_l "I am your bae, [LauraX.Petname]."
                         else:     
-                            call LauraFace("angry")            
-                            ch_l "I'm NOT your bae,  [L_Petname]."
+                            $ LauraX.FaceChange("angry")            
+                            ch_l "I'm NOT your bae,  [LauraX.Petname]."
                             
                     "I think I'll call you \"baby\".":
-                        $ L_Pet = "baby"
-                        if "boyfriend" in L_Petnames or ApprovalCheck("Laura", 500, "L"):
-                            call LauraFace("sexy", 1) 
-                            ch_l "Cute, [L_Petname]."
+                        $ LauraX.Pet = "baby"
+                        if "boyfriend" in LauraX.Petnames or ApprovalCheck(LauraX, 500, "L"):
+                            $ LauraX.FaceChange("sexy", 1) 
+                            ch_l "Cute, [LauraX.Petname]."
                         else:     
-                            call LauraFace("angry")            
+                            $ LauraX.FaceChange("angry")            
                             ch_l "I am not a baby." 
                             
                             
                     "I think I'll call you \"sweetie\".":
-                        $ L_Pet = "sweetie"
-                        if "boyfriend" in L_Petnames or ApprovalCheck("Laura", 600, "L"):
-                            ch_l "Aw, that's sweet, [L_Petname]."
+                        $ LauraX.Pet = "sweetie"
+                        if "boyfriend" in LauraX.Petnames or ApprovalCheck(LauraX, 600, "L"):
+                            ch_l "Aw, that's sweet, [LauraX.Petname]."
                         else:     
-                            call LauraFace("angry", 1)            
-                            ch_l "Too sweet, [L_Petname]."
+                            $ LauraX.FaceChange("angry", 1)            
+                            ch_l "Too sweet, [LauraX.Petname]."
                             
                     "I think I'll call you \"sexy\".":
-                        $ L_Pet = "sexy"
-                        if "lover" in L_Petnames or ApprovalCheck("Laura", 800):
-                            call LauraFace("sexy", 1) 
-                            ch_l "You know it, [L_Petname]."
+                        $ LauraX.Pet = "sexy"
+                        if "lover" in LauraX.Petnames or ApprovalCheck(LauraX, 800):
+                            $ LauraX.FaceChange("sexy", 1) 
+                            ch_l "You know it, [LauraX.Petname]."
                         else:        
-                            call LauraFace("angry", 1)         
-                            ch_l "Pushing a line there, [L_Petname]."  
+                            $ LauraX.FaceChange("angry", 1)         
+                            ch_l "Pushing a line there, [LauraX.Petname]."  
                             
                     "I think I'll call you \"lover\".":
-                        $ L_Pet = "lover"
-                        if "lover" in L_Petnames or ApprovalCheck("Laura", 1200):
-                            call LauraFace("sexy", 1) 
+                        $ LauraX.Pet = "lover"
+                        if "lover" in LauraX.Petnames or ApprovalCheck(LauraX, 1200):
+                            $ LauraX.FaceChange("sexy", 1) 
                             ch_l "I know."
                         else:      
-                            call LauraFace("angry", 1)           
-                            ch_l "I don't think so, [L_Petname]."  
+                            $ LauraX.FaceChange("angry", 1)           
+                            ch_l "I don't think so, [LauraX.Petname]."  
                     
                     "I think I'll call you \"Wolvie\".":
-                        $ L_Pet = "Wolvie"
-                        if ApprovalCheck("Laura", 500, "I"):
-                            call LauraFace("sexy", 1) 
-                            ch_l "Heh, ok, [L_Petname]."
+                        $ LauraX.Pet = "Wolvie"
+                        if ApprovalCheck(LauraX, 500, "I"):
+                            $ LauraX.FaceChange("sexy", 1) 
+                            ch_l "Heh, ok, [LauraX.Petname]."
                         else:     
-                            call LauraFace("angry")            
-                            ch_l "Not really that cute, [L_Petname]" 
+                            $ LauraX.FaceChange("angry")            
+                            ch_l "Not really that cute, [LauraX.Petname]" 
                         
                     "Back":
                         pass
@@ -2853,77 +1455,77 @@ label Laura_Pet:
             "Risky":
                 menu:                        
                     "I think I'll call you \"slave\".":
-                        $ L_Pet = "slave"
-                        if "master" in L_Petnames or ApprovalCheck("Laura", 800, "O"):
-                            call LauraFace("bemused", 1) 
-                            ch_l "As you wish, [L_Petname]."
+                        $ LauraX.Pet = "slave"
+                        if "master" in LauraX.Petnames or ApprovalCheck(LauraX, 800, "O"):
+                            $ LauraX.FaceChange("bemused", 1) 
+                            ch_l "As you wish, [LauraX.Petname]."
                         else:      
-                            call LauraFace("angry", 1)           
-                            ch_l "I am not your slave, [L_Petname]."
+                            $ LauraX.FaceChange("angry", 1)           
+                            ch_l "I am not your slave, [LauraX.Petname]."
                                             
                     "I think I'll call you \"pet\".":
-                        $ L_Pet = "pet"
-                        if "master" in L_Petnames or ApprovalCheck("Laura", 650, "O"):
-                            call LauraFace("bemused", 1) 
-                            ch_l "You can pet me if you want, [L_Petname]."
+                        $ LauraX.Pet = "pet"
+                        if "master" in LauraX.Petnames or ApprovalCheck(LauraX, 650, "O"):
+                            $ LauraX.FaceChange("bemused", 1) 
+                            ch_l "You can pet me if you want, [LauraX.Petname]."
                         else:             
-                            call LauraFace("angry", 1)    
-                            ch_l "I am no one's pet, [L_Petname]."
+                            $ LauraX.FaceChange("angry", 1)    
+                            ch_l "I am no one's pet, [LauraX.Petname]."
                             
                     "I think I'll call you \"slut\".":
-                        $ L_Pet = "slut"
-                        if "sex friend" in L_Petnames or ApprovalCheck("Laura", 900, "OI"):
-                            call LauraFace("sexy") 
+                        $ LauraX.Pet = "slut"
+                        if "sex friend" in LauraX.Petnames or ApprovalCheck(LauraX, 900, "OI"):
+                            $ LauraX.FaceChange("sexy") 
                             ch_l "Fair enough."
                         else:                
-                            call LauraFace("angry", 1) 
-                            $ L_Mouth = "surprised"
+                            $ LauraX.FaceChange("angry", 1) 
+                            $ LauraX.Mouth = "surprised"
                             ch_l "I'm like to see you try it with a busted jaw." 
                             
                     "I think I'll call you \"whore\".":
-                        $ L_Pet = "whore"
-                        if "fuckbuddy" in L_Petnames or ApprovalCheck("Laura", 1000, "OI"):
-                            call LauraFace("sly") 
+                        $ LauraX.Pet = "whore"
+                        if "fuckbuddy" in LauraX.Petnames or ApprovalCheck(LauraX, 1000, "OI"):
+                            $ LauraX.FaceChange("sly") 
                             ch_l "I mean. . ."
                         else:        
-                            call LauraFace("angry", 1)         
+                            $ LauraX.FaceChange("angry", 1)         
                             ch_l "If either of us is going to be turning tricks. . ." 
                                                    
                     "I think I'll call you \"sugartits\".":
-                        $ L_Pet = "sugartits"
-                        if "sex friend" in L_Petnames or ApprovalCheck("Laura", 1400):
-                            call LauraFace("sly", 1) 
+                        $ LauraX.Pet = "sugartits"
+                        if "sex friend" in LauraX.Petnames or ApprovalCheck(LauraX, 1400):
+                            $ LauraX.FaceChange("sly", 1) 
                             ch_l "That doesn't even make sense."
                         else:     
-                            call LauraFace("angry", 1)            
+                            $ LauraX.FaceChange("angry", 1)            
                             ch_l "Not cool." 
                             
                     "I think I'll call you \"sex friend\".":
-                        $ L_Pet = "sex friend"
-                        if "sex friend" in L_Petnames or ApprovalCheck("Laura", 600, "I"):
-                            call LauraFace("sly") 
+                        $ LauraX.Pet = "sex friend"
+                        if "sex friend" in LauraX.Petnames or ApprovalCheck(LauraX, 600, "I"):
+                            $ LauraX.FaceChange("sly") 
                             ch_l "Yeah. . ."
                         else:                
-                            call LauraFace("angry", 1) 
-                            ch_l "Keep it down, [L_Petname]." 
+                            $ LauraX.FaceChange("angry", 1) 
+                            ch_l "Keep it down, [LauraX.Petname]." 
                             
                     "I think I'll call you \"fuckbuddy\".":
-                        $ L_Pet = "fuckbuddy"
-                        if "fuckbuddy" in L_Petnames or ApprovalCheck("Laura", 700, "I"):
-                            call LauraFace("sly") 
+                        $ LauraX.Pet = "fuckbuddy"
+                        if "fuckbuddy" in LauraX.Petnames or ApprovalCheck(LauraX, 700, "I"):
+                            $ LauraX.FaceChange("sly") 
                             ch_l "Yup."
                         else:                
-                            call LauraFace("angry", 1)
-                            $ L_Mouth = "surprised"
-                            ch_l "Don't even joke, [L_Petname]." 
+                            $ LauraX.FaceChange("angry", 1)
+                            $ LauraX.Mouth = "surprised"
+                            ch_l "Don't even joke, [LauraX.Petname]." 
                         
                     "I think I'll call you \"baby girl\".":
-                        $ L_Pet = "baby girl"
-                        if "daddy" in L_Petnames or ApprovalCheck("Laura", 1200):
-                            call LauraFace("smile", 1) 
+                        $ LauraX.Pet = "baby girl"
+                        if "daddy" in LauraX.Petnames or ApprovalCheck(LauraX, 1200):
+                            $ LauraX.FaceChange("smile", 1) 
                             ch_l "I guess?"
                         else:                
-                            call LauraFace("angry", 1) 
+                            $ LauraX.FaceChange("angry", 1) 
                             ch_l "Weirdo." 
                             
                     "Back":
@@ -2933,310 +1535,144 @@ label Laura_Pet:
                 return
     return
     
-label Laura_Namecheck(L_Pet = L_Pet, Cnt = 0, Ugh = 0):
-    #L_Pet is the internal pet name, Cnt and Ugh are internal count variable
-    if L_Pet == "Laura":
-        return Ugh   
-    if Taboo:
-        $ Cnt = int(Taboo/10)
-    if L_Pet == "girl":                                         #easy options
-        if ApprovalCheck("Laura", 600, "L", TabM=1):            
-            call Statup("Laura", "Love", 80, 1)
-        else:
-            call Statup("Laura", "Love", 50, -1)
-            $ Ugh = 1
-    elif L_Pet == "boo" or L_Pet == "bae":
-        if ApprovalCheck("Laura", 600, "L", TabM=1):
-            call Statup("Laura", "Love", 80, 1)
-        else:
-            call Statup("Laura", "Love", 50, -2)
-            $ Ugh = 1
-    elif L_Pet == "baby":    
-        if ApprovalCheck("Laura", 500, "L", TabM=1):
-            call Statup("Laura", "Love", 90, 1)
-        else:
-            call Statup("Laura", "Love", 30, -1)
-            $ Ugh = 1
-    elif L_Pet == "Wolvie":
-        if ApprovalCheck("Laura", 500, "I", TabM=1):
-            call Statup("Laura", "Love", 80, 1)
-        else:
-            call Statup("Laura", "Love", 50, -1)
-            $ Ugh = 1
-    elif L_Pet == "sweetie":
-        if not ApprovalCheck("Laura", 600, "L", TabM=1):
-            call Statup("Laura", "Love", 80, 1)  
-        else:
-            call Statup("Laura", "Love", 40, -1)
-            $ Ugh = 1
-            
-    elif L_Pet == "sexy":
-        if ApprovalCheck("Laura", 800, TabM=1):                                                        #over 150
-            call Statup("Laura", "Love", 80, 2)
-            call Statup("Laura", "Obed", 80, 1)
-            call Statup("Laura", "Inbt", 70, 1) 
-        else:                                                            
-            call Statup("Laura", "Love", 50, (-1-Cnt))
-            call Statup("Laura", "Obed", 50, 1)
-            call Statup("Laura", "Inbt", 20, -1)
-            $ Ugh = 1            
-    elif L_Pet == "lover":
-        if ApprovalCheck("Laura", 1200, TabM=1):                                                        #over 150
-            call Statup("Laura", "Love", 80, 2)
-            call Statup("Laura", "Obed", 80, 1)
-            call Statup("Laura", "Inbt", 70, 1) 
-        else:                                                            
-            call Statup("Laura", "Love", 50, (-1-Cnt))
-            call Statup("Laura", "Obed", 50, 1)
-            call Statup("Laura", "Inbt", 20, -1)
-            $ Ugh = 1
-    #tougher options
-    elif L_Pet == "X-23":   
-        if ApprovalCheck("Laura", 800, "O"):
-            call Statup("Laura", "Lust", 90, 3) 
-            call Statup("Laura", "Love", 90, -1)  
-            call Statup("Laura", "Obed", 95, 2)                                   
-        elif ApprovalCheck("Laura", 700, "L") and not ApprovalCheck("Laura", 500, "O"):
-            call Statup("Laura", "Love", 200, -2)
-            call Statup("Laura", "Love", 50, -1, 1)
-            call Statup("Laura", "Obed", 30, 2)
-            call Statup("Laura", "Obed", 50, 2)
-            call Statup("Laura", "Inbt", 50, -1)
-            $ Ugh = 1
-        else:
-            call Statup("Laura", "Obed", 95, 1)
-            
-    elif L_Pet == "slave":                             
-        if ApprovalCheck("Laura", 800, "O", TabM=3):                                            #over 80
-            call Statup("Laura", "Lust", 90, (3+Cnt))
-            call Statup("Laura", "Obed", 95, (2+Cnt))
-            call Statup("Laura", "Inbt", 30, 1)  
-        elif ApprovalCheck("Laura", 500, "O", TabM=3):                                                  #between 50 and 80
-            call Statup("Laura", "Lust", 90, 1)
-            call Statup("Laura", "Love", 200, -2)
-            call Statup("Laura", "Obed", 81, 2)     
-        else:                                                                                           # under 50
-            call Statup("Laura", "Love", 200, -2)
-            call Statup("Laura", "Love", 50, -1, 1)
-            call Statup("Laura", "Obed", 50, 1)
-            call Statup("Laura", "Inbt", 50, -1)
-            $ Ugh = 1
-    
-    elif L_Pet == "pet":                                        #tougher options
-        if ApprovalCheck("Laura", 800, "O", TabM=2):
-            call Statup("Laura", "Lust", 90, (3+Cnt))
-            call Statup("Laura", "Obed", 95, (2+Cnt))
-            call Statup("Laura", "Inbt", 30, 1)
-            call Statup("Laura", "Inbt", 70, 1)     
-        elif ApprovalCheck("Laura", 650, "O", TabM=2):
-            call Statup("Laura", "Lust", 60, 1)
-            call Statup("Laura", "Obed", 81, 2)
-            call Statup("Laura", "Inbt", 70, 1)        
-        else:
-            call Statup("Laura", "Love", 200, -2)
-            call Statup("Laura", "Love", 50, -2, 1)
-            call Statup("Laura", "Obed", 50, 2)
-            call Statup("Laura", "Inbt", 50, -1)
-            $ Ugh = 1
-            
-    elif L_Pet == "slut":
-        if ApprovalCheck("Laura", 500, "O", TabM=2) or ApprovalCheck("Laura", 400, "I", TabM=2):        #over 50
-            call Statup("Laura", "Lust", 90, (4+Cnt))
-            call Statup("Laura", "Obed", 95, (2+Cnt))
-            call Statup("Laura", "Inbt", 40, 2)
-            call Statup("Laura", "Inbt", 80, 1)
-        elif ApprovalCheck("Laura", 300, "O", TabM=2) or ApprovalCheck("Laura", 200, "I", TabM=2):      #between 30 and 50
-            call Statup("Laura", "Lust", 90, 1)
-            call Statup("Laura", "Love", 200, (-1-Cnt))
-            call Statup("Laura", "Obed", 80, (2+Cnt))
-            call Statup("Laura", "Inbt", 70, 1)        
-        else:                                                                                           # under 40
-            call Statup("Laura", "Love", 200, (-2-Cnt))
-            call Statup("Laura", "Love", 50, (-1-Cnt), 1)
-            call Statup("Laura", "Obed", 50, 1)
-            call Statup("Laura", "Inbt", 20, -1)
-            $ Ugh = 1
-            
-    elif L_Pet == "whore":
-        if ApprovalCheck("Laura", 500, "O", TabM=2) or ApprovalCheck("Laura", 500, "I", TabM=2):        #over 60
-            call Statup("Laura", "Lust", 90, 4)
-            call Statup("Laura", "Obed", 95, 2)
-            call Statup("Laura", "Inbt", 50, 2)
-            call Statup("Laura", "Inbt", 80, 1)
-        elif ApprovalCheck("Laura", 400, "O", TabM=2) or ApprovalCheck("Laura", 400, "I", TabM=2):      #between 40 and 60
-            call Statup("Laura", "Lust", 90, 1)
-            call Statup("Laura", "Love", 200, (-2-Cnt))
-            call Statup("Laura", "Obed", 80, 2)
-            call Statup("Laura", "Inbt", 70, 1)
-        else:                                                                                           # under 40
-            call Statup("Laura", "Love", 200, (-3-Cnt))
-            call Statup("Laura", "Love", 50, (-2-Cnt), 1)
-            call Statup("Laura", "Obed", 50, 1)            
-            call Statup("Laura", "Inbt", 21, 1, 1)
-            call Statup("Laura", "Inbt", 20, -1)
-            $ Ugh = 1
-            
-    elif L_Pet == "sugartits":
-        if ApprovalCheck("Laura", 1500, TabM=1):                                                        #over 150
-            call Statup("Laura", "Obed", 80, 1)
-            call Statup("Laura", "Obed", 50, 2)
-            call Statup("Laura", "Inbt", 70, 1)            
-            call Statup("Laura", "Inbt", 30, 2)
-        else:                                                                       
-            call Statup("Laura", "Love", 200, (-2-Cnt))
-            call Statup("Laura", "Love", 50, (-1-Cnt))
-            call Statup("Laura", "Obed", 50, 1)
-            call Statup("Laura", "Inbt", 20, -1)
-            $ Ugh = 1
-            
-    elif L_Pet == "sex friend":    
-        if ApprovalCheck("Laura", 750, "O", TabM=1) or ApprovalCheck("Laura", 600, "I", TabM=1):        #over 75/60
-            call Statup("Laura", "Lust", 90, 3)
-            call Statup("Laura", "Obed", 95, 2)
-            call Statup("Laura", "Inbt", 40, 2)
-            call Statup("Laura", "Inbt", 80, 1)
-        elif ApprovalCheck("Laura", 600, "O", TabM=1) or ApprovalCheck("Laura", 400, "I", TabM=1):      #between 60/40 and 75/60
-            call Statup("Laura", "Lust", 90, 2)
-            call Statup("Laura", "Love", 200, (-1-Cnt))
-            call Statup("Laura", "Obed", 80, 1)
-            call Statup("Laura", "Inbt", 70, 1)
-            $ L_Blush = 1
-        else:                                                                                           # under 60/40
-            call Statup("Laura", "Love", 200, -Cnt)
-            call Statup("Laura", "Love", 50, (-1-Cnt), 1)
-            call Statup("Laura", "Obed", 50, 1)
-            call Statup("Laura", "Inbt", 20, -1)
-            $ Ugh = 1
-            
-    elif L_Pet == "fuckbuddy":
-        if ApprovalCheck("Laura", 700, "O", TabM=2) or ApprovalCheck("Laura", 700, "I", TabM=1):        #over 70/70
-            call Statup("Laura", "Lust", 90, 3)
-            call Statup("Laura", "Obed", 95, 2)
-            call Statup("Laura", "Inbt", 40, 2)
-            call Statup("Laura", "Inbt", 85, 1)
-        elif ApprovalCheck("Laura", 600, "O", TabM=2) or ApprovalCheck("Laura", 500, "I", TabM=1):      #between 60/50 and 70/70
-            call Statup("Laura", "Lust", 90, 2)
-            call Statup("Laura", "Love", 200, (-1-Cnt))
-            call Statup("Laura", "Obed", 80, 1)
-            call Statup("Laura", "Inbt", 70, 1)
-            $ L_Blush = 1
-        else:                                                                                           #under 60/50
-            call Statup("Laura", "Love", 200, -Cnt)
-            call Statup("Laura", "Love", 60, (-2-Cnt), 1)
-            call Statup("Laura", "Obed", 60, 1)
-            call Statup("Laura", "Inbt", 20, -1)
-            $ Ugh = 1
-            
-    elif L_Pet == "baby girl":
-        if ApprovalCheck("Laura", 1200, TabM=1):                                                        #over 150
-            call Statup("Laura", "Obed", 80, 1)
-            call Statup("Laura", "Obed", 50, 2)
-            call Statup("Laura", "Inbt", 70, 1)            
-            call Statup("Laura", "Inbt", 30, 2)
-        else:                                                                       
-            call Statup("Laura", "Love", 200, (-2-Cnt))
-            call Statup("Laura", "Love", 50, (-1-Cnt))
-            call Statup("Laura", "Obed", 50, 1)
-            call Statup("Laura", "Inbt", 20, -1)
-            $ Ugh = 1
-            
-    return Ugh
+#label Laura_Namecheck(LauraX.Pet = LauraX.Pet, Cnt = 0, Ugh = 0): #replaced with $ Girl.NameCheck() #checks reaction to petname
+  
+  
+# start Laura_Rename//////////////////////////////////////////////////////////
+label Laura_Rename:  
+        #Sets alternate names from Laura
+        $ LauraX.Mouth = "smile"
+        ch_l "Yeah?"
+        menu:
+            extend ""
+            "I think \"Laura's\" a pretty name." if LauraX.Name != "Laura" and "Laura" in LauraX.Names:
+                    $ LauraX.Name = "Laura"
+                    ch_l "Sounds good."
+            "I thought \"X-23\" sounded cool." if LauraX.Name != "X-23" and "X-23" in LauraX.Names:
+                    if not ApprovalCheck(LauraX, 500, "O") and not ApprovalCheck(LauraX, 800, "L"):
+                            ch_l "I've put that name behind me, I'd rather not. . ."                        
+                    else:
+                            if not ApprovalCheck(LauraX, 500, "O"):
+                                    $ LauraX.FaceChange("sadside", 0,Brows="normal") 
+                            if "namechange" not in LauraX.DailyActions:
+                                    $ LauraX.Statup("Love", 70, -2)   
+                                    $ LauraX.Statup("Obed", 70, 5)
+                            $ LauraX.Name = "X-23"
+                            ch_l "Oh, sure. . . I could go by that again. . ."
+            "I liked the sound of \"Wolverine.\"" if LauraX.Name != "Wolverine" and "Wolverine" in LauraX.Names:                
+                    $ LauraX.FaceChange("confused", 1) 
+                    if ApprovalCheck(LauraX, 500, "O") or ApprovalCheck(LauraX, 500, "I"):
+                            $ LauraX.Name = "Wolverine"
+                            $ LauraX.FaceChange("confused", 1) 
+                            if "namechange" not in LauraX.DailyActions:
+                                    $ LauraX.Statup("Obed", 70, 2)
+                                    $ LauraX.Statup("Inbt", 50, 2)
+                            ch_l "I guess I could give that one a go. . ."
+                    else:
+                            $ LauraX.Blush = 2
+                            ch_l "I. . . really don't think that would work for me. . ."
+                    $ LauraX.FaceChange() 
+            "Nevermind.":
+                    pass                    
+        $ LauraX.AddWord(1,0,"namechange")
+        return
+# end Laura_Rename//////////////////////////////////////////////////////////
 
 
-# start Laura_Personality//////////////////////////////////////////////////////////
+# start Laura_Personality / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 label Laura_Personality(Cnt = 0):   
-    if not L_Chat[4] or Cnt:
+    if not LauraX.Chat[4] or Cnt:
         "Since you're doing well in one area, you can convince Laura to focus on one of the others."
         "Any time you go over the limit in a given stat, the excess will spill over into the chosen stat instead."
         "This will also impact which personality trait takes priority in dialog."
     menu:
         ch_l "Yeah? What's up?"
-        "More Obedient. [[Love to Obedience]" if L_Love > 900:
+        "More Obedient. [[Love to Obedience]" if LauraX.Love > 900:
             ch_p "If you really love me, could you please just do what I say?"
             ch_l "If you really care about that, sure."
-            $ L_Chat[4] = 1
-        "Less Inhibited. [[Love to Inhibition]" if L_Love > 900:
+            $ LauraX.Chat[4] = 1
+        "Less Inhibited. [[Love to Inhibition]" if LauraX.Love > 900:
             ch_p "If you really love me, could lighten up a bit, just have some fun?"
             ch_l "I could always be a bit more wild if that's what you want."
-            $ L_Chat[4] = 2
+            $ LauraX.Chat[4] = 2
         
-        "Less Inhibited. [[Obedience to Inhibition]" if L_Obed > 900:
+        "Less Inhibited. [[Obedience to Inhibition]" if LauraX.Obed > 900:
             ch_p "I want you to be less inhibited."
             ch_l "I guess I could go all-out."
-            $ L_Chat[4] = 3
-        "More Loving. [[Obedience to Love]" if L_Obed > 900:
+            $ LauraX.Chat[4] = 3
+        "More Loving. [[Obedience to Love]" if LauraX.Obed > 900:
             ch_p "I'd like you to learn to love me."
             ch_l "I can try."
-            $ L_Chat[4] = 4
+            $ LauraX.Chat[4] = 4
             
-        "More Obedient. [[Inhibition to Obedience]" if L_Inbt > 900:
+        "More Obedient. [[Inhibition to Obedience]" if LauraX.Inbt > 900:
             ch_p "I know we're having fun, but couldn't you listen to me sometimes?"
             ch_l "I can give it a shot. . ."
-            $ L_Chat[4] = 5
+            $ LauraX.Chat[4] = 5
             
-        "More Loving. [[Inhibition to Love]" if L_Inbt > 900:
+        "More Loving. [[Inhibition to Love]" if LauraX.Inbt > 900:
             ch_p "I know we're having fun, but do you even care about me?"
             ch_l "If that's somethign you need out of this. . ."
-            $ L_Chat[4] = 6
+            $ LauraX.Chat[4] = 6
             
-        "I guess just do what you like. . .[[reset]" if L_Chat[4]:
+        "I guess just do what you like. . .[[reset]" if LauraX.Chat[4]:
             ch_p "You know what we talked about before? Nevermind that stuff."
             ch_l "Um, ok."
-            $ L_Chat[4] = 0
+            $ LauraX.Chat[4] = 0
         "Repeat the rules":
             $ Cnt = 1
             jump Laura_Personality
         "Nevermind.":
             return
     return
-# end Laura_Personality//////////////////////////////////////////////////////////
+# end Laura_Personality / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
 
 
 
-# Laura_Summon//////////////////////////////////////////////////////////
+# Laura_Summon / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
 label Laura_Summon(Tempmod=Tempmod):
-    call LauraOutfit  
-    if "no summon" in L_RecentActions:
-                if "angry" in L_RecentActions:
+    $ LauraX.OutfitChange()  
+    if "no summon" in LauraX.RecentActions:
+                if "angry" in LauraX.RecentActions:
                     ch_l "Grrrrrrrrr."
-                elif Action_Check("Laura", "recent", "no summon") > 1:
+                elif LauraX.RecentActions.count("no summon") > 1:
                     ch_l "Back off!"
-                    $ L_RecentActions.append("angry") 
+                    $ LauraX.RecentActions.append("angry") 
 #                elif Current_Time == "Night": 
 #                    ch_l "Like I said, it's too late for that."
                 else:
                     ch_l "Like I said, I'm busy."   
-                $ L_RecentActions.append("no summon")
+                $ LauraX.RecentActions.append("no summon")
                 return
                            
     $ D20 = renpy.random.randint(1, 20) 
     $ Line = 0
-    if L_Loc == "bg classroom": #fix change these if changed function
+    if LauraX.Loc == "bg classroom": #fix change these if changed function
         $ Tempmod = -10
-    elif L_Loc == "bg dangerroom":    
+    elif LauraX.Loc == "bg dangerroom":    
         $ Tempmod = -10
-    elif L_Loc == "bg showerroom":    
+    elif LauraX.Loc == "bg showerroom":    
         $ Tempmod = -30
         
     if D20 <= 3:                                                                        
         #unlucky refusal
         $ Line = "no"       
     if Current_Time == "Night": 
-                if ApprovalCheck("Laura", 500, "L") or ApprovalCheck("Laura", 400, "O"):                             
+                if ApprovalCheck(LauraX, 500, "L") or ApprovalCheck(LauraX, 400, "O"):                             
                         #It's night time but she likes you.
                         ch_l "You're up too? Sure, we can hang."
-                        $ L_Loc = bg_current 
+                        $ LauraX.Loc = bg_current 
                         call Set_The_Scene
                 else:                                                           
                         #It's night time and she isn't into you
                         ch_l "Nah."       
-                        $ L_RecentActions.append("no summon")         
+                        $ LauraX.RecentActions.append("no summon")         
                 return                  
-    elif "les" in L_RecentActions:
+    elif "les" in LauraX.RecentActions:
             #if she's with another girl. . .
-            if ApprovalCheck("Laura", 2000):
+            if ApprovalCheck(LauraX, 2000):
                     ch_l "I'm kinda with a girl right now? Wanna come over?"
                     menu:
                         extend ""
@@ -3248,49 +1684,49 @@ label Laura_Summon(Tempmod=Tempmod):
             else:            
                     ch_l "Oh, um, kinda busy here."   
                     ch_l "I'll see you later, eh?"      
-                    $ L_RecentActions.append("no summon") 
+                    $ LauraX.RecentActions.append("no summon") 
                     return   
-    elif not ApprovalCheck("Laura", 700, "L") or not ApprovalCheck("Laura", 600, "O"):                       
+    elif not ApprovalCheck(LauraX, 700, "L") or not ApprovalCheck(LauraX, 600, "O"):                       
         #It's not night time, but she's busy 
-        if not ApprovalCheck("Laura", 300):
-                ch_l "I'm busy, [L_Petname]."       
-                $ L_RecentActions.append("no summon")         
+        if not ApprovalCheck(LauraX, 300):
+                ch_l "I'm busy, [LauraX.Petname]."       
+                $ LauraX.RecentActions.append("no summon")         
                 return    
             
             
-        if "summoned" in L_RecentActions:
+        if "summoned" in LauraX.RecentActions:
                 pass
-        elif "goto" in L_RecentActions:
+        elif "goto" in LauraX.RecentActions:
                 ch_l "You were just over here."
-        elif L_Loc == "bg classroom":
+        elif LauraX.Loc == "bg classroom":
                 ch_l "I'm in class, did you want to come too?"
-        elif L_Loc == "bg dangerroom": 
-                ch_l "I'm in the Danger Room, [L_Petname], want in?"    
-        elif L_Loc == "bg campus": 
+        elif LauraX.Loc == "bg dangerroom": 
+                ch_l "I'm in the Danger Room, [LauraX.Petname], want in?"    
+        elif LauraX.Loc == "bg campus": 
                 ch_l "I'm napping under a tree here, want to come?" 
-        elif L_Loc == "bg laura": 
-                ch_l "I'm in my room, [L_Petname], want to hang?" 
-        elif L_Loc == "bg player": 
-                ch_l "I'm in your room, [L_Petname], why aren't you?"   
-        elif L_Loc == "bg showerroom":    
-            if ApprovalCheck("Laura", 1600):
+        elif LauraX.Loc == "bg laura": 
+                ch_l "I'm in my room, [LauraX.Petname], want to hang?" 
+        elif LauraX.Loc == "bg player": 
+                ch_l "I'm in your room, [LauraX.Petname], why aren't you?"   
+        elif LauraX.Loc == "bg showerroom":    
+            if ApprovalCheck(LauraX, 1600):
                 ch_l "I'm in the shower right now. Join me?"
             else:            
-                ch_l "I'm in the shower right now, [L_Petname]. We can connect later."       
-                $ L_RecentActions.append("no summon")         
+                ch_l "I'm in the shower right now, [LauraX.Petname]. We can connect later."       
+                $ LauraX.RecentActions.append("no summon")         
                 return      
-        elif L_Loc == "hold":
+        elif LauraX.Loc == "hold":
                 ch_l "I'm on task right now. Sorry?"       
-                $ L_RecentActions.append("no summon") 
+                $ LauraX.RecentActions.append("no summon") 
                 return      
         else:        
                 ch_l "Why don't you come to me?"    
            
            
-        if "summoned" in L_RecentActions:
+        if "summoned" in LauraX.RecentActions:
             ch_l "Again? Ok, fine."           
             $ Line = "yes"            
-        elif "goto" in L_RecentActions:
+        elif "goto" in LauraX.RecentActions:
             menu:
                 extend ""
                 "You're right, be right back.":
@@ -3299,19 +1735,19 @@ label Laura_Summon(Tempmod=Tempmod):
                 "Nah, it's better here.":    
                                 ch_l "If you say so."                    
                 "But I'd {i}really{/i} like to see you over here.":
-                        if ApprovalCheck("Laura", 600, "L") or ApprovalCheck("Laura", 1400):
+                        if ApprovalCheck(LauraX, 600, "L") or ApprovalCheck(LauraX, 1400):
                                 $ Line = "lonely"
                         else: 
                                 $ Line = "no"                        
                 "I said come over here.":
-                        if ApprovalCheck("Laura", 600, "O"):                                    
+                        if ApprovalCheck(LauraX, 600, "O"):                                    
                                 #she is obedient
                                 $ Line = "command"                        
-                        elif D20 >= 7 and ApprovalCheck("Laura", 1400):                         
+                        elif D20 >= 7 and ApprovalCheck(LauraX, 1400):                         
                                 #she is generally favorable 
                                 ch_l "Hmph."              
                                 $ Line = "yes"                        
-                        elif ApprovalCheck("Laura", 200, "O"):                                  
+                        elif ApprovalCheck(LauraX, 200, "O"):                                  
                                 #she is not obedient  
                                 ch_l "Whatever."    
                                 ch_l "I'll be here if you change your mind."    
@@ -3322,72 +1758,72 @@ label Laura_Summon(Tempmod=Tempmod):
             menu:
                 extend ""
                 "Sure, I'll be right there.":
-                    call Statup("Laura", "Love", 55, 1) 
-                    call Statup("Laura", "Inbt", 30, 1)
+                    $ LauraX.Statup("Love", 55, 1) 
+                    $ LauraX.Statup("Inbt", 30, 1)
                     ch_l "See you when you get here."
                     $ Line = "go to"
                     
                 "Nah, we can talk later.":
-                    call Statup("Laura", "Obed", 50, 1)                            
-                    call Statup("Laura", "Obed", 30, 2)
+                    $ LauraX.Statup("Obed", 50, 1)                            
+                    $ LauraX.Statup("Obed", 30, 2)
                     ch_l "Ok. Later then."
                     
                 "Could you please come visit me? I'm lonely.":
-                    if ApprovalCheck("Laura", 650, "L") or ApprovalCheck("Laura", 1500):
-                        call Statup("Laura", "Love", 70, 1)                   
-                        call Statup("Laura", "Obed", 50, 1)
+                    if ApprovalCheck(LauraX, 650, "L") or ApprovalCheck(LauraX, 1500):
+                        $ LauraX.Statup("Love", 70, 1)                   
+                        $ LauraX.Statup("Obed", 50, 1)
                         $ Line = "lonely"
                     else: 
-                        call Statup("Laura", "Inbt", 30, 1)
+                        $ LauraX.Statup("Inbt", 30, 1)
                         $ Line = "no"
                         ch_l "Man, you are such a sap."
                         
                 "Come on, it'll be fun.":
-                    if ApprovalCheck("Laura", 400, "L") and ApprovalCheck("Laura", 800):
-                        call Statup("Laura", "Love", 70, 1)                   
-                        call Statup("Laura", "Obed", 50, 1)
+                    if ApprovalCheck(LauraX, 400, "L") and ApprovalCheck(LauraX, 800):
+                        $ LauraX.Statup("Love", 70, 1)                   
+                        $ LauraX.Statup("Obed", 50, 1)
                         $ Line = "fun"
                     else: 
-                        call Statup("Laura", "Inbt", 30, 1)
+                        $ LauraX.Statup("Inbt", 30, 1)
                         $ Line = "no"
                         
                 "I said come over here.":
-                    if ApprovalCheck("Laura", 600, "O"):                              
+                    if ApprovalCheck(LauraX, 600, "O"):                              
                         #she is obedient
-                        call Statup("Laura", "Love", 50, 1, 1)    
-                        call Statup("Laura", "Love", 40, -1)                
-                        call Statup("Laura", "Obed", 90, 1)    
+                        $ LauraX.Statup("Love", 50, 1, 1)    
+                        $ LauraX.Statup("Love", 40, -1)                
+                        $ LauraX.Statup("Obed", 90, 1)    
                         $ Line = "command"
                         
-                    elif D20 >= 7 and ApprovalCheck("Laura", 1500):       
+                    elif D20 >= 7 and ApprovalCheck(LauraX, 1500):       
                         #she is generally favorable
-                        call Statup("Laura", "Love", 70, -2)  
-                        call Statup("Laura", "Love", 90, -1)  
-                        call Statup("Laura", "Obed", 50, 2)                                
-                        call Statup("Laura", "Obed", 90, 1)  
+                        $ LauraX.Statup("Love", 70, -2)  
+                        $ LauraX.Statup("Love", 90, -1)  
+                        $ LauraX.Statup("Obed", 50, 2)                                
+                        $ LauraX.Statup("Obed", 90, 1)  
                         ch_l "Ok, fine."              
                         $ Line = "yes"
                         
-                    elif ApprovalCheck("Laura", 200, "O"):                                         
+                    elif ApprovalCheck(LauraX, 200, "O"):                                         
                         #she is not obedient   
-                        call Statup("Laura", "Love", 60, -4)  
-                        call Statup("Laura", "Love", 90, -3)   
+                        $ LauraX.Statup("Love", 60, -4)  
+                        $ LauraX.Statup("Love", 90, -3)   
                         ch_l "Don't even try it."                             
-                        call Statup("Laura", "Inbt", 40, 2)
-                        call Statup("Laura", "Inbt", 60, 1)    
-                        call Statup("Laura", "Obed", 70, -3)
+                        $ LauraX.Statup("Inbt", 40, 2)
+                        $ LauraX.Statup("Inbt", 60, 1)    
+                        $ LauraX.Statup("Obed", 70, -3)
                         ch_l "I'm staying put."                    
                     else:                                                                   
                         #she is obedient, but you failed to meet the checks
-                        call Statup("Laura", "Inbt", 30, 1)
-                        call Statup("Laura", "Inbt", 50, 1)                                    
-                        call Statup("Laura", "Love", 50, -1, 1)
-                        call Statup("Laura", "Obed", 70, -1)  
+                        $ LauraX.Statup("Inbt", 30, 1)
+                        $ LauraX.Statup("Inbt", 50, 1)                                    
+                        $ LauraX.Statup("Love", 50, -1, 1)
+                        $ LauraX.Statup("Obed", 70, -1)  
                         $ Line = "no" 
                     #end "ordered"
     else:                                                                               
         #automatic acceptance
-        if L_Love > L_Obed:
+        if LauraX.Love > LauraX.Obed:
             ch_l "Sure!"
         else:
             ch_l "Ok, I'm in route."
@@ -3397,117 +1833,120 @@ label Laura_Summon(Tempmod=Tempmod):
     
     if not Line:                                                                        
             #You end the dialog neutrally               
-            $ L_RecentActions.append("no summon")         
+            $ LauraX.RecentActions.append("no summon")         
             return
         
     if Line == "no":                                                                    
             # She's refused, context based dialog
-            if L_Loc == "bg classroom":
+            if LauraX.Loc == "bg classroom":
                 ch_l "I can't skip this lecture." 
-            elif L_Loc == "bg dangerroom": 
+            elif LauraX.Loc == "bg dangerroom": 
                 ch_l "I'm just getting warmed up though!"
             else:
-                ch_l "Sorry, [L_Petname], I'm kinda busy."          
-            $ L_RecentActions.append("no summon")         
+                ch_l "Sorry, [LauraX.Petname], I'm kinda busy."          
+            $ LauraX.RecentActions.append("no summon")         
             return
         
     elif Line == "go to":                                                                 
             #You agreed to go to her instead        
             $ renpy.pop_call()
-            $ L_RecentActions.append("goto")  
-            $ P_RecentActions.append("goto")  
-            if L_Loc == "bg classroom":
+            $ LauraX.RecentActions.append("goto")  
+            $ Player.RecentActions.append("goto")  
+            if LauraX.Loc == "bg classroom":
                     ch_l "K, there's room next to me."
                     jump Class_Room 
-            elif L_Loc == "bg dangerroom": 
+            elif LauraX.Loc == "bg dangerroom": 
                     ch_l "I'll try to leave some bots for 'ya."
                     jump Danger_Room
-            elif L_Loc == "bg laura":    
+            elif LauraX.Loc == "bg laura":    
                     ch_l "I'll. . . make some space."
                     jump Laura_Room
-            elif L_Loc == "bg player": 
+            elif LauraX.Loc == "bg player": 
                     ch_l "I'll be waiting."
                     jump Player_Room                
-            elif L_Loc == "bg showerroom": 
+            elif LauraX.Loc == "bg showerroom": 
                     ch_l "I'll leave you some hot water."
                     jump Shower_Room
-            elif L_Loc == "bg campus": 
+            elif LauraX.Loc == "bg campus": 
                     ch_l "Look for the biggest tree."
                     jump Campus
-            elif L_Loc == "bg rogue": 
+            elif LauraX.Loc == "bg rogue": 
                     ch_l "Yeah, see you."
                     jump Rogue_Room
-            elif L_Loc == "bg kitty": 
+            elif LauraX.Loc == "bg kitty": 
                     ch_l "Yeah, see you."
                     jump Kitty_Room
-            elif L_Loc == "bg emma": 
+            elif LauraX.Loc == "bg emma": 
                     ch_l "Yeah, see you."
                     jump Emma_Room
             else:
                     ch_l "Um, I'll just meet you in my room."
-                    $ L_Loc = "bg laura"
+                    $ LauraX.Loc = "bg laura"
                     jump Laura_Room
             
     #She's agreed to come over    
     elif Line == "lonely":
             ch_l "You are such a dork!"
     elif Line == "command": 
-            ch_l "Yes, [L_Petname]."
+            ch_l "Yes, [LauraX.Petname]."
         
-    $ L_RecentActions.append("summoned")  
+    $ LauraX.RecentActions.append("summoned")  
     $ Line = 0
     ch_l "I'll be right there."      
-    if "locked" in P_Traits:
-            call Locked_Door("Laura")
-            return                          
-    $ L_Loc = bg_current 
-    call LauraOutfit
+    if "locked" in Player.Traits:
+            call Locked_Door(LauraX)
+            return                 
+    $ LauraX.Loc = bg_current 
+    call Taboo_Level(0)
+    $ LauraX.OutfitChange()
     call Set_The_Scene
     return
 
-# End Laura Summon ///////////////////    
+# End Laura Summon  / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
 
 label Laura_Leave(Tempmod=Tempmod, GirlsNum = 0):        
-    if "leaving" in L_RecentActions:
-        call DrainWord("Laura","leaving")
+    if "leaving" in LauraX.RecentActions:
+        $ LauraX.DrainWord("leaving")
     else:
         return
     
-    if L_Loc == "hold":   
+    if LauraX.Loc == "hold":   
             # Activates if she's being moved out of play
             ch_l "I'm taking off for a bit, later." 
             return
             
-    if "Laura" in Party or "lockedtravels" in L_Traits:           
+    if LauraX in Party or "lockedtravels" in LauraX.Traits:           
             #If she's in your party or if you've told her not to leave you
             #It resets her to your location
-            $ L_Loc = bg_current 
+            $ LauraX.Loc = bg_current 
             return
       
-    elif "freetravels" in L_Traits or not ApprovalCheck("Laura", 700):
+    elif "freetravels" in LauraX.Traits or not ApprovalCheck(LauraX, 700):
             #If you've told her to go wherever, or she just doesn't care what you think.   
-            call LauraOutfit           
+            $ LauraX.OutfitChange()           
             if GirlsNum: #if someone left before her
                         ch_l "Yeah, I'm leaving too."
                         
-            if L_Loc == "bg classroom":
+            if LauraX.Loc == "bg classroom":
                         ch_l "I've got class."
-            elif L_Loc == "bg dangerroom": 
+            elif LauraX.Loc == "bg dangerroom": 
                         ch_l "I'm hitting the Danger Room."   
-            elif L_Loc == "bg campus": 
+            elif LauraX.Loc == "bg campus": 
                         ch_l "I'm taking a nap in the quad." 
-            elif L_Loc == "bg laura": 
+            elif LauraX.Loc == "bg laura": 
                         ch_l "I'm headed back to my room." 
-            elif L_Loc == "bg player": 
+            elif LauraX.Loc == "bg player": 
                         ch_l "I'm gonna hang out in your room for a bit."   
-            elif L_Loc == "bg showerroom":    
-                if ApprovalCheck("Laura", 1400):
+            elif LauraX.Loc == "bg pool": 
+                        ch_l "I was hitting the pool."  
+            elif LauraX.Loc == "bg showerroom":    
+                if ApprovalCheck(LauraX, 1400):
                         ch_l "I'm hitting the showers, later."
                 else:            
                         ch_l "I'm headed out."
             else:        
-                        ch_l "I'm headed out, later."                  
+                        ch_l "I'm headed out, later."   
             hide Laura_Sprite
             return     
             #End Free Travels
@@ -3515,42 +1954,44 @@ label Laura_Leave(Tempmod=Tempmod, GirlsNum = 0):
     if bg_current == "bg dangerroom":   
             call Gym_Clothes("exit")
             
-    call LauraOutfit  
+    $ LauraX.OutfitChange()  
     
-    if "follow" not in L_Traits:
+    if "follow" not in LauraX.Traits:
             # Sets a key to show that she's asked you to follow her at least once
-            $ L_Traits.append("follow")   
+            $ LauraX.Traits.append("follow")   
         
     $ D20 = renpy.random.randint(1, 20) 
     $ Line = 0
     # Sets her preferences
-    if L_Loc == "bg classroom": #fix change these if changed function
+    if LauraX.Loc == "bg classroom": #fix change these if changed function
         $ Tempmod = 10
-    elif L_Loc == "bg dangerroom":    
+    elif LauraX.Loc == "bg dangerroom":    
         $ Tempmod = 20
-    elif L_Loc == "bg showerroom":    
+    elif LauraX.Loc == "bg showerroom":    
         $ Tempmod = 40
     
     
     if GirlsNum: #if someone left before her
                 ch_l "Yeah, I'm headed out too."
                 
-    if L_Loc == "bg classroom":
+    if LauraX.Loc == "bg classroom":
         ch_l "I've got class, want in?"
-    elif L_Loc == "bg dangerroom": 
+    elif LauraX.Loc == "bg dangerroom": 
         ch_l "I've got some Danger Room time, want in?"    
-    elif L_Loc == "bg campus": 
+    elif LauraX.Loc == "bg campus": 
         ch_l "I'm taking a nap on the quad, you want in?" 
-    elif L_Loc == "bg laura": 
+    elif LauraX.Loc == "bg laura": 
         ch_l "I'm headed back to my room, you want in?" 
-    elif L_Loc == "bg player": 
+    elif LauraX.Loc == "bg player": 
         ch_l "I'm going to hang out in your room for a bit, you coming?"   
-    elif L_Loc == "bg showerroom":    
-        if ApprovalCheck("Laura", 1600):
+    elif LauraX.Loc == "bg showerroom":    
+        if ApprovalCheck(LauraX, 1600):
             ch_l "I'm hitting the showers, you could use one too."
         else:            
             ch_l "I'm hitting the showers, see you later."
-            return        
+            return      
+    elif LauraX.Loc == "bg pool": 
+                ch_l "I was hitting the pool. Wanna come?"   
     else:        
         ch_l "Wanna join me?"    
     
@@ -3558,125 +1999,129 @@ label Laura_Leave(Tempmod=Tempmod, GirlsNum = 0):
     menu:
         extend ""
         "Sure, I'll catch up.":
-                if "followed" not in L_RecentActions:
-                    call Statup("Laura", "Love", 55, 1) 
-                    call Statup("Laura", "Inbt", 30, 1)
+                if "followed" not in LauraX.RecentActions:
+                    $ LauraX.Statup("Love", 55, 1) 
+                    $ LauraX.Statup("Inbt", 30, 1)
                 $ Line = "go to"
             
         "Nah, we can talk later.":
-                if "followed" not in L_RecentActions:
-                    call Statup("Laura", "Obed", 50, 1)                            
-                    call Statup("Laura", "Obed", 30, 2)
+                if "followed" not in LauraX.RecentActions:
+                    $ LauraX.Statup("Obed", 50, 1)                            
+                    $ LauraX.Statup("Obed", 30, 2)
                 ch_l "Sure, whatever."
             
         "Could you please stay with me? I'll get lonely.":
-                if ApprovalCheck("Laura", 650, "L") or ApprovalCheck("Laura", 1500):                
-                    if "followed" not in L_RecentActions:
-                        call Statup("Laura", "Love", 70, 1)                   
-                        call Statup("Laura", "Obed", 50, 1)
+                if ApprovalCheck(LauraX, 650, "L") or ApprovalCheck(LauraX, 1500):                
+                    if "followed" not in LauraX.RecentActions:
+                        $ LauraX.Statup("Love", 70, 1)                   
+                        $ LauraX.Statup("Obed", 50, 1)
                     $ Line = "lonely"
                 else: 
-                    if "followed" not in L_RecentActions:
-                        call Statup("Laura", "Inbt", 30, 1)
+                    if "followed" not in LauraX.RecentActions:
+                        $ LauraX.Statup("Inbt", 30, 1)
                     $ Line = "no"
                     ch_l "Man, you are such a sap."
                 
         "Come on, it'll be fun.":
-                if ApprovalCheck("Laura", 400, "L") and ApprovalCheck("Laura", 800):
-                    call Statup("Laura", "Love", 70, 1)                   
-                    call Statup("Laura", "Obed", 50, 1)
+                if ApprovalCheck(LauraX, 400, "L") and ApprovalCheck(LauraX, 800):
+                    $ LauraX.Statup("Love", 70, 1)                   
+                    $ LauraX.Statup("Obed", 50, 1)
                     $ Line = "fun"
                 else: 
-                    call Statup("Laura", "Inbt", 30, 1)
+                    $ LauraX.Statup("Inbt", 30, 1)
                     $ Line = "no"
                         
         "No, stay here.":
-                if ApprovalCheck("Laura", 600, "O"):                              
+                if ApprovalCheck(LauraX, 600, "O"):                              
                     #she is obedient
-                    if "followed" not in L_RecentActions: 
-                        call Statup("Laura", "Love", 40, -2)                
-                        call Statup("Laura", "Obed", 90, 1)    
+                    if "followed" not in LauraX.RecentActions: 
+                        $ LauraX.Statup("Love", 40, -2)                
+                        $ LauraX.Statup("Obed", 90, 1)    
                     $ Line = "command"
                     
-                elif D20 >= 7 and ApprovalCheck("Laura", 1400):       
+                elif D20 >= 7 and ApprovalCheck(LauraX, 1400):       
                     #she is generally favorable
-                    if "followed" not in L_RecentActions:
-                        call Statup("Laura", "Love", 70, -2)  
-                        call Statup("Laura", "Love", 90, -1)  
-                        call Statup("Laura", "Obed", 50, 2)                                
-                        call Statup("Laura", "Obed", 90, 1)  
+                    if "followed" not in LauraX.RecentActions:
+                        $ LauraX.Statup("Love", 70, -2)  
+                        $ LauraX.Statup("Love", 90, -1)  
+                        $ LauraX.Statup("Obed", 50, 2)                                
+                        $ LauraX.Statup("Obed", 90, 1)  
                     ch_l "I guess if you need me here."              
                     $ Line = "yes"
                     
-                elif ApprovalCheck("Laura", 200, "O"):                                         
+                elif ApprovalCheck(LauraX, 200, "O"):                                         
                     #she is not obedient                   
-                    if "followed" not in L_RecentActions:
-                        call Statup("Laura", "Love", 70, -4)  
-                        call Statup("Laura", "Love", 90, -2)   
+                    if "followed" not in LauraX.RecentActions:
+                        $ LauraX.Statup("Love", 70, -4)  
+                        $ LauraX.Statup("Love", 90, -2)   
                     ch_l "Don't tell me what to do."  
-                    if "followed" not in L_RecentActions:                       
-                        call Statup("Laura", "Inbt", 40, 2)
-                        call Statup("Laura", "Inbt", 60, 1)    
-                        call Statup("Laura", "Obed", 70, -2)
+                    if "followed" not in LauraX.RecentActions:                       
+                        $ LauraX.Statup("Inbt", 40, 2)
+                        $ LauraX.Statup("Inbt", 60, 1)    
+                        $ LauraX.Statup("Obed", 70, -2)
                     ch_l "I'm out of here."                    
                 else:                                                                  
                     #she is obedient, but you failed to meet the checks                  
-                    if "followed" not in L_RecentActions:
-                        call Statup("Laura", "Inbt", 30, 1)
-                        call Statup("Laura", "Inbt", 50, 1)                                    
-                        call Statup("Laura", "Love", 50, -1, 1)                               
-                        call Statup("Laura", "Love", 90, -2)
-                        call Statup("Laura", "Obed", 70, -1)  
+                    if "followed" not in LauraX.RecentActions:
+                        $ LauraX.Statup("Inbt", 30, 1)
+                        $ LauraX.Statup("Inbt", 50, 1)                                    
+                        $ LauraX.Statup("Love", 50, -1, 1)                               
+                        $ LauraX.Statup("Love", 90, -2)
+                        $ LauraX.Statup("Obed", 70, -1)  
                     $ Line = "no" 
                 #End ordered to stay
                     
-    $ L_RecentActions.append("followed")     
+    call Taboo_Level(0)
+    $ LauraX.RecentActions.append("followed")     
     if not Line:                                                                        
             #You end the dialog neutrally      
             hide Laura_Sprite
-            call Gym_Clothes("auto", "Laura")
+            call Gym_Clothes("change", [LauraX])
             return
     
     if Line == "no":                                                                    
             # She's refused, context based dialog
-            if L_Loc == "bg classroom":
+            if LauraX.Loc == "bg classroom":
                 ch_l "I really can't miss this one." 
-            elif L_Loc == "bg dangerroom": 
-                ch_l "Sorry [L_Petname], but I'm going a little stir crazy."
+            elif LauraX.Loc == "bg dangerroom": 
+                ch_l "Sorry [LauraX.Petname], but I'm going a little stir crazy."
             else:
                 ch_l "Sorry, I have stuff to do."         
             hide Laura_Sprite
-            call Gym_Clothes("auto", "Laura")         
+            call Gym_Clothes("change", [LauraX])         
             return
         
     elif Line == "go to":                                                                 
             #You agreed to go to her instead  
             $ Tempmod = 0
-            call DrainWord("All","leaving")  
-            call DrainWord("All","arriving")        
+            call DrainAll("leaving")
+            call DrainAll("arriving")       
             hide Laura_Sprite
-            call Gym_Clothes("auto", "Laura")
-            if L_Loc == "bg classroom":
+            call Gym_Clothes("change", [LauraX])
+            if LauraX.Loc == "bg classroom":
                 ch_l "Ok, get a move on then."            
                 jump Class_Room_Entry
-            elif L_Loc == "bg dangerroom": 
+            elif LauraX.Loc == "bg dangerroom": 
                 ch_l "I'll get warmed up."
                 jump Danger_Room_Entry
-            elif L_Loc == "bg laura": 
+            elif LauraX.Loc == "bg laura": 
                 ch_l "Ok."
                 jump Laura_Room
-            elif L_Loc == "bg player": 
+            elif LauraX.Loc == "bg player": 
                 ch_l "Good."
                 jump Player_Room                
-            elif L_Loc == "bg showerroom": 
+            elif LauraX.Loc == "bg showerroom": 
                 ch_l "Ok, nice."
                 jump Shower_Room_Entry
-            elif L_Loc == "bg campus": 
+            elif LauraX.Loc == "bg campus": 
                 ch_l "Ok, nice."
                 jump Campus_Entry
+            elif LauraX.Loc == "bg pool": 
+                ch_l "Cool."
+                jump Pool_Entry
             else:            
                 ch_l "I'll just meet you in your room."
-                $ L_Loc = "bg player"
+                $ LauraX.Loc = "bg player"
                 jump Player_Room
             #End "goto" where she's at
             
@@ -3684,312 +2129,129 @@ label Laura_Leave(Tempmod=Tempmod, GirlsNum = 0):
     elif Line == "lonely":
             ch_l "Well, I guess you should never go alone. . ."
     elif Line == "command": 
-            ch_l "Yes [L_Petname]."
+            ch_l "Yes [LauraX.Petname]."
     
     $ Line = 0
     ch_l "I'll stick around."                                
-    $ L_Loc = bg_current 
+    $ LauraX.Loc = bg_current 
     return
 
-# End Laura Leave ///////////////////   
+# End Laura Leave / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / 
 
-label Laura_Dismissed(Leaving = 0):
-    if "Laura" in Party:        
-            $ Party.remove("Laura")
-    call Laura_Schedule(0) #if L_Loc == bg_current then it means she wants to stay here
-    if "leaving" in L_RecentActions:
-            call DrainWord("Laura","leaving")   
-    menu:
-        "You can leave if you like.":
-                if L_Loc == bg_current and not ApprovalCheck("Laura", 600, "O"):
-                        ch_l "Ok. [[she does not seem to be moving. . .]"
-                else:
-                        ch_l "Ok."
-                        $ Leaving = 1                   
-        "Could you give me the room please?":                            
-                if L_Loc == bg_current and not ApprovalCheck("Laura", 800, "LO"):
-                        ch_l "Nobody's kicking you out [[She doesn't move]."
-                elif not ApprovalCheck("Laura", 500, "LO"):
-                        ch_l "Nope."               
-                else:
-                        if "dismissed" not in L_DailyActions:
-                                call Statup("Laura", "Obed", 30, 7)
-                                call Statup("Laura", "Obed", 50, 5)
-                        ch_l "Sure, ok." 
-                        $ Leaving = 1                              
-        "You can go now.":                         
-                if L_Loc == bg_current and not ApprovalCheck("Laura", 450, "O"):
-                        ch_l "But I won't."
-                elif not ApprovalCheck("Laura", 250, "O"):
-                        call LauraFace("confused") 
-                        ch_l "Why?"
-                else:
-                        if "dismissed" not in L_DailyActions:
-                                call Statup("Laura", "Obed", 40, 10)
-                                call Statup("Laura", "Obed", 60, 7)
-                        ch_l "Ok."
-                        $ Leaving = 1                               
-        "Nevermind.":
-                        return                                           
-    
-    if not Leaving and bg_current in ("bg campus","bg classroom","bg dangerroom"):
-            #if there is space nearby. . .
-            call Remove_Girl("Laura",1,1)            
-    elif not Leaving:     
-            menu:
-                extend ""
-                "I insist, get going.":  
-                        if L_Loc != bg_current and (ApprovalCheck("Laura", 1200, "LO") or ApprovalCheck("Laura", 400, "O")):
-                                #If she has someplace to be and is obedient
-                                if "dismissed" not in L_DailyActions:
-                                        call Statup("Laura", "Love", 70, -5, 1)
-                                        call Statup("Laura", "Obed", 60, 10)
-                                        call Statup("Laura", "Obed", 80, 5)
-                                ch_l "Ok, fine."  
-                                $ Leaving = 1                                  
-                        elif L_Loc != bg_current and (ApprovalCheck("Laura", 1000, "LO") or ApprovalCheck("Laura", 250, "O")):
-                                #If she has someplace to be and is less obedient
-                                if "dismissed" not in L_DailyActions:
-                                        call Statup("Laura", "Love", 50, -5, 1)
-                                        call Statup("Laura", "Love", 70, -5, 1)
-                                        call Statup("Laura", "Obed", 60, 10)
-                                        call Statup("Laura", "Obed", 80, 5)
-                                call LauraFace("angry") 
-                                ch_l "I've got stuff to do anyway."      
-                                $ Leaving = 1                         
-                        elif L_Loc != bg_current:
-                                #If she has someplace to be but is not obedient
-                                if "dismissed" not in L_DailyActions:
-                                        call Statup("Laura", "Love", 50, -5, 1)
-                                        call Statup("Laura", "Love", 70, -10, 1)
-                                        call Statup("Laura", "Obed", 50, -3)
-                                        call Statup("Laura", "Inbt", 50, 5)
-                                        call Statup("Laura", "Inbt", 80, 3)
-                                call LauraFace("angry") 
-                                ch_l "Not until I see what you have planned here."          
-                        elif ApprovalCheck("Laura", 1400, "LO") or ApprovalCheck("Laura", 400, "O"):
-                                #If she has nowhere to be to be but is obedient
-                                if "dismissed" not in L_DailyActions:
-                                        call Statup("Laura", "Love", 50, -5, 1)
-                                        call Statup("Laura", "Obed", 50, 10)
-                                        call Statup("Laura", "Obed", 80, 5)
-                                call LauraFace("sad") 
-                                ch_l "Ok."
-                                $ Leaving = 1                   
-                        else:
-                                #If she has nowhere to be to be and is not obedient
-                                if "dismissed" not in L_DailyActions:
-                                        call Statup("Laura", "Love", 50, -5, 1)
-                                        call Statup("Laura", "Love", 70, -10, 1)
-                                        call Statup("Laura", "Obed", 50, -5)
-                                        call Statup("Laura", "Inbt", 50, 3)
-                                        call Statup("Laura", "Inbt", 80, 2)
-                                call LauraFace("sad") 
-                                ch_l "Nope."          
-                "Ok, nevermind.":    
-                                pass
-                    
-    if "dismissed" not in L_DailyActions:
-            $ L_DailyActions.append("dismissed")        
-    if "Laura" in Nearby:
-        "You shift a bit away from Laura"
-    elif Leaving == 0:
-            # Stay
-            $ L_Loc = bg_current
-    else:
-            # Go
-            if L_Loc != bg_current: #it stays the same
-                pass
-            elif bg_current == "bg laura":
-                $ L_Loc = "bg campus"
-            else:
-                $ L_Loc = "bg laura"
-            hide Laura_Sprite
-            "Laura heads out." 
-    return
-    #end "you can leave"
-    
+### Laura's Clothes  / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
-label Laura_About(Girl="Rogue"):
-    ch_l "What do I think about her? Well. . ."    
-    if Girl == "Rogue":    
-            if "poly Rogue" in L_Traits:  
-                ch_l "Yeah, we hook up, so. . ."    
-            elif L_LikeRogue >= 900:
-                ch_l "She's got a great ass. . ."
-            elif L_LikeRogue >= 800:
-                ch_l "She's got a nice shape on her. . ."    
-            elif L_LikeRogue >= 700:
-                ch_l "She's good in a fight."
-            elif L_LikeRogue >= 600:
-                ch_l "We get along ok."
-            elif L_LikeRogue >= 500:
-                ch_l "I guess I've seen her around."
-            elif L_LikeRogue >= 400:
-                ch_l "I don't want to talk about it."
-            elif L_LikeRogue >= 300:
-                ch_l "Hate her." 
+label Laura_Clothes:   
+    if LauraX.Taboo:
+            if "exhibitionist" in LauraX.Traits:
+                ch_l "Yes? . ."  
+            elif ApprovalCheck(LauraX, 900, TabM=4) or ApprovalCheck(LauraX, 400, "I", TabM=3): 
+                ch_l "I don't think I'm supposed to undress around here. . ."
             else:
-                ch_l "Bitch."
-    elif Girl == "Kitty":    
-            if "poly Kitty" in L_Traits:  
-                ch_l "Yeah, we hook up, so. . ."    
-            elif L_LikeKitty >= 900:
-                ch_l "I do like her little tits. . ."
-            elif L_LikeKitty >= 800:
-                ch_l "She keeps in shape. . ."  
-            elif L_LikeKitty >= 700:
-                ch_l "Tough to hold down."
-            elif L_LikeKitty >= 600:
-                ch_l "She's cool."
-            elif L_LikeKitty >= 500:
-                ch_l "I guess I've seen her around."
-            elif L_LikeKitty >= 400:
-                ch_l "I don't want to talk about it."
-            elif L_LikeKitty >= 300:
-                ch_l "Hate her." 
-            else:
-                ch_l "Bitch."
-    elif Girl == "Emma":    
-            if "poly Emma" in L_Traits:  
-                ch_l "Yeah, we hook up, so. . ." 
-            elif L_LikeEmma >= 900:
-                ch_l "Really great rack on her. . ."
-            elif L_LikeEmma >= 800:
-                ch_l "She smells really nice. . ."    
-            elif L_LikeEmma >= 700:
-                ch_l "She's nice to me after class."
-            elif L_LikeEmma >= 600:
-                ch_l "She's a good teacher."
-            elif L_LikeEmma >= 500:
-                ch_l "She's fine."
-            elif L_LikeEmma >= 400:
-                ch_l "I could do with less of her attitude."
-            elif L_LikeEmma >= 300:
-                ch_l "She needs to stay out of my head." 
-            else:
-                ch_l "Grrrrr."          
-    return
-    
-#End Laura_AboutEmma   
-
-### Laura's Clothes // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-
-label Laura_Clothes:    
-    call LauraFace
-    $ Trigger = 1 # to prevent Focus swapping. . .   
-    menu:
-        ch_l "What about my clothes?"      
-        "Overshirts":
-                    jump Laura_Clothes_Over        
-        "Legwear":
-                    jump Laura_Clothes_Legs
-        "Underwear":
-                    jump Laura_Clothes_Under
-        "Accessories":
-                    jump Laura_Clothes_Misc                    
-        "Outfit Management":
-                    jump Laura_Clothes_Outfits                      
-        "Let's talk about what you wear around.":
-                    call Laura_Clothes_Schedule
-            
-        "Could I get a look at it?" if L_Loc != bg_current:
-                # checks to see if she'll drop the screen
-                call Laura_OutfitShame(0,2) 
-                if _return:                    
-                    show PhoneSex zorder 150
-                    ch_l "Ok, that good?"
-                hide PhoneSex
-        "Could I get a look at it?" if renpy.showing('DressScreen'):
-                # checks to see if she'll drop the screen
-                call Laura_OutfitShame(0,2) 
-                if _return:
-                    hide DressScreen
-        "Would you be more comfortable behind a screen? (locked)" if L_Taboo:
-                pass
-        "Would you be more comfortable behind a screen?" if L_Loc == bg_current and not L_Taboo and not renpy.showing('DressScreen'):
-                # checks to see if she'll drop the screen
-                if ApprovalCheck("Laura", 1500) or (L_SeenChest and L_SeenPussy):
-                        ch_l "Probably won't need it, thanks."
-                else:
-                        show DressScreen zorder 150
-                        ch_l "Yeah, this is better, thanks."
-                        
-        "Switch to. . .":
-                if renpy.showing('DressScreen'):
-                        call Laura_OutfitShame(0,2) 
-                        if _return:
-                            hide DressScreen
-                        else:
-                            call LauraOutfit  
-                            
-                $ L_TempClothes[1] = L_Arms  
-                $ L_TempClothes[2] = L_Legs 
-                $ L_TempClothes[3] = L_Over
-                $ L_TempClothes[4] = L_Neck 
-                $ L_TempClothes[5] = L_Chest 
-                $ L_TempClothes[6] = L_Panties
-#                $ L_TempClothes[7] = L_Boots
-                $ L_TempClothes[8] = L_Hair
-                $ L_TempClothes[9] = L_Hose
-                $ L_TempClothes[0] = 1 
-                $ L_Outfit = "temporary"
-                $ L_OutfitDay = "temporary" 
-                $ Trigger = 0
-                menu:
-                    "Rogue":
-                        call Rogue_Chat_Set("wardrobe")                  
-                    "Kitty":
-                        call Kitty_Chat_Set("wardrobe")                 
-                    "Emma":
-                        call Emma_Chat_Set("wardrobe")
-                    "Never mind":
-                        pass
-                        
-        "Never mind, you look good like that.":
-                if "wardrobe" not in L_RecentActions: 
-                        #Apply stat boosts only if it's the first time this turn 
-                        if L_Chat[1] <= 1:                
-                                call Statup("Laura", "Love", 70, 15)
-                                call Statup("Laura", "Obed", 40, 20)
-                                ch_l "Oh! Thank you."
-                        elif L_Chat[1] <= 10:
-                                call Statup("Laura", "Love", 70, 5)
-                                call Statup("Laura", "Obed", 40, 7)
-                                ch_l "Right?" 
-                        elif L_Chat[1] <= 50:
-                                call Statup("Laura", "Love", 70, 1)
-                                call Statup("Laura", "Obed", 40, 1)  
-                                ch_l "Uh-huh."
-                        else:
-                                ch_l "Sure."                    
-                        $ L_RecentActions.append("wardrobe")  
-                        
-                if renpy.showing('DressScreen'):
-                        call Laura_OutfitShame(0,2) 
-                        if _return:
-                            hide DressScreen
-                        else:
-                            call LauraOutfit  
-                #sets up a temporary outfit
-                $ L_TempClothes[1] = L_Arms  
-                $ L_TempClothes[2] = L_Legs 
-                $ L_TempClothes[3] = L_Over
-                $ L_TempClothes[4] = L_Neck 
-                $ L_TempClothes[5] = L_Chest 
-                $ L_TempClothes[6] = L_Panties
-#                $ L_TempClothes[7] = L_Boots
-                $ L_TempClothes[8] = L_Hair
-                $ L_TempClothes[9] = L_Hose
-                $ L_TempClothes[0] = 1 
-                $ L_Outfit = "temporary"
-                $ L_OutfitDay = "temporary"        
-                $ L_Chat[1] += 1   
-                $ Trigger = 0             
+                ch_l "I don't think I'm supposed to undress around here. . ."
+                ch_l "Can we talk about this in our rooms?"
                 return
-            
-    jump Laura_Clothes
-    #End of Laura Wardrobe Main Menu
+    elif ApprovalCheck(LauraX, 900, TabM=4) or ApprovalCheck(LauraX, 600, "L") or ApprovalCheck(LauraX, 300, "O"):
+                ch_l "Oh? What about them?"
+    else:
+                ch_l "I don't think about my clothes much."
+                ch_l "You shouldn't either."   
+                return
+                     
+    if Girl != LauraX:
+            #This culls returns if sent from another girl
+            $ renpy.pop_call()     
+    $ Girl = LauraX   
+    call Shift_Focus(Girl)
+        
+label Laura_Wardrobe_Menu: 
+    $ LauraX.FaceChange()
+    $ Trigger = 1 # to prevent Focus swapping. . .   
+    while True:
+        menu:
+            ch_l "What about my clothes?"      
+            "Overshirts":
+                        call Laura_Clothes_Over        
+            "Legwear":
+                        call Laura_Clothes_Legs
+            "Underwear":
+                        call Laura_Clothes_Under
+            "Accessories":
+                        call Laura_Clothes_Misc                    
+            "Outfit Management":
+                        call Laura_Clothes_Outfits                      
+            "Let's talk about what you wear around.":
+                        call Clothes_Schedule(LauraX)
+                
+            "Could I get a look at it?" if LauraX.Loc != bg_current:
+                    # checks to see if she'll drop the screen
+                    call OutfitShame(LauraX,0,2) 
+                    if _return:                    
+                        show PhoneSex zorder 150
+                        ch_l "Ok, that good?"
+                    hide PhoneSex
+            "Could I get a look at it?" if renpy.showing('DressScreen'):
+                    # checks to see if she'll drop the screen
+                    call OutfitShame(LauraX,0,2) 
+                    if _return:
+                        hide DressScreen
+            "Would you be more comfortable behind a screen? (locked)" if LauraX.Taboo:
+                    pass
+            "Would you be more comfortable behind a screen?" if LauraX.Loc == bg_current and not LauraX.Taboo and not renpy.showing('DressScreen'):
+                    # checks to see if she'll drop the screen
+                    if ApprovalCheck(LauraX, 1500) or (LauraX.SeenChest and LauraX.SeenPussy):
+                            ch_l "Probably won't need it, thanks."
+                    else:
+                            show DressScreen zorder 150
+                            ch_l "Yeah, this is better, thanks."
+                            
+            "Switch to. . .":
+                    if renpy.showing('DressScreen'):
+                            call OutfitShame(LauraX,0,2) 
+                            if _return:
+                                hide DressScreen
+                            else:
+                                $ LauraX.OutfitChange()  
+                    $ LauraX.Set_Temp_Outfit() #sets current outfit as temporary
+                    $ Trigger = 0
+                    call Switch_Chat
+                    if Girl != LauraX:
+                            ch_p "I wanted to talk about your clothes."
+                            call expression Girl.Tag +"_Clothes"
+                    $ Girl = LauraX
+                    call Shift_Focus(Girl)
+                            
+            "Never mind, you look good like that.":
+                    if "wardrobe" not in LauraX.RecentActions: 
+                            #Apply stat boosts only if it's the first time this turn 
+                            if LauraX.Chat[1] <= 1:                
+                                    $ LauraX.Statup("Love", 70, 15)
+                                    $ LauraX.Statup("Obed", 40, 20)
+                                    ch_l "Oh! Thank you."
+                            elif LauraX.Chat[1] <= 10:
+                                    $ LauraX.Statup("Love", 70, 5)
+                                    $ LauraX.Statup("Obed", 40, 7)
+                                    ch_l "Right?" 
+                            elif LauraX.Chat[1] <= 50:
+                                    $ LauraX.Statup("Love", 70, 1)
+                                    $ LauraX.Statup("Obed", 40, 1)  
+                                    ch_l "Uh-huh."
+                            else:
+                                    ch_l "Sure."                    
+                            $ LauraX.RecentActions.append("wardrobe") 
+                    if renpy.showing('DressScreen'):
+                            call OutfitShame(LauraX,0,2) 
+                            if _return:
+                                hide DressScreen
+                            else:
+                                $ LauraX.OutfitChange()  
+                    $ LauraX.Set_Temp_Outfit() #sets current outfit as temporary  
+                    $ LauraX.Chat[1] += 1   
+                    $ Trigger = 0             
+                    return
+               
+        #Loops back up 
+        #return #jump Laura_Clothes
+        #End of Laura Wardrobe Main Menu
         
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
 
@@ -3999,91 +2261,91 @@ label Laura_Clothes:
                 menu:
                     "Which slot would you like this saved in?"
                     "Custom 1":
-                                call Laura_OutfitShame(3,1)
+                                call OutfitShame(LauraX,3,1)
                     "Custom 2":
-                                call Laura_OutfitShame(5,1)
+                                call OutfitShame(LauraX,5,1)
                     "Custom 3":
-                                call Laura_OutfitShame(6,1)
+                                call OutfitShame(LauraX,6,1)
                     "Gym Clothes":
-                                call Laura_OutfitShame(4,1)
+                                call OutfitShame(LauraX,4,1)
                     "Sleepwear":
-                                call Laura_OutfitShame(7,1)
+                                call OutfitShame(LauraX,7,1)
                     "Swimwear":
-                                call Laura_OutfitShame(10,1)
+                                call OutfitShame(LauraX,10,1)
                     #8 is Emma's teaching clothes, 
                     "Never mind":
                                 pass
                                 
         "Leather combat outfit": 
-                call LauraOutfit("mission")   
+                $ LauraX.OutfitChange("casual1")   
                 menu:
                     "You should wear this one out. [[set current outfit]":
-                            $ L_Outfit = "mission"
-                            $ L_Shame = L_OutfitShame[1]
+                            $ LauraX.Outfit = "casual1"
+                            $ LauraX.Shame = 0
                             ch_l "Yeah, I love wearing this one in the field."
                     "Let's try something else though.":
                             ch_l "Ok."            
                     
         "Leather jacket and skirt combo.":  
-                call LauraOutfit("streets")
+                $ LauraX.OutfitChange("casual2")
                 menu:
                     "You should wear this one out. [[set current outfit]":
-                            $ L_Outfit = "streets"
-                            $ L_Shame = L_OutfitShame[2]
+                            $ LauraX.Outfit = "casual2"
+                            $ LauraX.Shame = 0
                             ch_l "Yeah, I mean, my cousin got it for me."
                     "Let's try something else though.":
                             ch_l "Ok."            
                     
-        "Remember that outfit we put together? [[Set a custom outfit] (locked)" if not L_Custom[0] and not L_Custom2[0] and not L_Custom3[0]:
+        "Remember that outfit we put together? [[Set a custom outfit] (locked)" if not LauraX.Custom1[0] and not LauraX.Custom2[0] and not LauraX.Custom3[0]:
                         pass       
                         
-        "Remember that outfit we put together?" if L_Custom[0] or L_Custom2[0] or L_Custom3[0]: 
+        "Remember that outfit we put together?" if LauraX.Custom1[0] or LauraX.Custom2[0] or LauraX.Custom3[0]: 
                 $ Cnt = 0
                 while 1:
                     menu:                
-                        "Throw on Custom 1 (locked)" if not L_Custom[0]:
+                        "Throw on Custom 1 (locked)" if not LauraX.Custom1[0]:
                                 pass
-                        "Throw on Custom 1" if L_Custom[0]:
-                                call LauraOutfit("custom1")
+                        "Throw on Custom 1" if LauraX.Custom1[0]:
+                                $ LauraX.OutfitChange("custom1")
                                 $ Cnt = 3
-                        "Throw on Custom 2 (locked)" if not L_Custom2[0]:
+                        "Throw on Custom 2 (locked)" if not LauraX.Custom2[0]:
                                 pass
-                        "Throw on Custom 2" if L_Custom2[0]:
-                                call LauraOutfit("custom2")
+                        "Throw on Custom 2" if LauraX.Custom2[0]:
+                                $ LauraX.OutfitChange("custom2")
                                 $ Cnt = 5
-                        "Throw on Custom 3 (locked)" if not L_Custom3[0]:
+                        "Throw on Custom 3 (locked)" if not LauraX.Custom3[0]:
                                 pass
-                        "Throw on Custom 3" if L_Custom3[0]:
-                                call LauraOutfit("custom3")
+                        "Throw on Custom 3" if LauraX.Custom3[0]:
+                                $ LauraX.OutfitChange("custom3")
                                 $ Cnt = 6
                         
                         "You should wear this one in private. (locked)" if not Cnt:
                                 pass
                         "You should wear this one in private." if Cnt:
                                 if Cnt == 5:
-                                    $ L_Schedule[9] = "custom2"
+                                    $ LauraX.Clothing[9] = "custom2"
                                 elif Cnt == 6:
-                                    $ L_Schedule[9] = "custom3"
+                                    $ LauraX.Clothing[9] = "custom3"
                                 else:
-                                    $ L_Schedule[9] = "custom"
+                                    $ LauraX.Clothing[9] = "custom1"
                                 ch_l "Ok, sure."
                         
                         "On second thought, forget about that one outfit. . .":
                                 menu:
-                                    "Custom 1 [[clear custom 1]" if L_Custom[0]:
+                                    "Custom 1 [[clear custom 1]" if LauraX.Custom1[0]:
                                         ch_l "Ok."
-                                        $ L_Custom[0] = 0
-                                    "Custom 1 [[clear custom 1] (locked)" if not L_Custom[0]:
+                                        $ LauraX.Custom1[0] = 0
+                                    "Custom 1 [[clear custom 1] (locked)" if not LauraX.Custom1[0]:
                                         pass
-                                    "Custom 2 [[clear custom 2]" if L_Custom2[0]:
+                                    "Custom 2 [[clear custom 2]" if LauraX.Custom2[0]:
                                         ch_l "Ok."
-                                        $ L_Custom2[0] = 0
-                                    "Custom 2 [[clear custom 2] (locked)" if not L_Custom2[0]:
+                                        $ LauraX.Custom2[0] = 0
+                                    "Custom 2 [[clear custom 2] (locked)" if not LauraX.Custom2[0]:
                                         pass
-                                    "Custom 3 [[clear custom 3]" if L_Custom3[0]:
+                                    "Custom 3 [[clear custom 3]" if LauraX.Custom3[0]:
                                         ch_l "Ok."
-                                        $ L_Custom3[0] = 0
-                                    "Custom 3 [[clear custom 3] (locked)" if not L_Custom3[0]:
+                                        $ LauraX.Custom3[0] = 0
+                                    "Custom 3 [[clear custom 3] (locked)" if not LauraX.Custom3[0]:
                                         pass
                                     "Never mind, [[back].":
                                         pass                                               
@@ -4091,153 +2353,155 @@ label Laura_Clothes:
                         "You should wear this one out. [[choose outfit first](locked)" if not Cnt:
                                 pass
                         "You should wear this one out." if Cnt:
-                                call Laura_Custom_Out(Cnt)
+                                call Custom_Out(LauraX,Cnt)
                         "Ok, back to what we were talking about. . .":
                                 $ Cnt = 0
-                                jump Laura_Clothes                  
+                                return #jump Laura_Clothes                  
         
-        "Gym Clothes?" if not L_Taboo or bg_current == "bg dangerroom":
-                call LauraOutfit("gym")
+        "Gym Clothes?" if not LauraX.Taboo or bg_current == "bg dangerroom":
+                $ LauraX.OutfitChange("gym")
             
-        "Sleepwear?" if not L_Taboo:
-                if ApprovalCheck("Laura", 1200):
-                        call LauraOutfit("sleep")
+        "Sleepwear?" if not LauraX.Taboo:
+                if ApprovalCheck(LauraX, 1200):
+                        $ LauraX.OutfitChange("sleep")
                 else:
-                        call Display_DressScreen("Laura")
+                        call Display_DressScreen(LauraX)
                         if _return:
-                            call LauraOutfit("sleep")
+                            $ LauraX.OutfitChange("sleep")
                                         
-        "Swimwear?" if not L_Taboo or bg_current == "bg pool":
-                call LauraOutfit("swimwear")
+        "Swimwear? (locked)" if (LauraX.Taboo and bg_current != "bg pool") or not LauraX.Swim[0]:
+                $ LauraX.OutfitChange("swimwear")   
+        "Swimwear?" if (not LauraX.Taboo or bg_current == "bg pool") and LauraX.Swim[0]:
+                $ LauraX.OutfitChange("swimwear")
             
         "Your birthday suit looks really great. . .":                                     
                 #Nude
-                call LauraFace("sexy", 1)
+                $ LauraX.FaceChange("sexy", 1)
                 $ Line = 0
-                if not L_Chest and not L_Panties and not L_Over and not L_Legs and not L_Hose:                
+                if not LauraX.Chest and not LauraX.Panties and not LauraX.Over and not LauraX.Legs and not LauraX.Hose:                
                     ch_l "Yeah. . . wait, how would you know?"  
-                elif L_SeenChest and L_SeenPussy and ApprovalCheck("Laura", 1200, TabM=4):
+                elif LauraX.SeenChest and LauraX.SeenPussy and ApprovalCheck(LauraX, 1200, TabM=4):
                     ch_l "You know it. . ."  
                     $ Line = 1
-                elif ApprovalCheck("Laura", 2000, TabM=4):
+                elif ApprovalCheck(LauraX, 2000, TabM=4):
                     ch_l "Skipping straight to that?"    
                     $ Line = 1
-                elif L_SeenChest and L_SeenPussy and ApprovalCheck("Laura", 1200, TabM=0):
+                elif LauraX.SeenChest and LauraX.SeenPussy and ApprovalCheck(LauraX, 1200, TabM=0):
                     ch_l "Maybe, but not here. . ."  
-                elif ApprovalCheck("Laura", 2000, TabM=0):
+                elif ApprovalCheck(LauraX, 2000, TabM=0):
                     ch_l "Maybe, but not here. . ."  
-                elif ApprovalCheck("Laura", 1000, TabM=0):                
-                    call LauraFace("confused", 1,Mouth="smirk")
+                elif ApprovalCheck(LauraX, 1000, TabM=0):                
+                    $ LauraX.FaceChange("confused", 1,Mouth="smirk")
                     ch_l "Yeah, but I'm not exactly showing it off."
-                    call LauraFace("bemused", 0)
+                    $ LauraX.FaceChange("bemused", 0)
                 else:
-                    call LauraFace("angry", 1)
+                    $ LauraX.FaceChange("angry", 1)
                     ch_l "What's it to you?"    
                     
                 if Line:                                                            
                     #If she got nude. . .                            
-                    call LauraOutfit("nude")
+                    $ LauraX.OutfitChange("nude")
                     "She throws her clothes off at her feet."
                     call Laura_First_Topless
                     call Laura_First_Bottomless(1)
-                    call LauraFace("sexy")
+                    $ LauraX.FaceChange("sexy")
                     menu:
                         "You know, you should wear this one out. [[set current outfit]":
-                            if "exhibitionist" in L_Traits:
+                            if "exhibitionist" in LauraX.Traits:
                                 ch_l "mmmm. . ." 
-                                $ L_Outfit = "nude"
-                                call Statup("Laura", "Lust", 50, 10) 
-                                call Statup("Laura", "Lust", 70, 5) 
-                                $ L_Shame = L_OutfitShame[0]
-                            elif ApprovalCheck("Laura", 800, "I") or ApprovalCheck("Laura", 2800, TabM=0):                    
+                                $ LauraX.Outfit = "nude"
+                                $ LauraX.Statup("Lust", 50, 10) 
+                                $ LauraX.Statup("Lust", 70, 5) 
+                                $ LauraX.Shame = 50
+                            elif ApprovalCheck(LauraX, 800, "I") or ApprovalCheck(LauraX, 2800, TabM=0):                    
                                 ch_l "Exciting. . ."
-                                $ L_Outfit = "nude"
-                                $ L_Shame = L_OutfitShame[0]
+                                $ LauraX.Outfit = "nude"
+                                $ LauraX.Shame = 50
                             else:
-                                call LauraFace("sexy", 1)
-                                $ L_Eyes = "surprised"
+                                $ LauraX.FaceChange("sexy", 1)
+                                $ LauraX.Eyes = "surprised"
                                 ch_l "I probably shouldn't. Sorry." 
                                 
                         "Let's try something else though.":
-                            if "exhibitionist" in L_Traits:
+                            if "exhibitionist" in LauraX.Traits:
                                 ch_l "Are you sure?"                         
-                            elif ApprovalCheck("Laura", 800, "I") or ApprovalCheck("Laura", 2800, TabM=0):       
-                                call LauraFace("bemused", 1)             
+                            elif ApprovalCheck(LauraX, 800, "I") or ApprovalCheck(LauraX, 2800, TabM=0):       
+                                $ LauraX.FaceChange("bemused", 1)             
                                 ch_l "I was worried you expected me to wear this out."
                                 ch_l ". . ."
                             else:
-                                call LauraFace("confused", 1)
+                                $ LauraX.FaceChange("confused", 1)
                                 ch_l "I don't mind you seeing my body, but. . ."   
                 $ Line = 0
                                         
         "Never mind":    
-            jump Laura_Clothes     
+            return #jump Laura_Clothes     
             
-    jump Laura_Clothes
+    return #jump Laura_Clothes
     #End of Laura Outfits
             
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
 
     menu Laura_Clothes_Over:                                                                                            
         # Overshirts
-        "Why don't you go with no [L_Over]?" if L_Over:
-                call LauraFace("bemused", 1)
-                if ApprovalCheck("Laura", 800, TabM=3) and (L_Chest or L_SeenChest):
+        "Why don't you go with no [LauraX.Over]?" if LauraX.Over:
+                $ LauraX.FaceChange("bemused", 1)
+                if ApprovalCheck(LauraX, 800, TabM=3) and (LauraX.Chest or LauraX.SeenChest):
                     ch_l "Ok."                    
-                elif ApprovalCheck("Laura", 600, TabM=0):
+                elif ApprovalCheck(LauraX, 600, TabM=0):
                     call Laura_NoBra
                     if not _return:
-                        if not ApprovalCheck("Laura", 1200):
-                            call Display_DressScreen("Laura")
+                        if not ApprovalCheck(LauraX, 1200):
+                            call Display_DressScreen(LauraX)
                             if not _return:
-                                jump Laura_Clothes
+                                return #jump Laura_Clothes
                         else:
-                                jump Laura_Clothes
+                                return #jump Laura_Clothes
                 else:
-                    call Display_DressScreen("Laura")
+                    call Display_DressScreen(LauraX)
                     if not _return:
                             ch_l "Not right now."
-                            if not L_Chest:
+                            if not LauraX.Chest:
                                 ch_l "I don't have anything under this. . ."
-                            jump Laura_Clothes                            
-                $ Line = L_Over
-                $ L_Over = 0
+                            return #jump Laura_Clothes                            
+                $ Line = LauraX.Over
+                $ LauraX.Over = 0
                 "She throws her [Line] at her feet."
-                if not L_Chest and not renpy.showing('DressScreen'):
+                if not LauraX.Chest and not renpy.showing('DressScreen'):
                         call Laura_First_Topless
             
-        "Try on that leather jacket." if L_Over != "jacket":
-                call LauraFace("bemused")
-                if not L_Over or L_Chest == "leather bra":
+        "Try on that leather jacket." if LauraX.Over != "jacket":
+                $ LauraX.FaceChange("bemused")
+                if not LauraX.Over or LauraX.Chest == "leather bra":
                     #if she's not already wearing a top, or has the leather bra on
                     ch_l "Sure."
-                elif ApprovalCheck("Laura", 800, TabM=0):
+                elif ApprovalCheck(LauraX, 800, TabM=0):
                     ch_l "Yeah, ok."          
                 else:
-                    call Display_DressScreen("Laura")
+                    call Display_DressScreen(LauraX)
                     if not _return:                            
-                            call LauraFace("bemused", 1)
-                            ch_l "I don't really want to take this [L_Over] off at the moment."
-                            jump Laura_Clothes    
-                $ L_Over = "jacket"   
+                            $ LauraX.FaceChange("bemused", 1)
+                            ch_l "I don't really want to take this [LauraX.Over] off at the moment."
+                            return #jump Laura_Clothes    
+                $ LauraX.Over = "jacket"   
                 
-        "Maybe just throw on a towel?" if L_Over != "towel":
-                call LauraFace("bemused", 1)
-                if L_Chest or L_SeenChest:
+        "Maybe just throw on a towel?" if LauraX.Over != "towel":
+                $ LauraX.FaceChange("bemused", 1)
+                if LauraX.Chest or LauraX.SeenChest:
                     ch_l "Weird."
-                elif ApprovalCheck("Laura", 1000, TabM=0):
-                    call LauraFace("perplexed", 1)
+                elif ApprovalCheck(LauraX, 1000, TabM=0):
+                    $ LauraX.FaceChange("perplexed", 1)
                     ch_l "Huh, ok . ."          
                 else:
-                    call Display_DressScreen("Laura")
+                    call Display_DressScreen(LauraX)
                     if not _return:                            
                             ch_l "That wouldn't look right."
-                            jump Laura_Clothes    
-                $ L_Over = "towel"    
+                            return #jump Laura_Clothes    
+                $ LauraX.Over = "towel"    
                             
         "Never mind":
             pass
-    jump Laura_Clothes
+    return #jump Laura_Clothes
     #End of Laura Top
             
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
@@ -4246,46 +2510,46 @@ label Laura_Clothes:
         menu:
             ch_l "I don't exactly have anything on under this. . ."
             "Then you could slip something on under it. . .":   
-                        if L_SeenChest and ApprovalCheck("Laura", 1000, TabM=3):
-                                $ L_Blush = 1
+                        if LauraX.SeenChest and ApprovalCheck(LauraX, 1000, TabM=3):
+                                $ LauraX.Blush = 1
                                 ch_l "-I didn't say that I minded. . ."
-                                $ L_Blush = 0                        
-                        elif ApprovalCheck("Laura", 1200, TabM=4):
-                                $ L_Blush = 1
+                                $ LauraX.Blush = 0                        
+                        elif ApprovalCheck(LauraX, 1200, TabM=4):
+                                $ LauraX.Blush = 1
                                 ch_l "-I didn't say that I minded. . ."
-                                $ L_Blush = 0                
-                        elif ApprovalCheck("Laura", 900, TabM=2) and "lace corset" in L_Inventory:
+                                $ LauraX.Blush = 0                
+                        elif ApprovalCheck(LauraX, 900, TabM=2) and "lace corset" in LauraX.Inventory:
                                 ch_l "I guess I could find something."
-                                $ L_Chest  = "lace corset"    
-                                "She pulls out her lace corset and slips it under her [L_Over]."
-                        elif ApprovalCheck("Laura", 700, TabM=2) and "corset" in L_Inventory:
+                                $ LauraX.Chest  = "lace corset"    
+                                "She pulls out her lace corset and slips it under her [LauraX.Over]."
+                        elif ApprovalCheck(LauraX, 700, TabM=2) and "corset" in LauraX.Inventory:
                                 ch_l "I guess I could find something."
-                                $ L_Chest  = "corset"    
-                                "She pulls out her corset and slips it under her [L_Over]."
-                        elif ApprovalCheck("Laura", 600, TabM=2):
+                                $ LauraX.Chest  = "corset"    
+                                "She pulls out her corset and slips it under her [LauraX.Over]."
+                        elif ApprovalCheck(LauraX, 600, TabM=2):
                                 ch_l "Yeah, I guess."
-                                $ L_Chest = "leather bra"
-                                "She pulls out her leather bra and slips it on under her [L_Over]."
+                                $ LauraX.Chest = "leather bra"
+                                "She pulls out her leather bra and slips it on under her [LauraX.Over]."
                         else:
                                 ch_l "Yeah, I don't think so."
                                 return 0
                         
             "You could always just wear nothing at all. . .":
-                        if ApprovalCheck("Laura", 1100, "LI", TabM=2) and L_Love > L_Inbt:               
+                        if ApprovalCheck(LauraX, 1100, "LI", TabM=2) and LauraX.Love > LauraX.Inbt:               
                                 ch_l "For you? I guess. . ."
-                        elif ApprovalCheck("Laura", 700, "OI", TabM=2) and L_Obed > L_Inbt:
+                        elif ApprovalCheck(LauraX, 700, "OI", TabM=2) and LauraX.Obed > LauraX.Inbt:
                                 ch_l "Sure. . ."
-                        elif ApprovalCheck("Laura", 600, "I", TabM=2):
+                        elif ApprovalCheck(LauraX, 600, "I", TabM=2):
                                 ch_l "Yeah. . ."
-                        elif ApprovalCheck("Laura", 1300, TabM=2):
+                        elif ApprovalCheck(LauraX, 1300, TabM=2):
                                 ch_l "Okay, fine."
                         else: 
-                                call LauraFace("surprised")
-                                $ L_Brows = "angry"
-                                if L_Taboo > 20:
+                                $ LauraX.FaceChange("surprised")
+                                $ LauraX.Brows = "angry"
+                                if LauraX.Taboo > 20:
                                     ch_l "Not in public, I won't!"
                                 else:
-                                    ch_l "You're not that cute, [L_Petname]!"
+                                    ch_l "You're not that cute, [LauraX.Petname]!"
                                 return 0
             "Never mind.":
                         ch_l "Ok. . ."
@@ -4297,64 +2561,64 @@ label Laura_Clothes:
 
     menu Laura_Clothes_Legs:                                                                                                 
         # Leggings    
-        "Maybe go without the [L_Legs]." if L_Legs:
-                call LauraFace("sexy", 1)
-                if L_SeenPanties and L_Panties and ApprovalCheck("Laura", 500, TabM=5):
+        "Maybe go without the [LauraX.Legs]." if LauraX.Legs:
+                $ LauraX.FaceChange("sexy", 1)
+                if LauraX.SeenPanties and LauraX.Panties and ApprovalCheck(LauraX, 500, TabM=5):
                     ch_l "Ok, sure."
-                elif L_SeenPussy and ApprovalCheck("Laura", 900, TabM=4):
+                elif LauraX.SeenPussy and ApprovalCheck(LauraX, 900, TabM=4):
                     ch_l "Yeah, ok."
-                elif ApprovalCheck("Laura", 1300, TabM=2) and L_Panties:
+                elif ApprovalCheck(LauraX, 1300, TabM=2) and LauraX.Panties:
                     ch_l "For you, fine. . ."
-                elif ApprovalCheck("Laura", 700) and not L_Panties:
+                elif ApprovalCheck(LauraX, 700) and not LauraX.Panties:
                     call Laura_NoPantiesOn
-                    if not _return and not L_Panties:
-                        if not ApprovalCheck("Laura", 1500):
-                            call Display_DressScreen("Laura")
+                    if not _return and not LauraX.Panties:
+                        if not ApprovalCheck(LauraX, 1500):
+                            call Display_DressScreen(LauraX)
                             if not _return:
-                                jump Laura_Clothes
+                                return #jump Laura_Clothes
                         else:
-                                jump Laura_Clothes
+                                return #jump Laura_Clothes
                 else:
-                    call Display_DressScreen("Laura")
+                    call Display_DressScreen(LauraX)
                     if not _return:
                         ch_l "Um, not with you around."
-                        if not L_Panties:
+                        if not LauraX.Panties:
                                 ch_l "I'm going commando today. . ."
-                        jump Laura_Clothes
+                        return #jump Laura_Clothes
                         
-                if L_Legs == "leather pants" or L_Legs == "mesh pants":
-                        $ L_Legs = 0    
+                if LauraX.Legs == "leather pants" or LauraX.Legs == "mesh pants":
+                        $ LauraX.Legs = 0    
                         "She tugs her pants off and drops them to the ground."
                 else:
-                        $ L_Legs = 0    
+                        $ LauraX.Legs = 0    
                         "She tugs her skirt off and drops it to the ground."                
                 if renpy.showing('DressScreen'):
                     pass
-                elif L_Panties:                
-                    $ L_SeenPanties = 1
+                elif LauraX.Panties:                
+                    $ LauraX.SeenPanties = 1
                 else:
                     call Laura_First_Bottomless
         
-        "You look great in those leather pants." if L_Legs != "leather pants":
+        "You look great in those leather pants." if LauraX.Legs != "leather pants":
                 ch_l "Yeah, ok."
-                $ L_Legs = "leather pants"
+                $ LauraX.Legs = "leather pants"
                 
-        "You look great in those mesh pants." if L_Legs != "mesh pants" and "mesh pants" in L_Inventory:
-                if ApprovalCheck("Laura", 1000, TabM=4):
+        "You look great in those mesh pants." if LauraX.Legs != "mesh pants" and "mesh pants" in LauraX.Inventory:
+                if ApprovalCheck(LauraX, 1000, TabM=4):
                         ch_l "Yeah, ok."
-                        $ L_Legs = "mesh pants"
+                        $ LauraX.Legs = "mesh pants"
                 else:
-                    call Display_DressScreen("Laura")
+                    call Display_DressScreen(LauraX)
                     if not _return:
                         ch_l "Sorry, those are kind of. . . breezy."
                     
-        "What about wearing your leather skirt?" if L_Legs != "skirt":
+        "What about wearing your leather skirt?" if LauraX.Legs != "skirt":
                 ch_l "Sure, why not."
-                $ L_Legs = "skirt"    
+                $ LauraX.Legs = "skirt"    
             
         "Never mind":
                 pass
-    jump Laura_Clothes
+    return #jump Laura_Clothes
     #End of Laura Pants
     
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
@@ -4363,66 +2627,66 @@ label Laura_Clothes:
         menu:
             ch_l "I'm going commando today."
             "Then you could slip on a pair of panties. . .":   
-                        if L_SeenPussy and ApprovalCheck("Laura", 1100, TabM=4):
-                                $ L_Blush = 1
+                        if LauraX.SeenPussy and ApprovalCheck(LauraX, 1100, TabM=4):
+                                $ LauraX.Blush = 1
                                 ch_l "No, commando's fine. . ."
-                                $ L_Blush = 0                        
-                        elif ApprovalCheck("Laura", 1500, TabM=4):
-                                $ L_Blush = 1
+                                $ LauraX.Blush = 0                        
+                        elif ApprovalCheck(LauraX, 1500, TabM=4):
+                                $ LauraX.Blush = 1
                                 ch_l "No, commando's fine. . ."
-                                $ L_Blush = 0                
-                        elif ApprovalCheck("Laura", 800, TabM=4) and "lace panties" in L_Inventory:
+                                $ LauraX.Blush = 0                
+                        elif ApprovalCheck(LauraX, 800, TabM=4) and "lace panties" in LauraX.Inventory:
                                 ch_l "I like how you think."
-                                $ L_Panties  = "lace panties"  
-                                if ApprovalCheck("Laura", 1200, TabM=4):   
-                                    $ Line = L_Legs
-                                    $ L_Legs = 0
-                                    "She pulls off her [L_Legs] and slips on the lace panties."                                    
-                                elif L_Legs == "skirt":
+                                $ LauraX.Panties  = "lace panties"  
+                                if ApprovalCheck(LauraX, 1200, TabM=4):   
+                                    $ Line = LauraX.Legs
+                                    $ LauraX.Legs = 0
+                                    "She pulls off her [Line] and slips on the lace panties."                                    
+                                elif LauraX.Legs == "skirt":
                                     "She pulls out her lace panties and pulls them up under her skirt."
-                                    $ L_Legs = 0
+                                    $ LauraX.Legs = 0
                                     "Then she drops the skirt to the floor."
                                 else:
-                                    $ Line = L_Legs
-                                    $ L_Legs = 0
+                                    $ Line = LauraX.Legs
+                                    $ LauraX.Legs = 0
                                     "She steps away a moment and then comes back wearing only the lace panties."                                     
-                                jump Laura_Clothes
-                        elif ApprovalCheck("Laura", 700, TabM=4):
+                                return #jump Laura_Clothes
+                        elif ApprovalCheck(LauraX, 700, TabM=4):
                                 ch_l "Yeah, I guess."
-                                $ L_Panties = "black panties"
-                                if ApprovalCheck("Laura", 1200, TabM=4):   
-                                    $ Line = L_Legs
-                                    $ L_Legs = 0
-                                    "She pulls off her [L_Legs] and slips on the black panties."                                    
-                                elif L_Legs == "skirt":
+                                $ LauraX.Panties = "black panties"
+                                if ApprovalCheck(LauraX, 1200, TabM=4):   
+                                    $ Line = LauraX.Legs
+                                    $ LauraX.Legs = 0
+                                    "She pulls off her [Line] and slips on the black panties."                                    
+                                elif LauraX.Legs == "skirt":
                                     "She pulls out her black panties and pulls them up under her skirt."
-                                    $ L_Legs = 0
+                                    $ LauraX.Legs = 0
                                     "Then she drops the skirt to the floor."
                                 else:
-                                    $ Line = L_Legs
-                                    $ L_Legs = 0
+                                    $ Line = LauraX.Legs
+                                    $ LauraX.Legs = 0
                                     "She steps away a moment and then comes back wearing only the black panties."                                     
-                                jump Laura_Clothes
+                                return #jump Laura_Clothes
                         else:
                                 ch_l "Nope."
                                 return 0
                         
             "You could always just wear nothing at all. . .":
-                        if ApprovalCheck("Laura", 1100, "LI", TabM=3) and L_Love > L_Inbt:               
+                        if ApprovalCheck(LauraX, 1100, "LI", TabM=3) and LauraX.Love > LauraX.Inbt:               
                                 ch_l "True. . ."
-                        elif ApprovalCheck("Laura", 700, "OI", TabM=3) and L_Obed > L_Inbt:
+                        elif ApprovalCheck(LauraX, 700, "OI", TabM=3) and LauraX.Obed > LauraX.Inbt:
                                 ch_l "Yes. . ."
-                        elif ApprovalCheck("Laura", 600, "I", TabM=3):
+                        elif ApprovalCheck(LauraX, 600, "I", TabM=3):
                                 ch_l "Hrmm. . ."
-                        elif ApprovalCheck("Laura", 1300, TabM=3):
+                        elif ApprovalCheck(LauraX, 1300, TabM=3):
                                 ch_l "Fine."
                         else: 
-                                call LauraFace("surprised")
-                                $ L_Brows = "angry"
-                                if L_Taboo > 20:
-                                    ch_l "Yeah, but not in public, [L_Petname]!"
+                                $ LauraX.FaceChange("surprised")
+                                $ LauraX.Brows = "angry"
+                                if LauraX.Taboo > 20:
+                                    ch_l "Yeah, but not in public, [LauraX.Petname]!"
                                 else:
-                                    ch_l "You aren't that cute, [L_Petname]!"
+                                    ch_l "You aren't that cute, [LauraX.Petname]!"
                                 return 0
                                 
             "Never mind.":
@@ -4436,207 +2700,207 @@ label Laura_Clothes:
     menu Laura_Clothes_Under:   
         "Tops":
             menu:
-                "How about you lose the [L_Chest]?" if L_Chest:
-                        call LauraFace("bemused", 1)
-                        if L_SeenChest and ApprovalCheck("Laura", 900, TabM=2.7):
+                "How about you lose the [LauraX.Chest]?" if LauraX.Chest:
+                        $ LauraX.FaceChange("bemused", 1)
+                        if LauraX.SeenChest and ApprovalCheck(LauraX, 900, TabM=2.7):
                             ch_l "Ok."    
-                        elif ApprovalCheck("Laura", 1100, TabM=2):
-                            if L_Taboo:
+                        elif ApprovalCheck(LauraX, 1100, TabM=2):
+                            if LauraX.Taboo:
                                 ch_l "I don't know, here. . ."
                             else:
                                 ch_l "Maybe. . ."
-                        elif L_Over == "jacket" and ApprovalCheck("Laura", 600, TabM=2):
+                        elif LauraX.Over == "jacket" and ApprovalCheck(LauraX, 600, TabM=2):
                             ch_l "This jacket is a bit revealing. . ."  
-                        elif L_Over and ApprovalCheck("Laura", 500, TabM=2):
+                        elif LauraX.Over and ApprovalCheck(LauraX, 500, TabM=2):
                             ch_l "I guess I could. . ."                          
-                        elif not L_Over:                            
-                            call Display_DressScreen("Laura")
+                        elif not LauraX.Over:                            
+                            call Display_DressScreen(LauraX)
                             if not _return:
                                 ch_l "Not without some other top."
-                                jump Laura_Clothes 
+                                return #jump Laura_Clothes 
                         else:
-                            call Display_DressScreen("Laura")
+                            call Display_DressScreen(LauraX)
                             if not _return:
                                 ch_l "Nah."
-                                jump Laura_Clothes 
-                        $ Line = L_Chest
-                        $ L_Chest = 0
-                        if L_Over:
-                            "She reaches under her [L_Over] grabs her [Line], and pulls it off, dropping it to the ground."
+                                return #jump Laura_Clothes 
+                        $ Line = LauraX.Chest
+                        $ LauraX.Chest = 0
+                        if LauraX.Over:
+                            "She reaches under her [LauraX.Over] grabs her [Line], and pulls it off, dropping it to the ground."
                         else:
                             "She pulls off her [Line] and drops it to the ground."
                             if not renpy.showing('DressScreen'):
                                 call Laura_First_Topless
                     
                     
-                "Try on that leather bra." if L_Chest != "leather bra":
+                "Try on that leather bra." if LauraX.Chest != "leather bra":
                         ch_l "Ok."
-                        $ L_Chest = "leather bra"           
+                        $ LauraX.Chest = "leather bra"           
                     
-                "I like that red corset." if L_Chest != "corset" and "corset" in L_Inventory :
-                        if L_SeenChest or ApprovalCheck("Laura", 1000, TabM=1):
+                "I like that red corset." if LauraX.Chest != "corset" and "corset" in LauraX.Inventory :
+                        if LauraX.SeenChest or ApprovalCheck(LauraX, 1000, TabM=1):
                             ch_l "K."   
-                            $ L_Chest = "corset"         
+                            $ LauraX.Chest = "corset"         
                         else:         
-                            call Display_DressScreen("Laura")
+                            call Display_DressScreen(LauraX)
                             if not _return:        
                                 ch_l "It's a bit revealing. . ."  
                         
-                "I like that lace corset." if L_Chest != "lace corset" and "lace corset" in L_Inventory :
-                        if L_SeenChest or ApprovalCheck("Laura", 1300, TabM=2):
+                "I like that lace corset." if LauraX.Chest != "lace corset" and "lace corset" in LauraX.Inventory :
+                        if LauraX.SeenChest or ApprovalCheck(LauraX, 1300, TabM=2):
                             ch_l "K."   
-                            $ L_Chest = "lace corset"         
+                            $ LauraX.Chest = "lace corset"         
                         else:      
-                            call Display_DressScreen("Laura")
+                            call Display_DressScreen(LauraX)
                             if not _return:           
                                 ch_l "It's a bit transparent. . ."  
                                     
-                "I like that wolverine tanktop." if L_Chest != "wolvie top" and "wolvie top" in L_Inventory:
-                        if L_SeenChest or ApprovalCheck("Laura", 1000, TabM=2):
+                "I like that wolverine tanktop." if LauraX.Chest != "wolvie top" and "wolvie top" in LauraX.Inventory:
+                        if LauraX.SeenChest or ApprovalCheck(LauraX, 1000, TabM=2):
                             ch_l "K."   
-                            $ L_Chest = "wolvie top"         
+                            $ LauraX.Chest = "wolvie top"         
                         else:         
-                            call Display_DressScreen("Laura")
+                            call Display_DressScreen(LauraX)
                             if not _return:        
                                 ch_l "It's a {i}little{/i} embarrassing. . ."  
                
-                "I like that bikini top." if L_Chest != "bikini top" and "bikini top" in L_Inventory:
+                "I like that bikini top." if LauraX.Chest != "bikini top" and "bikini top" in LauraX.Inventory:
                         if bg_current == "bg pool":
                                 ch_l "K."   
-                                $ L_Chest = "bikini top"         
+                                $ LauraX.Chest = "bikini top"         
                         else:                
-                                if L_SeenChest or ApprovalCheck("Laura", 1000, TabM=2):
+                                if LauraX.SeenChest or ApprovalCheck(LauraX, 1000, TabM=2):
                                     ch_l "K."   
-                                    $ L_Chest = "bikini top"         
+                                    $ LauraX.Chest = "bikini top"         
                                 else:      
-                                    call Display_DressScreen("Laura")
+                                    call Display_DressScreen(LauraX)
                                     if not _return:           
                                             ch_l "This is not really a \"bikini\" sort of place. . ." 
                 "Never mind":
                         pass 
-            jump Laura_Clothes_Under
+            return #jump Laura_Clothes_Under
               
         "Hose and stockings options":
             menu:          
-                "You could lose the hose." if L_Hose and L_Hose != 'ripped tights' and L_Hose != 'tights':     
-                                $ L_Hose = 0  
-                "The thigh-high hose would look good with that." if L_Hose != "stockings":     
-                                $ L_Hose = "stockings"  
-                "The stockings and garterbelt would look good with that." if L_Hose != "stockings and garterbelt" and "lace panties" in L_Inventory:     
-                                $ L_Hose = "stockings and garterbelt"  
-                "Just the garterbelt would look good with that." if L_Hose != "garterbelt" and "lace panties" in L_Inventory:     
-                                $ L_Hose = "garterbelt"    
+                "You could lose the hose." if LauraX.Hose and LauraX.Hose != 'ripped tights' and LauraX.Hose != 'tights':     
+                                $ LauraX.Hose = 0  
+                "The thigh-high hose would look good with that." if LauraX.Hose != "stockings":     
+                                $ LauraX.Hose = "stockings"  
+                "The stockings and garterbelt would look good with that." if LauraX.Hose != "stockings and garterbelt" and "lace panties" in LauraX.Inventory:     
+                                $ LauraX.Hose = "stockings and garterbelt"  
+                "Just the garterbelt would look good with that." if LauraX.Hose != "garterbelt" and "lace panties" in LauraX.Inventory:     
+                                $ LauraX.Hose = "garterbelt"    
                 "Never mind":
                         pass  
-            jump Laura_Clothes_Under
+            return #jump Laura_Clothes_Under
                         
         #Panties    
         "Panties":
             menu:
-                "You could lose those panties. . ." if L_Panties:
-                        call LauraFace("bemused", 1)  
-                        if ApprovalCheck("Laura", 900) and (L_Legs or (L_SeenPussy and not L_Taboo)):
+                "You could lose those panties. . ." if LauraX.Panties:
+                        $ LauraX.FaceChange("bemused", 1)  
+                        if ApprovalCheck(LauraX, 900) and (LauraX.Legs or (LauraX.SeenPussy and not LauraX.Taboo)):
                                 #If you've got decent approval and either she's wearing pants or you've seen her pussy and it's not in public                        
-                                if ApprovalCheck("Laura", 850, "L"):               
+                                if ApprovalCheck(LauraX, 850, "L"):               
                                         ch_l "True. . ."
-                                elif ApprovalCheck("Laura", 500, "O"):
+                                elif ApprovalCheck(LauraX, 500, "O"):
                                         ch_l "Agreed."
-                                elif ApprovalCheck("Laura", 350, "I"):
+                                elif ApprovalCheck(LauraX, 350, "I"):
                                         ch_l "Heh."
                                 else:
                                         ch_l "Sure, I guess."         
                         else:                       #low approval or not wearing pants or in public 
-                                if ApprovalCheck("Laura", 1100, "LI", TabM=3) and L_Love > L_Inbt:               
+                                if ApprovalCheck(LauraX, 1100, "LI", TabM=3) and LauraX.Love > LauraX.Inbt:               
                                         ch_l "Well look, it's not about you, but. . ."
-                                elif ApprovalCheck("Laura", 700, "OI", TabM=3) and L_Obed > L_Inbt:
+                                elif ApprovalCheck(LauraX, 700, "OI", TabM=3) and LauraX.Obed > LauraX.Inbt:
                                         ch_l "Well. . ."
-                                elif ApprovalCheck("Laura", 600, "I", TabM=3):
+                                elif ApprovalCheck(LauraX, 600, "I", TabM=3):
                                         ch_l "Hrmm. . ."
-                                elif ApprovalCheck("Laura", 1300, TabM=3):
+                                elif ApprovalCheck(LauraX, 1300, TabM=3):
                                         ch_l "Okay, okay."
                                 else:                                         
-                                        call Display_DressScreen("Laura")
+                                        call Display_DressScreen(LauraX)
                                         if not _return:
-                                            call LauraFace("surprised")
-                                            $ L_Brows = "angry" 
-                                            if L_Taboo > 20:
+                                            $ LauraX.FaceChange("surprised")
+                                            $ LauraX.Brows = "angry" 
+                                            if LauraX.Taboo > 20:
                                                 ch_l "This is too public."
                                             else:
-                                                ch_l "You're not that cute, [L_Petname]!"
-                                            jump Laura_Clothes
-                        $ L_Panties = 0
-                        if not L_Legs:
+                                                ch_l "You're not that cute, [LauraX.Petname]!"
+                                            return #jump Laura_Clothes
+                        $ LauraX.Panties = 0
+                        if not LauraX.Legs:
                             "She pulls off her panties, then drops them to the ground." 
                             if not renpy.showing('DressScreen'):
                                     call Laura_First_Bottomless  
-                        elif ApprovalCheck("Laura", 1200, TabM=4):   
-                            $ Line = L_Legs
-                            $ L_Legs = 0
-                            "She pulls off her [L_Legs] and panties, then pulls the [L_Legs] back on."  
-                            $ L_Legs = Line       
+                        elif ApprovalCheck(LauraX, 1200, TabM=4):   
+                            $ Line = LauraX.Legs
+                            $ LauraX.Legs = 0
+                            "She pulls off her [Line] and panties, then pulls the [Line] back on."  
+                            $ LauraX.Legs = Line       
                             call Laura_First_Bottomless(1)                             
-                        elif L_Legs == "skirt":
+                        elif LauraX.Legs == "skirt":
                             "She reaches under her skirt and pulls her panties off."
                         else:
-                            $ L_Blush = 1
+                            $ LauraX.Blush = 1
                             "She steps away a moment and then comes back."  
-                            $ L_Blush = 0                                    
+                            $ LauraX.Blush = 0                                    
                         
-                "Why don't you wear the leather panties instead?" if L_Panties and L_Panties != "leather panties":
-                        if ApprovalCheck("Laura", 1100, TabM=3):
+                "Why don't you wear the leather panties instead?" if LauraX.Panties and LauraX.Panties != "leather panties":
+                        if ApprovalCheck(LauraX, 1100, TabM=3):
                                 ch_l "Ok."
-                                $ L_Panties = "leather panties"  
+                                $ LauraX.Panties = "leather panties"  
                         else:       
-                                call Display_DressScreen("Laura")
+                                call Display_DressScreen(LauraX)
                                 if not _return:          
                                         ch_l "That's none of your busines."
                         
-                "Why don't you wear the wolverine panties instead?" if "wolvie panties" in L_Inventory and L_Panties and L_Panties != "wolvie panties":
-                        if ApprovalCheck("Laura", 1000, TabM=3):
+                "Why don't you wear the wolverine panties instead?" if "wolvie panties" in LauraX.Inventory and LauraX.Panties and LauraX.Panties != "wolvie panties":
+                        if ApprovalCheck(LauraX, 1000, TabM=3):
                                 ch_l "I guess."
-                                $ L_Panties = "wolvie panties"
+                                $ LauraX.Panties = "wolvie panties"
                         else:
-                                call Display_DressScreen("Laura")
+                                call Display_DressScreen(LauraX)
                                 if not _return: 
                                         ch_l "That's none of your busines."
                             
-                "Why don't you wear the lace panties instead?" if "lace panties" in L_Inventory and L_Panties and L_Panties != "lace panties":
-                        if ApprovalCheck("Laura", 1300, TabM=3):
+                "Why don't you wear the lace panties instead?" if "lace panties" in LauraX.Inventory and LauraX.Panties and LauraX.Panties != "lace panties":
+                        if ApprovalCheck(LauraX, 1300, TabM=3):
                                 ch_l "I guess."
-                                $ L_Panties = "lace panties"
+                                $ LauraX.Panties = "lace panties"
                         else:
-                                call Display_DressScreen("Laura")
+                                call Display_DressScreen(LauraX)
                                 if not _return: 
                                         ch_l "That's none of your busines."
                             
-                "I like those bikini bottoms." if "bikini bottoms" in L_Inventory and L_Panties != "bikini bottoms":                            
+                "I like those bikini bottoms." if "bikini bottoms" in LauraX.Inventory and LauraX.Panties != "bikini bottoms":                            
                         if bg_current == "bg pool":
                                 ch_l "K."   
-                                $ L_Panties = "bikini bottoms"         
+                                $ LauraX.Panties = "bikini bottoms"         
                         else:                
-                                if ApprovalCheck("Laura", 1000, TabM=2):
+                                if ApprovalCheck(LauraX, 1000, TabM=2):
                                     ch_l "K."   
-                                    $ L_Panties = "bikini bottoms"         
+                                    $ LauraX.Panties = "bikini bottoms"         
                                 else:    
-                                    call Display_DressScreen("Laura")
+                                    call Display_DressScreen(LauraX)
                                     if not _return:             
                                             ch_l "This is not really a \"bikini\" sort of place. . ." 
                             
-                "You know, you could wear some panties with that. . ." if not L_Panties:
-                        call LauraFace("bemused", 1)
-                        if (L_Love+L_Obed) <= (2 * L_Inbt):
-                            $ L_Mouth = "smile"
+                "You know, you could wear some panties with that. . ." if not LauraX.Panties:
+                        $ LauraX.FaceChange("bemused", 1)
+                        if LauraX.Legs and (LauraX.Love+LauraX.Obed) <= (2 * LauraX.Inbt):
+                            $ LauraX.Mouth = "smile"
                             ch_l "I don't know about that."
                             menu:
                                 "Fine by me":
-                                    jump Laura_Clothes
+                                    return #jump Laura_Clothes
                                 "I insist, put some on.":
-                                    if (L_Love+L_Obed) <= (1.5 * L_Inbt):
-                                        call LauraFace("angry", Eyes="side")
+                                    if (LauraX.Love+LauraX.Obed) <= (1.5 * LauraX.Inbt):
+                                        $ LauraX.FaceChange("angry", Eyes="side")
                                         ch_l "Well I insist otherwise."
-                                        jump Laura_Clothes
+                                        return #jump Laura_Clothes
                                     else:
-                                        call LauraFace("sadside")
+                                        $ LauraX.FaceChange("sadside")
                                         ch_l "Oh, fine."    
                         else:                
                             ch_l "I guess. . ."
@@ -4644,151 +2908,151 @@ label Laura_Clothes:
                             extend ""
                             "How about the black ones?":
                                     ch_l "Sure, ok."
-                                    $ L_Panties = "black panties"
-                            "How about the wolvie ones?" if "wolvie panties" in L_Inventory:
+                                    $ LauraX.Panties = "black panties"
+                            "How about the wolvie ones?" if "wolvie panties" in LauraX.Inventory:
                                     ch_l "Sure."                
-                                    $ L_Panties  = "wolvie panties"
-                            "How about the lace ones?" if "lace panties" in L_Inventory:
+                                    $ LauraX.Panties  = "wolvie panties"
+                            "How about the lace ones?" if "lace panties" in LauraX.Inventory:
                                     ch_l "Alright."                
-                                    $ L_Panties  = "lace panties"
+                                    $ LauraX.Panties  = "lace panties"
                 "Never mind":
                     pass
-            jump Laura_Clothes_Under
+            return #jump Laura_Clothes_Under
         "Never mind":
             pass
-    jump Laura_Clothes
+    return #jump Laura_Clothes
     #End of Laura Underwear
        
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  
         
     menu Laura_Clothes_Misc:                                                                                                                   
         #Misc
-#        "You look good with your hair up." if L_Hair != "evo":
-#            if ApprovalCheck("Laura", 600):
+#        "You look good with your hair up." if LauraX.Hair != "evo":
+#            if ApprovalCheck(LauraX, 600):
 #                ch_l "Like this?"
-#                $ L_Hair = "evo"
+#                $ LauraX.Hair = "evo"
 #            else:
 #                ch_l "Yeah, I know that."
                 
-        "Maybe dry out your hair." if L_Hair == "wet":
-                if ApprovalCheck("Laura", 600):
+        "Maybe dry out your hair." if LauraX.Hair == "wet":
+                if ApprovalCheck(LauraX, 600):
                     ch_l "Ok."
-                    $ L_Hair = "long"
+                    $ LauraX.Hair = "long"
                 else:
                     ch_l "I don't know, it's fine like this."
                 
-        "You should go for that wet look with your hair." if L_Hair != "wet":
-                if ApprovalCheck("Laura", 800):
+        "You should go for that wet look with your hair." if LauraX.Hair != "wet":
+                if ApprovalCheck(LauraX, 800):
                     ch_l "Hmm?"
-                    $ L_Hair = "wet"
+                    $ LauraX.Hair = "wet"
                     "She wanders off for a minute and comes back."
                     ch_l "Like this?"
                 else:
                     ch_l "Ugh, too much work."
         
-        "You know, I like some nice hair down there. Maybe grow it out." if not L_Pubes:
-                if "pubes" in L_Todo:
-                        call LauraFace("bemused", 1)
+        "You know, I like some nice hair down there. Maybe grow it out." if not LauraX.Pubes:
+                if "pubes" in LauraX.Todo:
+                        $ LauraX.FaceChange("bemused", 1)
                         ch_l "Even I can't grow it out instantly."
                 else:                
-                        call LauraFace("bemused", 1)
-                        if ApprovalCheck("Laura", 1000, TabM=0):               
+                        $ LauraX.FaceChange("bemused", 1)
+                        if ApprovalCheck(LauraX, 1000, TabM=0):               
                             ch_l "Sure, that's easier. . ."           
                         else: 
-                            call LauraFace("surprised")
-                            $ L_Brows = "angry"
+                            $ LauraX.FaceChange("surprised")
+                            $ LauraX.Brows = "angry"
                             ch_l "I think I'll do what I want down there."
-                            jump Laura_Clothes
-                        $ L_Todo.append("pubes")
-                        $ L_PubeC = 6        
-        "I like it waxed clean down there." if L_Pubes == 1:
-                call LauraFace("bemused", 1)            
-                if "shave" in L_Todo:
+                            return #jump Laura_Clothes
+                        $ LauraX.Todo.append("pubes")
+                        $ LauraX.PubeC = 6        
+        "I like it waxed clean down there." if LauraX.Pubes == 1:
+                $ LauraX.FaceChange("bemused", 1)            
+                if "shave" in LauraX.Todo:
                     ch_l "Yeah, I know, I'll get to it."
                 else:
-                    if ApprovalCheck("Laura", 1100, TabM=0):               
+                    if ApprovalCheck(LauraX, 1100, TabM=0):               
                         ch_l "Really? I guess I could give it a shave. . ."        
                     else: 
-                        call LauraFace("surprised")
-                        $ L_Brows = "angry"
+                        $ LauraX.FaceChange("surprised")
+                        $ LauraX.Brows = "angry"
                         ch_l "I think I'll do what I want down there."
-                        jump Laura_Clothes
-                    $ L_Todo.append("shave")  
+                        return #jump Laura_Clothes
+                    $ LauraX.Todo.append("shave")  
                     
-        "Piercings. [[See what she looks like without them first] (locked)" if not L_SeenPussy and not L_SeenChest:
+        "Piercings. [[See what she looks like without them first] (locked)" if not LauraX.SeenPussy and not LauraX.SeenChest:
             pass
             
-        "You know, you'd look really nice with some ring body piercings." if L_Pierce != "ring" and (L_SeenPussy or L_SeenChest):                     
-                if "ring" in L_Todo:
+        "You know, you'd look really nice with some ring body piercings." if LauraX.Pierce != "ring" and (LauraX.SeenPussy or LauraX.SeenChest):                     
+                if "ring" in LauraX.Todo:
                     ch_l "Yeah, I know, I'll get to it."
                 else:                    
-                    call LauraFace("bemused", 1)
-                    $ Approval = ApprovalCheck("Laura", 1150, TabM=0)
-                    if ApprovalCheck("Laura", 900, "L", TabM=0) or (Approval and L_Love > 2* L_Obed):   
+                    $ LauraX.FaceChange("bemused", 1)
+                    $ Approval = ApprovalCheck(LauraX, 1150, TabM=0)
+                    if ApprovalCheck(LauraX, 900, "L", TabM=0) or (Approval and LauraX.Love > 2* LauraX.Obed):   
                         ch_l "You think I'd look good with them?"
-                    elif ApprovalCheck("Laura", 600, "I", TabM=0) or (Approval and L_Inbt > L_Obed):
+                    elif ApprovalCheck(LauraX, 600, "I", TabM=0) or (Approval and LauraX.Inbt > LauraX.Obed):
                         ch_l "I've been thinking about that for a while."
-                    elif ApprovalCheck("Laura", 500, "O", TabM=0) or Approval:
-                        ch_l "Yes, [L_Petname]."
+                    elif ApprovalCheck(LauraX, 500, "O", TabM=0) or Approval:
+                        ch_l "Yes, [LauraX.Petname]."
                     else: 
-                        call LauraFace("surprised")
-                        $ L_Brows = "angry"
-                        ch_l "Not interested, [L_Petname]."
-                        jump Laura_Clothes            
-                    $ L_Todo.append("ring")
+                        $ LauraX.FaceChange("surprised")
+                        $ LauraX.Brows = "angry"
+                        ch_l "Not interested, [LauraX.Petname]."
+                        return #jump Laura_Clothes            
+                    $ LauraX.Todo.append("ring")
         
-        "You know, you'd look really nice with some barbell body piercings." if L_Pierce != "barbell" and (L_SeenPussy or L_SeenChest):                      
-                if "barbell" in L_Todo:
+        "You know, you'd look really nice with some barbell body piercings." if LauraX.Pierce != "barbell" and (LauraX.SeenPussy or LauraX.SeenChest):                      
+                if "barbell" in LauraX.Todo:
                     ch_l "Yeah, I know, I'll get to it."
                 else:                    
-                    call LauraFace("bemused", 1)
-                    $ Approval = ApprovalCheck("Laura", 1150, TabM=0)
-                    if ApprovalCheck("Laura", 900, "L", TabM=0) or (Approval and L_Love > 2 * L_Obed):   
+                    $ LauraX.FaceChange("bemused", 1)
+                    $ Approval = ApprovalCheck(LauraX, 1150, TabM=0)
+                    if ApprovalCheck(LauraX, 900, "L", TabM=0) or (Approval and LauraX.Love > 2 * LauraX.Obed):   
                         ch_l "You think I'd look good with them?"
-                    elif ApprovalCheck("Laura", 600, "I", TabM=0) or (Approval and L_Inbt > L_Obed):
+                    elif ApprovalCheck(LauraX, 600, "I", TabM=0) or (Approval and LauraX.Inbt > LauraX.Obed):
                         ch_l "I've been thinking about that for a while."
-                    elif ApprovalCheck("Laura", 500, "O", TabM=0) or Approval:
-                        ch_l "Yes, [L_Petname]."
+                    elif ApprovalCheck(LauraX, 500, "O", TabM=0) or Approval:
+                        ch_l "Yes, [LauraX.Petname]."
                     else: 
-                        call LauraFace("surprised")
-                        $ L_Brows = "angry"
-                        ch_l "Not interested, [L_Petname]."
-                        jump Laura_Clothes                
-                    $ L_Todo.append("barbell")
+                        $ LauraX.FaceChange("surprised")
+                        $ LauraX.Brows = "angry"
+                        ch_l "Not interested, [LauraX.Petname]."
+                        return #jump Laura_Clothes                
+                    $ LauraX.Todo.append("barbell")
             
-        "You know, you'd look better without those piercings." if L_Pierce:
-                call LauraFace("bemused", 1)
-                $ Approval = ApprovalCheck("Laura", 1350, TabM=0)
-                if ApprovalCheck("Laura", 950, "L", TabM=0) or (Approval and L_Love > L_Obed):   
+        "You know, you'd look better without those piercings." if LauraX.Pierce:
+                $ LauraX.FaceChange("bemused", 1)
+                $ Approval = ApprovalCheck(LauraX, 1350, TabM=0)
+                if ApprovalCheck(LauraX, 950, "L", TabM=0) or (Approval and LauraX.Love > LauraX.Obed):   
                     ch_l "Make up your mind . ."
-                elif ApprovalCheck("Laura", 700, "I", TabM=0) or (Approval and L_Inbt > L_Obed):
+                elif ApprovalCheck(LauraX, 700, "I", TabM=0) or (Approval and LauraX.Inbt > LauraX.Obed):
                     ch_l "In, out, snickt."
-                elif ApprovalCheck("Laura", 600, "O", TabM=0) or Approval:
+                elif ApprovalCheck(LauraX, 600, "O", TabM=0) or Approval:
                     ch_l "Fine."
                 else: 
-                    call LauraFace("surprised")
-                    $ L_Brows = "angry"
+                    $ LauraX.FaceChange("surprised")
+                    $ LauraX.Brows = "angry"
                     ch_l "I've sort of grown attached."
-                    jump Laura_Clothes            
-                $ L_Pierce = 0 
+                    return #jump Laura_Clothes            
+                $ LauraX.Pierce = 0 
                 
-        "Why don't you try on that medallion choker." if L_Neck != "leash choker":
+        "Why don't you try on that medallion choker." if LauraX.Neck != "leash choker":
                 ch_l "Ok. . ."         
-                $ L_Neck = "leash choker"
-        "Maybe go without a necklace." if L_Neck:
+                $ LauraX.Neck = "leash choker"
+        "Maybe go without a necklace." if LauraX.Neck:
                 ch_l "Ok. . ."         
-                $ L_Neck = 0
+                $ LauraX.Neck = 0
             
-        "Why don't you put those wristbands on." if L_Arms != "wrists":
+        "Why don't you put those wristbands on." if LauraX.Arms != "wrists":
                 ch_l "Ok. . ."         
-                $ L_Arms = "wrists"
-        "Maybe go without the wristbands." if L_Arms:
+                $ LauraX.Arms = "wrists"
+        "Maybe go without the wristbands." if LauraX.Arms:
                 ch_l "Ok. . ."         
-                $ L_Arms = 0
+                $ LauraX.Arms = 0
             
         "Never mind":
             pass         
-    jump Laura_Clothes
+    return #jump Laura_Clothes
     #End of Laura Misc Wardrobe
     
 return
@@ -4796,791 +3060,124 @@ return
 
 # < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
+    
+## Start Laura first Les / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
-label Laura_Clothes_Schedule(Cnt = 0):
-        #Sets clothing for different days, if Cnt is 3 it's all days, 2 is TuThu, 1 is only weekends
-        #Schedule 0-6= mon-fri, Schedule 7 is dates, 9 is private
+#label Laura_First_Les(Silent = 0, Undress = 0, GirlsNum = 0): #checked when she engages in a les scene  ## call Laura_First_Les(0,1)
+#    if LauraX.Les:
+#        return
+    
+#    $ LauraX.Les += 1
+#    $ LauraX.RecentActions.append("lesbian")        
+#    $ LauraX.Statup("Inbt", 30, 2) 
+#    $ LauraX.Statup("Inbt", 90, 1)
+    
+#    if not Silent: 
+#        #example previous line: Line + " and cups " + Primary + "'s breasts in her delicate hands" 
+#        "Laura's head jerks up and she looks at what [Partner] is doing. [Partner] pauses and glances up at her with a mischievous grin." 
+#        ch_l "I, um, I haven't done that sort of thing before."
+#        if Partner == "Rogue":
+#                if R_Les:
+#                    ch_r "Neither have I Sugar, but it seemed like fun."
+#                else:
+#                    ch_r "It's all right Sugar, I'll take care of you."
+#        if LauraX.LikeRogue >= 60 and ApprovalCheck(LauraX, (1500-(10*LauraX.Les)-(10*(LauraX.LikeRogue-60)))): #If she likes both of you a lot, threeway
+#                $ State = "threeway"
+#        elif ApprovalCheck(LauraX, 1000): #If she likes you well enough, Hetero
+#                $ State = "hetero"            
+#        elif LauraX.LikeRogue >= 70: #if she doesn't like you but likes Rogue, lesbian
+#                $ State = "lesbian"
         
-        if ApprovalCheck("Laura", 1500, "LO"):
-                ch_l "Fine, you pick, whatever."
-                $ Cnt = 3
-        elif ApprovalCheck("Laura", 1200, "LO"):
-                ch_l "I don't know, you could pick a few days. . ."
-                $ Cnt = 2
-        elif ApprovalCheck("Laura", 1000, "LO"):
-                ch_l "Maybe on weekends. . ."
-                $ Cnt = 1
-        else:
-                ch_l "Nah, I got it covered."
-                return
-        while True:    
-            menu:
-                    extend ""
-                    "Every Day":
-                        "This sets her outfit for every day of the week in one go."
-                        "This overwrites the default schedule, and any scheduling you've already made."
-                        "Any choices you make later will overwrite this choice."
-                        menu:
-                            "Pick an outfit to wear":                                
-                                call Laura_Clothes_ScheduleB
-                                if Cnt > 1:
-                                        $ L_Schedule[0] = _return
-                                if Cnt > 2:
-                                        $ L_Schedule[1] = _return
-                                if Cnt > 1:
-                                        $ L_Schedule[2] = _return
-                                if Cnt > 2:
-                                        $ L_Schedule[3] = _return
-                                if Cnt > 1:
-                                        $ L_Schedule[4] = _return
-                                $ L_Schedule[5] = _return
-                                $ L_Schedule[6] = _return
-                            "Never mind.":
-                                pass
+        
+        
+        
+        
+#        if "cockout" in Player.RecentActions:
+#                $ LauraX.FaceChange("down", 2)  
+#                if GirlsNum:
+#                    "Laura also glances down at your cock"
+#                else:
+#                    "Laura glances down at your exposed cock"
+#        elif Undress:
+#                "You strip nude."
+#        else:
+#                "You whip your cock out."
+#        $ Player.RecentActions.append("cockout") 
+        
+#        if Taboo and not ApprovalCheck(LauraX, 1500):
+#                $ LauraX.FaceChange("surprised", 2)  
+#                ch_l "Um, you should[LauraX.like]put that away in public."
+#                $ LauraX.FaceChange("bemused", 1)  
+#                if LauraX.SeenPeen == 1: 
+#                    ch_l "Or[LauraX.like]maybe. . ."
+#                    $ LauraX.Statup("Love", 90, 15)                
+#                    $ LauraX.Statup("Obed", 50, 20)
+#                    $ LauraX.Statup("Inbt", 60, 35)  
+                    
+#        elif LauraX.SeenPeen > 10:
+#                return    
+#        elif ApprovalCheck(LauraX, 1200) or ApprovalCheck(LauraX, 500, "L"):
+#                $ LauraX.FaceChange("sly",1) 
+#                if LauraX.SeenPeen == 1: 
+#                    $ LauraX.FaceChange("surprised",2)  
+#                    ch_l "That's. . . impressive."
+#                    $ LauraX.FaceChange("bemused",1)  
+#                    $ LauraX.Statup("Love", 90, 3) 
+#                elif LauraX.SeenPeen == 2:  
+#                    ch_l "I can't get over that."               
+#                    $ LauraX.Statup("Obed", 50, 7) 
+#                elif LauraX.SeenPeen == 5: 
+#                    ch_l "There it is."
+#                    $ LauraX.Statup("Inbt", 60, 5)  
+#                elif LauraX.SeenPeen == 10: 
+#                    ch_l "So beautiful."
+#                    $ LauraX.Statup("Obed", 80, 10)
+#                    $ LauraX.Statup("Inbt", 60, 3)  
+#        else:
+#                $ LauraX.FaceChange("sad",1) 
+#                if LauraX.SeenPeen == 1: 
+#                    $ LauraX.FaceChange("perplexed",1 ) 
+#                    ch_l "Well that happened. . ."
+#                    $ LauraX.Statup("Obed", 50, 7)
+#                    $ LauraX.Statup("Inbt", 60, 3)  
+#                elif LauraX.SeenPeen < 5: 
+#                    $ LauraX.FaceChange("sad",0) 
+#                    ch_l "Huh."
+#                    $ LauraX.Statup("Inbt", 60, 2)  
+#                elif LauraX.SeenPeen == 10: 
+#                    ch_l "[LauraX.Like]put that away."               
+#                    $ LauraX.Statup("Obed", 50, 7)
+#                    $ LauraX.Statup("Inbt", 60, 3)  
+    
+#    else: #Silent mode
+#                $ Player.RecentActions.append("cockout") 
+#                if LauraX.SeenPeen > 10:
+#                    return
+#                elif ApprovalCheck(LauraX, 1200) or ApprovalCheck(LauraX, 500, "L"):
+#                        if LauraX.SeenPeen == 1: 
+#                            $ LauraX.Statup("Love", 90, 3) 
+#                        elif LauraX.SeenPeen == 2:              
+#                            $ LauraX.Statup("Obed", 50, 7) 
+#                        elif LauraX.SeenPeen == 5: 
+#                            $ LauraX.Statup("Inbt", 60, 5)  
+#                        elif LauraX.SeenPeen == 10: 
+#                            $ LauraX.Statup("Love", 90, 10)  
+#                else:
+#                        if LauraX.SeenPeen == 1: 
+#                            $ LauraX.Statup("Obed", 50, 7)
+#                            $ LauraX.Statup("Inbt", 60, 3)  
+#                        elif LauraX.SeenPeen < 5: 
+#                            $ LauraX.Statup("Inbt", 60, 2)  
+#                        elif LauraX.SeenPeen == 10:              
+#                            $ LauraX.Statup("Obed", 50, 7)
+#                            $ LauraX.Statup("Inbt", 60, 3) 
                             
-                    "Weekdays":
-                        menu:
-                            "On Monday you should wear. . ." if Cnt > 1:
-                                call Laura_Clothes_ScheduleB
-                                $ L_Schedule[0] = _return
-                            "On Monday you should wear. . . (locked)" if Cnt <= 1:
-                                pass
-                                
-                            "On Tuesday you should wear. . ." if Cnt > 2:
-                                call Laura_Clothes_ScheduleB
-                                $ L_Schedule[1] = _return        
-                            "On Tuesday you should wear. . . (locked)" if Cnt <= 2:
-                                pass
-                                
-                            "On Wednesday you should wear. . ." if Cnt > 1:
-                                call Laura_Clothes_ScheduleB
-                                $ L_Schedule[2] = _return
-                            "On Wednesday you should wear. . . (locked)" if Cnt <= 1:
-                                pass   
-                                
-                            "On Thursday you should wear. . ." if Cnt > 2:
-                                call Laura_Clothes_ScheduleB
-                                $ L_Schedule[3] = _return
-                            "On Thursday you should wear. . . (locked)" if Cnt <= 2:
-                                pass
-                                
-                            "On Friday you should wear. . ." if Cnt > 1:
-                                call Laura_Clothes_ScheduleB
-                                $ L_Schedule[4] = _return
-                            "On Friday you should wear. . . (locked)" if Cnt <= 1:
-                                pass 
-                            "Back":
-                                pass   
-                   
-                    "Other":
-                        menu:       
-                            "On Saturday you should wear. . . (locked)" if Cnt < 1:
-                                pass
-                            "On Saturday you should wear. . ." if Cnt >= 1:
-                                call Laura_Clothes_ScheduleB
-                                $ L_Schedule[5] = _return
-                                
-                            "On Sunday you should wear. . . (locked)" if Cnt < 1:
-                                pass                          
-                            "On Sunday you should wear. . ." if Cnt >= 1:
-                                call Laura_Clothes_ScheduleB
-                                $ L_Schedule[6] = _return
-                                
-                            "In our rooms you should wear. . . (locked)" if Cnt < 1:
-                                pass
-                            "In our rooms you should wear. . ." if Cnt >= 1:
-                                call Laura_Clothes_ScheduleB(99)
-                                $ L_Schedule[9] = _return   
-                                
-                            "On dates you should wear. . . (locked)" if Cnt < 2:
-                                pass  
-                            "On dates you should wear. . ." if Cnt >= 2:
-                                call Laura_Clothes_ScheduleB
-                                $ L_Schedule[7] = _return     
-                            "Back":
-                                pass  
-                        
-                    "About Gym clothes":
-                            menu:
-                                ch_p "You asked me before about your gym clothes?"
-                                "Don't ask before changing into gym clothes" if "no ask gym" not in L_Traits:
-                                            ch_l "Oh. . . ok."
-                                            $ L_Traits.append("no ask gym")
-                                "Ask me before changing into gym clothes" if "no ask gym" in L_Traits:
-                                            ch_l "Oh. . . ok."
-                                            $ L_Traits.remove("no ask gym")    
-                                "Never Mind":
-                                    pass                              
-                                
-                    "Private outfit" if L_Schedule[9]:
-                            #if comfy is in L_Traits, she won't ask before changing
-                            ch_p "You know that outfit you wear in private?"
-                            menu:
-                                ch_l "Yeah?"
-                                "Just put them on without asking me about it." if "comfy" not in L_Traits:
-                                        ch_l "Sure."
-                                        $ L_Traits.append("comfy")
-                                "Ask before changing into that." if "comfy" in L_Traits:
-                                        ch_l "Sure."
-                                        $ L_Traits.remove("comfy")
-                                "Never Mind":
-                                        pass     
-                                
-                    "Never mind [[Done]":
-                        return       
-        jump Laura_Clothes_Schedule
-        
-        
-
+#    if LauraX.SeenPeen == 1:            
+#        $ LauraX.Statup("Love", 90, 10)                
+#        $ LauraX.Statup("Obed", 90, 25)
+#        $ LauraX.Statup("Inbt", 60, 20) 
+#        $ LauraX.Statup("Lust", 200, 5)
     
-label Laura_Clothes_ScheduleB(Count = 0):
-#This is called by Laura_Clothes_Schedule when setting her outfit for a given day
-#If Count by the end, yes, if not count, no. If count is 99 then it's an auto-yes
-            
-            menu:
-                "That leather combat look.":
-                    $ Count = 1
-                "Your jacket and skirt.":
-                    $ Count = 2
-                "That outfit we put together [[custom]":
-                            menu:
-                                ch_l "Which one?"
-                                "The first one. (locked)" if not L_Custom[0]:
-                                    pass
-                                "The first one." if L_Custom[0]:
-                                    if L_Custom[0] == 2 or Count == 99:
-                                        $ Count = 3
-                                    else:
-                                        ch_l "I told you I wouldn't wear that out."
-                                        
-                                "The second one. (locked)" if not L_Custom2[0]:
-                                    pass
-                                "The second one." if L_Custom2[0]:
-                                    if L_Custom2[0] == 2 or Count == 99:
-                                        $ Count = 5
-                                    else:
-                                        ch_l "I told you I wouldn't wear that out."
-                                        
-                                "The third one. (locked)" if not L_Custom3[0]:
-                                    pass
-                                "The third one." if L_Custom3[0]:
-                                    if L_Custom3[0] == 2 or Count == 99:
-                                        $ Count = 6
-                                    else:
-                                        ch_l "I told you I wouldn't wear that out."
-                                        
-                                "Never mind":
-                                    pass
-                "Your gym clothes.":
-                    $ Count = 4                
-                "Your sleepwear.":
-                    if Count != 99:
-                        ch_l "That's kinda skimpy, [L_Petname]."
-                        $ Count = 0
-                    else:
-                        $ Count = 7
-                "Whatever you like.":
-                    pass
-                    
-            if Count:
-                        ch_l "Ok, sure."
-            else:
-                        ch_l "I'll figure something else out."
-            return Count    
-#End Laura Clothes Scheduling Check
-
-label L_AltClothes(Outfit=8):
-        #1 = "mission", 2 = "streets"
-        #3 = "custom1", 5 = "custom2", 6 = "custom3", 7 = "sleep", 4 = "gym", 10 = "swimwear"
-        #This selects her outfit when teaching if 8
-        #This selects her private outfit if 9
-        
-        if L_Schedule[Outfit] == 1 or not L_Schedule[Outfit]:
-                    $ L_Outfit = "mission"
-        elif L_Schedule[Outfit] == 2:
-                    $ L_Outfit = "streets"
-        elif L_Schedule[Outfit] == 3:
-                    $ L_Outfit = "custom1"
-        elif L_Schedule[Outfit] == 5:
-                    $ L_Outfit = "custom2"
-        elif L_Schedule[Outfit] == 6:
-                    $ L_Outfit = "custom3"
-        elif L_Schedule[Outfit] == 7:
-                    $ L_Outfit = "sleep"
-        elif L_Schedule[Outfit] == 4:
-                    $ L_Outfit = "gym"
-        elif L_Schedule[Outfit] == 10:
-                    $ L_Outfit = "swimwear"
-        return
-  
-label L_Private_Outfit:
-    #sets Laura's private outfit in private
-    if L_Break[0] or "angry" in L_DailyActions:
-            return
-            
-    if L_Outfit == "temporary":
-            #if you manually set a different option, keep it
-            return
-    if "comfy" in L_RecentActions or "comfy" in L_Traits or L_Outfit == L_Schedule[9]:
-            call L_AltClothes(9)
-            call LauraOutfit(Changed=1)
-    elif "no comfy" in L_RecentActions:
-            pass        
-    elif (2 * L_Inbt) >= (L_Love + L_Obed +100):
-            # if her inhibition is much higher than her obedience to you. . .            
-            ch_l "One minute. . ."
-            ch_l "I'm getting a bit more comfortable."
-            call L_AltClothes(9)
-            call LauraOutfit(Changed=1)
-            $ L_RecentActions.append("comfy")
-    else:           
-            ch_l "One minute. . ."
-            menu: 
-                ch_l "I could throw on something a bit more fun. . ."
-                "Sure.":
-                    ch_l "Cool. . ."
-                    call L_AltClothes(9)
-                    call LauraOutfit(Changed=1)
-                    $ L_RecentActions.append("comfy")
-                "No thanks.":
-                    ch_l "Oh, ok."       
-                    $ L_RecentActions.append("no comfy")             
-    return
-
-label Laura_Custom_Out(Custom = 3, Shame = 0, Agree = 1):
-            #If Custom1 = 3, if custom2 = 5, if custom3 = 6
-            
-            call LauraFace("sexy", 1)
-            if "exhibitionist" in L_Traits:  
-                        ch_l "Mmmmmm. . ."  
-                        if Custom == 5 and L_Custom2[0] == 2:
-                            $ L_Outfit = "custom2"                    
-                            $ L_Shame = L_OutfitShame[5]
-                        elif Custom == 6 and L_Custom3[0] == 2:
-                            $ L_Outfit = "custom3"                    
-                            $ L_Shame = L_OutfitShame[6]
-                        else: #if custom 1:
-                            $ L_Outfit = "custom1"                    
-                            $ L_Shame = L_OutfitShame[3]            
-                        return    
-            
-            if Custom == 5 and L_Custom2[0] == 2:
-                        $ L_Outfit = "custom2"   
-            elif Custom == 6 and L_Custom3[0] == 2:
-                        $ L_Outfit = "custom3"   
-            elif L_Custom[0] == 2: #if custom 1:
-                        $ L_Outfit = "custom1"   
-            else: #no
-                        $ Agree = 0
-             
-            if Agree:                              
-                        #she's decided to wear this out.
-                        $ L_Shame = L_OutfitShame[Custom]          
-                        if L_OutfitShame[Custom] >= 50:
-                            ch_l "This is. . . really brave. . ."
-                        elif L_OutfitShame[Custom] >= 25:
-                            ch_l "This one's pretty skimpy. . ."
-                        elif L_OutfitShame[Custom] >= 15:
-                            call LauraFace("bemused", 1)
-                            ch_l "Yeah, ok. . ."
-                        else:
-                            ch_l "Yup."
-            else:
-                        #She's decided not to wear this out
-                        if L_OutfitShame[Custom] >= 50:
-                            call LauraFace("angry", 1)
-                            ch_l "Perv."
-                        elif L_OutfitShame[Custom] >= 25:
-                            call LauraFace("angry", 1)
-                            ch_l "Yeah, not in public."
-                        else:
-                            call LauraFace("surprised", 1)
-                            ch_l "Nah."  
-            return
-# End Laura Custom Out
-                                
-                                
-label Laura_OutfitShame(Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agree = 1):
-            #Custom determines which custom outfit is being checked against.    
-            #If Custom1 = 3, if custom2 = 5, if custom3 = 6, if gym = 4, if sleepwear 7, if private = 9, if swimsuit = 10
-            #if not a check, then it is only applied if it's in a taboo area
-            # Tempshame is a throwaway value, 0-50, Agree is whether she will wear it out, 2 if yes, 1 if only around you.
-            
-            if not Check and not L_Taboo and Custom != 20:
-                    #if this is not a custom check and you're in a safe space,
-                    if L_Schedule[9]:
-                            #if there is a "private outfit" set, ask to change.
-                            call L_Private_Outfit
-                    return
-                        
-            #If she's wearing a bra of some kind
-            if Custom == 20 and L_Uptop: 
-                $ Count = 0
-            elif L_Chest == "leather bra":  
-                $ Count = 20
-            elif L_Chest == "corset":
-                $ Count = 15
-            elif L_Chest == "bikini top":
-                $ Count = 15
-            elif L_Chest == "wolvie top":
-                $ Count = 10   
-            elif L_Chest == "lace corset":
-                $ Count = 5
-            else:     #L_Chest == 0
-                if L_Pierce:
-                    $ Count = -5
-                else:
-                    $ Count = 0
-                    
-            #If she's wearing an overshirt
-            if Custom == 20 and L_Uptop: 
-                $ Count = 0
-            elif L_Over == "jacket":                                             
-                $ Count += 10
-            elif L_Over == "towel":      
-                $ Count += 10
-            #else: nothing    
-            
-            call LauraFace("sexy", 0)
-            if Custom == 9 or Custom == 7:
-                pass
-            elif Count >= 20:
-                $ Count = 20
-                if Check:
-                    ch_l "This top works."
-            elif not Check:
-                pass
-            elif Count >= 10 and (ApprovalCheck("Laura", 1200, TabM=0) or ApprovalCheck("Laura", 500, "I", TabM=0)):  
-                ch_l "This top works."     
-            elif Count >= 10:
-                ch_l "The top's not really a good look."
-            elif Count >= 5 and (ApprovalCheck("Laura", 2300, TabM=0) or ApprovalCheck("Laura", 800, "I", TabM=0)):  
-                ch_l "I don't know, the top's a little light."
-            elif Count >= 5:        
-                call LauraFace("startled", 1)
-                ch_l "I can't really wear this top out."
-            elif (ApprovalCheck("Laura", 2700, TabM=0) or ApprovalCheck("Laura", 950, "I", TabM=0)):  
-                ch_l ". . ."        
-            else:
-                call LauraFace("bemused", 1)
-                ch_l "I wouldn't go out with my tits out."
-             
-            $ Tempshame -= Count                  #Set Outfit shame for the upper half    
-            $ Count = 0         
-            
-            if L_Legs and L_Panties and L_Legs != "mesh pants": 
-                        $ Count = 30               
-            else: #If she's missing something on her legs    
-                        if PantsNum("Laura") >= 5:               #If wearing pants commando
-                            $ Count = 25                            
-#                        elif L_Legs == "shorts":                #If wearing shorts
-#                            $ Count = 20  
-                        elif L_Legs == "skirt":                 #If wearing a skirt commando
-                            $ Count = 20     
-                        elif L_Panties == "bikini bottoms":       #If wearing only bikini bottoms
-                            $ Count = 15   
-                        elif L_Panties == "wolvie panties":      #If wearing only wolvie panties
-                            $ Count = 10
-                        elif L_Panties == "lace panties":       #If wearing only lace panties
-                            $ Count = 5
-                        elif L_Panties:                         #If wearing only any other panties
-                            $ Count = 7
-                        #else: 0
-                        
-                        if L_Legs == "mesh pants":
-                            $ Count += 5
-                        
-                        if HoseNum("Laura") >= 10:
-                            $ Count = 25 if Count < 25 else Count
-                            
-                        if L_Over == "towel" and Count:         #If wearing a Towel and anything else
-                            $ Count = 25
-                        elif L_Over == "towel":                 #If just wearing a Towel
-                            $ Count = 15   
-                            
-            if not Check:
-                        #If this isn't a custom check, skip this dialog stuff
-                        pass
-            elif Custom == 9 or Custom == 7:
-                        pass
-            elif Count >= 20:
-                        if PantsNum("Laura") >= 5:
-                            ch_l "and these pants work."
-                        elif HoseNum("Laura") >= 10:
-                            ch_l "and these [L_Hose] will work fine."
-                        elif L_Over == "towel":
-                            ch_l "The towel's an odd choice. . ."
-                        else:
-                            ch_l "but there's a draft."
-                        if not L_Panties and ApprovalCheck("Laura", 500, "I", TabM=0):
-                            ch_l "Commando's cool."           
-                        elif not L_Panties:
-                            ch_l "I might accidentally flash some people like this though."
-                    
-            elif Count >= 10 and (ApprovalCheck("Laura", 2000, TabM=0) or ApprovalCheck("Laura", 700, "I", TabM=0)):
-                    ch_l "I don't think I'm fully covered. . ."        
-            elif Count >= 10:
-                    call LauraFace("angry", 1)
-                    ch_l "I'm not covered like this. . ."                
-            elif (ApprovalCheck("Laura", 2500, TabM=0) or ApprovalCheck("Laura", 800, "I", TabM=0)):  
-                    ch_l "It's pretty minimal. . ."        
-            else:
-                    ch_l "I wouldn't show off my cooch either. . ."
-                
-            $ Tempshame -= Count                  #Set Outfit shame for the lower half
-            
-            if Check:
-                    #if this is a custom outfit check                    
-                    if Check == 2:
-                        ch_p "So can I see it then?"
-                    elif Custom == 4:
-                        ch_p "So would you work out in that?"
-                    elif Custom == 7:
-                        ch_p "So would you sleep in that?"
-                    else:
-                        ch_p "So would you wear that outside?" 
-                    call LauraFace("sexy", 0)
-                    if PantsNum("Laura") > 2:  
-                        pass        #if she's wearing pants
-                    elif PantiesNum("Laura") > 2 and (L_SeenPanties or ApprovalCheck("Laura", 900, TabM=0)):
-                        pass        #no pants, but panties
-                    elif L_SeenPussy or ApprovalCheck("Laura", 1200, TabM=0):
-                        pass        #no panties, but she's fine with that
-                    else:
-                        $ Agree = 0 #not fine with it
-                                
-                    if not Agree:
-                        pass
-                    elif OverNum("Laura") > 2:    
-                        pass        #if she's wearing a top
-                    elif ChestNum("Laura") > 2 and (L_SeenChest or ApprovalCheck("Laura", 900, TabM=0)):
-                        pass        #no top, but bra
-                    elif L_SeenChest or ApprovalCheck("Laura", 1200, TabM=0):
-                        pass        #no bra, but she's fine with that
-                    else:
-                        $ Agree = 0 #not fine with it
-                    
-                    if Check == 2 and Agree:
-                                #if checking to see if she'll drop the dressing screen. . .                                
-                                $ L_Shame = Tempshame
-                                call LauraFace("sly")
-                                ch_l "Huh, this'll work. . ."
-                                hide DressScreen
-                                return 1   
-                    if not Agree:
-                                #she isn't even comfortable with you seeing it
-                                call LauraFace("sly", 1)
-                                ch_l "You'll have to earn it."
-                                menu:
-                                    extend ""
-                                    "Ok then, you can put your normal clothes back on.":
-                                                call LauraOutfit(Changed=1)  
-                                                hide DressScreen
-                                    "Ok, we can keep tweaking it.":
-                                                pass
-                                call LauraFace("smile", 1)
-                                ch_l "Thanks."    
-                                return
-                                
-                    if L_Taboo >= 40: #L_Loc != "bg player" and L_Loc != "bg laura": 
-                            call LauraFace("confused",1)
-                            $ L_Mouth = "smile"
-                            ch_l "Well a bit late for that, I guess." 
-                    elif "exhibitionist" in L_Traits and Tempshame <= 20: 
-                            call Statup("Laura", "Lust", 80, 10) 
-                            call LauraFace("sexy", 2)      
-                            ch_l ". . ."
-                            call LauraFace("sexy", 1)      
-                    elif Tempshame <= 5:
-                            call LauraFace("smile")
-                            ch_l "I don't see why not."
-                    elif Tempshame <= 15 and (ApprovalCheck("Laura", 1700, TabM=0, C = 0) or ApprovalCheck("Laura", 400, "I", TabM=0, C = 0)):        
-                            ch_l "It looks good, right?"
-                    elif Custom == 7:
-                            #if it's sleepwear      
-                            call LauraFace("bemused", 1)
-                            if Tempshame >= 30:
-                                ch_l "Sure, perv."   
-                            elif Tempshame >= 15:
-                                ch_l "Sure, why not."  
-                            else:
-                                ch_l "Yeah, I guess."                       
-                    elif Tempshame <= 15:  
-                            call LauraFace("bemused", 1)
-                            ch_l "I can't move freely in this without showing off the goods."
-                            $ Agree = 0
-                    elif Custom == 10 and Tempshame <= 20:  
-                            #if it's a swimsuit. . .
-                            call LauraFace("bemused", 1)
-                            ch_l "Yeah, I can swim in this. . ."
-                    elif Tempshame <= 25 and (ApprovalCheck("Laura", 2300, TabM=0, C = 0) or ApprovalCheck("Laura", 700, "I", TabM=0, C = 0)):
-                            ch_l "I can handle this."
-                    elif Tempshame <= 25:
-                            call LauraFace("angry", 1)
-                            ch_l "Nah, too slutty."
-                            $ Agree = 0
-                    elif (ApprovalCheck("Laura", 2500, TabM=0, C = 0) or ApprovalCheck("Laura", 800, "I", TabM=0, C = 0)):
-                            call LauraFace("bemused", 1)
-                            ch_l "Pretty daring, eh?"
-                    else:
-                            call LauraFace("angry", 1)
-                            ch_l "As if."
-                            $ Agree = 0
-                        
-                    $ L_OutfitShame[Custom] = Tempshame                     
-                    if Custom == 5:
-                            $ L_Custom2[1] = L_Arms  
-                            $ L_Custom2[2] = L_Legs 
-                            $ L_Custom2[3] = L_Over
-                            $ L_Custom2[4] = L_Neck 
-                            $ L_Custom2[5] = L_Chest 
-                            $ L_Custom2[6] = L_Panties
-                            $ L_Custom2[8] = L_Hair
-                            $ L_Custom2[9] = L_Hose
-                            $ L_Custom2[0] = 2 if Agree else 1  
-                            call Clothing_Schedule_Check("Laura",5,1)           
-                    elif Custom == 6:
-                            $ L_Custom3[1] = L_Arms  
-                            $ L_Custom3[2] = L_Legs 
-                            $ L_Custom3[3] = L_Over
-                            $ L_Custom3[4] = L_Neck 
-                            $ L_Custom3[5] = L_Chest 
-                            $ L_Custom3[6] = L_Panties
-                            $ L_Custom3[8] = L_Hair
-                            $ L_Custom3[9] = L_Hose
-                            $ L_Custom3[0] = 2 if Agree else 1
-                            call Clothing_Schedule_Check("Laura",6,1)  
-                    elif Custom == 4 and Agree:
-                            $ L_Gym[1] = L_Arms  
-                            $ L_Gym[2] = L_Legs 
-                            $ L_Gym[3] = L_Over
-                            $ L_Gym[4] = L_Neck 
-                            $ L_Gym[5] = L_Chest 
-                            $ L_Gym[6] = L_Panties
-                            $ L_Gym[8] = L_Hair
-                            $ L_Gym[9] = L_Hose
-                            $ L_Gym[0] = 2   
-                            call Clothing_Schedule_Check("Laura",4,1)  
-                    elif Custom == 7:                            
-                            $ L_Sleepwear[1] = L_Arms  
-                            $ L_Sleepwear[2] = L_Legs 
-                            $ L_Sleepwear[3] = L_Over
-                            $ L_Sleepwear[4] = L_Neck 
-                            $ L_Sleepwear[5] = L_Chest 
-                            $ L_Sleepwear[6] = L_Panties
-                            $ L_Sleepwear[8] = L_Hair
-                            $ L_Sleepwear[9] = L_Hose
-                            $ L_Sleepwear[0] = 2 if Agree else 1   
-                    elif Custom == 10:            
-                            $ L_Swim[1] = L_Arms  
-                            $ L_Swim[2] = L_Legs 
-                            $ L_Swim[3] = L_Over
-                            $ L_Swim[4] = L_Neck 
-                            $ L_Swim[5] = L_Chest 
-                            $ L_Swim[6] = L_Panties
-                            $ L_Swim[8] = L_Hair
-                            $ L_Swim[9] = L_Hose
-                            $ L_Swim[0] = 2 if Agree else 1
-                    else: #Typically Custom == 3
-                            $ L_Custom[1] = L_Arms  
-                            $ L_Custom[2] = L_Legs 
-                            $ L_Custom[3] = L_Over
-                            $ L_Custom[4] = L_Neck 
-                            $ L_Custom[5] = L_Chest 
-                            $ L_Custom[6] = L_Panties
-                            $ L_Custom[8] = L_Hair
-                            $ L_Custom[9] = L_Hose
-                            $ L_Custom[0] = 2 if Agree else 1
-                            call Clothing_Schedule_Check("Laura",3,1)   
-                    #End check                       
-            elif L_Taboo <= 20:
-                # halves shame level if she's comfortable
-                $ Tempshame /= 2
-                
-            $ L_Shame = Tempshame
-            
-            if Custom == 20:
-                # This returns the scene if it's a check Shame adjustment
-                return 
-            if Check:
-                    pass
-            elif "exhibitionist" in L_Traits: 
-                    #If she's an exhibitionist
-                    pass
-            elif Tempshame <= 5:
-                    #If the outfit is very tame
-                    pass
-            elif L_Over == "towel" and L_Loc == "bg showerroom": 
-                    #If she's in a towel but it's appropriate
-                    pass
-            elif Tempshame <= 15 and (ApprovalCheck("Laura", 1700) or ApprovalCheck("Laura", 600, "I")):
-                    #If the outfit is hot but she's ok  
-                    pass
-            elif Tempshame <= 20 and (L_Loc == "bg dangerroom" or L_Loc == "bg pool"): 
-                    #If the outfit is light but she's in the gym
-                    pass
-            elif Tempshame <= 20 and (ApprovalCheck("Laura", 1800) or ApprovalCheck("Laura", 650, "I")):
-                    #If the outfit is sexy but she's cool with that
-                    pass
-            elif Tempshame <= 25 and (ApprovalCheck("Laura", 2300) or ApprovalCheck("Laura", 800, "I")):
-                    #If the outfit is sexy but she's cool with that
-                    pass
-            elif (ApprovalCheck("Laura", 2600) or ApprovalCheck("Laura", 950, "I")):
-                    #If the outfit is very scandelous but she's ok with that 
-                    pass
-            elif not L_Taboo:
-                    pass
-            else:   
-                    if Custom == 25:
-                            ch_l "!!!"                        
-                    elif L_Loc == bg_current:
-                            ch_l "One sec, I gotta change real quick."
-                    if L_Loc == "bg dangerroom":
-                            $ L_Outfit =  "gym"
-                    elif L_Loc == "bg pool" and L_Swim[0]:
-                            $ L_Outfit =  "swimwear"                        
-                    else:
-                            $ L_Outfit = renpy.random.choice(["mission", "streets"])
-                    $ L_OutfitDay = L_Outfit
-                    $ L_Water = 0
-                    call LauraOutfit(Changed = 1) 
-                    ch_l "That wasn't really \"outdoors\" wear."            
-            return        
-            
-#End Laura Custom clothes check.
-    
-# start laura hungry //////////////////////////////////////////////////////////
-label Laura_Hungry:
-    if L_Chat[3]:
-        ch_l "[[licks her lips] I'm a little thirsty. . ."
-    elif L_Chat[2]:
-        ch_l "I really enjoy that serum you whipped up."
-    else:
-        ch_l "[[licks her lips] I'm a little thirsty. . ."
-    $ L_Traits.append("hungry")
-return
-
-
-# end laura hungry //////////////////////////////////////////////////////////
-
-    
-# Start Laura first Les / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
-
-label Laura_First_Les(Silent = 0, Undress = 0, GirlsNum = 0): #checked when she engages in a les scene  ## call Laura_First_Les(0,1)
-    if L_Les:
-        return
-    
-    $ L_Les += 1
-    $ L_RecentActions.append("lesbian")        
-    call Statup("Laura", "Inbt", 30, 2) 
-    call Statup("Laura", "Inbt", 90, 1)
-    
-    if not Silent: 
-        #example previous line: Line + " and cups " + Primary + "'s breasts in her delicate hands" 
-        "Laura's head jerks up and she looks at what [Partner] is doing. [Partner] pauses and glances up at her with a mischievous grin." 
-        ch_l "I, um, I haven't done that sort of thing before."
-        if Partner == "Rogue":
-                if R_Les:
-                    ch_r "Neither have I Sugar, but it seemed like fun."
-                else:
-                    ch_r "It's all right Sugar, I'll take care of you."
-        if L_LikeRogue >= 60 and ApprovalCheck("Laura", (1500-(10*L_Les)-(10*(L_LikeRogue-60)))): #If she likes both of you a lot, threeway
-                $ State = "threeway"
-        elif ApprovalCheck("Laura", 1000): #If she likes you well enough, Hetero
-                $ State = "hetero"            
-        elif L_LikeRogue >= 70: #if she doesn't like you but likes Rogue, lesbian
-                $ State = "lesbian"
-        
-        
-        
-        
-        
-        if "cockout" in P_RecentActions:
-                call LauraFace("down", 2)  
-                if GirlsNum:
-                    "Laura also glances down at your cock"
-                else:
-                    "Laura glances down at your exposed cock"
-        elif Undress:
-                "You strip nude."
-        else:
-                "You whip your cock out."
-        $ P_RecentActions.append("cockout") 
-        
-        if Taboo and not ApprovalCheck("Laura", 1500):
-                call LauraFace("surprised", 2)  
-                ch_l "Um, you should[L_like]put that away in public."
-                call LauraFace("bemused", 1)  
-                if L_SeenPeen == 1: 
-                    ch_l "Or[L_like]maybe. . ."
-                    call Statup("Laura", "Love", 90, 15)                
-                    call Statup("Laura", "Obed", 50, 20)
-                    call Statup("Laura", "Inbt", 60, 35)  
-                    
-        elif L_SeenPeen > 10:
-                return    
-        elif ApprovalCheck("Laura", 1200) or ApprovalCheck("Laura", 500, "L"):
-                call LauraFace("sly",1) 
-                if L_SeenPeen == 1: 
-                    call LauraFace("surprised",2)  
-                    ch_l "That's. . . impressive."
-                    call LauraFace("bemused",1)  
-                    call Statup("Laura", "Love", 90, 3) 
-                elif L_SeenPeen == 2:  
-                    ch_l "I can't get over that."               
-                    call Statup("Laura", "Obed", 50, 7) 
-                elif L_SeenPeen == 5: 
-                    ch_l "There it is."
-                    call Statup("Laura", "Inbt", 60, 5)  
-                elif L_SeenPeen == 10: 
-                    ch_l "So beautiful."
-                    call Statup("Laura", "Obed", 80, 10)
-                    call Statup("Laura", "Inbt", 60, 3)  
-        else:
-                call LauraFace("sad",1) 
-                if L_SeenPeen == 1: 
-                    call LauraFace("perplexed",1 ) 
-                    ch_l "Well that happened. . ."
-                    call Statup("Laura", "Obed", 50, 7)
-                    call Statup("Laura", "Inbt", 60, 3)  
-                elif L_SeenPeen < 5: 
-                    call LauraFace("sad",0) 
-                    ch_l "Huh."
-                    call Statup("Laura", "Inbt", 60, 2)  
-                elif L_SeenPeen == 10: 
-                    ch_l "[L_Like]put that away."               
-                    call Statup("Laura", "Obed", 50, 7)
-                    call Statup("Laura", "Inbt", 60, 3)  
-    
-    else: #Silent mode
-                $ P_RecentActions.append("cockout") 
-                if L_SeenPeen > 10:
-                    return
-                elif ApprovalCheck("Laura", 1200) or ApprovalCheck("Laura", 500, "L"):
-                        if L_SeenPeen == 1: 
-                            call Statup("Laura", "Love", 90, 3) 
-                        elif L_SeenPeen == 2:              
-                            call Statup("Laura", "Obed", 50, 7) 
-                        elif L_SeenPeen == 5: 
-                            call Statup("Laura", "Inbt", 60, 5)  
-                        elif L_SeenPeen == 10: 
-                            call Statup("Laura", "Love", 90, 10)  
-                else:
-                        if L_SeenPeen == 1: 
-                            call Statup("Laura", "Obed", 50, 7)
-                            call Statup("Laura", "Inbt", 60, 3)  
-                        elif L_SeenPeen < 5: 
-                            call Statup("Laura", "Inbt", 60, 2)  
-                        elif L_SeenPeen == 10:              
-                            call Statup("Laura", "Obed", 50, 7)
-                            call Statup("Laura", "Inbt", 60, 3) 
-                            
-    if L_SeenPeen == 1:            
-        call Statup("Laura", "Love", 90, 10)                
-        call Statup("Laura", "Obed", 90, 25)
-        call Statup("Laura", "Inbt", 60, 20) 
-        call Statup("Laura", "Lust", 200, 5)
-    
-    return
-# End Laura first Les / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /   
+#    return
+## End Laura first Les / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /   
     

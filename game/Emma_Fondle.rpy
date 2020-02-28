@@ -1,171 +1,68 @@
-﻿# E_Massage /////////////////////////////////////////////////////////////////////////////
-label E_Massage:
-    call Shift_Focus("Emma")
-    $ Tempmod = 0    
+﻿# EmmaX.Fondle /////////////////////////////////////////////////////////////////////////////
+label Emma_Fondle:
     
-    $ Approval = ApprovalCheck("Emma", 500, TabM = 2) # 95, 110, 125 -120(215)
-    
-    if Approval >= 2:             
-        call EmmaFace("bemused", 1)
-        if E_Forced:
-                call EmmaFace("sad")
-                call Statup("Emma", "Love", 20, -2, 1)
-                call Statup("Emma", "Obed", 90, 1)
-                call Statup("Emma", "Inbt", 60, 1)
-        ch_e "I could use it, [E_Petname]."   
-        call Statup("Emma", "Love", 90, 1)
-        call Statup("Emma", "Inbt", 50, 3) 
-        jump E_Massage_Prep
-        
-    else:
-        call EmmaFace("angry", 1)
-        if "no massage" in E_RecentActions:  
-            ch_e "I only {i}just{/i} refused you, [E_Petname]."
-        elif "no massage" in E_DailyActions:       
-            ch_e "I told you \"no\" earlier, [E_Petname]."
-        else:
-            call EmmaFace("bemused")
-            ch_e "I'm not interested at the moment, [E_Petname]."   
-        menu:
-            extend ""
-            "Sorry, never mind." if "no massage" in E_DailyActions:
-                call EmmaFace("bemused")
-                ch_e "Don't concern yourself, [E_Petname]."              
-                return
-            "Maybe later?" if "no massage" not in E_DailyActions:
-                call EmmaFace("sexy")  
-                ch_e "Perhaps."
-                call Statup("Emma", "Love", 80, 1)
-                call Statup("Emma", "Inbt", 20, 1)
-                call Statup("Emma", "Obed", 20, 1)  
-                $ E_RecentActions.append("no massage")                      
-                $ E_DailyActions.append("no massage")            
-                return                
-            "Come on, Please?":             
-                if Approval:
-                    call EmmaFace("sexy")     
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 40, 2)
-                    call Statup("Emma", "Inbt", 30, 2)
-                    ch_e "I do have some tension built up. . ."                
-                    jump E_Massage_Prep
-                else:   
-                    call EmmaFace("sly", Brows="confused") 
-                    ch_e "No." 
-    
-    if "no massage" in E_DailyActions:
-        ch_e "I've made myself clear on this, [E_Petname]."   
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
-    elif E_Forced:
-        call EmmaFace("angry", 1)
-        ch_e "You'll have to keep your hands limber for yourself."
-        call Statup("Emma", "Lust", 60, 5)    
-        call Statup("Emma", "Obed", 50, -2)   
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
-    elif Taboo:
-        call EmmaFace("angry", 1)    
-        ch_e "I can't been seen doing that with you."                  
-    else:
-        call EmmaFace("sexy") 
-        $ E_Mouth = "sad"
-        ch_e "I really can't."    
-    $ E_RecentActions.append("no massage")                      
-    $ E_DailyActions.append("no massage") 
-    $ Tempmod = 0    
-    return
-
-label E_Massage_Prep:
-    call Emma_Top_Off("massage")
-    if "angry" in E_RecentActions:
-        return    
-    
-label E_Massage_Cycle: 
-    $ E_RecentActions.append("massage")                      
-    $ E_DailyActions.append("massage") 
-        
-    "You massage her back and shoulders."
-    if not E_Over:
-        $ E_Addict -= D20 if E_Addict > D20 else E_Addict
-    
-    $ D20 = renpy.random.randint(10, 20)
-    $ Round -= D20 if Round > D20 else (Round-1)
-            
-    ch_e "That was very. . . pleasant, [E_Petname]"
-    if "massage" not in E_RecentActions:        
-        call Statup("Emma", "Love", 90, 1)
-        call Statup("Emma", "Love", 50, 2)
-        call Statup("Emma", "Obed", 30, 2)
-    return
-
-# end E_Massage /////////////////////////////////////////////////////////////////////////////
-
-# E_Fondle /////////////////////////////////////////////////////////////////////////////
-label E_Fondle:
-    
-    $ E_Mouth = "smile"
-    if not E_Action:
-        ch_e "I'm rather tired right now, [E_Petname], raincheck?"
+    $ EmmaX.Mouth = "smile"
+    if not EmmaX.Action:
+        ch_e "I'm rather tired right now, [EmmaX.Petname], raincheck?"
         return
     menu:
-        ch_e "Well? Where did you want to touch, [E_Petname]?"
-        "Your breasts?" if E_Action:
-                jump E_Fondle_Breasts
-        "Your thighs?" if E_Action:
-                jump E_Fondle_Thighs
-        "Your pussy?" if E_Action:
-                jump E_Fondle_Pussy
-        "Your Ass?" if E_Action:
-                jump E_Fondle_Ass
+        ch_e "Well? Where did you want to touch, [EmmaX.Petname]?"
+        "Your breasts?" if EmmaX.Action:
+                jump Emma_Fondle_Breasts
+        "Your thighs?" if EmmaX.Action:
+                jump Emma_Fondle_Thighs
+        "Your pussy?" if EmmaX.Action:
+                jump Emma_Fondle_Pussy
+        "Your Ass?" if EmmaX.Action:
+                jump Emma_Fondle_Ass
         "Never mind.":
                 return
     return
 
 
-# E_Fondle Breasts /////////////////////////////////////////////////////////////////////////////
-label E_Fondle_Breasts:
+# EmmaX.Fondle Breasts /////////////////////////////////////////////////////////////////////////////
+label Emma_Fondle_Breasts:
     $ Round -= 5 if Round > 5 else (Round-1)
-    call Shift_Focus("Emma")
+    call Shift_Focus(EmmaX)
     
     # Will she let you fondle? Modifiers
-    if E_FondleB: #You've done it before
+    if EmmaX.FondleB: #You've done it before
         $ Tempmod += 15
-    if E_Lust > 75: #She's really horny
+    if EmmaX.Lust > 75: #She's really horny
         $ Tempmod += 20
-    if "exhibitionist" in E_Traits:
+    if "exhibitionist" in EmmaX.Traits:
         $ Tempmod += (3*Taboo)
-    if "dating" in E_Traits or "sex friend" in E_Petnames:
+    if "dating" in EmmaX.Traits or "sex friend" in EmmaX.Petnames:
         $ Tempmod += 10
-    elif "ex" in E_Traits:
+    elif "ex" in EmmaX.Traits:
         $ Tempmod -= 20
-    if E_ForcedCount and not E_Forced:
-        $ Tempmod -= 5 * E_ForcedCount
+    if EmmaX.ForcedCount and not EmmaX.Forced:
+        $ Tempmod -= 5 * EmmaX.ForcedCount
     
-    if Taboo and "tabno" in E_DailyActions:        
+    if Taboo and "tabno" in EmmaX.DailyActions:        
         $ Tempmod -= 10 
-    if Taboo and "public" not in E_History:                   
+    if Taboo and "public" not in EmmaX.History:                   
         $ Tempmod -= 20 
         
-    if "no fondle breasts" in E_DailyActions:               
+    if "no fondle breasts" in EmmaX.DailyActions:               
         $ Tempmod -= 5 
-        $ Tempmod -= 10 if "no fondle breasts" in E_RecentActions else 0        
+        $ Tempmod -= 10 if "no fondle breasts" in EmmaX.RecentActions else 0        
         
-    $ Approval = ApprovalCheck("Emma", 950, TabM = 3) # 95, 110, 125 -120(215)
+    $ Approval = ApprovalCheck(EmmaX, 950, TabM = 3) # 95, 110, 125 -120(215)
     
     if Situation == "auto":  
         if Approval:
-            call EmmaFace("sexy")       
-            call Statup("Emma", "Obed", 90, 1)
-            call Statup("Emma", "Obed", 70, 2)
-            call Statup("Emma", "Inbt", 70, 3)
-            call Statup("Emma", "Inbt", 30, 2)            
-            "As you cup her breast, Emma gently nods."            
-            jump E_FB_Prep        
+            $ EmmaX.FaceChange("sexy")       
+            $ EmmaX.Statup("Obed", 90, 1)
+            $ EmmaX.Statup("Obed", 70, 2)
+            $ EmmaX.Statup("Inbt", 70, 3)
+            $ EmmaX.Statup("Inbt", 30, 2)            
+            "As you cup her breast, [EmmaX.Name] gently nods."            
+            jump Emma_FB_Prep        
         else:   
-            call EmmaFace("surprised")
-            $ E_Brows = "confused"
-            call Statup("Emma", "Obed", 50, -2)
+            $ EmmaX.FaceChange("surprised")
+            $ EmmaX.Brows = "confused"
+            $ EmmaX.Statup("Obed", 50, -2)
             ch_e "Down boy, you were doing so well. . ."
             $ Tempmod = 0
             $ Trigger2 = 0
@@ -174,138 +71,138 @@ label E_Fondle_Breasts:
     # fondle yes:    
     
     if Approval:                                                                       #Second time+ dialog        
-        call EmmaFace("sexy", 1)
-        if E_Forced: 
-            call EmmaFace("sad")
-            call Statup("Emma", "Love", 70, -3, 1)
-            call Statup("Emma", "Love", 20, -2, 1)           
-        elif not Taboo and "tabno" in E_DailyActions:        
+        $ EmmaX.FaceChange("sexy", 1)
+        if EmmaX.Forced: 
+            $ EmmaX.FaceChange("sad")
+            $ EmmaX.Statup("Love", 70, -3, 1)
+            $ EmmaX.Statup("Love", 20, -2, 1)           
+        elif not Taboo and "tabno" in EmmaX.DailyActions:        
             ch_e "This does seem less. . . exposed."   
             
-    if "fondle breasts" in E_RecentActions:
-        call EmmaFace("sexy", 1)
+    if "fondle breasts" in EmmaX.RecentActions:
+        $ EmmaX.FaceChange("sexy", 1)
         ch_e "Mmmm, again? I suppose. . ."
-        jump E_FB_Prep
-    elif "fondle breasts" in E_DailyActions:
-        call EmmaFace("sexy", 1)
+        jump Emma_FB_Prep
+    elif "fondle breasts" in EmmaX.DailyActions:
+        $ EmmaX.FaceChange("sexy", 1)
         $ Line = renpy.random.choice(["You didn't get enough earlier?",
             "Relax, gently. . .",
             "Mmm. . ."]) 
         ch_e "[Line]"
             
     if Approval >= 2:             
-        call EmmaFace("bemused", 1)
-        if E_Forced:
-            call EmmaFace("sad")
-            call Statup("Emma", "Love", 70, -3, 1)
-            call Statup("Emma", "Love", 20, -2, 1)
-            call Statup("Emma", "Obed", 90, 1)
-            call Statup("Emma", "Inbt", 60, 1)
+        $ EmmaX.FaceChange("bemused", 1)
+        if EmmaX.Forced:
+            $ EmmaX.FaceChange("sad")
+            $ EmmaX.Statup("Love", 70, -3, 1)
+            $ EmmaX.Statup("Love", 20, -2, 1)
+            $ EmmaX.Statup("Obed", 90, 1)
+            $ EmmaX.Statup("Inbt", 60, 1)
         ch_e "That sounds lovely, ravish me."   
-        call Statup("Emma", "Love", 90, 1)
-        call Statup("Emma", "Inbt", 50, 3) 
-        jump E_FB_Prep
+        $ EmmaX.Statup("Love", 90, 1)
+        $ EmmaX.Statup("Inbt", 50, 3) 
+        jump Emma_FB_Prep
         
     else:
-        call EmmaFace("angry", 1)
-        if "no fondle breasts" in E_RecentActions:  
-            ch_e "Your persistance is doing you no favors, [E_Petname]."
-        elif Taboo and "tabno" in E_DailyActions and "no fondle breasts" in E_DailyActions:  
+        $ EmmaX.FaceChange("angry", 1)
+        if "no fondle breasts" in EmmaX.RecentActions:  
+            ch_e "Your persistance is doing you no favors, [EmmaX.Petname]."
+        elif Taboo and "tabno" in EmmaX.DailyActions and "no fondle breasts" in EmmaX.DailyActions:  
             ch_e "You've been warned." 
-        elif "no fondle breasts" in E_DailyActions:       
+        elif "no fondle breasts" in EmmaX.DailyActions:       
             ch_e "I believe you know my answer on this matter."
-        elif Taboo and "tabno" in E_DailyActions:  
-            ch_e "As I said, not here, [E_Petname]."  
-        elif not E_FondleB:
-            call EmmaFace("bemused")
-            ch_e "I highly doubt you could handle them, [E_Petname]. . ."
+        elif Taboo and "tabno" in EmmaX.DailyActions:  
+            ch_e "As I said, not here, [EmmaX.Petname]."  
+        elif not EmmaX.FondleB:
+            $ EmmaX.FaceChange("bemused")
+            ch_e "I highly doubt you could handle them, [EmmaX.Petname]. . ."
         else:
-            call EmmaFace("bemused")
+            $ EmmaX.FaceChange("bemused")
             ch_e "You wish."   
         menu:
             extend ""
-            "Sorry, never mind." if "no fondle breasts" in E_DailyActions:
-                call EmmaFace("bemused")
-                ch_e "Don't concern yourself, [E_Petname]."              
+            "Sorry, never mind." if "no fondle breasts" in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("bemused")
+                ch_e "Don't concern yourself, [EmmaX.Petname]."              
                 return
-            "Maybe later?" if "no fondle breasts" not in E_DailyActions:
-                call EmmaFace("sexy")  
+            "Maybe later?" if "no fondle breasts" not in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("sexy")  
                 "She re-adjusts her cleavage."
                 ch_e "Well, I can't rule it out. . ."
-                call Statup("Emma", "Love", 80, 1)
-                call Statup("Emma", "Love", 50, 1)
-                call Statup("Emma", "Inbt", 30, 2)    
+                $ EmmaX.Statup("Love", 80, 1)
+                $ EmmaX.Statup("Love", 50, 1)
+                $ EmmaX.Statup("Inbt", 30, 2)    
                 if Taboo:                    
-                    $ E_RecentActions.append("tabno")                      
-                    $ E_DailyActions.append("tabno") 
-                $ E_RecentActions.append("no fondle breasts")                      
-                $ E_DailyActions.append("no fondle breasts")            
+                    $ EmmaX.RecentActions.append("tabno")                      
+                    $ EmmaX.DailyActions.append("tabno") 
+                $ EmmaX.RecentActions.append("no fondle breasts")                      
+                $ EmmaX.DailyActions.append("no fondle breasts")            
                 return                
             "Come on, Please?":             
                 if Approval:
-                    call EmmaFace("sexy")     
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 2)
-                    call Statup("Emma", "Inbt", 60, 3)
-                    call Statup("Emma", "Inbt", 30, 2)
+                    $ EmmaX.FaceChange("sexy")     
+                    $ EmmaX.Statup("Obed", 90, 1)
+                    $ EmmaX.Statup("Obed", 50, 2)
+                    $ EmmaX.Statup("Inbt", 60, 3)
+                    $ EmmaX.Statup("Inbt", 30, 2)
                     ch_e "Politeness can be rewarded. . ."                
-                    jump E_FB_Prep
+                    jump Emma_FB_Prep
                 else:   
-                    call EmmaFace("sexy") 
+                    $ EmmaX.FaceChange("sexy") 
                     ch_e "This wasn't a \"tone\" issue." 
             
             
             "[[Grab her chest anyway]":                                               # Pressured into fondling. 
-                $ Approval = ApprovalCheck("Emma", 350, "OI", TabM = 3) # 35, 50, 65
-                if Approval > 1 or (Approval and E_Forced):
-                    call EmmaFace("sad")
-                    call Statup("Emma", "Love", 70, -5, 1)
-                    call Statup("Emma", "Love", 20, -2, 1)                 
+                $ Approval = ApprovalCheck(EmmaX, 350, "OI", TabM = 3) # 35, 50, 65
+                if Approval > 1 or (Approval and EmmaX.Forced):
+                    $ EmmaX.FaceChange("sad")
+                    $ EmmaX.Statup("Love", 70, -5, 1)
+                    $ EmmaX.Statup("Love", 20, -2, 1)                 
                     ch_e "That is not appropriate. . ."
                     ch_e "but neither is it entirely unwelcome. . ."
-                    call Statup("Emma", "Obed", 90, 2)
-                    call Statup("Emma", "Obed", 50, 4)
-                    call Statup("Emma", "Inbt", 60, 3)   
+                    $ EmmaX.Statup("Obed", 90, 2)
+                    $ EmmaX.Statup("Obed", 50, 4)
+                    $ EmmaX.Statup("Inbt", 60, 3)   
                     if Approval < 2:                          
-                        $ E_Forced = 1
-                    jump E_FB_Prep
+                        $ EmmaX.Forced = 1
+                    jump Emma_FB_Prep
                 else:                              
-                    call Statup("Emma", "Love", 200, -10)  
-                    call EmmaFace("angry", 1)
+                    $ EmmaX.Statup("Love", 200, -10)  
+                    $ EmmaX.FaceChange("angry", 1)
                     "She slaps your hand away."   
-                    $ E_RecentActions.append("angry")
-                    $ E_DailyActions.append("angry")   
+                    $ EmmaX.RecentActions.append("angry")
+                    $ EmmaX.DailyActions.append("angry")   
     
-    if "no fondle breasts" in E_DailyActions:
+    if "no fondle breasts" in EmmaX.DailyActions:
         ch_e "You need to pay attention when I speak to you."   
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
-    elif E_Forced:
-        call EmmaFace("angry", 1)
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
+    elif EmmaX.Forced:
+        $ EmmaX.FaceChange("angry", 1)
         ch_e "Don't push your luck."
-        call Statup("Emma", "Lust", 60, 5)    
-        call Statup("Emma", "Obed", 50, -2)   
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
+        $ EmmaX.Statup("Lust", 60, 5)    
+        $ EmmaX.Statup("Obed", 50, -2)   
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
     elif Taboo:
-        call EmmaFace("angry", 1)    
-        $ E_RecentActions.append("tabno")                   
-        $ E_DailyActions.append("tabno") 
+        $ EmmaX.FaceChange("angry", 1)    
+        $ EmmaX.RecentActions.append("tabno")                   
+        $ EmmaX.DailyActions.append("tabno") 
         ch_e "I can't been seen doing that with you."                   
-    elif E_FondleB:
-        call EmmaFace("sad")
+    elif EmmaX.FondleB:
+        $ EmmaX.FaceChange("sad")
         ch_e "I'm afraid you haven't earned back my good graces."        
     else:
-        call EmmaFace("sexy") 
-        $ E_Mouth = "sad"
+        $ EmmaX.FaceChange("sexy") 
+        $ EmmaX.Mouth = "sad"
         ch_e "No."    
-    $ E_RecentActions.append("no fondle breasts")                      
-    $ E_DailyActions.append("no fondle breasts") 
+    $ EmmaX.RecentActions.append("no fondle breasts")                      
+    $ EmmaX.DailyActions.append("no fondle breasts") 
     $ Tempmod = 0   
     return 
             
    
-label E_FB_Prep: #Animation set-up 
+label Emma_FB_Prep: #Animation set-up 
     if Trigger == "kiss you": 
         $ Trigger = "fondle breasts" 
         return
@@ -313,73 +210,73 @@ label E_FB_Prep: #Animation set-up
     if Trigger2 == "fondle breasts": 
         return
             
-    call E_Breasts_Launch("fondle breasts")
+    call Emma_Breasts_Launch("fondle breasts")
     
-    if Situation == "Emma":                                                                  
+    if Situation == EmmaX:                                                                  
             #Emma auto-starts    
             $ Situation = 0
-            if (E_Over or E_Chest) and not E_Uptop:
+            if (EmmaX.Over or EmmaX.Chest) and not EmmaX.Uptop:
                 #if she has some sort of top on. . .
-                if ApprovalCheck("Emma", 1250, TabM = 1) or (E_SeenChest and ApprovalCheck("Emma", 500) and not Taboo):
-                        $ E_Uptop = 1
-                        $ Line = E_Over if E_Over else E_Chest
-                        "With a devilish grin, Emma pulls her [Line] up over her breasts."
+                if ApprovalCheck(EmmaX, 1250, TabM = 1) or (EmmaX.SeenChest and ApprovalCheck(EmmaX, 500) and not Taboo):
+                        $ EmmaX.Uptop = 1
+                        $ Line = EmmaX.Over if EmmaX.Over else EmmaX.Chest
+                        "With a devilish grin, [EmmaX.Name] pulls her [Line] up over her breasts."
                         call Emma_First_Topless(1)
                         $ Line = 0
                         "She then grabs your arm and mashes your hand against her breast, clearly intending you to get to work."
                 else:
-                    "Emma grabs your arm and mashes your hand against her covered breast, clearly intending you to get to work."
+                        "[EmmaX.Name] grabs your arm and mashes your hand against her covered breast, clearly intending you to get to work."
             else:
-                "Emma grabs your arm and mashes your hand against her breast, clearly intending you to get to work."
+                        "[EmmaX.Name] grabs your arm and mashes your hand against her breast, clearly intending you to get to work."
             menu:
                 "What do you do?"
                 "Get to work.":                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    call Statup("Emma", "Inbt", 50, 2)
+                    $ EmmaX.Statup("Inbt", 80, 3) 
+                    $ EmmaX.Statup("Inbt", 50, 2)
                     "You start to fondle it."
                 "Praise her.":       
-                    call EmmaFace("sexy", 1)                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    ch_p "I like the initiative, [E_Pet]."
-                    call Emma_Namecheck
+                    $ EmmaX.FaceChange("sexy", 1)                    
+                    $ EmmaX.Statup("Inbt", 80, 3) 
+                    ch_p "I like the initiative, [EmmaX.Pet]."
+                    $ EmmaX.NameCheck() #checks reaction to petname
                     "You start to fondle it."
-                    call Statup("Emma", "Love", 85, 1)
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 2)
+                    $ EmmaX.Statup("Love", 85, 1)
+                    $ EmmaX.Statup("Obed", 90, 1)
+                    $ EmmaX.Statup("Obed", 50, 2)
                 "Ask her to stop.":
                     "You pull your hand back."
-                    call EmmaFace("surprised")       
-                    call Statup("Emma", "Inbt", 70, 1) 
-                    ch_p "Let's not do that right now, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma pulls back."
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 1)
-                    call Statup("Emma", "Obed", 30, 2)
-                    $ P_RecentActions.append("nope")      
-                    call AnyWord("Emma",1,"refused","refused")  
+                    $ EmmaX.FaceChange("surprised")       
+                    $ EmmaX.Statup("Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [EmmaX.Pet]."
+                    $ EmmaX.NameCheck() #checks reaction to petname
+                    "[EmmaX.Name] pulls back."
+                    $ EmmaX.Statup("Obed", 90, 1)
+                    $ EmmaX.Statup("Obed", 50, 1)
+                    $ EmmaX.Statup("Obed", 30, 2)
+                    $ Player.RecentActions.append("nope")      
+                    $ EmmaX.AddWord(1,"refused","refused")  
                     return          
             #end auto
             
-    if not E_Forced and Situation != "auto":
+    if not EmmaX.Forced and Situation != "auto":
         $ Tempmod = 0
-        call Emma_Top_Off
-        if "angry" in E_RecentActions:
+        call Top_Off(EmmaX)
+        if "angry" in EmmaX.RecentActions:
             return
     $ Tempmod = 0  
-    if not E_FondleB:        
-        if E_Forced:
-            call Statup("Emma", "Love", 90, -20)
-            call Statup("Emma", "Obed", 70, 25)
-            call Statup("Emma", "Inbt", 80, 15) 
+    if not EmmaX.FondleB:        
+        if EmmaX.Forced:
+            $ EmmaX.Statup("Love", 90, -20)
+            $ EmmaX.Statup("Obed", 70, 25)
+            $ EmmaX.Statup("Inbt", 80, 15) 
         else:
-            call Statup("Emma", "Love", 90, 10)
-            call Statup("Emma", "Obed", 70, 5)
-            call Statup("Emma", "Inbt", 80, 15) 
+            $ EmmaX.Statup("Love", 90, 10)
+            $ EmmaX.Statup("Obed", 70, 5)
+            $ EmmaX.Statup("Inbt", 80, 15) 
             
     if Taboo:
-        $ E_Inbt += int(Taboo/10)  
-        $ E_Lust += int(Taboo/5)        
+        $ EmmaX.Inbt += int(Taboo/10)  
+        $ EmmaX.Lust += int(Taboo/5)        
     
     if Situation:
         $ renpy.pop_call()
@@ -387,68 +284,68 @@ label E_FB_Prep: #Animation set-up
     $ Line = 0  
     $ Cnt = 0     
     if Taboo:
-        call DrainWord("Emma","tabno")
-    call DrainWord("Emma","no fondle breasts")
-    $ E_RecentActions.append("fondle breasts")                      
-    $ E_DailyActions.append("fondle breasts") 
+        $ EmmaX.DrainWord("tabno")
+    $ EmmaX.DrainWord("no fondle breasts")
+    $ EmmaX.RecentActions.append("fondle breasts")                      
+    $ EmmaX.DailyActions.append("fondle breasts") 
     
-label E_FB_Cycle: #Repeating strokes
+label Emma_FB_Cycle: #Repeating strokes
     while Round >=0:  
-        call Shift_Focus("Emma") 
-        call E_Breasts_Launch("fondle breasts")
-        call EmmaLust   
+        call Shift_Focus(EmmaX) 
+        call Emma_Breasts_Launch("fondle breasts")
+        $ EmmaX.LustFace()   
         
-        if  P_Focus < 100:                                                   
+        if  Player.Focus < 100:                                                   
                     #Player Command menu
                     menu:
                         "Keep going. . .":
                                     pass
                          
                         "Slap her ass":                     
-                                    call E_Slap_Ass  
+                                    call Slap_Ass(EmmaX)  
                                     $ Cnt += 1
                                     $ Round -= 1                                      
-                                    jump E_FB_Cycle  
+                                    jump Emma_FB_Cycle  
                                     
-                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in P_Traits:
+                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in Player.Traits:
                                     pass
-                        "Focus to last longer." if not P_FocusX and "focus" in P_Traits:
+                        "Focus to last longer." if not Player.FocusX and "focus" in Player.Traits:
                                     "You concentrate on not burning out too quickly."                
-                                    $ P_FocusX = 1
-                        "Release your focus." if P_FocusX:
+                                    $ Player.FocusX = 1
+                        "Release your focus." if Player.FocusX:
                                     "You release your concentration. . ."                
-                                    $ P_FocusX = 0
+                                    $ Player.FocusX = 0
                                     
                         "Other options":
                                 menu:   
                                     "Offhand action":
-                                            if E_Action and MultiAction:
-                                                call Emma_Offhand_Set
+                                            if EmmaX.Action and MultiAction:
+                                                call Offhand_Set
                                                 if Trigger2:
-                                                     $ E_Action -= 1
+                                                     $ EmmaX.Action -= 1
                                             else:
                                                 ch_e "I could use a break, are you about finished here?"  
                                                 
                                     "Shift primary action":
-                                            if E_Action and MultiAction:
+                                            if EmmaX.Action and MultiAction:
                                                     menu:
                                                         "Ask to suck on them.":
-                                                                if E_Action and MultiAction:                        
+                                                                if EmmaX.Action and MultiAction:                        
                                                                     $ Situation = "shift"
-                                                                    call E_FB_After
-                                                                    call E_Suck_Breasts
+                                                                    call Emma_FB_After
+                                                                    call Emma_Suck_Breasts
                                                                 else:
                                                                     ch_e "I could use a break, are you about finished here?"
                                                         "Just suck on them without asking.":
-                                                                if E_Action and MultiAction:                            
+                                                                if EmmaX.Action and MultiAction:                            
                                                                     $ Situation = "auto"
-                                                                    call E_FB_After
-                                                                    call E_Suck_Breasts
+                                                                    call Emma_FB_After
+                                                                    call Emma_Suck_Breasts
                                                                 else:
                                                                     "As you lean in to suck on her breast, she grabs your head and pushes back."
                                                                     ch_e "I could use a break, are you about finished here?"
                                                         "Never Mind":
-                                                                jump E_FB_Cycle
+                                                                jump Emma_FB_Cycle
                                             else: 
                                                 ch_e "I could use a break, are you about finished here?"
                     
@@ -456,181 +353,183 @@ label E_FB_Cycle: #Repeating strokes
                                         pass
                                     "Threesome actions" if Partner:   
                                         menu:
-                                            "Ask Emma to do something else with [Partner]" if Trigger == "lesbian":
-                                                        call Emma_Les_Change
-                                            "Ask Emma to do something else with [Partner] (locked)" if Trigger != "lesbian":
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name]" if Trigger == "lesbian":
+                                                        call Les_Change(EmmaX)
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name] (locked)" if Trigger != "lesbian":
                                                         pass
-                                            "Ask [Partner] to do something else":
-                                                        call Partner_Threechange("Emma") 
+                                            "Ask [Partner.Name] to do something else":
+                                                        call Three_Change(EmmaX) 
                                                         
                                             "Don't stop what you're doing. . .(locked)" if not ThreeCount or not Trigger4:
                                                         $ ThreeCount = 0                                                            
                                             "Don't stop what you're doing. . ." if ThreeCount and Trigger4:
                                                         $ ThreeCount = 0   
                                                         
-                                            "Swap to [Partner]":
-                                                        call Trigger_Swap("Emma")
-                                            "Undress [Partner]":
-                                                        call Partner_Undress
-                                                        jump E_FB_Cycle 
-                                            "Clean up Partner":
-                                                        call Partner_Cleanup
-                                                        jump E_FB_Cycle 
+                                            "Swap to [Partner.Name]":
+                                                        call Trigger_Swap(EmmaX)
+                                            "Undress [Partner.Name]":
+                                                        call Girl_Undress(Partner)
+                                                        jump Emma_FB_Cycle 
+                                            "Clean up [Partner.Name] (locked)" if not Partner.Spunk:
+                                                        pass
+                                            "Clean up [Partner.Name]" if Partner.Spunk:
+                                                        call Girl_Cleanup(Partner,"ask")
+                                                        jump Emma_FB_Cycle 
                                             "Never mind":
-                                                        jump E_FB_Cycle 
-                                    "Undress Emma":
-                                            call E_Undress   
-                                    "Clean up Emma (locked)" if not E_Spunk:
+                                                        jump Emma_FB_Cycle 
+                                    "Undress [EmmaX.Name]":
+                                            call Girl_Undress(EmmaX)   
+                                    "Clean up [EmmaX.Name] (locked)" if not EmmaX.Spunk:
                                             pass  
-                                    "Clean up Emma" if E_Spunk:
-                                            call Emma_Cleanup("ask")                                         
+                                    "Clean up [EmmaX.Name]" if EmmaX.Spunk:
+                                            call Girl_Cleanup(EmmaX,"ask")                                         
                                     "Never mind":
-                                            jump E_FB_Cycle 
+                                            jump Emma_FB_Cycle 
                                                    
                         "Back to Sex Menu" if MultiAction: 
                                     ch_p "Let's try something else."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Situation = "shift"
                                     $ Line = 0
-                                    jump E_FB_After
+                                    jump Emma_FB_After
                         "End Scene" if not MultiAction: 
                                     ch_p "Let's stop for now."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Line = 0
-                                    jump E_FB_After
+                                    jump Emma_FB_After
         #End menu (if Line)
         
-        call Shift_Focus("Emma")    
-        call Sex_Dialog("Emma",Partner)
+        call Shift_Focus(EmmaX)    
+        call Sex_Dialog(EmmaX,Partner)
                 
         #If either of you could cum 
         
         $ Cnt += 1
         $ Round -= 1   
     
-        $ P_Focus = 50 if not P_Semen and P_Focus >= 50 else P_Focus #Resets P_Focus if can't get it up
-        if P_Focus >= 100 or E_Lust >= 100: 
+        $ Player.Focus = 50 if not Player.Semen and Player.Focus >= 50 else Player.Focus #Resets Player.Focus if can't get it up
+        if Player.Focus >= 100 or EmmaX.Lust >= 100: 
                     #If either of you could cum   
-                    if P_Focus >= 100:    
+                    if Player.Focus >= 100:    
                             #If you can cum:                                                 
-                            call PE_Cumming
-                            if "angry" in E_RecentActions:  
-                                call E_Pos_Reset
+                            call Player_Cumming(EmmaX)
+                            if "angry" in EmmaX.RecentActions:  
+                                call Emma_Pos_Reset
                                 return    
-                            call Statup("Emma", "Lust", 200, 5) 
-                            if 100 > E_Lust >= 70 and E_OCount < 2 and E_SEXP >= 20:             
-                                $ E_RecentActions.append("unsatisfied")                      
-                                $ E_DailyActions.append("unsatisfied") 
+                            $ EmmaX.Statup("Lust", 200, 5) 
+                            if 100 > EmmaX.Lust >= 70 and EmmaX.OCount < 2 and EmmaX.SEXP >= 20:             
+                                $ EmmaX.RecentActions.append("unsatisfied")                      
+                                $ EmmaX.DailyActions.append("unsatisfied") 
                             
-                            if P_Focus > 80:
-                                jump E_FB_After 
+                            if Player.Focus > 80:
+                                jump Emma_FB_After 
                             $ Line = "came"
      
-                    if E_Lust >= 100:  
-                            #If Emma can cum                                             
-                            call E_Cumming
-                            if Situation == "shift" or "angry" in E_RecentActions:
-                                jump E_FB_After
+                    if EmmaX.Lust >= 100:  
+                            #If [EmmaX.Name] can cum                                             
+                            call Girl_Cumming(EmmaX)
+                            if Situation == "shift" or "angry" in EmmaX.RecentActions:
+                                jump Emma_FB_After
                        
-                    if Line == "came": #ex P_Focus <= 20: 
+                    if Line == "came": #ex Player.Focus <= 20: 
                             #If you've just cum,  
                             $ Line = 0
-                            if not P_Semen:
+                            if not Player.Semen:
                                 "You're emptied out, you should probably take a break."
                             
                             
-                            if "unsatisfied" in E_RecentActions:#And Emma is unsatisfied,  
-                                "Emma still seems a bit unsatisfied with the experience."
+                            if "unsatisfied" in EmmaX.RecentActions:#And [EmmaX.Name] is unsatisfied,  
+                                "[EmmaX.Name] still seems a bit unsatisfied with the experience."
                                 menu:
                                     "Finish her?"
                                     "Yes, keep going for a bit.":
                                         $ Line = "You get back into it" 
                                     "No, I'm done.":
                                         "You pull back."
-                                        jump E_FB_After    
-        if Partner:
+                                        jump Emma_FB_After    
+        if Partner and Partner.Lust >= 100:
                 #Checks if partner could orgasm
-                call Partner_Cumming("Emma")            
+                call Girl_Cumming(Partner)            
         #End orgasm
         
-        $ P_Focus -= 10 if P_FocusX and P_Focus > 50 else 0
+        $ Player.Focus -= 10 if Player.FocusX and Player.Focus > 50 else 0
         
-        if E_SEXP >= 100 or ApprovalCheck("Emma", 1200, "LO"):
+        if EmmaX.SEXP >= 100 or ApprovalCheck(EmmaX, 1200, "LO"):
             pass
-        elif Cnt == (5 + E_FondleB):
-                    $ E_Brows = "confused"
+        elif Cnt == (5 + EmmaX.FondleB):
+                    $ EmmaX.Brows = "confused"
                     ch_e "They really are magnificent, aren't they?" 
-        elif E_Lust >= 85:
+        elif EmmaX.Lust >= 85:
                     pass  
-        elif Cnt == (15 + E_FondleB) and E_SEXP >= 15 and not ApprovalCheck("Emma", 1500):
-                    $ E_Brows = "confused" 
+        elif Cnt == (15 + EmmaX.FondleB) and EmmaX.SEXP >= 15 and not ApprovalCheck(EmmaX, 1500):
+                    $ EmmaX.Brows = "confused" 
                     menu:
-                        ch_e "Perhaps we could try something else, [E_Petname]?"
+                        ch_e "Perhaps we could try something else, [EmmaX.Petname]?"
                         "Finish up.":
                                 "You let go. . ."   
-                                jump E_FB_After
+                                jump Emma_FB_After
                         "Let's try something else." if MultiAction: 
                                 $ Line = 0
                                 $ Situation = "shift"
-                                jump E_FB_After
+                                jump Emma_FB_After
                         "No, this is fun.":   
-                                if ApprovalCheck("Emma", 1200) or ApprovalCheck("Emma", 500, "O"):                        
-                                    call Statup("Emma", "Love", 200, -5)
-                                    call Statup("Emma", "Obed", 50, 3)                    
-                                    call Statup("Emma", "Obed", 80, 2)
+                                if ApprovalCheck(EmmaX, 1200) or ApprovalCheck(EmmaX, 500, "O"):                        
+                                    $ EmmaX.Statup("Love", 200, -5)
+                                    $ EmmaX.Statup("Obed", 50, 3)                    
+                                    $ EmmaX.Statup("Obed", 80, 2)
                                     "She grumbles but lets you keep going."
                                 else:
-                                    call EmmaFace("angry", 1)   
-                                    call E_Pos_Reset
+                                    $ EmmaX.FaceChange("angry", 1)   
+                                    call Emma_Pos_Reset
                                     "She scowls at you and pulls back."
                                     ch_e "You may be enjoying yourself, but I'm getting a bit sore."                         
-                                    call Statup("Emma", "Love", 50, -3, 1)
-                                    call Statup("Emma", "Love", 80, -4, 1)
-                                    call Statup("Emma", "Obed", 30, -1, 1)                    
-                                    call Statup("Emma", "Obed", 50, -1, 1)  
-                                    $ E_RecentActions.append("angry")
-                                    $ E_DailyActions.append("angry")   
-                                    jump E_FB_After
+                                    $ EmmaX.Statup("Love", 50, -3, 1)
+                                    $ EmmaX.Statup("Love", 80, -4, 1)
+                                    $ EmmaX.Statup("Obed", 30, -1, 1)                    
+                                    $ EmmaX.Statup("Obed", 50, -1, 1)  
+                                    $ EmmaX.RecentActions.append("angry")
+                                    $ EmmaX.DailyActions.append("angry")   
+                                    jump Emma_FB_After
         #End Count check
         
-        call Escalation("Emma","E") #sees if she wants to escalate things
+        call Escalation(EmmaX) #sees if she wants to escalate things
         
         if Round == 10:
             ch_e "It's getting late. . ."  
         elif Round == 5:
             ch_e "We should take a break soon."     
             
-        if E_Lust >= 50 and not E_Uptop and (E_Chest or E_Over):
-                $ E_Uptop = 1
-                "Emma sighs and tugs her breasts free of her clothes."      
+        if EmmaX.Lust >= 50 and not EmmaX.Uptop and (EmmaX.Chest or EmmaX.Over):
+                $ EmmaX.Uptop = 1
+                "[EmmaX.Name] sighs and tugs her breasts free of her clothes."      
                 call Emma_First_Topless            
     
     #Round = 0 loop breaks
-    call EmmaFace("bemused", 0)
+    $ EmmaX.FaceChange("bemused", 0)
     $ Line = 0
     ch_e "We need to stop for a moment, let me catch my breath."
     
-label E_FB_After:
+label Emma_FB_After:
     if not Situation: #fix  Situation != "shift" and Situation != "auto" and Situation != "pullback": 
-        call E_Pos_Reset
+        call Emma_Pos_Reset
         
-    call EmmaFace("sexy") 
+    $ EmmaX.FaceChange("sexy") 
     
-    $ E_FondleB += 1  
-    $ E_Action -=1
-    $ E_Addictionrate += 1
-    if "addictive" in P_Traits:
-        $ E_Addictionrate += 1        
+    $ EmmaX.FondleB += 1  
+    $ EmmaX.Action -=1
+    $ EmmaX.Addictionrate += 1
+    if "addictive" in Player.Traits:
+        $ EmmaX.Addictionrate += 1        
     
-    call Partner_Like("Emma",2)
+    call Partner_Like(EmmaX,2)
      
-    if E_FondleB == 1:            
-            $ E_SEXP += 4         
+    if EmmaX.FondleB == 1:            
+            $ EmmaX.SEXP += 4         
             if not Situation: 
-                if E_Love >= 500 and "unsatisfied" not in E_RecentActions:
+                if EmmaX.Love >= 500 and "unsatisfied" not in EmmaX.RecentActions:
                     ch_e "I'm sure it exceeded your expectations. . ."
-                elif E_Obed <= 500 and P_Focus <= 20:
-                    call EmmaFace("perplexed", 1)
+                elif EmmaX.Obed <= 500 and Player.Focus <= 20:
+                    $ EmmaX.FaceChange("perplexed", 1)
                     ch_e "Well you certainly hit the jackpot."
      
     $ Tempmod = 0  
@@ -644,247 +543,247 @@ label E_FB_After:
 
 # R Suck Breasts /////////////////////////////////////////////////////////////////////////////
 
-label E_Suck_Breasts:
+label Emma_Suck_Breasts:
     $ Round -= 5 if Round > 5 else (Round-1)
-    call Shift_Focus("Emma")
+    call Shift_Focus(EmmaX)
                                                                                         # Will she let you suck? Modifiers
-    if E_SuckB: #You've done it before
+    if EmmaX.SuckB: #You've done it before
         $ Tempmod += 15
-    if not E_Chest and not E_Over:
+    if not EmmaX.Chest and not EmmaX.Over:
         $ Tempmod += 15
-    if E_Lust > 75: #She's really horny
+    if EmmaX.Lust > 75: #She's really horny
         $ Tempmod += 20
-    if E_Lust > 75 and Situation == "auto": #She's really horny
+    if EmmaX.Lust > 75 and Situation == "auto": #She's really horny
         $ Tempmod += 10
-    if "exhibitionist" in E_Traits:
+    if "exhibitionist" in EmmaX.Traits:
         $ Tempmod += (4*Taboo)
-    if "dating" in E_Traits or "sex friend" in E_Petnames:
+    if "dating" in EmmaX.Traits or "sex friend" in EmmaX.Petnames:
         $ Tempmod += 10
-    elif "ex" in E_Traits:
+    elif "ex" in EmmaX.Traits:
         $ Tempmod -= 25  
-    if E_ForcedCount and not E_Forced:
-        $ Tempmod -= 5 * E_ForcedCount     
+    if EmmaX.ForcedCount and not EmmaX.Forced:
+        $ Tempmod -= 5 * EmmaX.ForcedCount     
     
-    if Taboo and "tabno" in E_DailyActions:        
+    if Taboo and "tabno" in EmmaX.DailyActions:        
         $ Tempmod -= 10 
-    if Taboo and "public" not in E_History:                   
+    if Taboo and "public" not in EmmaX.History:                   
         $ Tempmod -= 20 
         
-    if "no suck breasts" in E_DailyActions:               
+    if "no suck breasts" in EmmaX.DailyActions:               
         $ Tempmod -= 5 
-        $ Tempmod -= 10 if "no suck breasts" in E_RecentActions else 0   
+        $ Tempmod -= 10 if "no suck breasts" in EmmaX.RecentActions else 0   
         
-    $ Approval = ApprovalCheck("Emma", 1050, TabM = 4) # 105, 120, 135, Taboo -160(265)
+    $ Approval = ApprovalCheck(EmmaX, 1050, TabM = 4) # 105, 120, 135, Taboo -160(265)
     
     if Situation == "auto":                                                                  #You auto-start
         if Approval:
-            call EmmaFace("sexy")       
-            call Statup("Emma", "Obed", 90, 1)
-            call Statup("Emma", "Obed", 70, 2)
-            call Statup("Emma", "Inbt", 70, 3)
-            call Statup("Emma", "Inbt", 30, 2)            
-            "As you dive in, Emma seems a bit surprised, but just makes a little \"coo.\""              
-            jump E_SB_Prep      
+            $ EmmaX.FaceChange("sexy")       
+            $ EmmaX.Statup("Obed", 90, 1)
+            $ EmmaX.Statup("Obed", 70, 2)
+            $ EmmaX.Statup("Inbt", 70, 3)
+            $ EmmaX.Statup("Inbt", 30, 2)            
+            "As you dive in, [EmmaX.Name] seems a bit surprised, but just makes a little \"coo.\""              
+            jump Emma_SB_Prep      
         else:               
-            call EmmaFace("surprised")
-            call Statup("Emma", "Obed", 50, -2)
+            $ EmmaX.FaceChange("surprised")
+            $ EmmaX.Statup("Obed", 50, -2)
             ch_e "Down boy, you were doing so well. . ."               
             $ Tempmod = 0
             $ Trigger2 = 0
             return
     
-    if "suck breasts" in E_RecentActions:
-        call EmmaFace("sexy", 1)
+    if "suck breasts" in EmmaX.RecentActions:
+        $ EmmaX.FaceChange("sexy", 1)
         ch_e "Mmmm, again? I suppose. . ."
-        jump E_SB_Prep
-    elif "suck breasts" in E_DailyActions:
-        call EmmaFace("sexy", 1)
+        jump Emma_SB_Prep
+    elif "suck breasts" in EmmaX.DailyActions:
+        $ EmmaX.FaceChange("sexy", 1)
         $ Line = renpy.random.choice(["You didn't get enough earlier?",
             "Relax, gently. . .",
             "Mmm. . ."]) 
         ch_e "[Line]"
         
     if Approval >= 2:                                                                   #She's into it. . .
-        call EmmaFace("bemused", 1)
-        if E_Forced:
-            call EmmaFace("sad")
-            call Statup("Emma", "Love", 70, -3, 1)
-            call Statup("Emma", "Love", 20, -2, 1)
-            call Statup("Emma", "Obed", 90, 1)
-            call Statup("Emma", "Inbt", 60, 1)
+        $ EmmaX.FaceChange("bemused", 1)
+        if EmmaX.Forced:
+            $ EmmaX.FaceChange("sad")
+            $ EmmaX.Statup("Love", 70, -3, 1)
+            $ EmmaX.Statup("Love", 20, -2, 1)
+            $ EmmaX.Statup("Obed", 90, 1)
+            $ EmmaX.Statup("Inbt", 60, 1)
         ch_e "Oh very well. . ."   
-        call Statup("Emma", "Love", 90, 1)
-        call Statup("Emma", "Inbt", 50, 3) 
-        jump E_SB_Prep   
+        $ EmmaX.Statup("Love", 90, 1)
+        $ EmmaX.Statup("Inbt", 50, 3) 
+        jump Emma_SB_Prep   
         
     else:                                                                               #She's not into it, but maybe. . .            
-        call EmmaFace("angry", 1)
-        if "no suck breasts" in E_RecentActions:  
-            ch_e "Your persistance is doing you no favors, [E_Petname]."
-        elif Taboo and "tabno" in E_DailyActions and "no suck breasts" in E_DailyActions:  
+        $ EmmaX.FaceChange("angry", 1)
+        if "no suck breasts" in EmmaX.RecentActions:  
+            ch_e "Your persistance is doing you no favors, [EmmaX.Petname]."
+        elif Taboo and "tabno" in EmmaX.DailyActions and "no suck breasts" in EmmaX.DailyActions:  
             ch_e "I told you I couldn't be seen like that." 
-        elif "no suck breasts" in E_DailyActions:       
+        elif "no suck breasts" in EmmaX.DailyActions:       
             ch_e "I believe you know my answer on this matter."
-        elif Taboo and "tabno" in E_DailyActions:  
-            ch_e "As I said, not here, [E_Petname]."  
-        elif not E_SuckB:
-            call EmmaFace("bemused")
+        elif Taboo and "tabno" in EmmaX.DailyActions:  
+            ch_e "As I said, not here, [EmmaX.Petname]."  
+        elif not EmmaX.SuckB:
+            $ EmmaX.FaceChange("bemused")
             ch_e "Let's work up to that, perhaps. . ."
         else:
-            call EmmaFace("bemused")
+            $ EmmaX.FaceChange("bemused")
             ch_e "You wish."  
         menu:
             extend ""
-            "Sorry, never mind." if "no suck breasts" in E_DailyActions:
-                call EmmaFace("bemused")
+            "Sorry, never mind." if "no suck breasts" in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("bemused")
                 ch_e "No offense taken. I get it."              
                 return
-            "Maybe later?" if "no suck breasts" not in E_DailyActions:
-                call EmmaFace("sexy")  
-                ch_e "I'll give it some thought, [E_Petname]."
-                call Statup("Emma", "Love", 80, 1)
-                call Statup("Emma", "Love", 50, 1)
-                call Statup("Emma", "Inbt", 30, 2)    
+            "Maybe later?" if "no suck breasts" not in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("sexy")  
+                ch_e "I'll give it some thought, [EmmaX.Petname]."
+                $ EmmaX.Statup("Love", 80, 1)
+                $ EmmaX.Statup("Love", 50, 1)
+                $ EmmaX.Statup("Inbt", 30, 2)    
                 if Taboo:                    
-                    $ E_RecentActions.append("tabno")                      
-                    $ E_DailyActions.append("tabno") 
-                $ E_RecentActions.append("no suck breasts")                      
-                $ E_DailyActions.append("no suck breasts")            
+                    $ EmmaX.RecentActions.append("tabno")                      
+                    $ EmmaX.DailyActions.append("tabno") 
+                $ EmmaX.RecentActions.append("no suck breasts")                      
+                $ EmmaX.DailyActions.append("no suck breasts")            
                 return
             "Come on, Please?":             
                 if Approval:
-                    call EmmaFace("sexy")     
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 2)
-                    call Statup("Emma", "Inbt", 60, 3)
-                    call Statup("Emma", "Inbt", 30, 2)
+                    $ EmmaX.FaceChange("sexy")     
+                    $ EmmaX.Statup("Obed", 90, 1)
+                    $ EmmaX.Statup("Obed", 50, 2)
+                    $ EmmaX.Statup("Inbt", 60, 3)
+                    $ EmmaX.Statup("Inbt", 30, 2)
                     ch_e "Oh, if you insist. . ."                
-                    jump E_SB_Prep
+                    jump Emma_SB_Prep
                 else:   
-                    call EmmaFace("sexy") 
+                    $ EmmaX.FaceChange("sexy") 
                     ch_e "This wasn't a \"tone\" issue."     
             
             "[[Start sucking anyway]":                                               # Pressured into licking. 
-                $ Approval = ApprovalCheck("Emma", 450, "OI", TabM = 3) # 45, 60, 75, -120(165)
-                if Approval > 1 or (Approval and E_Forced):
-                    call EmmaFace("sad")
-                    call Statup("Emma", "Love", 70, -5, 1)
-                    call Statup("Emma", "Love", 20, -2, 1)                 
+                $ Approval = ApprovalCheck(EmmaX, 450, "OI", TabM = 3) # 45, 60, 75, -120(165)
+                if Approval > 1 or (Approval and EmmaX.Forced):
+                    $ EmmaX.FaceChange("sad")
+                    $ EmmaX.Statup("Love", 70, -5, 1)
+                    $ EmmaX.Statup("Love", 20, -2, 1)                 
                     ch_e "You'd better shower them with praise. . ."                         
-                    call Statup("Emma", "Obed", 90, 2)
-                    call Statup("Emma", "Obed", 50, 4)
-                    call Statup("Emma", "Inbt", 60, 3)  
+                    $ EmmaX.Statup("Obed", 90, 2)
+                    $ EmmaX.Statup("Obed", 50, 4)
+                    $ EmmaX.Statup("Inbt", 60, 3)  
                     if Approval < 2:                          
-                        $ E_Forced = 1
-                    jump E_SB_Prep
+                        $ EmmaX.Forced = 1
+                    jump Emma_SB_Prep
                 else:                              
-                    call Statup("Emma", "Love", 200, -10)  
-                    call EmmaFace("angry", 1)
+                    $ EmmaX.Statup("Love", 200, -10)  
+                    $ EmmaX.FaceChange("angry", 1)
                     "She shoves your head back out."   
-                    $ E_RecentActions.append("angry")
-                    $ E_DailyActions.append("angry")   
+                    $ EmmaX.RecentActions.append("angry")
+                    $ EmmaX.DailyActions.append("angry")   
                     
-    if "no suck breasts" in E_DailyActions:
-        ch_e "I don't appreciate having to repeat myself, [E_Petname]."   
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
-    elif E_Forced:
-        call EmmaFace("angry", 1)
+    if "no suck breasts" in EmmaX.DailyActions:
+        ch_e "I don't appreciate having to repeat myself, [EmmaX.Petname]."   
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
+    elif EmmaX.Forced:
+        $ EmmaX.FaceChange("angry", 1)
         ch_e "Not worth it."
-        call Statup("Emma", "Lust", 60, 5)    
-        call Statup("Emma", "Obed", 50, -2)    
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
+        $ EmmaX.Statup("Lust", 60, 5)    
+        $ EmmaX.Statup("Obed", 50, -2)    
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
     elif Taboo:   
-        call EmmaFace("angry", 1)      
-        $ E_RecentActions.append("tabno")    
-        $ E_DailyActions.append("tabno") 
+        $ EmmaX.FaceChange("angry", 1)      
+        $ EmmaX.RecentActions.append("tabno")    
+        $ EmmaX.DailyActions.append("tabno") 
         ch_e "I have a reputation to maintain."                   
-    elif E_SuckB:
-        call EmmaFace("sad")
+    elif EmmaX.SuckB:
+        $ EmmaX.FaceChange("sad")
         ch_e "I am sorry about that, but perhaps later?"            
     else:
-        call EmmaFace("sexy") 
-        $ E_Mouth = "sad"
+        $ EmmaX.FaceChange("sexy") 
+        $ EmmaX.Mouth = "sad"
         ch_e "No."
-    $ E_RecentActions.append("no suck breasts")                      
-    $ E_DailyActions.append("no suck breasts") 
+    $ EmmaX.RecentActions.append("no suck breasts")                      
+    $ EmmaX.DailyActions.append("no suck breasts") 
     $ Tempmod = 0    
     return
          
 
-label E_SB_Prep:                                                                 #Animation set-up 
+label Emma_SB_Prep:                                                                 #Animation set-up 
             
     if Trigger2 == "suck breasts":
         return
              
-    call E_Breasts_Launch("suck breasts")
+    call Emma_Breasts_Launch("suck breasts")
     
-    if Situation == "Emma":                                                        
+    if Situation == EmmaX:                                                        
             #Emma auto-starts    
             $ Situation = 0
-            if (E_Over or E_Chest) and not E_Uptop:
+            if (EmmaX.Over or EmmaX.Chest) and not EmmaX.Uptop:
                 #if she has some sort of top on. . .
-                if ApprovalCheck("Emma", 1250, TabM = 1) or (E_SeenChest and ApprovalCheck("Emma", 500) and not Taboo):
-                        $ E_Uptop = 1
-                        $ Line = E_Over if E_Over else E_Chest
-                        "With a devilish grin, Emma pulls her [Line] up over her breasts."
+                if ApprovalCheck(EmmaX, 1250, TabM = 1) or (EmmaX.SeenChest and ApprovalCheck(EmmaX, 500) and not Taboo):
+                        $ EmmaX.Uptop = 1
+                        $ Line = EmmaX.Over if EmmaX.Over else EmmaX.Chest
+                        "With a devilish grin, [EmmaX.Name] pulls her [Line] up over her breasts."
                         call Emma_First_Topless(1)
                         $ Line = 0
                         "She then grabs your head and crams your face into her chest, clearly intending you to get to work."
                 else:
-                    "Emma grabs your head and crams your face into her chest, clearly intending you to get to work."
+                        "[EmmaX.Name] grabs your head and crams your face into her chest, clearly intending you to get to work."
             else:
-                "Emma grabs your head and crams your face into her chest, clearly intending you to get to work."
+                        "[EmmaX.Name] grabs your head and crams your face into her chest, clearly intending you to get to work."
             menu:
                 "What do you do?"
                 "Get to work.":                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    call Statup("Emma", "Inbt", 50, 2)
+                    $ EmmaX.Statup("Inbt", 80, 3) 
+                    $ EmmaX.Statup("Inbt", 50, 2)
                     "You start to run your tongue along her nipple."
                 "Praise her.":       
-                    call EmmaFace("sexy", 1)                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    ch_p "Mmm, I like this, [E_Pet]."
-                    call Emma_Namecheck
+                    $ EmmaX.FaceChange("sexy", 1)                    
+                    $ EmmaX.Statup("Inbt", 80, 3) 
+                    ch_p "Mmm, I like this, [EmmaX.Pet]."
+                    $ EmmaX.NameCheck() #checks reaction to petname
                     "You start to fondle it."
-                    call Statup("Emma", "Love", 85, 1)
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 2)
+                    $ EmmaX.Statup("Love", 85, 1)
+                    $ EmmaX.Statup("Obed", 90, 1)
+                    $ EmmaX.Statup("Obed", 50, 2)
                 "Ask her to stop.":
                     "You pull your head back."
-                    call EmmaFace("surprised")       
-                    call Statup("Emma", "Inbt", 70, 1) 
-                    ch_p "Let's not do that right now, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma pulls away."
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 1)
-                    call Statup("Emma", "Obed", 30, 2)
-                    $ P_RecentActions.append("nope")      
-                    call AnyWord("Emma",1,"refused","refused")  
+                    $ EmmaX.FaceChange("surprised")       
+                    $ EmmaX.Statup("Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [EmmaX.Pet]."
+                    $ EmmaX.NameCheck() #checks reaction to petname
+                    "[EmmaX.Name] pulls away."
+                    $ EmmaX.Statup("Obed", 90, 1)
+                    $ EmmaX.Statup("Obed", 50, 1)
+                    $ EmmaX.Statup("Obed", 30, 2)
+                    $ Player.RecentActions.append("nope")      
+                    $ EmmaX.AddWord(1,"refused","refused")  
                     return          
             #end auto
-    if not E_Forced and Situation != "auto":
+    if not EmmaX.Forced and Situation != "auto":
         $ Tempmod = 0   
-        call Emma_Top_Off
-        if "angry" in E_RecentActions:
+        call Top_Off(EmmaX)
+        if "angry" in EmmaX.RecentActions:
             return
     
     $ Tempmod = 0 
-    if not E_SuckB:        
-        if E_Forced:
-            call Statup("Emma", "Love", 90, -25)
-            call Statup("Emma", "Obed", 70, 25)
-            call Statup("Emma", "Inbt", 80, 17) 
+    if not EmmaX.SuckB:        
+        if EmmaX.Forced:
+            $ EmmaX.Statup("Love", 90, -25)
+            $ EmmaX.Statup("Obed", 70, 25)
+            $ EmmaX.Statup("Inbt", 80, 17) 
         else:
-            call Statup("Emma", "Love", 90, 10)
-            call Statup("Emma", "Obed", 70, 10)
-            call Statup("Emma", "Inbt", 80, 15) 
+            $ EmmaX.Statup("Love", 90, 10)
+            $ EmmaX.Statup("Obed", 70, 10)
+            $ EmmaX.Statup("Inbt", 80, 15) 
     
     if Taboo:
-        $ E_Inbt += int(Taboo/10)  
-        $ E_Lust += int(Taboo/5)
+        $ EmmaX.Inbt += int(Taboo/10)  
+        $ EmmaX.Lust += int(Taboo/5)
         
     if Situation:     
         $ renpy.pop_call() 
@@ -892,63 +791,63 @@ label E_SB_Prep:                                                                
     $ Line = 0  
     $ Cnt = 0      
     if Taboo:
-        call DrainWord("Emma","tabno")
-    call DrainWord("Emma","no suck breasts")
-    $ E_RecentActions.append("suck breasts")                      
-    $ E_DailyActions.append("suck breasts") 
+        $ EmmaX.DrainWord("tabno")
+    $ EmmaX.DrainWord("no suck breasts")
+    $ EmmaX.RecentActions.append("suck breasts")                      
+    $ EmmaX.DailyActions.append("suck breasts") 
     
-label E_SB_Cycle: #Repeating strokes  
+label Emma_SB_Cycle: #Repeating strokes  
     if Trigger2 == "kiss you":
             $ Trigger2 = 0
     while Round >=0:  
-        call Shift_Focus("Emma") 
-        call E_Breasts_Launch("suck breasts")
-        call EmmaLust   
+        call Shift_Focus(EmmaX) 
+        call Emma_Breasts_Launch("suck breasts")
+        $ EmmaX.LustFace()   
         
-        if  P_Focus < 100:                                                   
+        if  Player.Focus < 100:                                                   
                     #Player Command menu
                     menu:
                         "Keep going. . .":
                                     pass
                          
                         "Slap her ass":                     
-                                    call E_Slap_Ass  
+                                    call Slap_Ass(EmmaX)  
                                     $ Cnt += 1
                                     $ Round -= 1                                      
-                                    jump E_SB_Cycle  
+                                    jump Emma_SB_Cycle  
                                     
-                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in P_Traits:
+                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in Player.Traits:
                                     pass
-                        "Focus to last longer." if not P_FocusX and "focus" in P_Traits:
+                        "Focus to last longer." if not Player.FocusX and "focus" in Player.Traits:
                                     "You concentrate on not burning out too quickly."                
-                                    $ P_FocusX = 1
-                        "Release your focus." if P_FocusX:
+                                    $ Player.FocusX = 1
+                        "Release your focus." if Player.FocusX:
                                     "You release your concentration. . ."                
-                                    $ P_FocusX = 0
+                                    $ Player.FocusX = 0
                                     
                         "Other options":
                                 menu:   
                                     "Offhand action":
-                                            if E_Action and MultiAction:
-                                                call Emma_Offhand_Set
+                                            if EmmaX.Action and MultiAction:
+                                                call Offhand_Set
                                                 if Trigger2:
-                                                     $ E_Action -= 1
+                                                     $ EmmaX.Action -= 1
                                             else:
                                                 ch_e "I could use a break, are you about finished here?"  
                                                 
                                     "Shift primary action":
-                                            if E_Action and MultiAction:
+                                            if EmmaX.Action and MultiAction:
                                                     menu:
                                                         "Pull back to fondling.":  
-                                                            if E_Action and MultiAction:
+                                                            if EmmaX.Action and MultiAction:
                                                                 $ Situation = "pullback"
-                                                                call E_SB_After
-                                                                call E_Fondle_Breasts
+                                                                call Emma_SB_After
+                                                                call Emma_Fondle_Breasts
                                                             else:
-                                                                "As you pull back, Emma pushes you back in close."
+                                                                "As you pull back, [EmmaX.Name] pushes you back in close."
                                                                 ch_e "I could use a break, are you about finished here?"
                                                         "Never Mind":
-                                                                jump E_SB_Cycle
+                                                                jump Emma_SB_Cycle
                                             else: 
                                                 ch_e "I could use a break, are you about finished here?"           
                     
@@ -956,141 +855,143 @@ label E_SB_Cycle: #Repeating strokes
                                         pass
                                     "Threesome actions" if Partner:   
                                         menu:
-                                            "Ask Emma to do something else with [Partner]" if Trigger == "lesbian":
-                                                        call Emma_Les_Change
-                                            "Ask Emma to do something else with [Partner] (locked)" if Trigger != "lesbian":
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name]" if Trigger == "lesbian":
+                                                        call Les_Change(EmmaX)
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name] (locked)" if Trigger != "lesbian":
                                                         pass
-                                            "Ask [Partner] to do something else":
-                                                        call Partner_Threechange("Emma") 
+                                            "Ask [Partner.Name] to do something else":
+                                                        call Three_Change(EmmaX) 
                                                         
                                             "Don't stop what you're doing. . .(locked)" if not ThreeCount or not Trigger4:
                                                         $ ThreeCount = 0                                                            
                                             "Don't stop what you're doing. . ." if ThreeCount and Trigger4:
                                                         $ ThreeCount = 0   
                                                         
-                                            "Swap to [Partner]":
-                                                        call Trigger_Swap("Emma")
-                                            "Undress [Partner]":
-                                                        call Partner_Undress
-                                                        jump E_SB_Cycle 
-                                            "Clean up Partner":
-                                                        call Partner_Cleanup
-                                                        jump E_SB_Cycle 
+                                            "Swap to [Partner.Name]":
+                                                        call Trigger_Swap(EmmaX)
+                                            "Undress [Partner.Name]":
+                                                        call Girl_Undress(Partner)
+                                                        jump Emma_SB_Cycle 
+                                            "Clean up [Partner.Name] (locked)" if not Partner.Spunk:
+                                                        pass
+                                            "Clean up [Partner.Name]" if Partner.Spunk:
+                                                        call Girl_Cleanup(Partner,"ask")
+                                                        jump Emma_SB_Cycle 
                                             "Never mind":
-                                                        jump E_SB_Cycle 
-                                    "Undress Emma":
-                                            call E_Undress   
-                                    "Clean up Emma (locked)" if not E_Spunk:
+                                                        jump Emma_SB_Cycle 
+                                    "Undress [EmmaX.Name]":
+                                            call Girl_Undress(EmmaX)   
+                                    "Clean up [EmmaX.Name] (locked)" if not EmmaX.Spunk:
                                             pass  
-                                    "Clean up Emma" if E_Spunk:
-                                            call Emma_Cleanup("ask")                                         
+                                    "Clean up [EmmaX.Name]" if EmmaX.Spunk:
+                                            call Girl_Cleanup(EmmaX,"ask")                                         
                                     "Never mind":
-                                            jump E_SB_Cycle 
+                                            jump Emma_SB_Cycle 
                                                    
                         "Back to Sex Menu" if MultiAction: 
                                     ch_p "Let's try something else."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Situation = "shift"
                                     $ Line = 0
-                                    jump E_SB_After
+                                    jump Emma_SB_After
                         "End Scene" if not MultiAction: 
                                     ch_p "Let's stop for now."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Line = 0
-                                    jump E_SB_After
+                                    jump Emma_SB_After
         #End menu (if Line)
         
-        call Shift_Focus("Emma")    
-        call Sex_Dialog("Emma",Partner)
+        call Shift_Focus(EmmaX)    
+        call Sex_Dialog(EmmaX,Partner)
                 
         #If either of you could cum 
         
         $ Cnt += 1
         $ Round -= 1   
     
-        $ P_Focus = 50 if not P_Semen and P_Focus >= 50 else P_Focus #Resets P_Focus if can't get it up
-        if P_Focus >= 100 or E_Lust >= 100: 
+        $ Player.Focus = 50 if not Player.Semen and Player.Focus >= 50 else Player.Focus #Resets Player.Focus if can't get it up
+        if Player.Focus >= 100 or EmmaX.Lust >= 100: 
                     #If either of you could cum   
-                    if P_Focus >= 100:    
+                    if Player.Focus >= 100:    
                             #If you can cum:                                                 
-                            call PE_Cumming
-                            if "angry" in E_RecentActions:  
-                                call E_Pos_Reset
+                            call Player_Cumming(EmmaX)
+                            if "angry" in EmmaX.RecentActions:  
+                                call Emma_Pos_Reset
                                 return    
-                            call Statup("Emma", "Lust", 200, 5) 
-                            if 100 > E_Lust >= 70 and E_OCount < 2:             
-                                $ E_RecentActions.append("unsatisfied")                      
-                                $ E_DailyActions.append("unsatisfied") 
+                            $ EmmaX.Statup("Lust", 200, 5) 
+                            if 100 > EmmaX.Lust >= 70 and EmmaX.OCount < 2:             
+                                $ EmmaX.RecentActions.append("unsatisfied")                      
+                                $ EmmaX.DailyActions.append("unsatisfied") 
                             
-                            if P_Focus > 80:
-                                jump E_SB_After 
+                            if Player.Focus > 80:
+                                jump Emma_SB_After 
                             $ Line = "came"
      
-                    if E_Lust >= 100:  
-                            #If Emma can cum                                             
-                            call E_Cumming
-                            if Situation == "shift" or "angry" in E_RecentActions:
-                                jump E_SB_After
+                    if EmmaX.Lust >= 100:  
+                            #If [EmmaX.Name] can cum                                             
+                            call Girl_Cumming(EmmaX)
+                            if Situation == "shift" or "angry" in EmmaX.RecentActions:
+                                jump Emma_SB_After
                        
-                    if Line == "came": #ex P_Focus <= 20: 
+                    if Line == "came": #ex Player.Focus <= 20: 
                             #If you've just cum,  
                             $ Line = 0
-                            if not P_Semen:
+                            if not Player.Semen:
                                 "You're emptied out, you should probably take a break."
                             
                             
-                            if "unsatisfied" in E_RecentActions:#And Emma is unsatisfied,  
-                                    "Emma still seems a bit unsatisfied with the experience."
+                            if "unsatisfied" in EmmaX.RecentActions:#And [EmmaX.Name] is unsatisfied,  
+                                    "[EmmaX.Name] still seems a bit unsatisfied with the experience."
                                     menu:
                                         "Finish her?"
                                         "Yes, keep going for a bit.":
                                             $ Line = "You get back into it" 
                                         "No, I'm done.":
                                             "You pull back."
-                                            jump E_SB_After    
+                                            jump Emma_SB_After    
         if Partner:
                 #Checks if partner could orgasm
-                call Partner_Cumming("Emma")            
+                call Girl_Cumming(Partner)            
         #End orgasm
         
-        $ P_Focus -= 10 if P_FocusX and P_Focus > 50 else 0
+        $ Player.Focus -= 10 if Player.FocusX and Player.Focus > 50 else 0
         
-        if E_SEXP >= 100 or ApprovalCheck("Emma", 1200, "LO"):
+        if EmmaX.SEXP >= 100 or ApprovalCheck(EmmaX, 1200, "LO"):
             pass
-        elif Cnt == (5 + E_SuckB):
-                    $ E_Brows = "sly"
+        elif Cnt == (5 + EmmaX.SuckB):
+                    $ EmmaX.Brows = "sly"
                     ch_e "Lovely, aren't they?"   
-        elif E_Lust >= 85:
+        elif EmmaX.Lust >= 85:
                     pass
-        elif Cnt == (15 + E_SuckB) and E_SEXP >= 15 and not ApprovalCheck("Emma", 1500):
-                    $ E_Brows = "confused"        
+        elif Cnt == (15 + EmmaX.SuckB) and EmmaX.SEXP >= 15 and not ApprovalCheck(EmmaX, 1500):
+                    $ EmmaX.Brows = "confused"        
                     menu:
                         ch_e "You certainly seem to be enjoying yourself, but perhaps we could add some variety?"                         
                         "Finish up.":
                                 "You let go. . ."   
-                                jump E_SB_After
+                                jump Emma_SB_After
                         "Let's try something else." if MultiAction: 
                                 $ Line = 0
                                 $ Situation = "shift"
-                                jump E_SB_After
+                                jump Emma_SB_After
                         "No, this is fun.":   
-                                if ApprovalCheck("Emma", 1200) or ApprovalCheck("Emma", 500, "O"):                        
-                                    call Statup("Emma", "Love", 200, -5)
-                                    call Statup("Emma", "Obed", 50, 3)                    
-                                    call Statup("Emma", "Obed", 80, 2)
+                                if ApprovalCheck(EmmaX, 1200) or ApprovalCheck(EmmaX, 500, "O"):                        
+                                    $ EmmaX.Statup("Love", 200, -5)
+                                    $ EmmaX.Statup("Obed", 50, 3)                    
+                                    $ EmmaX.Statup("Obed", 80, 2)
                                     "She grumbles but lets you keep going."
                                 else:
-                                    call EmmaFace("angry", 1)   
-                                    call E_Pos_Reset
+                                    $ EmmaX.FaceChange("angry", 1)   
+                                    call Emma_Pos_Reset
                                     "She scowls at you and pulls back."
                                     ch_e "You may be enjoying yourself, but I'm getting a bit sore."                         
-                                    call Statup("Emma", "Love", 50, -3, 1)
-                                    call Statup("Emma", "Love", 80, -4, 1)
-                                    call Statup("Emma", "Obed", 30, -1, 1)                    
-                                    call Statup("Emma", "Obed", 50, -1, 1)  
-                                    $ E_RecentActions.append("angry")
-                                    $ E_DailyActions.append("angry")   
-                                    jump E_SB_After
+                                    $ EmmaX.Statup("Love", 50, -3, 1)
+                                    $ EmmaX.Statup("Love", 80, -4, 1)
+                                    $ EmmaX.Statup("Obed", 30, -1, 1)                    
+                                    $ EmmaX.Statup("Obed", 50, -1, 1)  
+                                    $ EmmaX.RecentActions.append("angry")
+                                    $ EmmaX.DailyActions.append("angry")   
+                                    jump Emma_SB_After
         #End Count check
            
         if Round == 10:
@@ -1098,40 +999,40 @@ label E_SB_Cycle: #Repeating strokes
         elif Round == 5:
             ch_e "We should take a break soon."        
     
-        if E_Lust >= 50 and not E_Uptop and (E_Chest or E_Over):
-                $ E_Uptop = 1
-                "Emma sighs and tugs her breasts free of her clothes."    
+        if EmmaX.Lust >= 50 and not EmmaX.Uptop and (EmmaX.Chest or EmmaX.Over):
+                $ EmmaX.Uptop = 1
+                "[EmmaX.Name] sighs and tugs her breasts free of her clothes."    
                 call Emma_First_Topless    
                 
     #Round = 0 loop breaks
-    call EmmaFace("bemused", 0)
+    $ EmmaX.FaceChange("bemused", 0)
     $ Line = 0
     ch_e "We need to stop for a moment, let me catch my breath."
     
-label E_SB_After:
+label Emma_SB_After:
     if not Situation: #fix  Situation != "shift" and Situation != "auto" and Situation != "pullback": 
-        call E_Pos_Reset
+        call Emma_Pos_Reset
         
-    call EmmaFace("sexy") 
+    $ EmmaX.FaceChange("sexy") 
     
-    $ E_SuckB += 1  
-    $ E_Action -=1
-    $ E_Addictionrate += 1
-    if "addictive" in P_Traits:
-        $ E_Addictionrate += 1        
+    $ EmmaX.SuckB += 1  
+    $ EmmaX.Action -=1
+    $ EmmaX.Addictionrate += 1
+    if "addictive" in Player.Traits:
+        $ EmmaX.Addictionrate += 1        
     
     if Partner == "Kitty":
-        call Partner_Like("Emma",2,2)
+        call Partner_Like(EmmaX,2,2)
     else:
-        call Partner_Like("Emma",2)
+        call Partner_Like(EmmaX,2)
      
-    if E_SuckB == 1:            
-            $ E_SEXP += 4         
+    if EmmaX.SuckB == 1:            
+            $ EmmaX.SEXP += 4         
             if not Situation: 
-                if E_Love >= 500 and "unsatisfied" not in E_RecentActions:
+                if EmmaX.Love >= 500 and "unsatisfied" not in EmmaX.RecentActions:
                     ch_e "Delectable, weren't they."
-                elif E_Obed <= 500 and P_Focus <= 20:
-                    call EmmaFace("perplexed", 1)
+                elif EmmaX.Obed <= 500 and Player.Focus <= 20:
+                    $ EmmaX.FaceChange("perplexed", 1)
                     ch_e "Did you get enough?"
      
     $ Tempmod = 0  
@@ -1144,174 +1045,174 @@ label E_SB_After:
 
 # Fondle Thighs start //////////////////////////////////////////
 
-label E_Fondle_Thighs:
+label Emma_Fondle_Thighs:
     $ Round -= 5 if Round > 5 else (Round-1)
-    call Shift_Focus("Emma")
+    call Shift_Focus(EmmaX)
                                                                                         # Will she let you fondle her thighs? Modifiers
-    if E_FondleT: #You've done it before
+    if EmmaX.FondleT: #You've done it before
         $ Tempmod += 10
-    if E_Legs == "pants" or HoseNum("Emma") >= 5: # she's got pants on.
+    if EmmaX.PantsNum() > 6 or EmmaX.HoseNum() >= 5: # she's got pants on.
         $ Tempmod -= 5    
-    if E_Lust > 75: #She's really horny
+    if EmmaX.Lust > 75: #She's really horny
         $ Tempmod += 10    
-    if "exhibitionist" in E_Traits:
+    if "exhibitionist" in EmmaX.Traits:
         $ Tempmod += Taboo   
-    if "dating" in E_Traits or "sex friend" in E_Petnames:
+    if "dating" in EmmaX.Traits or "sex friend" in EmmaX.Petnames:
         $ Tempmod += 10
-    elif "ex" in E_Traits:
+    elif "ex" in EmmaX.Traits:
         $ Tempmod -= 25 
-    if E_ForcedCount and not E_Forced:
-        $ Tempmod -= 5 * E_ForcedCount      
+    if EmmaX.ForcedCount and not EmmaX.Forced:
+        $ Tempmod -= 5 * EmmaX.ForcedCount      
     
-    if Taboo and "tabno" in E_DailyActions:        
+    if Taboo and "tabno" in EmmaX.DailyActions:        
         $ Tempmod -= 10 
-    if Taboo and "public" not in E_History:                   
+    if Taboo and "public" not in EmmaX.History:                   
         $ Tempmod -= 20 
         
-    if "no fondle thighs" in E_DailyActions:               
+    if "no fondle thighs" in EmmaX.DailyActions:               
         $ Tempmod -= 5 
-        $ Tempmod -= 10 if "no fondle thighs" in E_RecentActions else 0   
+        $ Tempmod -= 10 if "no fondle thighs" in EmmaX.RecentActions else 0   
             
-    $ Approval = ApprovalCheck("Emma", 750, TabM=1) # 75, 90, 105, Taboo -40(105)
+    $ Approval = ApprovalCheck(EmmaX, 750, TabM=1) # 75, 90, 105, Taboo -40(105)
     
     if Situation == "auto":                                                                  #You auto-start
         if Approval:
-            call EmmaFace("sexy")       
-            call Statup("Emma", "Obed", 50, 1)
-            call Statup("Emma", "Inbt", 30, 2)            
-            "As you caress her thigh, Emma glances at you, and smiles."             
-            jump E_FT_Prep      
+            $ EmmaX.FaceChange("sexy")       
+            $ EmmaX.Statup("Obed", 50, 1)
+            $ EmmaX.Statup("Inbt", 30, 2)            
+            "As you caress her thigh, [EmmaX.Name] glances at you, and smiles."             
+            jump Emma_FT_Prep      
         else:               
-            call EmmaFace("surprised")
-            call Statup("Emma", "Obed", 50, -2)
-            ch_e "Perhaps we keep it above the waist, [E_Petname]."               
+            $ EmmaX.FaceChange("surprised")
+            $ EmmaX.Statup("Obed", 50, -2)
+            ch_e "Perhaps we keep it above the waist, [EmmaX.Petname]."               
             $ Tempmod = 0
             $ Trigger2 = 0
             return
             
     if Situation == "pullback":     
-        call EmmaFace("surprised")    
-        $ E_Brows = "sad"
-        if E_Lust > 60:
-            call Statup("Emma", "Love", 70, -3)
-        call Statup("Emma", "Obed", 90, 1)
-        call Statup("Emma", "Obed", 70, 2)
-        "As you pull back, Emma looks a little sad."              
-        jump E_FT_Prep  
-    elif "fondle thighs" in E_RecentActions:
-        call EmmaFace("sexy", 1)
+        $ EmmaX.FaceChange("surprised")    
+        $ EmmaX.Brows = "sad"
+        if EmmaX.Lust > 60:
+            $ EmmaX.Statup("Love", 70, -3)
+        $ EmmaX.Statup("Obed", 90, 1)
+        $ EmmaX.Statup("Obed", 70, 2)
+        "As you pull back, [EmmaX.Name] looks a little sad."              
+        jump Emma_FT_Prep  
+    elif "fondle thighs" in EmmaX.RecentActions:
+        $ EmmaX.FaceChange("sexy", 1)
         ch_e "Mmmm, again? I suppose. . ."
-        jump E_FT_Prep
-    elif "fondle thighs" in E_DailyActions:
-        call EmmaFace("sexy", 1)       
+        jump Emma_FT_Prep
+    elif "fondle thighs" in EmmaX.DailyActions:
+        $ EmmaX.FaceChange("sexy", 1)       
         ch_e "You didn't get enough earlier?"
     
     if Approval >= 2:                                                                   #She's into it. . .
-        call EmmaFace("bemused", 1)
-        if E_Forced:
-            call EmmaFace("sad")
-            call Statup("Emma", "Love", 70, -3, 1)
-            call Statup("Emma", "Obed", 90, 1)
-            call Statup("Emma", "Inbt", 60, 1)
-        ch_e "Ok [E_Petname], go ahead."   
-        call Statup("Emma", "Love", 90, 1)
-        call Statup("Emma", "Inbt", 50, 3) 
-        jump E_FT_Prep   
+        $ EmmaX.FaceChange("bemused", 1)
+        if EmmaX.Forced:
+            $ EmmaX.FaceChange("sad")
+            $ EmmaX.Statup("Love", 70, -3, 1)
+            $ EmmaX.Statup("Obed", 90, 1)
+            $ EmmaX.Statup("Inbt", 60, 1)
+        ch_e "Ok [EmmaX.Petname], go ahead."   
+        $ EmmaX.Statup("Love", 90, 1)
+        $ EmmaX.Statup("Inbt", 50, 3) 
+        jump Emma_FT_Prep   
         
     else:                                                                               #She's not into it, but maybe. . .            
-        call EmmaFace("angry", 1)
-        if "no fondle thighs" in E_RecentActions:  
-            ch_e "Your persistance is doing you no favors, [E_Petname]."
-        elif Taboo and "tabno" in E_DailyActions and "no fondle thighs" in E_DailyActions:  
+        $ EmmaX.FaceChange("angry", 1)
+        if "no fondle thighs" in EmmaX.RecentActions:  
+            ch_e "Your persistance is doing you no favors, [EmmaX.Petname]."
+        elif Taboo and "tabno" in EmmaX.DailyActions and "no fondle thighs" in EmmaX.DailyActions:  
             ch_e "I told you not to touch me like that in public!" 
-        elif "no fondle thighs" in E_DailyActions:       
+        elif "no fondle thighs" in EmmaX.DailyActions:       
             ch_e "I believe you know my answer on this matter."
-        elif Taboo and "tabno" in E_DailyActions:  
-            ch_e "As I said, not here, [E_Petname]."  
-        elif not E_FondleT:
-            call EmmaFace("bemused")
-            ch_e "Seems a bit forward, [E_Petname]."
+        elif Taboo and "tabno" in EmmaX.DailyActions:  
+            ch_e "As I said, not here, [EmmaX.Petname]."  
+        elif not EmmaX.FondleT:
+            $ EmmaX.FaceChange("bemused")
+            ch_e "Seems a bit forward, [EmmaX.Petname]."
         else:
-            call EmmaFace("bemused")
+            $ EmmaX.FaceChange("bemused")
             ch_e "You wish."  
         menu:
             extend ""
-            "Sorry, never mind." if "no fondle thighs" in E_DailyActions:
-                call EmmaFace("bemused")
+            "Sorry, never mind." if "no fondle thighs" in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("bemused")
                 ch_e "I appreciate your restraint."             
                 return
-            "Maybe later?" if "no fondle thighs" not in E_DailyActions:
-                call EmmaFace("sexy")  
+            "Maybe later?" if "no fondle thighs" not in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("sexy")  
                 ch_e "Perhaps."
-                call Statup("Emma", "Love", 80, 1)
-                call Statup("Emma", "Inbt", 30, 2)    
+                $ EmmaX.Statup("Love", 80, 1)
+                $ EmmaX.Statup("Inbt", 30, 2)    
                 if Taboo:                    
-                    $ E_RecentActions.append("tabno")                      
-                    $ E_DailyActions.append("tabno") 
-                $ E_RecentActions.append("no fondle thighs")                      
-                $ E_DailyActions.append("no fondle thighs")            
+                    $ EmmaX.RecentActions.append("tabno")                      
+                    $ EmmaX.DailyActions.append("tabno") 
+                $ EmmaX.RecentActions.append("no fondle thighs")                      
+                $ EmmaX.DailyActions.append("no fondle thighs")            
                 return
             "Come on, Please?":             
                 if Approval:
-                    call EmmaFace("sexy")     
-                    call Statup("Emma", "Obed", 60, 1)
-                    call Statup("Emma", "Obed", 30, 2)
-                    call Statup("Emma", "Inbt", 50, 1)
-                    call Statup("Emma", "Inbt", 30, 2)
+                    $ EmmaX.FaceChange("sexy")     
+                    $ EmmaX.Statup("Obed", 60, 1)
+                    $ EmmaX.Statup("Obed", 30, 2)
+                    $ EmmaX.Statup("Inbt", 50, 1)
+                    $ EmmaX.Statup("Inbt", 30, 2)
                     ch_e "Politeness can be rewarded. . ."             
-                    jump E_FT_Prep
+                    jump Emma_FT_Prep
                 else:   
-                    call EmmaFace("sexy") 
+                    $ EmmaX.FaceChange("sexy") 
                     ch_e "This wasn't a \"tone\" issue."     
             
             "[[Start caressing her thigh anyway]":                                               # Pressured into fondling. 
-                $ Approval = ApprovalCheck("Emma", 350, "OI", TabM = 2) # 35, 50, 65, -80(105)
-                if Approval > 1 or (Approval and E_Forced):
-                    call EmmaFace("sad")
-                    call Statup("Emma", "Love", 70, -5, 1)
-                    call Statup("Emma", "Love", 20, -2, 1)                 
+                $ Approval = ApprovalCheck(EmmaX, 350, "OI", TabM = 2) # 35, 50, 65, -80(105)
+                if Approval > 1 or (Approval and EmmaX.Forced):
+                    $ EmmaX.FaceChange("sad")
+                    $ EmmaX.Statup("Love", 70, -5, 1)
+                    $ EmmaX.Statup("Love", 20, -2, 1)                 
                     ch_e "Hmmph."                         
-                    call Statup("Emma", "Obed", 50, 3)
-                    call Statup("Emma", "Inbt", 60, 2)  
+                    $ EmmaX.Statup("Obed", 50, 3)
+                    $ EmmaX.Statup("Inbt", 60, 2)  
                     if Approval < 2:                          
-                        $ E_Forced = 1
-                    jump E_FT_Prep
+                        $ EmmaX.Forced = 1
+                    jump Emma_FT_Prep
                 else:                              
-                    call Statup("Emma", "Love", 200, -8)  
-                    call EmmaFace("angry", 1)
+                    $ EmmaX.Statup("Love", 200, -8)  
+                    $ EmmaX.FaceChange("angry", 1)
                     "She slaps your hand away."   
-                    $ E_RecentActions.append("angry")
-                    $ E_DailyActions.append("angry")   
+                    $ EmmaX.RecentActions.append("angry")
+                    $ EmmaX.DailyActions.append("angry")   
                     
-    if "no fondle thighs" in E_DailyActions:
-        ch_e "I don't appreciate having to repeat myself, [E_Petname]."   
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
-    elif E_Forced:
-        call EmmaFace("angry", 1)
+    if "no fondle thighs" in EmmaX.DailyActions:
+        ch_e "I don't appreciate having to repeat myself, [EmmaX.Petname]."   
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
+    elif EmmaX.Forced:
+        $ EmmaX.FaceChange("angry", 1)
         ch_e "Don't push your luck."
-        call Statup("Emma", "Lust", 50, 2)    
-        call Statup("Emma", "Obed", 50, -1)   
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
+        $ EmmaX.Statup("Lust", 50, 2)    
+        $ EmmaX.Statup("Obed", 50, -1)   
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
     elif Taboo:
-        call EmmaFace("angry", 1)    
-        $ E_RecentActions.append("tabno")          
-        $ E_DailyActions.append("tabno") 
+        $ EmmaX.FaceChange("angry", 1)    
+        $ EmmaX.RecentActions.append("tabno")          
+        $ EmmaX.DailyActions.append("tabno") 
         ch_e "I have a reputation to maintain."                   
-    elif E_FondleT:
-        call EmmaFace("sad")
+    elif EmmaX.FondleT:
+        $ EmmaX.FaceChange("sad")
         ch_e "Hands."            
     else:
-        call EmmaFace("sexy") 
-        $ E_Mouth = "sad"
+        $ EmmaX.FaceChange("sexy") 
+        $ EmmaX.Mouth = "sad"
         ch_e "No."
-    $ E_RecentActions.append("no fondle thighs")                      
-    $ E_DailyActions.append("no fondle thighs") 
+    $ EmmaX.RecentActions.append("no fondle thighs")                      
+    $ EmmaX.DailyActions.append("no fondle thighs") 
     $ Tempmod = 0    
     return
     
-label E_FT_Prep:                                                                 #Animation set-up 
+label Emma_FT_Prep:                                                                 #Animation set-up 
     if Trigger == "kiss you": 
         $ Trigger = "fondle thighs" 
         return
@@ -1319,27 +1220,27 @@ label E_FT_Prep:                                                                
     if Trigger2 == "fondle thighs": 
         return
         
-    if not E_Forced and Situation != "auto":
+    if not EmmaX.Forced and Situation != "auto":
         $ Tempmod = 0
-        call Emma_Bottoms_Off 
-        if "angry" in E_RecentActions:
+        call Bottoms_Off(EmmaX) 
+        if "angry" in EmmaX.RecentActions:
             return 
             
     $ Tempmod = 0    
-    call E_Pussy_Launch("fondle thighs")
-    if not E_FondleT:        
-        if E_Forced:
-            call Statup("Emma", "Love", 90, -10)
-            call Statup("Emma", "Obed", 70, 15)
-            call Statup("Emma", "Inbt", 80, 10) 
+    call Emma_Pussy_Launch("fondle thighs")
+    if not EmmaX.FondleT:        
+        if EmmaX.Forced:
+            $ EmmaX.Statup("Love", 90, -10)
+            $ EmmaX.Statup("Obed", 70, 15)
+            $ EmmaX.Statup("Inbt", 80, 10) 
         else:
-            call Statup("Emma", "Love", 90, 5)
-            call Statup("Emma", "Obed", 70, 10)
-            call Statup("Emma", "Inbt", 80, 15) 
+            $ EmmaX.Statup("Love", 90, 5)
+            $ EmmaX.Statup("Obed", 70, 10)
+            $ EmmaX.Statup("Inbt", 80, 15) 
             
     if Taboo:               
-        call Statup("Emma", "Lust", 200, (int(Taboo/5)))                               
-        call Statup("Emma", "Inbt", 200, (2*(int(Taboo/5))))
+        $ EmmaX.Statup("Lust", 200, (int(Taboo/5)))                               
+        $ EmmaX.Statup("Inbt", 200, (2*(int(Taboo/5))))
      
     if Situation:   
         $ renpy.pop_call() 
@@ -1347,75 +1248,75 @@ label E_FT_Prep:                                                                
     $ Line = 0 
     $ Cnt = 0
     if Taboo:
-        call DrainWord("Emma","tabno")
-    call DrainWord("Emma","no fondle thighs")
-    $ E_RecentActions.append("fondle thighs")                      
-    $ E_DailyActions.append("fondle thighs")  
+        $ EmmaX.DrainWord("tabno")
+    $ EmmaX.DrainWord("no fondle thighs")
+    $ EmmaX.RecentActions.append("fondle thighs")                      
+    $ EmmaX.DailyActions.append("fondle thighs")  
     
-label E_FT_Cycle:                                                                #Repeating strokes
+label Emma_FT_Cycle:                                                                #Repeating strokes
     while Round >=0:  
-        call Shift_Focus("Emma") 
-        call E_Pussy_Launch("fondle thighs")
-        call EmmaLust   
+        call Shift_Focus(EmmaX) 
+        call Emma_Pussy_Launch("fondle thighs")
+        $ EmmaX.LustFace()   
         
-        if  P_Focus < 100:                                                   
+        if  Player.Focus < 100:                                                   
                     #Player Command menu
                     menu:
                         "Keep going. . .":
                                     pass
                          
                         "Slap her ass":                     
-                                    call E_Slap_Ass  
+                                    call Slap_Ass(EmmaX)  
                                     $ Cnt += 1
                                     $ Round -= 1                                      
-                                    jump E_FT_Cycle  
+                                    jump Emma_FT_Cycle  
                                     
-                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in P_Traits:
+                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in Player.Traits:
                                     pass
-                        "Focus to last longer." if not P_FocusX and "focus" in P_Traits:
+                        "Focus to last longer." if not Player.FocusX and "focus" in Player.Traits:
                                     "You concentrate on not burning out too quickly."                
-                                    $ P_FocusX = 1
-                        "Release your focus." if P_FocusX:
+                                    $ Player.FocusX = 1
+                        "Release your focus." if Player.FocusX:
                                     "You release your concentration. . ."                
-                                    $ P_FocusX = 0
+                                    $ Player.FocusX = 0
                                     
                         "Other options":
                                 menu:   
                                     "Offhand action":
-                                            if E_Action and MultiAction:
-                                                call Emma_Offhand_Set
+                                            if EmmaX.Action and MultiAction:
+                                                call Offhand_Set
                                                 if Trigger2:
-                                                     $ E_Action -= 1
+                                                     $ EmmaX.Action -= 1
                                             else:
                                                 ch_e "I could use a break, are you about finished here?"  
                                                 
                                     "Shift primary action":
-                                            if E_Action and MultiAction:
+                                            if EmmaX.Action and MultiAction:
                                                     menu:                                                             
                                                         "Can I do a little deeper?":
-                                                                if E_Action and MultiAction:
+                                                                if EmmaX.Action and MultiAction:
                                                                     $ Situation = "shift"
-                                                                    call E_FT_After
-                                                                    call E_Fondle_Pussy                
+                                                                    call Emma_FT_After
+                                                                    call Emma_Fondle_Pussy                
                                                                 else:
                                                                     ch_e "I could use a break, are you about finished here?"  
                                                         "Shift your hands a bit higher without asking":
-                                                                if E_Action and MultiAction:
+                                                                if EmmaX.Action and MultiAction:
                                                                     $ Situation = "auto"
-                                                                    call E_FT_After
-                                                                    call E_Fondle_Pussy    
+                                                                    call Emma_FT_After
+                                                                    call Emma_Fondle_Pussy    
                                                                 else:
                                                                     "As your hands creep upwards, she grabs your wrists."
                                                                     ch_e "I could use a break, are you about finished here?" 
                                                         "Never Mind":
-                                                                jump E_FT_Cycle
+                                                                jump Emma_FT_Cycle
                                             else: 
                                                 ch_e "I could use a break, are you about finished here?"           
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
-                                                call E_FT_After
-                                                call Emma_Offhand_Set   
+                                                call Emma_FT_After
+                                                call Offhand_Set   
                                     "Shift your focus (locked)" if not Trigger2:
                                                 pass
                                     
@@ -1423,139 +1324,141 @@ label E_FT_Cycle:                                                               
                                         pass
                                     "Threesome actions" if Partner:   
                                         menu:
-                                            "Ask Emma to do something else with [Partner]" if Trigger == "lesbian":
-                                                        call Emma_Les_Change
-                                            "Ask Emma to do something else with [Partner] (locked)" if Trigger != "lesbian":
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name]" if Trigger == "lesbian":
+                                                        call Les_Change(EmmaX)
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name] (locked)" if Trigger != "lesbian":
                                                         pass
-                                            "Ask [Partner] to do something else":
-                                                        call Partner_Threechange("Emma") 
+                                            "Ask [Partner.Name] to do something else":
+                                                        call Three_Change(EmmaX) 
                                                         
                                             "Don't stop what you're doing. . .(locked)" if not ThreeCount or not Trigger4:
                                                         $ ThreeCount = 0                                                            
                                             "Don't stop what you're doing. . ." if ThreeCount and Trigger4:
                                                         $ ThreeCount = 0   
                                                         
-                                            "Swap to [Partner]":
-                                                        call Trigger_Swap("Emma")
-                                            "Undress [Partner]":
-                                                        call Partner_Undress
-                                                        jump E_FT_Cycle 
-                                            "Clean up Partner":
-                                                        call Partner_Cleanup
-                                                        jump E_FT_Cycle 
+                                            "Swap to [Partner.Name]":
+                                                        call Trigger_Swap(EmmaX)
+                                            "Undress [Partner.Name]":
+                                                        call Girl_Undress(Partner)
+                                                        jump Emma_FT_Cycle 
+                                            "Clean up [Partner.Name] (locked)" if not Partner.Spunk:
+                                                        pass
+                                            "Clean up [Partner.Name]" if Partner.Spunk:
+                                                        call Girl_Cleanup(Partner,"ask")
+                                                        jump Emma_FT_Cycle 
                                             "Never mind":
-                                                        jump E_FT_Cycle 
-                                    "Undress Emma":
-                                            call E_Undress   
-                                    "Clean up Emma (locked)" if not E_Spunk:
+                                                        jump Emma_FT_Cycle 
+                                    "Undress [EmmaX.Name]":
+                                            call Girl_Undress(EmmaX)   
+                                    "Clean up [EmmaX.Name] (locked)" if not EmmaX.Spunk:
                                             pass  
-                                    "Clean up Emma" if E_Spunk:
-                                            call Emma_Cleanup("ask")                                         
+                                    "Clean up [EmmaX.Name]" if EmmaX.Spunk:
+                                            call Girl_Cleanup(EmmaX,"ask")                                         
                                     "Never mind":
-                                            jump E_FT_Cycle 
+                                            jump Emma_FT_Cycle 
                                                    
                         "Back to Sex Menu" if MultiAction: 
                                     ch_p "Let's try something else."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Situation = "shift"
                                     $ Line = 0
-                                    jump E_FT_After
+                                    jump Emma_FT_After
                         "End Scene" if not MultiAction: 
                                     ch_p "Let's stop for now."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Line = 0
-                                    jump E_FT_After
+                                    jump Emma_FT_After
         #End menu (if Line)
         
-        call Shift_Focus("Emma")    
-        call Sex_Dialog("Emma",Partner)
+        call Shift_Focus(EmmaX)    
+        call Sex_Dialog(EmmaX,Partner)
                 
         #If either of you could cum 
         
         $ Cnt += 1
         $ Round -= 1   
     
-        $ P_Focus = 50 if not P_Semen and P_Focus >= 50 else P_Focus #Resets P_Focus if can't get it up
-        if P_Focus >= 100 or E_Lust >= 100: 
+        $ Player.Focus = 50 if not Player.Semen and Player.Focus >= 50 else Player.Focus #Resets Player.Focus if can't get it up
+        if Player.Focus >= 100 or EmmaX.Lust >= 100: 
                     #If either of you could cum   
-                    if P_Focus >= 100:    
+                    if Player.Focus >= 100:    
                             #If you can cum:                                                 
-                            call PE_Cumming
-                            if "angry" in E_RecentActions:  
-                                call E_Pos_Reset
+                            call Player_Cumming(EmmaX)
+                            if "angry" in EmmaX.RecentActions:  
+                                call Emma_Pos_Reset
                                 return    
-                            call Statup("Emma", "Lust", 200, 5) 
-                            if 100 > E_Lust >= 70 and E_OCount < 2 and E_SEXP >= 20:             
-                                $ E_RecentActions.append("unsatisfied")                      
-                                $ E_DailyActions.append("unsatisfied") 
+                            $ EmmaX.Statup("Lust", 200, 5) 
+                            if 100 > EmmaX.Lust >= 70 and EmmaX.OCount < 2 and EmmaX.SEXP >= 20:             
+                                $ EmmaX.RecentActions.append("unsatisfied")                      
+                                $ EmmaX.DailyActions.append("unsatisfied") 
                             
-                            if P_Focus > 80:
-                                jump E_FT_After 
+                            if Player.Focus > 80:
+                                jump Emma_FT_After 
                             $ Line = "came"
      
-                    if E_Lust >= 100:  
-                            #If Emma can cum                                             
-                            call E_Cumming
-                            if Situation == "shift" or "angry" in E_RecentActions:
-                                jump E_FT_After
+                    if EmmaX.Lust >= 100:  
+                            #If [EmmaX.Name] can cum                                             
+                            call Girl_Cumming(EmmaX)
+                            if Situation == "shift" or "angry" in EmmaX.RecentActions:
+                                jump Emma_FT_After
                        
-                    if Line == "came": #ex P_Focus <= 20: 
+                    if Line == "came": #ex Player.Focus <= 20: 
                             #If you've just cum,  
                             $ Line = 0
-                            if not P_Semen:
+                            if not Player.Semen:
                                 "You're emptied out, you should probably take a break."
                             
                             
-                            if "unsatisfied" in E_RecentActions:#And Emma is unsatisfied,  
-                                    "Emma still seems a bit unsatisfied with the experience."
+                            if "unsatisfied" in EmmaX.RecentActions:#And [EmmaX.Name] is unsatisfied,  
+                                    "[EmmaX.Name] still seems a bit unsatisfied with the experience."
                                     menu:
                                         "Finish her?"
                                         "Yes, keep going for a bit.":
                                             $ Line = "You get back into it" 
                                         "No, I'm done.":
                                             "You pull back."
-                                            jump E_FT_After    
+                                            jump Emma_FT_After    
         if Partner:
                 #Checks if partner could orgasm
-                call Partner_Cumming("Emma")            
+                call Girl_Cumming(Partner)            
         #End orgasm
         
-        $ P_Focus -= 10 if P_FocusX and P_Focus > 50 else 0
+        $ Player.Focus -= 10 if Player.FocusX and Player.Focus > 50 else 0
         
-        if E_SEXP >= 100 or ApprovalCheck("Emma", 1200, "LO"):
+        if EmmaX.SEXP >= 100 or ApprovalCheck(EmmaX, 1200, "LO"):
             pass
-        elif Cnt == (5 + E_FondleT):
-                    $ E_Brows = "confused"
+        elif Cnt == (5 + EmmaX.FondleT):
+                    $ EmmaX.Brows = "confused"
                     ch_e "Luxurious, yes?"   
-        elif Cnt == (15 + E_FondleT) and E_SEXP >= 15 and not ApprovalCheck("Emma", 1500):
-                    $ E_Brows = "confused"        
+        elif Cnt == (15 + EmmaX.FondleT) and EmmaX.SEXP >= 15 and not ApprovalCheck(EmmaX, 1500):
+                    $ EmmaX.Brows = "confused"        
                     menu:
                         ch_e "You certainly seem to be enjoying yourself, but perhaps we could add some variety?"                         
                         "Finish up.":
                                 "You let go. . ."   
-                                jump E_FT_After
+                                jump Emma_FT_After
                         "Let's try something else." if MultiAction: 
                                 $ Line = 0
                                 $ Situation = "shift"
-                                jump E_FT_After
+                                jump Emma_FT_After
                         "No, this is fun.":   
-                                if ApprovalCheck("Emma", 1200) or ApprovalCheck("Emma", 500, "O"):                        
-                                    call Statup("Emma", "Love", 200, -5)
-                                    call Statup("Emma", "Obed", 50, 3)                    
-                                    call Statup("Emma", "Obed", 80, 2)
+                                if ApprovalCheck(EmmaX, 1200) or ApprovalCheck(EmmaX, 500, "O"):                        
+                                    $ EmmaX.Statup("Love", 200, -5)
+                                    $ EmmaX.Statup("Obed", 50, 3)                    
+                                    $ EmmaX.Statup("Obed", 80, 2)
                                     "She grumbles but lets you keep going."
                                 else:
-                                    call EmmaFace("angry", 1)   
-                                    call E_Pos_Reset
+                                    $ EmmaX.FaceChange("angry", 1)   
+                                    call Emma_Pos_Reset
                                     "She scowls at you and pulls back."
                                     ch_e "Well perhaps you are enjoying yourself, but I'm tired of this."                         
-                                    call Statup("Emma", "Love", 50, -3, 1)
-                                    call Statup("Emma", "Love", 80, -4, 1)
-                                    call Statup("Emma", "Obed", 30, -1, 1)                    
-                                    call Statup("Emma", "Obed", 50, -1, 1)  
-                                    $ E_RecentActions.append("angry")
-                                    $ E_DailyActions.append("angry")   
-                                    jump E_FT_After
+                                    $ EmmaX.Statup("Love", 50, -3, 1)
+                                    $ EmmaX.Statup("Love", 80, -4, 1)
+                                    $ EmmaX.Statup("Obed", 30, -1, 1)                    
+                                    $ EmmaX.Statup("Obed", 50, -1, 1)  
+                                    $ EmmaX.RecentActions.append("angry")
+                                    $ EmmaX.DailyActions.append("angry")   
+                                    jump Emma_FT_After
         #End Count check
            
         if Round == 10:
@@ -1564,36 +1467,36 @@ label E_FT_Cycle:                                                               
             ch_e "We should take a break soon."        
     
     #Round = 0 loop breaks
-    call EmmaFace("bemused", 0)
+    $ EmmaX.FaceChange("bemused", 0)
     $ Line = 0
     ch_e "We need to stop for a moment, let me catch my breath."
     
     
-label E_FT_After:
+label Emma_FT_After:
     if not Situation: #fix  Situation != "shift" and Situation != "auto" and Situation != "pullback": 
-        call E_Pos_Reset
+        call Emma_Pos_Reset
         
-    call EmmaFace("sexy") 
+    $ EmmaX.FaceChange("sexy") 
     
-    $ E_FondleT += 1  
-    $ E_Action -=1
-    if E_Legs != "pants" or E_Upskirt:        
-        $ E_Addictionrate += 1
-        if "addictive" in P_Traits:
-            $ E_Addictionrate += 1
+    $ EmmaX.FondleT += 1  
+    $ EmmaX.Action -=1
+    if EmmaX.PantsNum() <= 6 or EmmaX.Upskirt:        
+        $ EmmaX.Addictionrate += 1
+        if "addictive" in Player.Traits:
+            $ EmmaX.Addictionrate += 1
     
     if Partner == "Kitty":
-        call Partner_Like("Emma",2)
+        call Partner_Like(EmmaX,2)
     else:
-        call Partner_Like("Emma",1)
+        call Partner_Like(EmmaX,1)
      
-    if E_FondleT == 1:            
-            $ E_SEXP += 3         
+    if EmmaX.FondleT == 1:            
+            $ EmmaX.SEXP += 3         
             if not Situation: 
-                if E_Love >= 500 and "unsatisfied" not in E_RecentActions:
+                if EmmaX.Love >= 500 and "unsatisfied" not in EmmaX.RecentActions:
                     ch_e "That was. . . pleasant."
-                elif E_Obed <= 500 and P_Focus <= 20:
-                    call EmmaFace("perplexed", 1)
+                elif EmmaX.Obed <= 500 and Player.Focus <= 20:
+                    $ EmmaX.FaceChange("perplexed", 1)
                     ch_e "Was that enough?"
      
     $ Tempmod = 0  
@@ -1603,70 +1506,70 @@ label E_FT_After:
     return   
     
 # ////////////////////////////////////////////////////////////////////////Start Fondle Pussy    
-label E_Fondle_Pussy:
+label Emma_Fondle_Pussy:
     $ Round -= 5 if Round > 5 else (Round-1)
-    call Shift_Focus("Emma")
+    call Shift_Focus(EmmaX)
                                                                                         # Will she let you fondle? Modifiers
-    if E_FondleP: #You've done it before
+    if EmmaX.FondleP: #You've done it before
         $ Tempmod += 20
-    if E_Legs == "pants" or HoseNum("Emma") >= 5: # she's got pants on.
+    if EmmaX.PantsNum() > 6 or EmmaX.HoseNum() >= 5: # she's got pants on.
         $ Tempmod -= 10    
-    if E_Lust > 75: #She's really horny
+    if EmmaX.Lust > 75: #She's really horny
         $ Tempmod += 15
-    if E_Lust > 75 and Situation == "auto": #She's really horny
+    if EmmaX.Lust > 75 and Situation == "auto": #She's really horny
         $ Tempmod += 10
-    if "exhibitionist" in E_Traits:
+    if "exhibitionist" in EmmaX.Traits:
         $ Tempmod += (2*Taboo)
-    if "dating" in E_Traits or "sex friend" in E_Petnames:
+    if "dating" in EmmaX.Traits or "sex friend" in EmmaX.Petnames:
         $ Tempmod += 10
-    elif "ex" in E_Traits:
+    elif "ex" in EmmaX.Traits:
         $ Tempmod -= 25  
-    if E_ForcedCount and not E_Forced:
-        $ Tempmod -= 5 * E_ForcedCount     
+    if EmmaX.ForcedCount and not EmmaX.Forced:
+        $ Tempmod -= 5 * EmmaX.ForcedCount     
     
-    if Taboo and "tabno" in E_DailyActions:        
+    if Taboo and "tabno" in EmmaX.DailyActions:        
         $ Tempmod -= 10 
-    if Taboo and "public" not in E_History:                   
+    if Taboo and "public" not in EmmaX.History:                   
         $ Tempmod -= 20 
         
-    if "no fondle pussy" in E_DailyActions:               
+    if "no fondle pussy" in EmmaX.DailyActions:               
         $ Tempmod -= 5 
-        $ Tempmod -= 10 if "no fondle pussy" in E_RecentActions else 0   
+        $ Tempmod -= 10 if "no fondle pussy" in EmmaX.RecentActions else 0   
             
-    $ Approval = ApprovalCheck("Emma", 1050, TabM = 2) # 105, 120, 135, Taboo -80(185)
+    $ Approval = ApprovalCheck(EmmaX, 1050, TabM = 2) # 105, 120, 135, Taboo -80(185)
     
     if Situation == "auto":                                                                  #You auto-start
         if Approval:
-            call EmmaFace("sexy")       
-            call Statup("Emma", "Obed", 90, 1)
-            call Statup("Emma", "Obed", 70, 2)
-            call Statup("Emma", "Inbt", 70, 3)
-            call Statup("Emma", "Inbt", 30, 2)
-            "As your hand creeps up her thigh, Emma seems a bit surprised, but then nods."            
-            jump E_FP_Prep      
+            $ EmmaX.FaceChange("sexy")       
+            $ EmmaX.Statup("Obed", 90, 1)
+            $ EmmaX.Statup("Obed", 70, 2)
+            $ EmmaX.Statup("Inbt", 70, 3)
+            $ EmmaX.Statup("Inbt", 30, 2)
+            "As your hand creeps up her thigh, [EmmaX.Name] seems a bit surprised, but then nods."            
+            jump Emma_FP_Prep      
         else:               
-            call EmmaFace("surprised")
-            call Statup("Emma", "Obed", 50, -2)
+            $ EmmaX.FaceChange("surprised")
+            $ EmmaX.Statup("Obed", 50, -2)
             ch_e "Down boy, you were doing so well. . ."               
             $ Tempmod = 0
             $ Trigger2 = 0
             return
             
     if Situation == "pullback":     
-        call EmmaFace("surprised")   
-        $ E_Brows = "sad"        
-        if E_Lust > 80:
-            call Statup("Emma", "Love", 70, -4)
-        call Statup("Emma", "Obed", 90, 1)
-        call Statup("Emma", "Obed", 70, 2)
-        "As your hand pulls out, Emma gasps and looks upset."              
-        jump E_FP_Prep     
-    elif "fondle pussy" in E_RecentActions:
-        call EmmaFace("sexy", 1)
+        $ EmmaX.FaceChange("surprised")   
+        $ EmmaX.Brows = "sad"        
+        if EmmaX.Lust > 80:
+            $ EmmaX.Statup("Love", 70, -4)
+        $ EmmaX.Statup("Obed", 90, 1)
+        $ EmmaX.Statup("Obed", 70, 2)
+        "As your hand pulls out, [EmmaX.Name] gasps and looks upset."              
+        jump Emma_FP_Prep     
+    elif "fondle pussy" in EmmaX.RecentActions:
+        $ EmmaX.FaceChange("sexy", 1)
         ch_e "Mmmm, again? I suppose. . ."
-        jump E_FP_Prep
-    elif "fondle pussy" in E_DailyActions:
-        call EmmaFace("sexy", 1)
+        jump Emma_FP_Prep
+    elif "fondle pussy" in EmmaX.DailyActions:
+        $ EmmaX.FaceChange("sexy", 1)
         $ Line = renpy.random.choice(["You didn't get enough earlier?",
             "Relax, gently. . .",
             "Take it a bit gently, I'm still shaking from earlier.",
@@ -1674,200 +1577,200 @@ label E_Fondle_Pussy:
         ch_e "[Line]"
         
     if Approval >= 2:                                                                   #She's into it. . .
-        call EmmaFace("bemused", 1)
-        if E_Forced:
-            call EmmaFace("sad")
-            call Statup("Emma", "Love", 70, -3, 1)
-            call Statup("Emma", "Love", 20, -2, 1)
-            call Statup("Emma", "Obed", 90, 1)
-            call Statup("Emma", "Inbt", 60, 1)
+        $ EmmaX.FaceChange("bemused", 1)
+        if EmmaX.Forced:
+            $ EmmaX.FaceChange("sad")
+            $ EmmaX.Statup("Love", 70, -3, 1)
+            $ EmmaX.Statup("Love", 20, -2, 1)
+            $ EmmaX.Statup("Obed", 90, 1)
+            $ EmmaX.Statup("Inbt", 60, 1)
         ch_e "Mmmm, I couldn't refuse. . ."   
-        call Statup("Emma", "Love", 90, 1)
-        call Statup("Emma", "Inbt", 50, 3) 
-        jump E_FP_Prep   
+        $ EmmaX.Statup("Love", 90, 1)
+        $ EmmaX.Statup("Inbt", 50, 3) 
+        jump Emma_FP_Prep   
         
     else:                                                                               #She's not into it, but maybe. . .            
-        call EmmaFace("angry", 1)
-        if "no fondle pussy" in E_RecentActions:  
-            ch_e "Your persistance is doing you no favors, [E_Petname]."
-        elif Taboo and "tabno" in E_DailyActions and "no fondle pussy" in E_DailyActions:  
+        $ EmmaX.FaceChange("angry", 1)
+        if "no fondle pussy" in EmmaX.RecentActions:  
+            ch_e "Your persistance is doing you no favors, [EmmaX.Petname]."
+        elif Taboo and "tabno" in EmmaX.DailyActions and "no fondle pussy" in EmmaX.DailyActions:  
             ch_e "I told you not to touch me like that in public!" 
-        elif "no fondle pussy" in E_DailyActions:       
+        elif "no fondle pussy" in EmmaX.DailyActions:       
             ch_e "I believe you know my answer on this matter."
-        elif Taboo and "tabno" in E_DailyActions:  
-            ch_e "As I said, not here, [E_Petname]."  
-        elif not E_FondleP:
-            call EmmaFace("bemused")
-            ch_e "I don't think we're there yet, [E_Petname]. . ."
+        elif Taboo and "tabno" in EmmaX.DailyActions:  
+            ch_e "As I said, not here, [EmmaX.Petname]."  
+        elif not EmmaX.FondleP:
+            $ EmmaX.FaceChange("bemused")
+            ch_e "I don't think we're there yet, [EmmaX.Petname]. . ."
         else:
-            call EmmaFace("bemused")
+            $ EmmaX.FaceChange("bemused")
             ch_e "You wish."  
         menu:
             extend ""
-            "Sorry, never mind." if "no fondle pussy" in E_DailyActions:
-                call EmmaFace("bemused")
-                ch_e "I appreciate your restraint, [E_Petname]."              
+            "Sorry, never mind." if "no fondle pussy" in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("bemused")
+                ch_e "I appreciate your restraint, [EmmaX.Petname]."              
                 return
-            "Maybe later?" if "no fondle pussy" not in E_DailyActions:
-                call EmmaFace("sexy")  
-                ch_e "I'll give it some thought, [E_Petname]."
-                call Statup("Emma", "Love", 80, 2)
-                call Statup("Emma", "Inbt", 70, 2)   
+            "Maybe later?" if "no fondle pussy" not in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("sexy")  
+                ch_e "I'll give it some thought, [EmmaX.Petname]."
+                $ EmmaX.Statup("Love", 80, 2)
+                $ EmmaX.Statup("Inbt", 70, 2)   
                 if Taboo:                    
-                    $ E_RecentActions.append("tabno")                      
-                    $ E_DailyActions.append("tabno") 
-                $ E_RecentActions.append("no fondle pussy")                      
-                $ E_DailyActions.append("no fondle pussy")            
+                    $ EmmaX.RecentActions.append("tabno")                      
+                    $ EmmaX.DailyActions.append("tabno") 
+                $ EmmaX.RecentActions.append("no fondle pussy")                      
+                $ EmmaX.DailyActions.append("no fondle pussy")            
                 return
             "Come on, Please?":             
                 if Approval:
-                    call EmmaFace("sexy")     
-                    call Statup("Emma", "Obed", 90, 2)
-                    call Statup("Emma", "Obed", 50, 2)
-                    call Statup("Emma", "Inbt", 70, 3) 
-                    call Statup("Emma", "Inbt", 40, 2) 
+                    $ EmmaX.FaceChange("sexy")     
+                    $ EmmaX.Statup("Obed", 90, 2)
+                    $ EmmaX.Statup("Obed", 50, 2)
+                    $ EmmaX.Statup("Inbt", 70, 3) 
+                    $ EmmaX.Statup("Inbt", 40, 2) 
                     ch_e "I do enjoy hearing you beg. . ."                    
-                    jump E_FP_Prep
+                    jump Emma_FP_Prep
                 else:   
-                    call EmmaFace("sexy") 
+                    $ EmmaX.FaceChange("sexy") 
                     ch_e "No."
             
             "[[Start fondling anyway]":                                               # Pressured into fondling. 
-                $ Approval = ApprovalCheck("Emma", 450, "OI", TabM = 2) # 45, 60, 75, -80(125)
-                if Approval > 1 or (Approval and E_Forced):
-                    call EmmaFace("sad")
-                    call Statup("Emma", "Love", 70, -5, 1)
-                    call Statup("Emma", "Love", 200, -2)                 
+                $ Approval = ApprovalCheck(EmmaX, 450, "OI", TabM = 2) # 45, 60, 75, -80(125)
+                if Approval > 1 or (Approval and EmmaX.Forced):
+                    $ EmmaX.FaceChange("sad")
+                    $ EmmaX.Statup("Love", 70, -5, 1)
+                    $ EmmaX.Statup("Love", 200, -2)                 
                     ch_e "Oh, if you insist. . ."
-                    call Statup("Emma", "Obed", 50, 4)
-                    call Statup("Emma", "Inbt", 80, 1) 
-                    call Statup("Emma", "Inbt", 60, 3)  
+                    $ EmmaX.Statup("Obed", 50, 4)
+                    $ EmmaX.Statup("Inbt", 80, 1) 
+                    $ EmmaX.Statup("Inbt", 60, 3)  
                     if Approval < 2:                          
-                        $ E_Forced = 1
-                    jump E_FP_Prep
+                        $ EmmaX.Forced = 1
+                    jump Emma_FP_Prep
                 else:                              
-                    call Statup("Emma", "Love", 200, -15)  
-                    call EmmaFace("angry", 1)
+                    $ EmmaX.Statup("Love", 200, -15)  
+                    $ EmmaX.FaceChange("angry", 1)
                     "She slaps your hand away."   
-                    $ E_RecentActions.append("angry")
-                    $ E_DailyActions.append("angry")   
+                    $ EmmaX.RecentActions.append("angry")
+                    $ EmmaX.DailyActions.append("angry")   
                     
-    if "no fondle pussy" in E_DailyActions:
-        ch_e "I don't appreciate having to repeat myself, [E_Petname]."   
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
-    elif E_Forced:
-        call EmmaFace("angry", 1)
-        ch_e "I don't think so, [E_Petname]."
-        call Statup("Emma", "Lust", 70, 5)    
-        call Statup("Emma", "Obed", 50, -2)    
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
+    if "no fondle pussy" in EmmaX.DailyActions:
+        ch_e "I don't appreciate having to repeat myself, [EmmaX.Petname]."   
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
+    elif EmmaX.Forced:
+        $ EmmaX.FaceChange("angry", 1)
+        ch_e "I don't think so, [EmmaX.Petname]."
+        $ EmmaX.Statup("Lust", 70, 5)    
+        $ EmmaX.Statup("Obed", 50, -2)    
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
     elif Taboo:
-        call EmmaFace("angry", 1)    
-        $ E_RecentActions.append("tabno")                   
-        $ E_DailyActions.append("tabno")
+        $ EmmaX.FaceChange("angry", 1)    
+        $ EmmaX.RecentActions.append("tabno")                   
+        $ EmmaX.DailyActions.append("tabno")
         ch_e "I have a reputation to maintain."                   
-    elif E_FondleP:
-        call EmmaFace("sad")
+    elif EmmaX.FondleP:
+        $ EmmaX.FaceChange("sad")
         ch_e "Sorry, keep your hands out of there."           
     else:
-        call EmmaFace("sexy") 
-        $ E_Mouth = "sad"
-        ch_e "No thank you, [E_Petname]."
-    $ E_RecentActions.append("no fondle pussy")                      
-    $ E_DailyActions.append("no fondle pussy") 
+        $ EmmaX.FaceChange("sexy") 
+        $ EmmaX.Mouth = "sad"
+        ch_e "No thank you, [EmmaX.Petname]."
+    $ EmmaX.RecentActions.append("no fondle pussy")                      
+    $ EmmaX.DailyActions.append("no fondle pussy") 
     $ Tempmod = 0    
     return
                     
-label E_FP_Prep: #Animation set-up 
+label Emma_FP_Prep: #Animation set-up 
     if Trigger2 == "fondle pussy":
         return
             
-    call E_Pussy_Launch("fondle pussy")
+    call Emma_Pussy_Launch("fondle pussy")
     
-    if Situation == "Emma":                                                        
+    if Situation == EmmaX:                                                        
             #Emma auto-starts    
             $ Situation = 0
-            if (E_Legs and not E_Upskirt) or (E_Panties and not E_PantiesDown):
+            if (EmmaX.Legs and not EmmaX.Upskirt) or (EmmaX.Panties and not EmmaX.PantiesDown):
                 #if she has some sort of top on. . .
-                if ApprovalCheck("Emma", 1250, TabM = 1) or (E_SeenPussy and ApprovalCheck("Emma", 500) and not Taboo):
-                        $ E_Upskirt = 1
-                        $ E_PantiesDown = 1
+                if ApprovalCheck(EmmaX, 1250, TabM = 1) or (EmmaX.SeenPussy and ApprovalCheck(EmmaX, 500) and not Taboo):
+                        $ EmmaX.Upskirt = 1
+                        $ EmmaX.PantiesDown = 1
                         $ Line = 0
-                        if E_Legs == "skirt":
-                            $ Line = "Emma hikes up her skirt"
-                        elif PantsNum("Emma") >= 5:
-                            $ Line = "Emma pulls down her " + E_Legs
+                        if EmmaX.PantsNum() == 5:
+                            $ Line = EmmaX.Name + " hikes up her skirt"
+                        elif EmmaX.PantsNum() >= 6:
+                            $ Line = EmmaX.Name + " pulls down her " + EmmaX.Legs
                         else:
                             $ Line = 0                            
-                        if E_Panties:
+                        if EmmaX.Panties:
                             if Line:
                                 #wearing pants
-                                "[Line] and pulls her [E_Panties] out of the way."
+                                "[Line] and pulls her [EmmaX.Panties] out of the way."
                                 "She then grabs your arm and then strokes your hand across her crotch, clearly intending you to get to work."
                             else:
                                 #no pants
-                                "She pulls her [E_Panties] out of the way, and then strokes your hand across her crotch."
+                                "She pulls her [EmmaX.Panties] out of the way, and then strokes your hand across her crotch."
                                 "She clearly intends for you to get to work." 
                         else:
-                            #pants but no panties
-                            "[Line], and then strokes your hand across her crotch."
-                            "She clearly intends for you to get to work."                     
+                                #pants but no panties
+                                "[Line], and then strokes your hand across her crotch."
+                                "She clearly intends for you to get to work."                     
                         call Emma_First_Bottomless(1)
                 else:
-                    "Emma grabs your arm and strokes your hand across her crotch, clearly intending you to get to work."
+                        "[EmmaX.Name] grabs your arm and strokes your hand across her crotch, clearly intending you to get to work."
             else:
-                "Emma grabs your arm and strokes your hand across her crotch, clearly intending you to get to work."
+                        "[EmmaX.Name] grabs your arm and strokes your hand across her crotch, clearly intending you to get to work."
             menu:
                 "What do you do?"
                 "Get to work.":                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    call Statup("Emma", "Inbt", 50, 2)
+                    $ EmmaX.Statup("Inbt", 80, 3) 
+                    $ EmmaX.Statup("Inbt", 50, 2)
                     "You start to run your fingers along her pussy."
                 "Praise her.":       
-                    call EmmaFace("sexy", 1)                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    ch_p "I like the initiative, [E_Pet]."
-                    call Emma_Namecheck
+                    $ EmmaX.FaceChange("sexy", 1)                    
+                    $ EmmaX.Statup("Inbt", 80, 3) 
+                    ch_p "I like the initiative, [EmmaX.Pet]."
+                    $ EmmaX.NameCheck() #checks reaction to petname
                     "You start to run your fingers along her pussy."
-                    call Statup("Emma", "Love", 85, 1)
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 2)
+                    $ EmmaX.Statup("Love", 85, 1)
+                    $ EmmaX.Statup("Obed", 90, 1)
+                    $ EmmaX.Statup("Obed", 50, 2)
                 "Ask her to stop.":
                     "You pull your hand back."
-                    call EmmaFace("surprised")       
-                    call Statup("Emma", "Inbt", 70, 1) 
-                    ch_p "Let's not do that right now, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma pulls back."
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 1)
-                    call Statup("Emma", "Obed", 30, 2)
-                    $ P_RecentActions.append("nope")      
-                    call AnyWord("Emma",1,"refused","refused")  
+                    $ EmmaX.FaceChange("surprised")       
+                    $ EmmaX.Statup("Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [EmmaX.Pet]."
+                    $ EmmaX.NameCheck() #checks reaction to petname
+                    "[EmmaX.Name] pulls back."
+                    $ EmmaX.Statup("Obed", 90, 1)
+                    $ EmmaX.Statup("Obed", 50, 1)
+                    $ EmmaX.Statup("Obed", 30, 2)
+                    $ Player.RecentActions.append("nope")      
+                    $ EmmaX.AddWord(1,"refused","refused")  
                     return          
             #end auto
             
-    if not E_Forced and Situation != "auto":
+    if not EmmaX.Forced and Situation != "auto":
         $ Tempmod = 0
-        call Emma_Bottoms_Off   
-        if "angry" in E_RecentActions:
+        call Bottoms_Off(EmmaX)   
+        if "angry" in EmmaX.RecentActions:
             return 
     $ Tempmod = 0
     
-    if not E_FondleP:        
-        if E_Forced:
-            call Statup("Emma", "Love", 90, -50)
-            call Statup("Emma", "Obed", 70, 35)
-            call Statup("Emma", "Inbt", 80, 25) 
+    if not EmmaX.FondleP:        
+        if EmmaX.Forced:
+            $ EmmaX.Statup("Love", 90, -50)
+            $ EmmaX.Statup("Obed", 70, 35)
+            $ EmmaX.Statup("Inbt", 80, 25) 
         else:
-            call Statup("Emma", "Love", 90, 10)
-            call Statup("Emma", "Obed", 70, 10)
-            call Statup("Emma", "Inbt", 80, 15) 
+            $ EmmaX.Statup("Love", 90, 10)
+            $ EmmaX.Statup("Obed", 70, 10)
+            $ EmmaX.Statup("Inbt", 80, 15) 
     if Taboo:
-        $ E_Inbt += int(Taboo/10)  
-        $ E_Lust += int(Taboo/5)
+        $ EmmaX.Inbt += int(Taboo/10)  
+        $ EmmaX.Lust += int(Taboo/5)
     
     if Situation:     
         $ renpy.pop_call() 
@@ -1875,27 +1778,27 @@ label E_FP_Prep: #Animation set-up
     $ Line = 0    
     $ Cnt = 0
     if Taboo:
-        call DrainWord("Emma","tabno")
-    call DrainWord("Emma","no fondle pussy")
-    $ E_RecentActions.append("fondle pussy")                      
-    $ E_DailyActions.append("fondle pussy") 
+        $ EmmaX.DrainWord("tabno")
+    $ EmmaX.DrainWord("no fondle pussy")
+    $ EmmaX.RecentActions.append("fondle pussy")                      
+    $ EmmaX.DailyActions.append("fondle pussy") 
     
     $ Speed = 1
     
-label E_FP_Cycle: #Repeating strokes
+label Emma_FP_Cycle: #Repeating strokes
     while Round >=0:  
-        call Shift_Focus("Emma") 
-        call E_Pussy_Launch("fondle pussy")
-        call EmmaLust   
+        call Shift_Focus(EmmaX) 
+        call Emma_Pussy_Launch("fondle pussy")
+        $ EmmaX.LustFace()   
         
-        if  P_Focus < 100:                                                   
+        if  Player.Focus < 100:                                                   
                     #Player Command menu
                     menu:
                         "Keep going. . .":
                                     pass
                           
                         "I want to stick a finger in. . ." if Speed != 2:
-                                if E_InsertP: 
+                                if EmmaX.InsertP: 
                                     $ Speed = 2
                                 else:
                                     menu:                                
@@ -1903,64 +1806,64 @@ label E_FP_Cycle: #Repeating strokes
                                             $ Situation = "shift"
                                         "Don't ask first [[just stick it in]":                                    
                                             $ Situation = "auto"
-                                    call E_Insert_Pussy 
+                                    call Emma_Insert_Pussy 
                         
                         "Pull back a bit. . ." if Speed == 2:
                                     $ Speed = 0
                                     
                         "Slap her ass":                     
-                                    call E_Slap_Ass  
+                                    call Slap_Ass(EmmaX)  
                                     $ Cnt += 1
                                     $ Round -= 1                                      
-                                    jump E_FP_Cycle  
+                                    jump Emma_FP_Cycle  
                                     
-                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in P_Traits:
+                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in Player.Traits:
                                     pass
-                        "Focus to last longer." if not P_FocusX and "focus" in P_Traits:
+                        "Focus to last longer." if not Player.FocusX and "focus" in Player.Traits:
                                     "You concentrate on not burning out too quickly."                
-                                    $ P_FocusX = 1
-                        "Release your focus." if P_FocusX:
+                                    $ Player.FocusX = 1
+                        "Release your focus." if Player.FocusX:
                                     "You release your concentration. . ."                
-                                    $ P_FocusX = 0
+                                    $ Player.FocusX = 0
                                     
                         "Other options":
                                 menu:   
                                     "Offhand action":
-                                            if E_Action and MultiAction:
-                                                call Emma_Offhand_Set
+                                            if EmmaX.Action and MultiAction:
+                                                call Offhand_Set
                                                 if Trigger2:
-                                                     $ E_Action -= 1
+                                                     $ EmmaX.Action -= 1
                                             else:
                                                 ch_e "I could use a break, are you about finished here?"  
                                                 
                                     "Shift primary action":
-                                            if E_Action and MultiAction:
+                                            if EmmaX.Action and MultiAction:
                                                     menu:                                                             
                                                         "I want to lick your pussy.":
                                                                 $ Situation = "shift"
-                                                                call E_FP_After
-                                                                call E_Lick_Pussy                 
+                                                                call Emma_FP_After
+                                                                call Emma_Lick_Pussy                 
                                                         "Just start licking":
                                                                 $ Situation = "auto"
-                                                                call E_FP_After
-                                                                call E_Lick_Pussy         
+                                                                call Emma_FP_After
+                                                                call Emma_Lick_Pussy         
                                                         "Pull back to the thighs":
                                                                 $ Situation = "pullback"
-                                                                call E_FP_After
-                                                                call E_Fondle_Thighs
+                                                                call Emma_FP_After
+                                                                call Emma_Fondle_Thighs
                                                         "I want to stick a dildo in.":
                                                                 $ Situation = "shift"
-                                                                call E_FP_After
-                                                                call E_Dildo_Pussy  
+                                                                call Emma_FP_After
+                                                                call Emma_Dildo_Pussy  
                                                         "Never Mind":
-                                                                jump E_FP_Cycle
+                                                                jump Emma_FP_Cycle
                                             else: 
                                                 ch_e "I could use a break, are you about finished here?"           
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
-                                                call E_FP_After
-                                                call Emma_Offhand_Set   
+                                                call Emma_FP_After
+                                                call Offhand_Set   
                                     "Shift your focus (locked)" if not Trigger2:
                                                 pass
                                     
@@ -1968,141 +1871,143 @@ label E_FP_Cycle: #Repeating strokes
                                         pass
                                     "Threesome actions" if Partner:   
                                         menu:
-                                            "Ask Emma to do something else with [Partner]" if Trigger == "lesbian":
-                                                        call Emma_Les_Change
-                                            "Ask Emma to do something else with [Partner] (locked)" if Trigger != "lesbian":
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name]" if Trigger == "lesbian":
+                                                        call Les_Change(EmmaX)
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name] (locked)" if Trigger != "lesbian":
                                                         pass
-                                            "Ask [Partner] to do something else":
-                                                        call Partner_Threechange("Emma") 
+                                            "Ask [Partner.Name] to do something else":
+                                                        call Three_Change(EmmaX) 
                                                         
                                             "Don't stop what you're doing. . .(locked)" if not ThreeCount or not Trigger4:
                                                         $ ThreeCount = 0                                                            
                                             "Don't stop what you're doing. . ." if ThreeCount and Trigger4:
                                                         $ ThreeCount = 0   
                                                         
-                                            "Swap to [Partner]":
-                                                        call Trigger_Swap("Emma")
-                                            "Undress [Partner]":
-                                                        call Partner_Undress
-                                                        jump E_FP_Cycle 
-                                            "Clean up Partner":
-                                                        call Partner_Cleanup
-                                                        jump E_FP_Cycle 
+                                            "Swap to [Partner.Name]":
+                                                        call Trigger_Swap(EmmaX)
+                                            "Undress [Partner.Name]":
+                                                        call Girl_Undress(Partner)
+                                                        jump Emma_FP_Cycle 
+                                            "Clean up [Partner.Name] (locked)" if not Partner.Spunk:
+                                                        pass
+                                            "Clean up [Partner.Name]" if Partner.Spunk:
+                                                        call Girl_Cleanup(Partner,"ask")
+                                                        jump Emma_FP_Cycle 
                                             "Never mind":
-                                                        jump E_FP_Cycle 
-                                    "Undress Emma":
-                                            call E_Undress   
-                                    "Clean up Emma (locked)" if not E_Spunk:
+                                                        jump Emma_FP_Cycle 
+                                    "Undress [EmmaX.Name]":
+                                            call Girl_Undress(EmmaX)   
+                                    "Clean up [EmmaX.Name] (locked)" if not EmmaX.Spunk:
                                             pass  
-                                    "Clean up Emma" if E_Spunk:
-                                            call Emma_Cleanup("ask")                                         
+                                    "Clean up [EmmaX.Name]" if EmmaX.Spunk:
+                                            call Girl_Cleanup(EmmaX,"ask")                                         
                                     "Never mind":
-                                            jump E_FP_Cycle 
+                                            jump Emma_FP_Cycle 
                                                    
                         "Back to Sex Menu" if MultiAction: 
                                     ch_p "Let's try something else."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Situation = "shift"
                                     $ Line = 0
-                                    jump E_FP_After
+                                    jump Emma_FP_After
                         "End Scene" if not MultiAction: 
                                     ch_p "Let's stop for now."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Line = 0
-                                    jump E_FP_After
+                                    jump Emma_FP_After
         #End menu (if Line)
         
-        call Shift_Focus("Emma")    
-        call Sex_Dialog("Emma",Partner)
+        call Shift_Focus(EmmaX)    
+        call Sex_Dialog(EmmaX,Partner)
                 
         #If either of you could cum 
         
         $ Cnt += 1
         $ Round -= 1   
     
-        $ P_Focus = 50 if not P_Semen and P_Focus >= 50 else P_Focus #Resets P_Focus if can't get it up
-        if P_Focus >= 100 or E_Lust >= 100: 
+        $ Player.Focus = 50 if not Player.Semen and Player.Focus >= 50 else Player.Focus #Resets Player.Focus if can't get it up
+        if Player.Focus >= 100 or EmmaX.Lust >= 100: 
                     #If either of you could cum   
-                    if P_Focus >= 100:    
+                    if Player.Focus >= 100:    
                             #If you can cum:                                                 
-                            call PE_Cumming
-                            if "angry" in E_RecentActions:  
-                                call E_Pos_Reset
+                            call Player_Cumming(EmmaX)
+                            if "angry" in EmmaX.RecentActions:  
+                                call Emma_Pos_Reset
                                 return    
-                            call Statup("Emma", "Lust", 200, 5) 
-                            if 100 > E_Lust >= 70 and E_OCount < 2:             
-                                $ E_RecentActions.append("unsatisfied")                      
-                                $ E_DailyActions.append("unsatisfied") 
+                            $ EmmaX.Statup("Lust", 200, 5) 
+                            if 100 > EmmaX.Lust >= 70 and EmmaX.OCount < 2:             
+                                $ EmmaX.RecentActions.append("unsatisfied")                      
+                                $ EmmaX.DailyActions.append("unsatisfied") 
                             
-                            if P_Focus > 80:
-                                jump E_FP_After 
+                            if Player.Focus > 80:
+                                jump Emma_FP_After 
                             $ Line = "came"
      
-                    if E_Lust >= 100:  
-                            #If Emma can cum                                             
-                            call E_Cumming
-                            if Situation == "shift" or "angry" in E_RecentActions:
-                                jump E_FP_After
+                    if EmmaX.Lust >= 100:  
+                            #If [EmmaX.Name] can cum                                             
+                            call Girl_Cumming(EmmaX)
+                            if Situation == "shift" or "angry" in EmmaX.RecentActions:
+                                jump Emma_FP_After
                        
-                    if Line == "came": #ex P_Focus <= 20: 
+                    if Line == "came": #ex Player.Focus <= 20: 
                             #If you've just cum,  
                             $ Line = 0
-                            if not P_Semen:
+                            if not Player.Semen:
                                 "You're emptied out, you should probably take a break."
                             
                             
-                            if "unsatisfied" in E_RecentActions:#And Emma is unsatisfied,  
-                                    "Emma still seems a bit unsatisfied with the experience."
+                            if "unsatisfied" in EmmaX.RecentActions:#And [EmmaX.Name] is unsatisfied,  
+                                    "[EmmaX.Name] still seems a bit unsatisfied with the experience."
                                     menu:
                                         "Finish her?"
                                         "Yes, keep going for a bit.":
                                             $ Line = "You get back into it" 
                                         "No, I'm done.":
                                             "You pull back."
-                                            jump E_FP_After    
-        if Partner:
+                                            jump Emma_FP_After    
+        if Partner and Partner.Lust >= 100:
                 #Checks if partner could orgasm
-                call Partner_Cumming("Emma")            
+                call Girl_Cumming(Partner)            
         #End orgasm
         
-        $ P_Focus -= 10 if P_FocusX and P_Focus > 50 else 0
+        $ Player.Focus -= 10 if Player.FocusX and Player.Focus > 50 else 0
         
-        if E_SEXP >= 100 or ApprovalCheck("Emma", 1200, "LO"):
+        if EmmaX.SEXP >= 100 or ApprovalCheck(EmmaX, 1200, "LO"):
             pass
-        elif Cnt == (5 + E_FondleP):
-                    $ E_Brows = "confused"
+        elif Cnt == (5 + EmmaX.FondleP):
+                    $ EmmaX.Brows = "confused"
                     ch_e "You like how that feels, huh?"  
-        elif E_Lust >= 80:
+        elif EmmaX.Lust >= 80:
                     pass
-        elif Cnt == (15 + E_FondleP) and E_SEXP >= 15 and not ApprovalCheck("Emma", 1500):
-                    $ E_Brows = "confused"        
+        elif Cnt == (15 + EmmaX.FondleP) and EmmaX.SEXP >= 15 and not ApprovalCheck(EmmaX, 1500):
+                    $ EmmaX.Brows = "confused"        
                     menu:
                         ch_e "You certainly seem to be enjoying yourself, but perhaps we could add some variety?"                         
                         "Finish up.":
                                 "You let go. . ."   
-                                jump E_FP_After
+                                jump Emma_FP_After
                         "Let's try something else." if MultiAction: 
                                 $ Line = 0
                                 $ Situation = "shift"
-                                jump E_FP_After
+                                jump Emma_FP_After
                         "No, this is fun.":   
-                                if ApprovalCheck("Emma", 1200) or ApprovalCheck("Emma", 500, "O"):                        
-                                    call Statup("Emma", "Love", 200, -5)
-                                    call Statup("Emma", "Obed", 50, 3)                    
-                                    call Statup("Emma", "Obed", 80, 2)
+                                if ApprovalCheck(EmmaX, 1200) or ApprovalCheck(EmmaX, 500, "O"):                        
+                                    $ EmmaX.Statup("Love", 200, -5)
+                                    $ EmmaX.Statup("Obed", 50, 3)                    
+                                    $ EmmaX.Statup("Obed", 80, 2)
                                     "She grumbles but lets you keep going."
                                 else:
-                                    call EmmaFace("angry", 1)   
-                                    call E_Pos_Reset
+                                    $ EmmaX.FaceChange("angry", 1)   
+                                    call Emma_Pos_Reset
                                     "She scowls at you and pulls back."
                                     ch_e "Well perhaps you are enjoying yourself, but I'm tired of this."                         
-                                    call Statup("Emma", "Love", 50, -3, 1)
-                                    call Statup("Emma", "Love", 80, -4, 1)
-                                    call Statup("Emma", "Obed", 30, -1, 1)                    
-                                    call Statup("Emma", "Obed", 50, -1, 1)  
-                                    $ E_RecentActions.append("angry")
-                                    $ E_DailyActions.append("angry")   
-                                    jump E_FP_After
+                                    $ EmmaX.Statup("Love", 50, -3, 1)
+                                    $ EmmaX.Statup("Love", 80, -4, 1)
+                                    $ EmmaX.Statup("Obed", 30, -1, 1)                    
+                                    $ EmmaX.Statup("Obed", 50, -1, 1)  
+                                    $ EmmaX.RecentActions.append("angry")
+                                    $ EmmaX.DailyActions.append("angry")   
+                                    jump Emma_FP_After
         #End Count check
            
         if Round == 10:
@@ -2111,33 +2016,33 @@ label E_FP_Cycle: #Repeating strokes
             ch_e "We should take a break soon."        
     
     #Round = 0 loop breaks
-    call EmmaFace("bemused", 0)
+    $ EmmaX.FaceChange("bemused", 0)
     $ Line = 0
     ch_e "We need to stop for a moment, let me catch my breath."
     
     
-label E_FP_After:
+label Emma_FP_After:
     if not Situation: #fix  Situation != "shift" and Situation != "auto" and Situation != "pullback": 
-        call E_Pos_Reset
+        call Emma_Pos_Reset
         
-    call EmmaFace("sexy") 
+    $ EmmaX.FaceChange("sexy") 
     
-    $ E_FondleP += 1  
-    $ E_Action -=1
-    if E_Legs != "pants" or E_Upskirt:        
-        $ E_Addictionrate += 1
-        if "addictive" in P_Traits:
-            $ E_Addictionrate += 1
+    $ EmmaX.FondleP += 1  
+    $ EmmaX.Action -=1
+    if EmmaX.PantsNum() <= 6 or EmmaX.Upskirt:        
+        $ EmmaX.Addictionrate += 1
+        if "addictive" in Player.Traits:
+            $ EmmaX.Addictionrate += 1
     
-    call Partner_Like("Emma",2)
+    call Partner_Like(EmmaX,2)
      
-    if E_FondleP == 1:            
-            $ E_SEXP += 7         
+    if EmmaX.FondleP == 1:            
+            $ EmmaX.SEXP += 7         
             if not Situation: 
-                if E_Love >= 500 and "unsatisfied" not in E_RecentActions:
+                if EmmaX.Love >= 500 and "unsatisfied" not in EmmaX.RecentActions:
                     ch_e "I do appreciate some rather. . . aggressive attention down there."
-                elif E_Obed <= 500 and P_Focus <= 20:
-                    call EmmaFace("perplexed", 1)
+                elif EmmaX.Obed <= 500 and Player.Focus <= 20:
+                    $ EmmaX.FaceChange("perplexed", 1)
                     ch_e "Did you find what you were looking for?"
      
     $ Tempmod = 0  
@@ -2146,151 +2051,151 @@ label E_FP_After:
     call Checkout
     return   
 
-# end E_Fondle Pussy /////////////////////////////////////////////////////////////////////////////
+# end EmmaX.Fondle Pussy /////////////////////////////////////////////////////////////////////////////
 
 # ////////////////////////////////////////////////////////////////////////Start Insert Pussy    
-label E_Insert_Pussy:
-    call Shift_Focus("Emma")
+label Emma_Insert_Pussy:
+    call Shift_Focus(EmmaX)
     if Situation == "auto":                                                                  #You auto-start                    
-        if ApprovalCheck("Emma", 1100, TabM = 2):
-            call EmmaFace("surprised")       
-            call Statup("Emma", "Obed", 90, 1)
-            call Statup("Emma", "Obed", 70, 2)
-            call Statup("Emma", "Inbt", 70, 3) 
-            call Statup("Emma", "Inbt", 30, 2) 
-            "As you slide a finger in, Emma seems a bit surprised, but seems into it."              
-            jump E_IP_Prep
+        if ApprovalCheck(EmmaX, 1100, TabM = 2):
+            $ EmmaX.FaceChange("surprised")       
+            $ EmmaX.Statup("Obed", 90, 1)
+            $ EmmaX.Statup("Obed", 70, 2)
+            $ EmmaX.Statup("Inbt", 70, 3) 
+            $ EmmaX.Statup("Inbt", 30, 2) 
+            "As you slide a finger in, [EmmaX.Name] seems a bit surprised, but seems into it."              
+            jump Emma_IP_Prep
         else:   
-            call EmmaFace("surprised",2)
-            call Statup("Emma", "Love", 80, -2)
-            call Statup("Emma", "Obed", 50, -3)
+            $ EmmaX.FaceChange("surprised",2)
+            $ EmmaX.Statup("Love", 80, -2)
+            $ EmmaX.Statup("Obed", 50, -3)
             ch_e "Oooh!"
             "She slaps your hand back."
-            call EmmaFace("perplexed",1)
+            $ EmmaX.FaceChange("perplexed",1)
             ch_e "Careful what you put in there, you may not get it back."
             return            
     
-    if ApprovalCheck("Emma", 1100, TabM = 2):                                                                   #She's into it. . .               
-        if E_Forced:
-            call EmmaFace("sad")
-            call Statup("Emma", "Love", 70, -3, 1)
-            call Statup("Emma", "Love", 20, -2, 1)
-            call Statup("Emma", "Obed", 90, 1)
-            call Statup("Emma", "Inbt", 60, 1)
+    if ApprovalCheck(EmmaX, 1100, TabM = 2):                                                                   #She's into it. . .               
+        if EmmaX.Forced:
+            $ EmmaX.FaceChange("sad")
+            $ EmmaX.Statup("Love", 70, -3, 1)
+            $ EmmaX.Statup("Love", 20, -2, 1)
+            $ EmmaX.Statup("Obed", 90, 1)
+            $ EmmaX.Statup("Inbt", 60, 1)
             ch_e "If you must. . ."    
         else:
-            call EmmaFace("sexy", 1)
-            call Statup("Emma", "Love", 90, 1)
-            call Statup("Emma", "Inbt", 50, 3) 
+            $ EmmaX.FaceChange("sexy", 1)
+            $ EmmaX.Statup("Love", 90, 1)
+            $ EmmaX.Statup("Inbt", 50, 3) 
             ch_e "Mmmmmm. . ."                
-        call Statup("Emma", "Obed", 20, 1)
-        call Statup("Emma", "Obed", 60, 1)
-        call Statup("Emma", "Inbt", 70, 2) 
-        jump E_IP_Prep   
+        $ EmmaX.Statup("Obed", 20, 1)
+        $ EmmaX.Statup("Obed", 60, 1)
+        $ EmmaX.Statup("Inbt", 70, 2) 
+        jump Emma_IP_Prep   
     
     else:                                                                               #She's not into it, but maybe. . .  
-        call EmmaFace("bemused", 2)
+        $ EmmaX.FaceChange("bemused", 2)
         ch_e "No. Thank you."
-        $ E_Blush = 1
+        $ EmmaX.Blush = 1
     return
     
                 
-label E_IP_Prep: #Animation set-up     
-    if not E_InsertP:
-        $ E_InsertP = 1
-        $ E_SEXP += 10          
-        if E_Forced:
-            call Statup("Emma", "Love", 90, -60)
-            call Statup("Emma", "Obed", 70, 55)
-            call Statup("Emma", "Inbt", 80, 35) 
+label Emma_IP_Prep: #Animation set-up     
+    if not EmmaX.InsertP:
+        $ EmmaX.InsertP = 1
+        $ EmmaX.SEXP += 10          
+        if EmmaX.Forced:
+            $ EmmaX.Statup("Love", 90, -60)
+            $ EmmaX.Statup("Obed", 70, 55)
+            $ EmmaX.Statup("Inbt", 80, 35) 
         else:
-            call Statup("Emma", "Love", 90, 10)
-            call Statup("Emma", "Obed", 70, 20)
-            call Statup("Emma", "Inbt", 80, 25)
+            $ EmmaX.Statup("Love", 90, 10)
+            $ EmmaX.Statup("Obed", 70, 20)
+            $ EmmaX.Statup("Inbt", 80, 25)
                 
-    if not E_Forced and Situation != "auto":        
-        call E_Undress("bottom")
-        if "angry" in E_RecentActions:
+    if not EmmaX.Forced and Situation != "auto":        
+        call Girl_Undress(EmmaX,"bottom")
+        if "angry" in EmmaX.RecentActions:
             return    
             
-#    call E_Pussy_Launch("insert pussy")
+#    call Emma_Pussy_Launch("insert pussy")
     if Taboo:
-        $ E_Inbt += int(Taboo/10)  
-        $ E_Lust += int(Taboo/5)
+        $ EmmaX.Inbt += int(Taboo/10)  
+        $ EmmaX.Lust += int(Taboo/5)
         
     $ Line = 0  
     $ Speed = 2
     return
 
-# end E_Insert Pussy /////////////////////////////////////////////////////////////////////////////
+# end EmmaX.Insert Pussy /////////////////////////////////////////////////////////////////////////////
 
 
 
 
 # ////////////////////////////////////////////////////////////////////////Start Insert Pussy    
-label E_Lick_Pussy: 
+label Emma_Lick_Pussy: 
     $ Round -= 5 if Round > 5 else (Round-1)
-    call Shift_Focus("Emma")
+    call Shift_Focus(EmmaX)
                                                                                   # Will she let you fondle? Modifiers     
-    if E_LickP: #You've done it before
+    if EmmaX.LickP: #You've done it before
         $ Tempmod += 15
-    if E_Legs == "pants" or HoseNum("Emma") >= 5: # she's got pants on.
+    if EmmaX.PantsNum() > 6 or EmmaX.HoseNum() >= 5: # she's got pants on.
         $ Tempmod -= 15  
-    if E_Lust > 95:
+    if EmmaX.Lust > 95:
         $ Tempmod += 20  
-    elif E_Lust > 85: #She's really horny
+    elif EmmaX.Lust > 85: #She's really horny
         $ Tempmod += 15
     if Situation == "shift":
         $ Tempmod += 10
-    if E_Lust > 85 and Situation == "auto": #She's really horny
+    if EmmaX.Lust > 85 and Situation == "auto": #She's really horny
         $ Tempmod += 10
-    if "exhibitionist" in E_Traits:
+    if "exhibitionist" in EmmaX.Traits:
         $ Tempmod += (4*Taboo) 
-    if "dating" in E_Traits or "sex friend" in E_Petnames:
+    if "dating" in EmmaX.Traits or "sex friend" in EmmaX.Petnames:
         $ Tempmod += 10
-    elif "ex" in E_Traits:
+    elif "ex" in EmmaX.Traits:
         $ Tempmod -= 25  
-    if E_ForcedCount and not E_Forced:
-        $ Tempmod -= 5 * E_ForcedCount     
+    if EmmaX.ForcedCount and not EmmaX.Forced:
+        $ Tempmod -= 5 * EmmaX.ForcedCount     
     
-    if Taboo and "tabno" in E_DailyActions:        
+    if Taboo and "tabno" in EmmaX.DailyActions:        
         $ Tempmod -= 10 
-    if Taboo and "public" not in E_History:                   
+    if Taboo and "public" not in EmmaX.History:                   
         $ Tempmod -= 20 
         
-    if "no lick pussy" in E_DailyActions:               
+    if "no lick pussy" in EmmaX.DailyActions:               
         $ Tempmod -= 5 
-        $ Tempmod -= 10 if "no lick pussy" in E_RecentActions else 0   
+        $ Tempmod -= 10 if "no lick pussy" in EmmaX.RecentActions else 0   
             
-    $ Approval = ApprovalCheck("Emma", 1250, TabM = 4) # 125, 140, 155, Taboo -160(285)
+    $ Approval = ApprovalCheck(EmmaX, 1250, TabM = 4) # 125, 140, 155, Taboo -160(285)
     
     if Situation == "auto":                                                                  #You auto-start                    
         if Approval:            
-            call EmmaFace("surprised")
-            call Statup("Emma", "Obed", 90, 1)
-            call Statup("Emma", "Obed", 70, 2)
-            call Statup("Emma", "Inbt", 70, 3) 
-            call Statup("Emma", "Inbt", 30, 2) 
-            "As you crouch down and start to lick her pussy, Emma jumps, but then softens."  
-            call EmmaFace("sexy")           
-            jump E_LP_Prep
+            $ EmmaX.FaceChange("surprised")
+            $ EmmaX.Statup("Obed", 90, 1)
+            $ EmmaX.Statup("Obed", 70, 2)
+            $ EmmaX.Statup("Inbt", 70, 3) 
+            $ EmmaX.Statup("Inbt", 30, 2) 
+            "As you crouch down and start to lick her pussy, [EmmaX.Name] jumps, but then softens."  
+            $ EmmaX.FaceChange("sexy")           
+            jump Emma_LP_Prep
         else:   
-            call EmmaFace("surprised")
-            call Statup("Emma", "Love", 80, -2)
-            call Statup("Emma", "Obed", 50, -3)
+            $ EmmaX.FaceChange("surprised")
+            $ EmmaX.Statup("Love", 80, -2)
+            $ EmmaX.Statup("Obed", 50, -3)
             ch_e "I like where your head is at, so to speak, but perhaps hold off on that." 
-            call EmmaFace("perplexed",1)
+            $ EmmaX.FaceChange("perplexed",1)
             "She pushes your head back away from her."
             $ Tempmod = 0
             $ Trigger2 = 0
             return            
     
-    if "lick pussy" in E_RecentActions:
-        call EmmaFace("sexy", 1)
+    if "lick pussy" in EmmaX.RecentActions:
+        $ EmmaX.FaceChange("sexy", 1)
         ch_e "Mmmm, again? I suppose. . ."
-        jump E_LP_Prep
-    elif "lick pussy" in E_DailyActions:
-        call EmmaFace("sexy", 1)
+        jump Emma_LP_Prep
+    elif "lick pussy" in EmmaX.DailyActions:
+        $ EmmaX.FaceChange("sexy", 1)
         $ Line = renpy.random.choice(["You didn't get enough earlier?",
             "Huh? Again?",
             "I must have done something right.",
@@ -2299,288 +2204,288 @@ label E_Lick_Pussy:
         ch_e "[Line]"
         
     if Approval >= 2:                                                                   #She's into it. . .               
-        if E_Forced:
-            call EmmaFace("sad")
-            call Statup("Emma", "Love", 70, -3, 1)
-            call Statup("Emma", "Love", 20, -2, 1)
-            call Statup("Emma", "Obed", 90, 1)
-            call Statup("Emma", "Inbt", 60, 1)
+        if EmmaX.Forced:
+            $ EmmaX.FaceChange("sad")
+            $ EmmaX.Statup("Love", 70, -3, 1)
+            $ EmmaX.Statup("Love", 20, -2, 1)
+            $ EmmaX.Statup("Obed", 90, 1)
+            $ EmmaX.Statup("Inbt", 60, 1)
             ch_e "If you must. . ."    
         else:
-            call EmmaFace("sexy", 1)
-            $ E_Eyes = "closed"            
-            call Statup("Emma", "Love", 90, 1)
-            call Statup("Emma", "Inbt", 50, 3)            
-            call Statup("Emma", "Lust", 200, 3)
+            $ EmmaX.FaceChange("sexy", 1)
+            $ EmmaX.Eyes = "closed"            
+            $ EmmaX.Statup("Love", 90, 1)
+            $ EmmaX.Statup("Inbt", 50, 3)            
+            $ EmmaX.Statup("Lust", 200, 3)
             ch_e "Mmmmmm. . ."                
-        call Statup("Emma", "Obed", 20, 1)
-        call Statup("Emma", "Obed", 60, 1)
-        call Statup("Emma", "Inbt", 70, 2) 
-        jump E_LP_Prep   
+        $ EmmaX.Statup("Obed", 20, 1)
+        $ EmmaX.Statup("Obed", 60, 1)
+        $ EmmaX.Statup("Inbt", 70, 2) 
+        jump Emma_LP_Prep   
     
     else:                                                                               #She's not into it, but maybe. . .            
-        call EmmaFace("angry", 1)
-        if "no lick pussy" in E_RecentActions:  
-            ch_e "Your persistance is doing you no favors, [E_Petname]."
-        elif Taboo and "tabno" in E_DailyActions and "no lick pussy" in E_DailyActions:  
+        $ EmmaX.FaceChange("angry", 1)
+        if "no lick pussy" in EmmaX.RecentActions:  
+            ch_e "Your persistance is doing you no favors, [EmmaX.Petname]."
+        elif Taboo and "tabno" in EmmaX.DailyActions and "no lick pussy" in EmmaX.DailyActions:  
             ch_e "You already got your answer!" 
-        elif "no lick pussy" in E_DailyActions:       
+        elif "no lick pussy" in EmmaX.DailyActions:       
             ch_e "I believe you know my answer on this matter."
-        elif Taboo and "tabno" in E_DailyActions:  
-            ch_e "As I said, not here, [E_Petname]."  
-        elif not E_LickP:
-            call EmmaFace("bemused")
-            ch_e "I'm not sure we're at that stage, [E_Petname]. . ."
+        elif Taboo and "tabno" in EmmaX.DailyActions:  
+            ch_e "As I said, not here, [EmmaX.Petname]."  
+        elif not EmmaX.LickP:
+            $ EmmaX.FaceChange("bemused")
+            ch_e "I'm not sure we're at that stage, [EmmaX.Petname]. . ."
         else:
-            call EmmaFace("bemused")
+            $ EmmaX.FaceChange("bemused")
             ch_e "I'm really not comfortable with that. . ." 
         menu:
             extend ""
-            "Sorry, never mind." if "no lick pussy" in E_DailyActions:
-                call EmmaFace("bemused")
-                ch_e "I appreciate your restraint, [E_Petname]."              
+            "Sorry, never mind." if "no lick pussy" in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("bemused")
+                ch_e "I appreciate your restraint, [EmmaX.Petname]."              
                 return            
-            "I'm sure I can convince you later. . ." if "no lick pussy" not in E_DailyActions:
-                call EmmaFace("sexy")  
-                ch_e "I'll be thinking about it, [E_Petname]."
-                call Statup("Emma", "Love", 80, 2)
-                call Statup("Emma", "Inbt", 70, 2)   
+            "I'm sure I can convince you later. . ." if "no lick pussy" not in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("sexy")  
+                ch_e "I'll be thinking about it, [EmmaX.Petname]."
+                $ EmmaX.Statup("Love", 80, 2)
+                $ EmmaX.Statup("Inbt", 70, 2)   
                 if Taboo:                    
-                    $ E_RecentActions.append("tabno")                      
-                    $ E_DailyActions.append("tabno") 
-                $ E_RecentActions.append("no lick pussy")                      
-                $ E_DailyActions.append("no lick pussy")            
+                    $ EmmaX.RecentActions.append("tabno")                      
+                    $ EmmaX.DailyActions.append("tabno") 
+                $ EmmaX.RecentActions.append("no lick pussy")                      
+                $ EmmaX.DailyActions.append("no lick pussy")            
                 return
             "I think you'd really enjoy it. . .":            
                 if Approval:
-                    call EmmaFace("sexy")           
-                    call Statup("Emma", "Obed", 90, 2)
-                    call Statup("Emma", "Obed", 50, 2)
+                    $ EmmaX.FaceChange("sexy")           
+                    $ EmmaX.Statup("Obed", 90, 2)
+                    $ EmmaX.Statup("Obed", 50, 2)
                     ch_e "You present a compelling case. . ."      
-                    call Statup("Emma", "Inbt", 70, 3) 
-                    call Statup("Emma", "Inbt", 40, 2)
-                    jump E_LP_Prep
+                    $ EmmaX.Statup("Inbt", 70, 3) 
+                    $ EmmaX.Statup("Inbt", 40, 2)
+                    jump Emma_LP_Prep
                 else:   
-                    call EmmaFace("sexy") 
-                    ch_e "I would, but still no, [E_Petname]."    
+                    $ EmmaX.FaceChange("sexy") 
+                    ch_e "I would, but still no, [EmmaX.Petname]."    
             
             "[[Get in there anyway]":                                               # Pressured into being licked. 
-                $ Approval = ApprovalCheck("Emma", 750, "OI", TabM = 4) # 75, 90, 105, -160(235)
-                if Approval > 1 or (Approval and E_Forced):
-                    call EmmaFace("sad")
-                    call Statup("Emma", "Love", 70, -5, 1)
-                    call Statup("Emma", "Love", 200, -2)                 
+                $ Approval = ApprovalCheck(EmmaX, 750, "OI", TabM = 4) # 75, 90, 105, -160(235)
+                if Approval > 1 or (Approval and EmmaX.Forced):
+                    $ EmmaX.FaceChange("sad")
+                    $ EmmaX.Statup("Love", 70, -5, 1)
+                    $ EmmaX.Statup("Love", 200, -2)                 
                     ch_e "If you insist. . ."  
-                    call Statup("Emma", "Obed", 50, 4)
-                    call Statup("Emma", "Inbt", 80, 1) 
-                    call Statup("Emma", "Inbt", 60, 3)  
+                    $ EmmaX.Statup("Obed", 50, 4)
+                    $ EmmaX.Statup("Inbt", 80, 1) 
+                    $ EmmaX.Statup("Inbt", 60, 3)  
                     if Approval < 2:                          
-                        $ E_Forced = 1
-                    jump E_LP_Prep
+                        $ EmmaX.Forced = 1
+                    jump Emma_LP_Prep
                 else:                              
-                    call Statup("Emma", "Love", 200, -15)  
-                    call EmmaFace("angry", 1)
+                    $ EmmaX.Statup("Love", 200, -15)  
+                    $ EmmaX.FaceChange("angry", 1)
                     "She shoves your head back."   
-                    $ E_RecentActions.append("angry")
-                    $ E_DailyActions.append("angry")   
+                    $ EmmaX.RecentActions.append("angry")
+                    $ EmmaX.DailyActions.append("angry")   
                     
-    if "no lick pussy" in E_DailyActions:
-        ch_e "I don't appreciate having to repeat myself, [E_Petname]."   
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
-    elif E_Forced:
-        call EmmaFace("angry", 1)
-        ch_e "I really can't, [E_Petname]."
-        call Statup("Emma", "Lust", 80, 5)    
-        call Statup("Emma", "Obed", 50, -2)     
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
+    if "no lick pussy" in EmmaX.DailyActions:
+        ch_e "I don't appreciate having to repeat myself, [EmmaX.Petname]."   
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
+    elif EmmaX.Forced:
+        $ EmmaX.FaceChange("angry", 1)
+        ch_e "I really can't, [EmmaX.Petname]."
+        $ EmmaX.Statup("Lust", 80, 5)    
+        $ EmmaX.Statup("Obed", 50, -2)     
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
     elif Taboo:
-        call EmmaFace("angry", 1)    
-        $ E_RecentActions.append("tabno")                   
-        $ E_DailyActions.append("tabno") 
+        $ EmmaX.FaceChange("angry", 1)    
+        $ EmmaX.RecentActions.append("tabno")                   
+        $ EmmaX.DailyActions.append("tabno") 
         ch_e "I have a reputation to maintain."                   
-    elif E_LickP:
-        call EmmaFace("sad") 
+    elif EmmaX.LickP:
+        $ EmmaX.FaceChange("sad") 
         ch_e "Keep your head out of there."    
     else:
-        call EmmaFace("surprised")
+        $ EmmaX.FaceChange("surprised")
         ch_e "I know, I'm as disappointed as you are."
-        call EmmaFace
-    $ E_RecentActions.append("no lick pussy")                      
-    $ E_DailyActions.append("no lick pussy") 
+        $ EmmaX.FaceChange()
+    $ EmmaX.RecentActions.append("no lick pussy")                      
+    $ EmmaX.DailyActions.append("no lick pussy") 
     $ Tempmod = 0    
     return
     
-label E_LP_Prep: #Animation set-up  
+label Emma_LP_Prep: #Animation set-up  
     if Trigger2 == "lick pussy": #fix pull down pants now an option, make it work
         return
             
-    call E_Pussy_Launch("lick pussy")
+    call Emma_Pussy_Launch("lick pussy")
     
-    if Situation == "Emma":                                                       
+    if Situation == EmmaX:                                                       
             #Emma auto-starts    
             $ Situation = 0
-            if (E_Legs and not E_Upskirt) or (E_Panties and not E_PantiesDown):
+            if (EmmaX.Legs and not EmmaX.Upskirt) or (EmmaX.Panties and not EmmaX.PantiesDown):
                 #if she has some sort of top on. . .
-                if ApprovalCheck("Emma", 1250, TabM = 1) or (E_SeenPussy and ApprovalCheck("Emma", 500) and not Taboo):
-                        $ E_Upskirt = 1
-                        $ E_PantiesDown = 1
+                if ApprovalCheck(EmmaX, 1250, TabM = 1) or (EmmaX.SeenPussy and ApprovalCheck(EmmaX, 500) and not Taboo):
+                        $ EmmaX.Upskirt = 1
+                        $ EmmaX.PantiesDown = 1
                         $ Line = 0
-                        if E_Legs == "skirt":
-                            $ Line = "Emma hikes up her skirt"
-                        elif PantsNum("Emma") >= 5:
-                            $ Line = "Emma pulls down her " + E_Legs
+                        if EmmaX.PantsNum() == 5:
+                            $ Line = EmmaX.Name + " hikes up her skirt"
+                        elif EmmaX.PantsNum() >= 6:
+                            $ Line = EmmaX.Name + " pulls down her " + EmmaX.Legs
                         else:
                             $ Line = 0                            
-                        if E_Panties:
+                        if EmmaX.Panties:
                             if Line:
                                 #wearing pants
-                                "[Line] and pulls her [E_Panties] out of the way."
+                                "[Line] and pulls her [EmmaX.Panties] out of the way."
                                 "She then grabs your head and pulls it to her crotch, clearly intending you to get to work."
                             else:
                                 #no pants
-                                "She pulls her [E_Panties] out of the way, and then shoves your face into her crotch."
+                                "She pulls her [EmmaX.Panties] out of the way, and then shoves your face into her crotch."
                                 "She clearly intends for you to get to work." 
                         else:
-                            #pants but no panties
-                            "[Line], and then shoves your face into her crotch."
-                            "She clearly intends for you to get to work."                     
+                                #pants but no panties
+                                "[Line], and then shoves your face into her crotch."
+                                "She clearly intends for you to get to work."                     
                         call Emma_First_Bottomless(1)
                 else:
-                    "Emma grabs your head and pulls it to her crotch, clearly intending you to get to work."
+                        "[EmmaX.Name] grabs your head and pulls it to her crotch, clearly intending you to get to work."
             else:
-                "Emma grabs your head and pulls it to her crotch, clearly intending you to get to work."
+                        "[EmmaX.Name] grabs your head and pulls it to her crotch, clearly intending you to get to work."
             menu:
                 "What do you do?"
                 "Get to work.":                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    call Statup("Emma", "Inbt", 50, 2)
+                    $ EmmaX.Statup("Inbt", 80, 3) 
+                    $ EmmaX.Statup("Inbt", 50, 2)
                     "You start licking."
                 "Praise her.":       
-                    call EmmaFace("sexy", 1)                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    ch_p "Mmm, I like this idea, [E_Pet]."
-                    call Emma_Namecheck
+                    $ EmmaX.FaceChange("sexy", 1)                    
+                    $ EmmaX.Statup("Inbt", 80, 3) 
+                    ch_p "Mmm, I like this idea, [EmmaX.Pet]."
+                    $ EmmaX.NameCheck() #checks reaction to petname
                     "You start licking."
-                    call Statup("Emma", "Love", 85, 1)
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 2)
+                    $ EmmaX.Statup("Love", 85, 1)
+                    $ EmmaX.Statup("Obed", 90, 1)
+                    $ EmmaX.Statup("Obed", 50, 2)
                 "Ask her to stop.":
                     "You pull your head away."
-                    call EmmaFace("surprised")       
-                    call Statup("Emma", "Inbt", 70, 1) 
-                    ch_p "Let's not do that right now, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma pulls back."
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 1)
-                    call Statup("Emma", "Obed", 30, 2)
-                    $ P_RecentActions.append("nope")      
-                    call AnyWord("Emma",1,"refused","refused")  
+                    $ EmmaX.FaceChange("surprised")       
+                    $ EmmaX.Statup("Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [EmmaX.Pet]."
+                    $ EmmaX.NameCheck() #checks reaction to petname
+                    "[EmmaX.Name] pulls back."
+                    $ EmmaX.Statup("Obed", 90, 1)
+                    $ EmmaX.Statup("Obed", 50, 1)
+                    $ EmmaX.Statup("Obed", 30, 2)
+                    $ Player.RecentActions.append("nope")      
+                    $ EmmaX.AddWord(1,"refused","refused")  
                     return          
             #end auto
             
-    if not E_Forced and Situation != "auto":
+    if not EmmaX.Forced and Situation != "auto":
         $ Tempmod = 0
-        if E_Legs == "pants":
+        if EmmaX.PantsNum() > 6:
             $ Tempmod = 15
-        call Emma_Bottoms_Off
-        if "angry" in E_RecentActions:
+        call Bottoms_Off(EmmaX)
+        if "angry" in EmmaX.RecentActions:
             return  
             
     $ Tempmod = 0  
-    if not E_LickP:        
-        if E_Forced:
-            call Statup("Emma", "Love", 90, -30)
-            call Statup("Emma", "Obed", 70, 35)
-            call Statup("Emma", "Inbt", 80, 75) 
+    if not EmmaX.LickP:        
+        if EmmaX.Forced:
+            $ EmmaX.Statup("Love", 90, -30)
+            $ EmmaX.Statup("Obed", 70, 35)
+            $ EmmaX.Statup("Inbt", 80, 75) 
         else:
-            call Statup("Emma", "Love", 90, 35)
-            call Statup("Emma", "Obed", 70, 15)
-            call Statup("Emma", "Inbt", 80, 35)
+            $ EmmaX.Statup("Love", 90, 35)
+            $ EmmaX.Statup("Obed", 70, 15)
+            $ EmmaX.Statup("Inbt", 80, 35)
     if Taboo:
-        $ E_Inbt += int(Taboo/10)  
-        $ E_Lust += int(Taboo/5)
+        $ EmmaX.Inbt += int(Taboo/10)  
+        $ EmmaX.Lust += int(Taboo/5)
     if Situation:     
         $ renpy.pop_call() 
         $ Situation = 0  
         
-    if E_Legs == "skirt":
-        $ E_Upskirt = 1  
-        $ E_SeenPanties = 1
+    if EmmaX.PantsNum() == 5:
+        $ EmmaX.Upskirt = 1  
+        $ EmmaX.SeenPanties = 1
     call Emma_First_Bottomless(1)
     
     $ Line = 0
     $ Cnt = 0
     if Taboo:
-        call DrainWord("Emma","tabno")
-    call DrainWord("Emma","no lick pussy")
-    $ E_RecentActions.append("lick pussy")                      
-    $ E_DailyActions.append("lick pussy") 
+        $ EmmaX.DrainWord("tabno")
+    $ EmmaX.DrainWord("no lick pussy")
+    $ EmmaX.RecentActions.append("lick pussy")                      
+    $ EmmaX.DailyActions.append("lick pussy") 
     
-label E_LP_Cycle: #Repeating strokes
+label Emma_LP_Cycle: #Repeating strokes
     if Trigger2 == "kiss you":
             $ Trigger2 = 0   
     while Round >=0:  
-        call Shift_Focus("Emma") 
-        call E_Pussy_Launch("lick pussy")
-        call EmmaLust   
+        call Shift_Focus(EmmaX) 
+        call Emma_Pussy_Launch("lick pussy")
+        $ EmmaX.LustFace()   
         
-        if  P_Focus < 100:                                                   
+        if  Player.Focus < 100:                                                   
                     #Player Command menu
                     menu:
                         "Keep going. . .":
                                     pass
                                                               
                         "Slap her ass":                     
-                                    call E_Slap_Ass  
+                                    call Slap_Ass(EmmaX)  
                                     $ Cnt += 1
                                     $ Round -= 1                                      
-                                    jump E_LP_Cycle  
+                                    jump Emma_LP_Cycle  
                                     
-                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in P_Traits:
+                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in Player.Traits:
                                     pass
-                        "Focus to last longer." if not P_FocusX and "focus" in P_Traits:
+                        "Focus to last longer." if not Player.FocusX and "focus" in Player.Traits:
                                     "You concentrate on not burning out too quickly."                
-                                    $ P_FocusX = 1
-                        "Release your focus." if P_FocusX:
+                                    $ Player.FocusX = 1
+                        "Release your focus." if Player.FocusX:
                                     "You release your concentration. . ."                
-                                    $ P_FocusX = 0
+                                    $ Player.FocusX = 0
                                     
                         "Other options":
                                 menu:   
                                     "Offhand action":
-                                            if E_Action and MultiAction:
-                                                call Emma_Offhand_Set
+                                            if EmmaX.Action and MultiAction:
+                                                call Offhand_Set
                                                 if Trigger2:
-                                                     $ E_Action -= 1
+                                                     $ EmmaX.Action -= 1
                                             else:
                                                 ch_e "I could use a break, are you about finished here?"  
                                                 
                                     "Shift primary action":
-                                            if E_Action and MultiAction:
+                                            if EmmaX.Action and MultiAction:
                                                     menu:                                                             
                                                         "Pull out and start rubbing again.":
-                                                                if E_Action and MultiAction:
+                                                                if EmmaX.Action and MultiAction:
                                                                     $ Situation = "pullback"
-                                                                    call E_LP_After
-                                                                    call E_Fondle_Pussy
+                                                                    call Emma_LP_After
+                                                                    call Emma_Fondle_Pussy
                                                                 else:
                                                                     ch_e "I could use a break, are you about finished here?"  
                                                         "I want to stick a dildo in.":
                                                                 $ Situation = "shift"
-                                                                call E_LP_After
-                                                                call E_Dildo_Pussy  
+                                                                call Emma_LP_After
+                                                                call Emma_Dildo_Pussy  
                                                         "Never Mind":
-                                                                jump E_LP_Cycle
+                                                                jump Emma_LP_Cycle
                                             else: 
                                                 ch_e "I could use a break, are you about finished here?"           
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
-                                                call E_LP_After
-                                                call Emma_Offhand_Set   
+                                                call Emma_LP_After
+                                                call Offhand_Set   
                                     "Shift your focus (locked)" if not Trigger2:
                                                 pass
                                     
@@ -2588,147 +2493,149 @@ label E_LP_Cycle: #Repeating strokes
                                         pass
                                     "Threesome actions" if Partner:   
                                         menu:
-                                            "Ask Emma to do something else with [Partner]" if Trigger == "lesbian":
-                                                        call Emma_Les_Change
-                                            "Ask Emma to do something else with [Partner] (locked)" if Trigger != "lesbian":
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name]" if Trigger == "lesbian":
+                                                        call Les_Change(EmmaX)
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name] (locked)" if Trigger != "lesbian":
                                                         pass
-                                            "Ask [Partner] to do something else":
-                                                        call Partner_Threechange("Emma") 
+                                            "Ask [Partner.Name] to do something else":
+                                                        call Three_Change(EmmaX) 
                                                         
                                             "Don't stop what you're doing. . .(locked)" if not ThreeCount or not Trigger4:
                                                         $ ThreeCount = 0                                                            
                                             "Don't stop what you're doing. . ." if ThreeCount and Trigger4:
                                                         $ ThreeCount = 0   
                                                         
-                                            "Swap to [Partner]":
-                                                        call Trigger_Swap("Emma")
-                                            "Undress [Partner]":
-                                                        call Partner_Undress
-                                                        jump E_LP_Cycle 
-                                            "Clean up Partner":
-                                                        call Partner_Cleanup
-                                                        jump E_LP_Cycle 
+                                            "Swap to [Partner.Name]":
+                                                        call Trigger_Swap(EmmaX)
+                                            "Undress [Partner.Name]":
+                                                        call Girl_Undress(Partner)
+                                                        jump Emma_LP_Cycle 
+                                            "Clean up [Partner.Name] (locked)" if not Partner.Spunk:
+                                                        pass
+                                            "Clean up [Partner.Name]" if Partner.Spunk:
+                                                        call Girl_Cleanup(Partner,"ask")
+                                                        jump Emma_LP_Cycle 
                                             "Never mind":
-                                                        jump E_LP_Cycle 
-                                    "Undress Emma":
-                                            call E_Undress   
-                                    "Clean up Emma (locked)" if not E_Spunk:
+                                                        jump Emma_LP_Cycle 
+                                    "Undress [EmmaX.Name]":
+                                            call Girl_Undress(EmmaX)   
+                                    "Clean up [EmmaX.Name] (locked)" if not EmmaX.Spunk:
                                             pass  
-                                    "Clean up Emma" if E_Spunk:
-                                            call Emma_Cleanup("ask")                                         
+                                    "Clean up [EmmaX.Name]" if EmmaX.Spunk:
+                                            call Girl_Cleanup(EmmaX,"ask")                                         
                                     "Never mind":
-                                            jump E_LP_Cycle 
+                                            jump Emma_LP_Cycle 
                                                    
                         "Back to Sex Menu" if MultiAction: 
                                     ch_p "Let's try something else."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Situation = "shift"
                                     $ Line = 0
-                                    jump E_LP_After
+                                    jump Emma_LP_After
                         "End Scene" if not MultiAction: 
                                     ch_p "Let's stop for now."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Line = 0
-                                    jump E_LP_After
+                                    jump Emma_LP_After
         #End menu (if Line)
         
-        if E_Panties or E_Legs == "pants" or HoseNum("Emma") >= 5: #This checks if Emma wants to strip down.
-                call E_Undress("auto")
+        if EmmaX.Panties or EmmaX.PantsNum() > 6 or EmmaX.HoseNum() >= 5: #This checks if [EmmaX.Name] wants to strip down.
+                call Girl_Undress(EmmaX,"auto")
                 
-        call Shift_Focus("Emma")    
-        call Sex_Dialog("Emma",Partner)
+        call Shift_Focus(EmmaX)    
+        call Sex_Dialog(EmmaX,Partner)
                 
         #If either of you could cum 
         
         $ Cnt += 1
         $ Round -= 1   
     
-        $ P_Focus = 50 if not P_Semen and P_Focus >= 50 else P_Focus #Resets P_Focus if can't get it up
-        if P_Focus >= 100 or E_Lust >= 100: 
+        $ Player.Focus = 50 if not Player.Semen and Player.Focus >= 50 else Player.Focus #Resets Player.Focus if can't get it up
+        if Player.Focus >= 100 or EmmaX.Lust >= 100: 
                     #If either of you could cum   
-                    if P_Focus >= 100:    
+                    if Player.Focus >= 100:    
                             #If you can cum:                                                 
-                            call PE_Cumming
-                            if "angry" in E_RecentActions:  
-                                call E_Pos_Reset
+                            call Player_Cumming(EmmaX)
+                            if "angry" in EmmaX.RecentActions:  
+                                call Emma_Pos_Reset
                                 return    
-                            call Statup("Emma", "Lust", 200, 5) 
-                            if 100 > E_Lust >= 70 and E_OCount < 2:             
-                                $ E_RecentActions.append("unsatisfied")                      
-                                $ E_DailyActions.append("unsatisfied") 
+                            $ EmmaX.Statup("Lust", 200, 5) 
+                            if 100 > EmmaX.Lust >= 70 and EmmaX.OCount < 2:             
+                                $ EmmaX.RecentActions.append("unsatisfied")                      
+                                $ EmmaX.DailyActions.append("unsatisfied") 
                             
-                            if P_Focus > 80:
-                                jump E_LP_After 
+                            if Player.Focus > 80:
+                                jump Emma_LP_After 
                             $ Line = "came"
      
-                    if E_Lust >= 100:  
-                            #If Emma can cum                                             
-                            call E_Cumming
-                            if Situation == "shift" or "angry" in E_RecentActions:
-                                jump E_LP_After
+                    if EmmaX.Lust >= 100:  
+                            #If [EmmaX.Name] can cum                                             
+                            call Girl_Cumming(EmmaX)
+                            if Situation == "shift" or "angry" in EmmaX.RecentActions:
+                                jump Emma_LP_After
                        
-                    if Line == "came": #ex P_Focus <= 20: 
+                    if Line == "came": #ex Player.Focus <= 20: 
                             #If you've just cum,  
                             $ Line = 0
-                            if not P_Semen:
+                            if not Player.Semen:
                                 "You're emptied out, you should probably take a break."
                             
                             
-                            if "unsatisfied" in E_RecentActions:#And Emma is unsatisfied,  
-                                    "Emma still seems a bit unsatisfied with the experience."
+                            if "unsatisfied" in EmmaX.RecentActions:#And [EmmaX.Name] is unsatisfied,  
+                                    "[EmmaX.Name] still seems a bit unsatisfied with the experience."
                                     menu:
                                         "Finish her?"
                                         "Yes, keep going for a bit.":
                                             $ Line = "You get back into it" 
                                         "No, I'm done.":
                                             "You pull back."
-                                            jump E_LP_After    
-        if Partner:
+                                            jump Emma_LP_After  
+        if Partner and Partner.Lust >= 100:
                 #Checks if partner could orgasm
-                call Partner_Cumming("Emma")            
+                call Girl_Cumming(Partner)            
         #End orgasm
         
-        $ P_Focus -= 10 if P_FocusX and P_Focus > 50 else 0
+        $ Player.Focus -= 10 if Player.FocusX and Player.Focus > 50 else 0
         
-        if E_SEXP >= 100 or ApprovalCheck("Emma", 1200, "LO"):
+        if EmmaX.SEXP >= 100 or ApprovalCheck(EmmaX, 1200, "LO"):
             pass
-        elif Cnt == (5 + E_LickP):
-                    $ E_Brows = "confused"
+        elif Cnt == (5 + EmmaX.LickP):
+                    $ EmmaX.Brows = "confused"
                     ch_e "Isn't it just delicious?"  
-        elif E_Lust >= 80:
+        elif EmmaX.Lust >= 80:
                     pass
-        elif Cnt == (15 + E_LickP) and E_SEXP >= 15 and not ApprovalCheck("Emma", 1500):
-                    $ E_Brows = "confused"        
+        elif Cnt == (15 + EmmaX.LickP) and EmmaX.SEXP >= 15 and not ApprovalCheck(EmmaX, 1500):
+                    $ EmmaX.Brows = "confused"        
                     menu:
-                        ch_e "[E_Petname], I know you're having fun down there, but maybe we could try something else."                         
+                        ch_e "[EmmaX.Petname], I know you're having fun down there, but maybe we could try something else."                         
                         "Finish up.":
                                 "You let go. . ."   
-                                jump E_LP_After
+                                jump Emma_LP_After
                         "Let's try something else." if MultiAction: 
                                 $ Line = 0
                                 $ Situation = "shift"
-                                jump E_LP_After
+                                jump Emma_LP_After
                         "No, this is fun.":   
-                                if ApprovalCheck("Emma", 1200) or ApprovalCheck("Emma", 500, "O"):                        
-                                    call Statup("Emma", "Love", 200, -5)
-                                    call Statup("Emma", "Obed", 50, 3)                    
-                                    call Statup("Emma", "Obed", 80, 2)
+                                if ApprovalCheck(EmmaX, 1200) or ApprovalCheck(EmmaX, 500, "O"):                        
+                                    $ EmmaX.Statup("Love", 200, -5)
+                                    $ EmmaX.Statup("Obed", 50, 3)                    
+                                    $ EmmaX.Statup("Obed", 80, 2)
                                     "She grumbles but lets you keep going."
                                 else:
-                                    call EmmaFace("angry", 1)   
-                                    call E_Pos_Reset
+                                    $ EmmaX.FaceChange("angry", 1)   
+                                    call Emma_Pos_Reset
                                     "She scowls at you and pulls back."
                                     ch_e "Well perhaps you are enjoying yourself, but I'm tired of this."                         
-                                    call Statup("Emma", "Love", 50, -3, 1)
-                                    call Statup("Emma", "Love", 80, -4, 1)
-                                    call Statup("Emma", "Obed", 30, -1, 1)                    
-                                    call Statup("Emma", "Obed", 50, -1, 1)  
-                                    $ E_RecentActions.append("angry")
-                                    $ E_DailyActions.append("angry")   
-                                    jump E_LP_After
+                                    $ EmmaX.Statup("Love", 50, -3, 1)
+                                    $ EmmaX.Statup("Love", 80, -4, 1)
+                                    $ EmmaX.Statup("Obed", 30, -1, 1)                    
+                                    $ EmmaX.Statup("Obed", 50, -1, 1)  
+                                    $ EmmaX.RecentActions.append("angry")
+                                    $ EmmaX.DailyActions.append("angry")   
+                                    jump Emma_LP_After
         #End Count check
            
-        call Escalation("Emma","E") #sees if she wants to escalate things
+        call Escalation(EmmaX) #sees if she wants to escalate things
         
         if Round == 10:
             ch_e "It's getting late. . ."  
@@ -2736,36 +2643,36 @@ label E_LP_Cycle: #Repeating strokes
             ch_e "We should take a break soon."        
     
     #Round = 0 loop breaks
-    call EmmaFace("bemused", 0)
+    $ EmmaX.FaceChange("bemused", 0)
     $ Line = 0
     ch_e "We need to stop for a moment, let me catch my breath."
     
     
-label E_LP_After:
+label Emma_LP_After:
     if not Situation: #fix  Situation != "shift" and Situation != "auto" and Situation != "pullback": 
-        call E_Pos_Reset
+        call Emma_Pos_Reset
         
-    call EmmaFace("sexy") 
+    $ EmmaX.FaceChange("sexy") 
     
-    $ E_LickP += 1  
-    $ E_Action -=1     
-    if E_Legs != "pants" or E_Upskirt:        
-        $ E_Addictionrate += 1
-        if "addictive" in P_Traits:
-            $ E_Addictionrate += 1
+    $ EmmaX.LickP += 1  
+    $ EmmaX.Action -=1     
+    if EmmaX.PantsNum() <= 6 or EmmaX.Upskirt:        
+        $ EmmaX.Addictionrate += 1
+        if "addictive" in Player.Traits:
+            $ EmmaX.Addictionrate += 1
     
     if Partner == "Rogue":
-        call Partner_Like("Emma",3,2)
+        call Partner_Like(EmmaX,3,2)
     else:
-        call Partner_Like("Emma",2)
+        call Partner_Like(EmmaX,2)
      
-    if E_LickP == 1:            
-            $ E_SEXP += 10         
+    if EmmaX.LickP == 1:            
+            $ EmmaX.SEXP += 10         
             if not Situation: 
-                if E_Love >= 500 and "unsatisfied" not in E_RecentActions:
+                if EmmaX.Love >= 500 and "unsatisfied" not in EmmaX.RecentActions:
                     ch_e "I could really take advantage of your services more often. . ."
-                elif E_Obed <= 500 and P_Focus <= 20:
-                    call EmmaFace("perplexed", 1)
+                elif EmmaX.Obed <= 500 and Player.Focus <= 20:
+                    $ EmmaX.FaceChange("perplexed", 1)
                     ch_e "I suppose that worked out for both of us. . ."
      
     $ Tempmod = 0  
@@ -2775,210 +2682,210 @@ label E_LP_After:
     return   
 
 
-# end E_Lick Pussy /////////////////////////////////////////////////////////////////////////////
+# end EmmaX.Lick Pussy /////////////////////////////////////////////////////////////////////////////
 
     
 # ////////////////////////////////////////////////////////////////////////Start Fondle Ass    
-label E_Fondle_Ass: 
+label Emma_Fondle_Ass: 
     $ Round -= 5 if Round > 5 else (Round-1)
-    call Shift_Focus("Emma")
+    call Shift_Focus(EmmaX)
                                                                                      # Will she let you fondle? Modifiers
-    if E_FondleA: #You've done it before
+    if EmmaX.FondleA: #You've done it before
         $ Tempmod += 10
-    if E_Legs == "pants" or HoseNum("Emma") >= 5: # she's got pants on.
+    if EmmaX.PantsNum() > 6 or EmmaX.HoseNum() >= 5: # she's got pants on.
         $ Tempmod -= 5     
-    if E_Lust > 75: #She's really horny
+    if EmmaX.Lust > 75: #She's really horny
         $ Tempmod += 15
-    if "exhibitionist" in E_Traits:
+    if "exhibitionist" in EmmaX.Traits:
         $ Tempmod += Taboo  
-    if "dating" in E_Traits or "sex friend" in E_Petnames:
+    if "dating" in EmmaX.Traits or "sex friend" in EmmaX.Petnames:
         $ Tempmod += 10
-    elif "ex" in E_Traits:
+    elif "ex" in EmmaX.Traits:
         $ Tempmod -= 25 
-    if E_ForcedCount and not E_Forced:
-        $ Tempmod -= 5 * E_ForcedCount      
+    if EmmaX.ForcedCount and not EmmaX.Forced:
+        $ Tempmod -= 5 * EmmaX.ForcedCount      
     
-    if Taboo and "tabno" in E_DailyActions:        
+    if Taboo and "tabno" in EmmaX.DailyActions:        
         $ Tempmod -= 10 
-    if Taboo and "public" not in E_History:                   
+    if Taboo and "public" not in EmmaX.History:                   
         $ Tempmod -= 20 
         
-    if "no fondle ass" in E_DailyActions:               
+    if "no fondle ass" in EmmaX.DailyActions:               
         $ Tempmod -= 5 
-        $ Tempmod -= 10 if "no fondle ass" in E_RecentActions else 0   
+        $ Tempmod -= 10 if "no fondle ass" in EmmaX.RecentActions else 0   
         
-    $ Approval = ApprovalCheck("Emma", 850, TabM=1) # 85, 100, 115, Taboo -40(125)
+    $ Approval = ApprovalCheck(EmmaX, 850, TabM=1) # 85, 100, 115, Taboo -40(125)
     
     if Situation == "auto":                                                                  #You auto-start
         if Approval:  
-            call EmmaFace("surprised", 1)  
-            call Statup("Emma", "Obed", 70, 2)
-            call Statup("Emma", "Inbt", 40, 2) 
-            "As your hand creeps down her backside, Emma jumps a bit, and then relaxes."              
-            call EmmaFace("sexy")  
-            jump E_FA_Prep  
+            $ EmmaX.FaceChange("surprised", 1)  
+            $ EmmaX.Statup("Obed", 70, 2)
+            $ EmmaX.Statup("Inbt", 40, 2) 
+            "As your hand creeps down her backside, [EmmaX.Name] jumps a bit, and then relaxes."              
+            $ EmmaX.FaceChange("sexy")  
+            jump Emma_FA_Prep  
         else:          
-            call EmmaFace("surprised")
-            call Statup("Emma", "Obed", 50, -3)
-            ch_e "Hands off, [E_Petname]."   
-            call EmmaFace("bemused")
+            $ EmmaX.FaceChange("surprised")
+            $ EmmaX.Statup("Obed", 50, -3)
+            ch_e "Hands off, [EmmaX.Petname]."   
+            $ EmmaX.FaceChange("bemused")
             $ Tempmod = 0
             $ Trigger2 = 0
             return
             
     if Situation == "pullback":     
-        call EmmaFace("surprised")   
-        $ E_Brows = "sad"        
-        if E_Lust > 80:
-            call Statup("Emma", "Love", 70, -4)
-        call Statup("Emma", "Obed", 90, 1)
-        call Statup("Emma", "Obed", 70, 2)
-        "As your finger slides out, Emma gasps and looks upset."              
-        jump E_FA_Prep     
-    elif "fondle ass" in E_RecentActions:
-        call EmmaFace("sexy", 1)
+        $ EmmaX.FaceChange("surprised")   
+        $ EmmaX.Brows = "sad"        
+        if EmmaX.Lust > 80:
+            $ EmmaX.Statup("Love", 70, -4)
+        $ EmmaX.Statup("Obed", 90, 1)
+        $ EmmaX.Statup("Obed", 70, 2)
+        "As your finger slides out, [EmmaX.Name] gasps and looks upset."              
+        jump Emma_FA_Prep     
+    elif "fondle ass" in EmmaX.RecentActions:
+        $ EmmaX.FaceChange("sexy", 1)
         ch_e "Mmmm, again? I suppose. . ."
-        jump E_FA_Prep
-    elif "fondle ass" in E_DailyActions:
-        call EmmaFace("sexy", 1)
+        jump Emma_FA_Prep
+    elif "fondle ass" in EmmaX.DailyActions:
+        $ EmmaX.FaceChange("sexy", 1)
         $ Line = renpy.random.choice(["You didn't get enough earlier?",
             "Perhaps not so rough this time?",
             "Mmm. . ."]) 
         ch_e "[Line]"
         
     if Approval >= 2:                                                                   #She's into it. . .        
-        if E_Forced:
-            call EmmaFace("sad")
-            call Statup("Emma", "Love", 70, -2, 1)
-            call Statup("Emma", "Obed", 90, 2)
-            call Statup("Emma", "Inbt", 60, 2)
+        if EmmaX.Forced:
+            $ EmmaX.FaceChange("sad")
+            $ EmmaX.Statup("Love", 70, -2, 1)
+            $ EmmaX.Statup("Obed", 90, 2)
+            $ EmmaX.Statup("Inbt", 60, 2)
             ch_e "If you insist. . ."   
         else:
-            call EmmaFace("bemused, 1") 
+            $ EmmaX.FaceChange("bemused, 1") 
             ch_e "I can't exactly refuse. . ."   
-        call Statup("Emma", "Lust", 200, 3)
-        call Statup("Emma", "Obed", 60, 1)
-        call Statup("Emma", "Inbt", 70, 1) 
-        jump E_FA_Prep
+        $ EmmaX.Statup("Lust", 200, 3)
+        $ EmmaX.Statup("Obed", 60, 1)
+        $ EmmaX.Statup("Inbt", 70, 1) 
+        jump Emma_FA_Prep
         
     else:                                                                               #She's not into it, but maybe. . .            
-        call EmmaFace("angry", 1)
-        if "no fondle ass" in E_RecentActions:  
-            ch_e "Your persistance is doing you no favors, [E_Petname]."
-        elif Taboo and "tabno" in E_DailyActions and "no fondle ass" in E_DailyActions:  
+        $ EmmaX.FaceChange("angry", 1)
+        if "no fondle ass" in EmmaX.RecentActions:  
+            ch_e "Your persistance is doing you no favors, [EmmaX.Petname]."
+        elif Taboo and "tabno" in EmmaX.DailyActions and "no fondle ass" in EmmaX.DailyActions:  
             ch_e "I told you not to touch me like that in public!" 
-        elif "no fondle ass" in E_DailyActions:       
+        elif "no fondle ass" in EmmaX.DailyActions:       
             ch_e "I believe you know my answer on this matter."
-        elif Taboo and "tabno" in E_DailyActions:  
-            ch_e "As I said, not here, [E_Petname]."  
-        elif not E_FondleA:
-            call EmmaFace("bemused")
-            ch_e "Not yet, [E_Petname]. . ."
+        elif Taboo and "tabno" in EmmaX.DailyActions:  
+            ch_e "As I said, not here, [EmmaX.Petname]."  
+        elif not EmmaX.FondleA:
+            $ EmmaX.FaceChange("bemused")
+            ch_e "Not yet, [EmmaX.Petname]. . ."
         else:
-            call EmmaFace("bemused")
-            ch_e "Let's not, ok [E_Petname]?"
+            $ EmmaX.FaceChange("bemused")
+            ch_e "Let's not, ok [EmmaX.Petname]?"
         menu:
             extend ""
-            "Sorry, never mind." if "no fondle ass" in E_DailyActions:
-                call EmmaFace("bemused")
-                ch_e "I appreciate your restraint, [E_Petname]."              
+            "Sorry, never mind." if "no fondle ass" in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("bemused")
+                ch_e "I appreciate your restraint, [EmmaX.Petname]."              
                 return
-            "Maybe later?" if "no fondle ass" not in E_DailyActions:
-                call EmmaFace("sexy")  
+            "Maybe later?" if "no fondle ass" not in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("sexy")  
                 ch_e "Perhaps."
-                call Statup("Emma", "Love", 80, 2)
-                call Statup("Emma", "Inbt", 50, 2)  
+                $ EmmaX.Statup("Love", 80, 2)
+                $ EmmaX.Statup("Inbt", 50, 2)  
                 if Taboo:                    
-                    $ E_RecentActions.append("tabno")                      
-                    $ E_DailyActions.append("tabno") 
-                $ E_RecentActions.append("no fondle ass")                      
-                $ E_DailyActions.append("no fondle ass")            
+                    $ EmmaX.RecentActions.append("tabno")                      
+                    $ EmmaX.DailyActions.append("tabno") 
+                $ EmmaX.RecentActions.append("no fondle ass")                      
+                $ EmmaX.DailyActions.append("no fondle ass")            
                 return
             "Just one good squeeze?":             
                 if Approval:
-                    call EmmaFace("sexy")     
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 2)
+                    $ EmmaX.FaceChange("sexy")     
+                    $ EmmaX.Statup("Obed", 90, 1)
+                    $ EmmaX.Statup("Obed", 50, 2)
                     ch_e "I do enjoy hearing you beg. . ."                           
-                    call Statup("Emma", "Inbt", 70, 1) 
-                    call Statup("Emma", "Inbt", 40, 2) 
-                    jump E_FA_Prep
+                    $ EmmaX.Statup("Inbt", 70, 1) 
+                    $ EmmaX.Statup("Inbt", 40, 2) 
+                    jump Emma_FA_Prep
                 else:   
-                    call EmmaFace("sexy") 
+                    $ EmmaX.FaceChange("sexy") 
                     ch_e "No."     
             
             "[[Start fondling anyway]":                                               # Pressured into fondling. 
-                $ Approval = ApprovalCheck("Emma", 250, "OI", TabM = 3) # 25, 40, 55, -120(145)
-                if Approval > 1 or (Approval and E_Forced):
-                    call EmmaFace("sad")
-                    call Statup("Emma", "Love", 70, -3, 1)
-                    call Statup("Emma", "Love", 200, -1) 
+                $ Approval = ApprovalCheck(EmmaX, 250, "OI", TabM = 3) # 25, 40, 55, -120(145)
+                if Approval > 1 or (Approval and EmmaX.Forced):
+                    $ EmmaX.FaceChange("sad")
+                    $ EmmaX.Statup("Love", 70, -3, 1)
+                    $ EmmaX.Statup("Love", 200, -1) 
                     ch_e "Fine, I suppose."                
-                    call Statup("Emma", "Obed", 50, 3)
-                    call Statup("Emma", "Inbt", 60, 3) 
+                    $ EmmaX.Statup("Obed", 50, 3)
+                    $ EmmaX.Statup("Inbt", 60, 3) 
                     if Approval < 2:                          
-                        $ E_Forced = 1
-                    jump E_FA_Prep
+                        $ EmmaX.Forced = 1
+                    jump Emma_FA_Prep
                 else:                              
-                    call Statup("Emma", "Love", 200, -10)  
-                    call EmmaFace("angry", 1)
+                    $ EmmaX.Statup("Love", 200, -10)  
+                    $ EmmaX.FaceChange("angry", 1)
                     "She slaps your hand away."   
-                    $ E_RecentActions.append("angry")
-                    $ E_DailyActions.append("angry")   
+                    $ EmmaX.RecentActions.append("angry")
+                    $ EmmaX.DailyActions.append("angry")   
                         
-    if "no fondle ass" in E_DailyActions:
-        ch_e "I don't appreciate having to repeat myself, [E_Petname]."   
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
-    elif E_Forced:
-        call EmmaFace("angry", 1)
+    if "no fondle ass" in EmmaX.DailyActions:
+        ch_e "I don't appreciate having to repeat myself, [EmmaX.Petname]."   
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
+    elif EmmaX.Forced:
+        $ EmmaX.FaceChange("angry", 1)
         ch_e "Do you want to keep those fingers?"
-        call Statup("Emma", "Lust", 60, 5)    
-        call Statup("Emma", "Obed", 50, -2)   
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
+        $ EmmaX.Statup("Lust", 60, 5)    
+        $ EmmaX.Statup("Obed", 50, -2)   
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
     elif Taboo:
-        call EmmaFace("angry", 1)    
-        $ E_RecentActions.append("tabno")   
-        $ E_DailyActions.append("tabno") 
+        $ EmmaX.FaceChange("angry", 1)    
+        $ EmmaX.RecentActions.append("tabno")   
+        $ EmmaX.DailyActions.append("tabno") 
         ch_e "I have a reputation to maintain."                   
-    elif E_FondleA:
-        call EmmaFace("sad")
+    elif EmmaX.FondleA:
+        $ EmmaX.FaceChange("sad")
         ch_e "I'm sorry, keep your hands to yourself."        
     else:
-        call EmmaFace("sexy") 
-        $ E_Mouth = "sad"
+        $ EmmaX.FaceChange("sexy") 
+        $ EmmaX.Mouth = "sad"
         ch_e "No."
-    $ E_RecentActions.append("no fondle ass")                      
-    $ E_DailyActions.append("no fondle ass") 
+    $ EmmaX.RecentActions.append("no fondle ass")                      
+    $ EmmaX.DailyActions.append("no fondle ass") 
     $ Tempmod = 0    
     return
         
 ch_e "Sorry, I don't even know how I got here. . ."
 return
 
-label E_FA_Prep: #Animation set-up  
+label Emma_FA_Prep: #Animation set-up  
     if Trigger2 == "fondle ass":
         return
-    if not E_Forced and Situation != "auto":
+    if not EmmaX.Forced and Situation != "auto":
         $ Tempmod = 0
-        call Emma_Bottoms_Off
-        if "angry" in E_RecentActions:
+        call Bottoms_Off(EmmaX)
+        if "angry" in EmmaX.RecentActions:
             return    
     $ Tempmod = 0      
-    call E_Pussy_Launch("fondle ass")
-    if not E_FondleA:        
-        if E_Forced:
-            call Statup("Emma", "Love", 90, -20)
-            call Statup("Emma", "Obed", 70, 20)
-            call Statup("Emma", "Inbt", 80, 15) 
+    call Emma_Pussy_Launch("fondle ass")
+    if not EmmaX.FondleA:        
+        if EmmaX.Forced:
+            $ EmmaX.Statup("Love", 90, -20)
+            $ EmmaX.Statup("Obed", 70, 20)
+            $ EmmaX.Statup("Inbt", 80, 15) 
         else:
-            call Statup("Emma", "Love", 90, 10)
-            call Statup("Emma", "Obed", 70, 12)
-            call Statup("Emma", "Inbt", 80, 20)
+            $ EmmaX.Statup("Love", 90, 10)
+            $ EmmaX.Statup("Obed", 70, 12)
+            $ EmmaX.Statup("Inbt", 80, 20)
     if Taboo:
-        $ E_Inbt += int(Taboo/10)  
-        $ E_Lust += int(Taboo/5)
+        $ EmmaX.Inbt += int(Taboo/10)  
+        $ EmmaX.Lust += int(Taboo/5)
      
     if Situation:     
         $ renpy.pop_call() 
@@ -2986,80 +2893,80 @@ label E_FA_Prep: #Animation set-up
     $ Line = 0
     $ Cnt = 0
     if Taboo:
-        call DrainWord("Emma","tabno")
-    call DrainWord("Emma","no fondle ass")
-    $ E_RecentActions.append("fondle ass")                      
-    $ E_DailyActions.append("fondle ass") 
+        $ EmmaX.DrainWord("tabno")
+    $ EmmaX.DrainWord("no fondle ass")
+    $ EmmaX.RecentActions.append("fondle ass")                      
+    $ EmmaX.DailyActions.append("fondle ass") 
     
-label E_FA_Cycle: #Repeating strokes
+label Emma_FA_Cycle: #Repeating strokes
     while Round >=0:  
-        call Shift_Focus("Emma") 
-        call E_Pussy_Launch("fondle ass")
-        call EmmaLust   
+        call Shift_Focus(EmmaX) 
+        call Emma_Pussy_Launch("fondle ass")
+        $ EmmaX.LustFace()   
         
-        if  P_Focus < 100:                                                   
+        if  Player.Focus < 100:                                                   
                     #Player Command menu
                     menu:
                         "Keep going. . .":
                                     pass
                                                               
                         "Slap her ass":                     
-                                    call E_Slap_Ass  
+                                    call Slap_Ass(EmmaX)  
                                     $ Cnt += 1
                                     $ Round -= 1                                      
-                                    jump E_FA_Cycle  
+                                    jump Emma_FA_Cycle  
                                     
-                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in P_Traits:
+                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in Player.Traits:
                                     pass
-                        "Focus to last longer." if not P_FocusX and "focus" in P_Traits:
+                        "Focus to last longer." if not Player.FocusX and "focus" in Player.Traits:
                                     "You concentrate on not burning out too quickly."                
-                                    $ P_FocusX = 1
-                        "Release your focus." if P_FocusX:
+                                    $ Player.FocusX = 1
+                        "Release your focus." if Player.FocusX:
                                     "You release your concentration. . ."                
-                                    $ P_FocusX = 0
+                                    $ Player.FocusX = 0
                                     
                         "Other options":
                                 menu:   
                                     "Offhand action":
-                                            if E_Action and MultiAction:
-                                                call Emma_Offhand_Set
+                                            if EmmaX.Action and MultiAction:
+                                                call Offhand_Set
                                                 if Trigger2:
-                                                     $ E_Action -= 1
+                                                     $ EmmaX.Action -= 1
                                             else:
                                                 ch_e "I could use a break, are you about finished here?"  
                                                 
                                     "Shift primary action":
-                                            if E_Action and MultiAction:
+                                            if EmmaX.Action and MultiAction:
                                                     menu:                                                             
                                                         "I want to stick a finger in.":
                                                                 $ Situation = "shift"
-                                                                call E_FA_After
-                                                                call E_Insert_Ass    
+                                                                call Emma_FA_After
+                                                                call Emma_Insert_Ass    
                                                         "Just stick a finger in without asking.":
                                                                 $ Situation = "auto"
-                                                                call E_FA_After
-                                                                call E_Insert_Ass
+                                                                call Emma_FA_After
+                                                                call Emma_Insert_Ass
                                                         "I want to lick your asshole.":
                                                                 $ Situation = "shift"
-                                                                call E_FA_After
-                                                                call E_Lick_Ass                 
+                                                                call Emma_FA_After
+                                                                call Emma_Lick_Ass                 
                                                         "Just start licking.":
                                                                 $ Situation = "auto"
-                                                                call E_FA_After
-                                                                call E_Lick_Ass    
+                                                                call Emma_FA_After
+                                                                call Emma_Lick_Ass    
                                                         "I want to stick a dildo in.":                                                                
                                                                 $ Situation = "shift"
-                                                                call E_FA_After
-                                                                call E_Dildo_Ass  
+                                                                call Emma_FA_After
+                                                                call Emma_Dildo_Ass  
                                                         "Never Mind":
-                                                                jump E_FA_Cycle
+                                                                jump Emma_FA_Cycle
                                             else: 
                                                 ch_e "I could use a break, are you about finished here?"           
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
-                                                call E_FA_After
-                                                call Emma_Offhand_Set   
+                                                call Emma_FA_After
+                                                call Offhand_Set   
                                     "Shift your focus (locked)" if not Trigger2:
                                                 pass
                                     
@@ -3067,147 +2974,149 @@ label E_FA_Cycle: #Repeating strokes
                                         pass
                                     "Threesome actions" if Partner:   
                                         menu:
-                                            "Ask Emma to do something else with [Partner]" if Trigger == "lesbian":
-                                                        call Emma_Les_Change
-                                            "Ask Emma to do something else with [Partner] (locked)" if Trigger != "lesbian":
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name]" if Trigger == "lesbian":
+                                                        call Les_Change(EmmaX)
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name] (locked)" if Trigger != "lesbian":
                                                         pass
-                                            "Ask [Partner] to do something else":
-                                                        call Partner_Threechange("Emma") 
+                                            "Ask [Partner.Name] to do something else":
+                                                        call Three_Change(EmmaX) 
                                                         
                                             "Don't stop what you're doing. . .(locked)" if not ThreeCount or not Trigger4:
                                                         $ ThreeCount = 0                                                            
                                             "Don't stop what you're doing. . ." if ThreeCount and Trigger4:
                                                         $ ThreeCount = 0   
                                                         
-                                            "Swap to [Partner]":
-                                                        call Trigger_Swap("Emma")
-                                            "Undress [Partner]":
-                                                        call Partner_Undress
-                                                        jump E_FA_Cycle 
-                                            "Clean up Partner":
-                                                        call Partner_Cleanup
-                                                        jump E_FA_Cycle 
+                                            "Swap to [Partner.Name]":
+                                                        call Trigger_Swap(EmmaX)
+                                            "Undress [Partner.Name]":
+                                                        call Girl_Undress(Partner)
+                                                        jump Emma_FA_Cycle 
+                                            "Clean up [Partner.Name] (locked)" if not Partner.Spunk:
+                                                        pass
+                                            "Clean up [Partner.Name]" if Partner.Spunk:
+                                                        call Girl_Cleanup(Partner,"ask")
+                                                        jump Emma_FA_Cycle 
                                             "Never mind":
-                                                        jump E_FA_Cycle 
-                                    "Undress Emma":
-                                            call E_Undress   
-                                    "Clean up Emma (locked)" if not E_Spunk:
+                                                        jump Emma_FA_Cycle 
+                                    "Undress [EmmaX.Name]":
+                                            call Girl_Undress(EmmaX)   
+                                    "Clean up [EmmaX.Name] (locked)" if not EmmaX.Spunk:
                                             pass  
-                                    "Clean up Emma" if E_Spunk:
-                                            call Emma_Cleanup("ask")                                         
+                                    "Clean up [EmmaX.Name]" if EmmaX.Spunk:
+                                            call Girl_Cleanup(EmmaX,"ask")                                         
                                     "Never mind":
-                                            jump E_FA_Cycle 
+                                            jump Emma_FA_Cycle 
                                                    
                         "Back to Sex Menu" if MultiAction: 
                                     ch_p "Let's try something else."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Situation = "shift"
                                     $ Line = 0
-                                    jump E_FA_After
+                                    jump Emma_FA_After
                         "End Scene" if not MultiAction: 
                                     ch_p "Let's stop for now."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Line = 0
-                                    jump E_FA_After
+                                    jump Emma_FA_After
         #End menu (if Line)
         
-        if E_Panties or E_Legs == "pants" or HoseNum("Emma") >= 5: #This checks if Emma wants to strip down.
-                call E_Undress("auto")
+        if EmmaX.Panties or EmmaX.PantsNum() > 6 or EmmaX.HoseNum() >= 5: #This checks if [EmmaX.Name] wants to strip down.
+                call Girl_Undress(EmmaX,"auto")
                 
-        call Shift_Focus("Emma")    
-        call Sex_Dialog("Emma",Partner)
+        call Shift_Focus(EmmaX)    
+        call Sex_Dialog(EmmaX,Partner)
                 
         #If either of you could cum 
         
         $ Cnt += 1
         $ Round -= 1   
     
-        $ P_Focus = 50 if not P_Semen and P_Focus >= 50 else P_Focus #Resets P_Focus if can't get it up
-        if P_Focus >= 100 or E_Lust >= 100: 
+        $ Player.Focus = 50 if not Player.Semen and Player.Focus >= 50 else Player.Focus #Resets Player.Focus if can't get it up
+        if Player.Focus >= 100 or EmmaX.Lust >= 100: 
                     #If either of you could cum   
-                    if P_Focus >= 100:    
+                    if Player.Focus >= 100:    
                             #If you can cum:                                                 
-                            call PE_Cumming
-                            if "angry" in E_RecentActions:  
-                                call E_Pos_Reset
+                            call Player_Cumming(EmmaX)
+                            if "angry" in EmmaX.RecentActions:  
+                                call Emma_Pos_Reset
                                 return    
-                            call Statup("Emma", "Lust", 200, 5) 
-                            if 100 > E_Lust >= 70 and E_OCount < 2 and E_SEXP >= 20:             
-                                $ E_RecentActions.append("unsatisfied")                      
-                                $ E_DailyActions.append("unsatisfied") 
+                            $ EmmaX.Statup("Lust", 200, 5) 
+                            if 100 > EmmaX.Lust >= 70 and EmmaX.OCount < 2 and EmmaX.SEXP >= 20:             
+                                $ EmmaX.RecentActions.append("unsatisfied")                      
+                                $ EmmaX.DailyActions.append("unsatisfied") 
                             
-                            if P_Focus > 80:
-                                jump E_FA_After 
+                            if Player.Focus > 80:
+                                jump Emma_FA_After 
                             $ Line = "came"
      
-                    if E_Lust >= 100:  
-                            #If Emma can cum                                             
-                            call E_Cumming
-                            if Situation == "shift" or "angry" in E_RecentActions:
-                                jump E_FA_After
+                    if EmmaX.Lust >= 100:  
+                            #If [EmmaX.Name] can cum                                             
+                            call Girl_Cumming(EmmaX)
+                            if Situation == "shift" or "angry" in EmmaX.RecentActions:
+                                jump Emma_FA_After
                        
-                    if Line == "came": #ex P_Focus <= 20: 
+                    if Line == "came": #ex Player.Focus <= 20: 
                             #If you've just cum,  
                             $ Line = 0
-                            if not P_Semen:
+                            if not Player.Semen:
                                 "You're emptied out, you should probably take a break."
                             
                             
-                            if "unsatisfied" in E_RecentActions:#And Emma is unsatisfied,  
-                                    "Emma still seems a bit unsatisfied with the experience."
+                            if "unsatisfied" in EmmaX.RecentActions:#And [EmmaX.Name] is unsatisfied,  
+                                    "[EmmaX.Name] still seems a bit unsatisfied with the experience."
                                     menu:
                                         "Finish her?"
                                         "Yes, keep going for a bit.":
                                             $ Line = "You get back into it" 
                                         "No, I'm done.":
                                             "You pull back."
-                                            jump E_FA_After    
-        if Partner:
+                                            jump Emma_FA_After   
+        if Partner and Partner.Lust >= 100:
                 #Checks if partner could orgasm
-                call Partner_Cumming("Emma")            
+                call Girl_Cumming(Partner)            
         #End orgasm
         
-        $ P_Focus -= 10 if P_FocusX and P_Focus > 50 else 0
+        $ Player.Focus -= 10 if Player.FocusX and Player.Focus > 50 else 0
                     
-        if E_SEXP >= 100 or ApprovalCheck("Emma", 1200, "LO"):
+        if EmmaX.SEXP >= 100 or ApprovalCheck(EmmaX, 1200, "LO"):
             pass
-        elif Cnt == (5 + E_FondleA):
-                    $ E_Brows = "confused"
+        elif Cnt == (5 + EmmaX.FondleA):
+                    $ EmmaX.Brows = "confused"
                     ch_e "Mmmm I do enjoy that. . ."  
-        elif E_Lust >= 80:
+        elif EmmaX.Lust >= 80:
                     pass
-        elif Cnt == (15 + E_FondleA) and E_SEXP >= 15 and not ApprovalCheck("Emma", 1500):
-                    $ E_Brows = "confused"        
+        elif Cnt == (15 + EmmaX.FondleA) and EmmaX.SEXP >= 15 and not ApprovalCheck(EmmaX, 1500):
+                    $ EmmaX.Brows = "confused"        
                     menu:
-                        ch_e "[E_Petname], this is nice, but could we do something else?"                         
+                        ch_e "[EmmaX.Petname], this is nice, but could we do something else?"                         
                         "Finish up.":
                                 "You let go. . ."   
-                                jump E_FA_After
+                                jump Emma_FA_After
                         "Let's try something else." if MultiAction: 
                                 $ Line = 0
                                 $ Situation = "shift"
-                                jump E_FA_After
+                                jump Emma_FA_After
                         "No, this is fun.":   
-                                if ApprovalCheck("Emma", 1200) or ApprovalCheck("Emma", 500, "O"):                        
-                                    call Statup("Emma", "Love", 200, -5)
-                                    call Statup("Emma", "Obed", 50, 3)                    
-                                    call Statup("Emma", "Obed", 80, 2)
+                                if ApprovalCheck(EmmaX, 1200) or ApprovalCheck(EmmaX, 500, "O"):                        
+                                    $ EmmaX.Statup("Love", 200, -5)
+                                    $ EmmaX.Statup("Obed", 50, 3)                    
+                                    $ EmmaX.Statup("Obed", 80, 2)
                                     "She grumbles but lets you keep going."
                                 else:
-                                    call EmmaFace("angry", 1)   
-                                    call E_Pos_Reset
+                                    $ EmmaX.FaceChange("angry", 1)   
+                                    call Emma_Pos_Reset
                                     "She scowls at you and pulls back."
                                     ch_e "Well perhaps you are enjoying yourself, but I'm tired of this."                         
-                                    call Statup("Emma", "Love", 50, -3, 1)
-                                    call Statup("Emma", "Love", 80, -4, 1)
-                                    call Statup("Emma", "Obed", 30, -1, 1)                    
-                                    call Statup("Emma", "Obed", 50, -1, 1)  
-                                    $ E_RecentActions.append("angry")
-                                    $ E_DailyActions.append("angry")   
-                                    jump E_FA_After
+                                    $ EmmaX.Statup("Love", 50, -3, 1)
+                                    $ EmmaX.Statup("Love", 80, -4, 1)
+                                    $ EmmaX.Statup("Obed", 30, -1, 1)                    
+                                    $ EmmaX.Statup("Obed", 50, -1, 1)  
+                                    $ EmmaX.RecentActions.append("angry")
+                                    $ EmmaX.DailyActions.append("angry")   
+                                    jump Emma_FA_After
         #End Count check
         
-        call Escalation("Emma","E") #sees if she wants to escalate things
+        call Escalation(EmmaX) #sees if she wants to escalate things
         
         if Round == 10:
             ch_e "It's getting late. . ."  
@@ -3215,33 +3124,33 @@ label E_FA_Cycle: #Repeating strokes
             ch_e "We should take a break soon."        
     
     #Round = 0 loop breaks
-    call EmmaFace("bemused", 0)
+    $ EmmaX.FaceChange("bemused", 0)
     $ Line = 0
     ch_e "We need to stop for a moment, let me catch my breath."
     
     
-label E_FA_After:
+label Emma_FA_After:
     if not Situation: #fix  Situation != "shift" and Situation != "auto" and Situation != "pullback": 
-        call E_Pos_Reset
+        call Emma_Pos_Reset
         
-    call EmmaFace("sexy") 
+    $ EmmaX.FaceChange("sexy") 
     
-    $ E_FondleA += 1  
-    $ E_Action -=1            
-    if E_Legs != "pants" or E_Upskirt:        
-        $ E_Addictionrate += 1
-        if "addictive" in P_Traits:
-            $ E_Addictionrate += 1
+    $ EmmaX.FondleA += 1  
+    $ EmmaX.Action -=1            
+    if EmmaX.PantsNum() <= 6 or EmmaX.Upskirt:        
+        $ EmmaX.Addictionrate += 1
+        if "addictive" in Player.Traits:
+            $ EmmaX.Addictionrate += 1
     
-        call Partner_Like("Emma",2)
+        call Partner_Like(EmmaX,2)
      
-    if E_FondleA == 1:            
-            $ E_SEXP += 4         
+    if EmmaX.FondleA == 1:            
+            $ EmmaX.SEXP += 4         
             if not Situation: 
-                if E_Love >= 500 and "unsatisfied" not in E_RecentActions:
+                if EmmaX.Love >= 500 and "unsatisfied" not in EmmaX.RecentActions:
                     ch_e "That was. . . nice. . ."
-                elif E_Obed <= 500 and P_Focus <= 20:
-                    call EmmaFace("perplexed", 1)
+                elif EmmaX.Obed <= 500 and Player.Focus <= 20:
+                    $ EmmaX.FaceChange("perplexed", 1)
                     ch_e "Did you enjoy that?"
      
     $ Tempmod = 0  
@@ -3251,279 +3160,279 @@ label E_FA_After:
     return   
 
 
-# end E_Fondle Ass /////////////////////////////////////////////////////////////////////////////
+# end EmmaX.Fondle Ass /////////////////////////////////////////////////////////////////////////////
 
 # ////////////////////////////////////////////////////////////////////////Start Insert Ass    
-label E_Insert_Ass:
+label Emma_Insert_Ass:
     $ Round -= 5 if Round > 5 else (Round-1)
-    call Shift_Focus("Emma")
+    call Shift_Focus(EmmaX)
     
-    if E_InsertA: #You've done it before
+    if EmmaX.InsertA: #You've done it before
         $ Tempmod += 25
-    if E_Legs == "pants" or HoseNum("Emma") >= 5: # she's got pants on.
+    if EmmaX.PantsNum() > 6 or EmmaX.HoseNum() >= 5: # she's got pants on.
         $ Tempmod -= 15    
-    if E_Lust > 85: #She's really horny
+    if EmmaX.Lust > 85: #She's really horny
         $ Tempmod += 15
-    if E_Lust > 95:
+    if EmmaX.Lust > 95:
         $ Tempmod += 5
     if Situation == "shift":
         $ Tempmod += 10
-    if E_Lust > 85 and Situation == "auto": #She's really horny
+    if EmmaX.Lust > 85 and Situation == "auto": #She's really horny
         $ Tempmod += 10
-    if "exhibitionist" in E_Traits:
+    if "exhibitionist" in EmmaX.Traits:
         $ Tempmod += (4*Taboo)
-    if "dating" in E_Traits or "sex friend" in E_Petnames:
+    if "dating" in EmmaX.Traits or "sex friend" in EmmaX.Petnames:
         $ Tempmod += 10
-    elif "ex" in E_Traits:
+    elif "ex" in EmmaX.Traits:
         $ Tempmod -= 25 
-    if E_ForcedCount and not E_Forced:
-        $ Tempmod -= 5 * E_ForcedCount
+    if EmmaX.ForcedCount and not EmmaX.Forced:
+        $ Tempmod -= 5 * EmmaX.ForcedCount
     
-    if Taboo and "tabno" in E_DailyActions:        
+    if Taboo and "tabno" in EmmaX.DailyActions:        
         $ Tempmod -= 10 
-    if Taboo and "public" not in E_History:                   
+    if Taboo and "public" not in EmmaX.History:                   
         $ Tempmod -= 20 
         
-    if "no insert ass" in E_DailyActions:               
+    if "no insert ass" in EmmaX.DailyActions:               
         $ Tempmod -= 5 
-        $ Tempmod -= 10 if "no insert ass" in E_RecentActions else 0   
+        $ Tempmod -= 10 if "no insert ass" in EmmaX.RecentActions else 0   
             
-    $ Approval = ApprovalCheck("Emma", 1300, TabM = 3) # 130, 145, 160, Taboo -120(250)
+    $ Approval = ApprovalCheck(EmmaX, 1300, TabM = 3) # 130, 145, 160, Taboo -120(250)
     
     if Situation == "auto":                                                                  #You auto-start                    
         if Approval:            
-            call EmmaFace("surprised")
-            call Statup("Emma", "Obed", 90, 2)
-            call Statup("Emma", "Obed", 70, 2)
-            call Statup("Emma", "Inbt", 80, 2) 
-            call Statup("Emma", "Inbt", 30, 2) 
-            "As you slide a finger in, Emma tightens around it in surprise, but seems into it."  
-            call EmmaFace("sexy")           
-            jump E_IA_Prep
+            $ EmmaX.FaceChange("surprised")
+            $ EmmaX.Statup("Obed", 90, 2)
+            $ EmmaX.Statup("Obed", 70, 2)
+            $ EmmaX.Statup("Inbt", 80, 2) 
+            $ EmmaX.Statup("Inbt", 30, 2) 
+            "As you slide a finger in, [EmmaX.Name] tightens around it in surprise, but seems into it."  
+            $ EmmaX.FaceChange("sexy")           
+            jump Emma_IA_Prep
         else:   
-            call EmmaFace("surprised")
-            call Statup("Emma", "Love", 80, -2)
-            call Statup("Emma", "Obed", 50, -3)
-            ch_e "Whoa, back off, [E_Petname]."                 
+            $ EmmaX.FaceChange("surprised")
+            $ EmmaX.Statup("Love", 80, -2)
+            $ EmmaX.Statup("Obed", 50, -3)
+            ch_e "Whoa, back off, [EmmaX.Petname]."                 
             $ Tempmod = 0
             $ Trigger2 = 0
             return          
     
-    if "insert ass" in E_DailyActions:
-        call EmmaFace("sexy", 1)
+    if "insert ass" in EmmaX.DailyActions:
+        $ EmmaX.FaceChange("sexy", 1)
         $ Line = renpy.random.choice(["You didn't get enough earlier?",
             "Relax, gently. . .",
             "Mmm. . ."]) 
         ch_e "[Line]"
         
     if Approval >= 2:                                                                   #She's into it. . .               
-        if E_Forced:
-            call EmmaFace("sad")
-            call Statup("Emma", "Love", 70, -3, 1)
-            call Statup("Emma", "Love", 20, -2, 1)
-            call Statup("Emma", "Obed", 90, 1)
-            call Statup("Emma", "Inbt", 60, 1)
+        if EmmaX.Forced:
+            $ EmmaX.FaceChange("sad")
+            $ EmmaX.Statup("Love", 70, -3, 1)
+            $ EmmaX.Statup("Love", 20, -2, 1)
+            $ EmmaX.Statup("Obed", 90, 1)
+            $ EmmaX.Statup("Inbt", 60, 1)
             ch_e "If you must. . ."    
         else:
-            call EmmaFace("sexy", 1)
-            $ E_Eyes = "closed"            
-            call Statup("Emma", "Love", 90, 1)
-            call Statup("Emma", "Inbt", 50, 3)            
-            call Statup("Emma", "Lust", 200, 3)
+            $ EmmaX.FaceChange("sexy", 1)
+            $ EmmaX.Eyes = "closed"            
+            $ EmmaX.Statup("Love", 90, 1)
+            $ EmmaX.Statup("Inbt", 50, 3)            
+            $ EmmaX.Statup("Lust", 200, 3)
             ch_e "Mmmmm. . ."                
-        call Statup("Emma", "Obed", 20, 1)
-        call Statup("Emma", "Obed", 60, 1)
-        call Statup("Emma", "Inbt", 70, 2) 
-        jump E_IA_Prep   
+        $ EmmaX.Statup("Obed", 20, 1)
+        $ EmmaX.Statup("Obed", 60, 1)
+        $ EmmaX.Statup("Inbt", 70, 2) 
+        jump Emma_IA_Prep   
     
     else:                                                                               #She's not into it, but maybe. . .            
-        call EmmaFace("angry", 1)
-        if "no insert ass" in E_RecentActions:  
-            ch_e "Your persistance is doing you no favors, [E_Petname]."
-        elif Taboo and "tabno" in E_DailyActions and "no insert ass" in E_DailyActions:  
+        $ EmmaX.FaceChange("angry", 1)
+        if "no insert ass" in EmmaX.RecentActions:  
+            ch_e "Your persistance is doing you no favors, [EmmaX.Petname]."
+        elif Taboo and "tabno" in EmmaX.DailyActions and "no insert ass" in EmmaX.DailyActions:  
             ch_e "I told you that wasn't appropriate!" 
-        elif "no insert ass" in E_DailyActions:       
+        elif "no insert ass" in EmmaX.DailyActions:       
             ch_e "I believe you know my answer on this matter."
-        elif Taboo and "tabno" in E_DailyActions:  
-            ch_e "As I said, not here, [E_Petname]."  
-        elif not E_InsertA:
-            call EmmaFace("perplexed", 1)
+        elif Taboo and "tabno" in EmmaX.DailyActions:  
+            ch_e "As I said, not here, [EmmaX.Petname]."  
+        elif not EmmaX.InsertA:
+            $ EmmaX.FaceChange("perplexed", 1)
             ch_e "That's really not my usual style. . ."
         else:
-            call EmmaFace("bemused")
+            $ EmmaX.FaceChange("bemused")
             ch_e "I'd rather not today. . ."
         menu:
             extend ""
-            "Sorry, never mind." if "no insert ass" in E_DailyActions:
-                call EmmaFace("bemused")
-                ch_e "I appreciate your restraint, [E_Petname]."              
+            "Sorry, never mind." if "no insert ass" in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("bemused")
+                ch_e "I appreciate your restraint, [EmmaX.Petname]."              
                 return
-            "Maybe later?" if "no insert ass" not in E_DailyActions:
-                call EmmaFace("sexy")  
-                ch_e "It's. . . possible, [E_Petname]."
-                call Statup("Emma", "Love", 80, 2)
-                call Statup("Emma", "Inbt", 70, 2)   
+            "Maybe later?" if "no insert ass" not in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("sexy")  
+                ch_e "It's. . . possible, [EmmaX.Petname]."
+                $ EmmaX.Statup("Love", 80, 2)
+                $ EmmaX.Statup("Inbt", 70, 2)   
                 if Taboo:                    
-                    $ E_RecentActions.append("tabno")                      
-                    $ E_DailyActions.append("tabno") 
-                $ E_RecentActions.append("no insert ass")                      
-                $ E_DailyActions.append("no insert ass")            
+                    $ EmmaX.RecentActions.append("tabno")                      
+                    $ EmmaX.DailyActions.append("tabno") 
+                $ EmmaX.RecentActions.append("no insert ass")                      
+                $ EmmaX.DailyActions.append("no insert ass")            
                 return
             "I think you'd really enjoy it. . .":            
                 if Approval:
-                    call EmmaFace("sexy")           
-                    call Statup("Emma", "Obed", 90, 2)
-                    call Statup("Emma", "Obed", 50, 2)
+                    $ EmmaX.FaceChange("sexy")           
+                    $ EmmaX.Statup("Obed", 90, 2)
+                    $ EmmaX.Statup("Obed", 50, 2)
                     ch_e "You're probably right. . ."      
-                    call Statup("Emma", "Inbt", 70, 3) 
-                    call Statup("Emma", "Inbt", 40, 2)
-                    jump E_IA_Prep
+                    $ EmmaX.Statup("Inbt", 70, 3) 
+                    $ EmmaX.Statup("Inbt", 40, 2)
+                    jump Emma_IA_Prep
                 else:   
-                    call EmmaFace("bemused") 
+                    $ EmmaX.FaceChange("bemused") 
                     ch_e "I don't think that I would."     
             
             "[[Slide a finger in anyway]":                                               # Pressured into being fingered. 
-                $ Approval = ApprovalCheck("Emma", 950, "OI", TabM = 3) # 95, 110, 125, -120(215)
-                if Approval > 1 or (Approval and E_Forced):                    
-                    call EmmaFace("surprised", 1)
-                    call Statup("Emma", "Love", 70, -5, 1)
-                    call Statup("Emma", "Love", 200, -2)                 
+                $ Approval = ApprovalCheck(EmmaX, 950, "OI", TabM = 3) # 95, 110, 125, -120(215)
+                if Approval > 1 or (Approval and EmmaX.Forced):                    
+                    $ EmmaX.FaceChange("surprised", 1)
+                    $ EmmaX.Statup("Love", 70, -5, 1)
+                    $ EmmaX.Statup("Love", 200, -2)                 
                     ch_e "Well hello there. . ."                     
-                    call EmmaFace("sad")
-                    call Statup("Emma", "Obed", 50, 4)
-                    call Statup("Emma", "Inbt", 80, 1) 
-                    call Statup("Emma", "Inbt", 60, 3)  
+                    $ EmmaX.FaceChange("sad")
+                    $ EmmaX.Statup("Obed", 50, 4)
+                    $ EmmaX.Statup("Inbt", 80, 1) 
+                    $ EmmaX.Statup("Inbt", 60, 3)  
                     if Approval < 2:                          
-                        $ E_Forced = 1
-                    jump E_IA_Prep
+                        $ EmmaX.Forced = 1
+                    jump Emma_IA_Prep
                 else:                              
-                    call Statup("Emma", "Love", 200, -15)  
-                    call EmmaFace("angry", 1)
+                    $ EmmaX.Statup("Love", 200, -15)  
+                    $ EmmaX.FaceChange("angry", 1)
                     "She slaps your hand away."   
-                    $ E_RecentActions.append("angry")
-                    $ E_DailyActions.append("angry")   
+                    $ EmmaX.RecentActions.append("angry")
+                    $ EmmaX.DailyActions.append("angry")   
                     
-    if "no insert ass" in E_DailyActions:
-        ch_e "I don't appreciate having to repeat myself, [E_Petname]."   
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
-    elif E_Forced:
-        call EmmaFace("angry", 1)
+    if "no insert ass" in EmmaX.DailyActions:
+        ch_e "I don't appreciate having to repeat myself, [EmmaX.Petname]."   
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
+    elif EmmaX.Forced:
+        $ EmmaX.FaceChange("angry", 1)
         ch_e "I'm not going that far today."
-        if E_Inbt > 50:
-                call Statup("Emma", "Lust", 80, 10)  
+        if EmmaX.Inbt > 50:
+                $ EmmaX.Statup("Lust", 80, 10)  
         else:
-                call Statup("Emma", "Lust", 50, 3)
-        call Statup("Emma", "Obed", 50, -2)      
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
+                $ EmmaX.Statup("Lust", 50, 3)
+        $ EmmaX.Statup("Obed", 50, -2)      
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
     elif Taboo:
-        call EmmaFace("angry", 1)    
-        $ E_RecentActions.append("tabno")                   
-        $ E_DailyActions.append("tabno") 
+        $ EmmaX.FaceChange("angry", 1)    
+        $ EmmaX.RecentActions.append("tabno")                   
+        $ EmmaX.DailyActions.append("tabno") 
         ch_e "I have a reputation to maintain."                   
-    elif E_InsertA:
-        call EmmaFace("sad") 
+    elif EmmaX.InsertA:
+        $ EmmaX.FaceChange("sad") 
         ch_e "I don't feel like it."    
     else:
-        call EmmaFace("surprised")
-        ch_e "Not today, [E_Petname]."
-        call EmmaFace
-    $ E_RecentActions.append("no insert ass")                      
-    $ E_DailyActions.append("no insert ass") 
+        $ EmmaX.FaceChange("surprised")
+        ch_e "Not today, [EmmaX.Petname]."
+        $ EmmaX.FaceChange()
+    $ EmmaX.RecentActions.append("no insert ass")                      
+    $ EmmaX.DailyActions.append("no insert ass") 
     $ Tempmod = 0    
     return
     
         
-label E_IA_Prep: #Animation set-up 
+label Emma_IA_Prep: #Animation set-up 
     if Trigger2 == "insert ass":
         return
             
-    call E_Pussy_Launch("insert ass")
+    call Emma_Pussy_Launch("insert ass")
     
-    if Situation == "Emma":                                                         
+    if Situation == EmmaX:                                                         
             #Emma auto-starts    
             $ Situation = 0
-            if (E_Legs and not E_Upskirt) or (E_Panties and not E_PantiesDown):
+            if (EmmaX.Legs and not EmmaX.Upskirt) or (EmmaX.Panties and not EmmaX.PantiesDown):
                 #if she has some sort of top on. . .
-                if ApprovalCheck("Emma", 1250, TabM = 1) or (E_SeenPussy and ApprovalCheck("Emma", 500) and not Taboo):
-                        $ E_Upskirt = 1
-                        $ E_PantiesDown = 1
+                if ApprovalCheck(EmmaX, 1250, TabM = 1) or (EmmaX.SeenPussy and ApprovalCheck(EmmaX, 500) and not Taboo):
+                        $ EmmaX.Upskirt = 1
+                        $ EmmaX.PantiesDown = 1
                         $ Line = 0
-                        if E_Legs == "skirt":
-                            $ Line = "Emma hikes up her skirt"
-                        elif PantsNum("Emma") >= 5:
-                            $ Line = "Emma pulls down her " + E_Legs
+                        if EmmaX.PantsNum() == 5:
+                            $ Line = EmmaX.Name + " hikes up her skirt"
+                        elif EmmaX.PantsNum() >= 6:
+                            $ Line = EmmaX.Name + " pulls down her " + EmmaX.Legs
                         else:
                             $ Line = 0                            
-                        if E_Panties:
+                        if EmmaX.Panties:
                             if Line:
                                 #wearing pants
-                                "[Line] and pulls her [E_Panties] out of the way."
+                                "[Line] and pulls her [EmmaX.Panties] out of the way."
                                 "She then grabs your arm and presses your hand against her asshole, clearly intending you to get to work."
                             else:
                                 #no pants
-                                "She pulls her [E_Panties] out of the way, and then presses your hand against her asshole."
+                                "She pulls her [EmmaX.Panties] out of the way, and then presses your hand against her asshole."
                                 "She clearly intends for you to get to work." 
                         else:
-                            #pants but no panties
-                            "[Line], and then presses your hand against her asshole."
-                            "She clearly intends for you to get to work."                     
+                                #pants but no panties
+                                "[Line], and then presses your hand against her asshole."
+                                "She clearly intends for you to get to work."                     
                         call Emma_First_Bottomless(1)
                 else:
-                    "Emma grabs your arm and presses your hand against her asshole, clearly intending you to get to work."
+                        "[EmmaX.Name] grabs your arm and presses your hand against her asshole, clearly intending you to get to work."
             else:
-                "Emma grabs your arm and presses your hand against her asshole, clearly intending you to get to work."
+                        "[EmmaX.Name] grabs your arm and presses your hand against her asshole, clearly intending you to get to work."
             menu:
                 "What do you do?"
                 "Get to work.":                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    call Statup("Emma", "Inbt", 50, 2)
+                    $ EmmaX.Statup("Inbt", 80, 3) 
+                    $ EmmaX.Statup("Inbt", 50, 2)
                     "You press your finger into it."
                 "Praise her.":       
-                    call EmmaFace("sexy", 1)                    
-                    call Statup("Emma", "Inbt", 80, 3) 
-                    ch_p "Dirty girl, [E_Pet]."
-                    call Emma_Namecheck
+                    $ EmmaX.FaceChange("sexy", 1)                    
+                    $ EmmaX.Statup("Inbt", 80, 3) 
+                    ch_p "Dirty girl, [EmmaX.Pet]."
+                    $ EmmaX.NameCheck() #checks reaction to petname
                     "You press your finger into it."
-                    call Statup("Emma", "Love", 85, 1)
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 2)
+                    $ EmmaX.Statup("Love", 85, 1)
+                    $ EmmaX.Statup("Obed", 90, 1)
+                    $ EmmaX.Statup("Obed", 50, 2)
                 "Ask her to stop.":
                     "You pull your hand back."
-                    call EmmaFace("surprised")       
-                    call Statup("Emma", "Inbt", 70, 1) 
-                    ch_p "Let's not do that right now, [E_Pet]."
-                    call Emma_Namecheck
-                    "Emma pulls back."
-                    call Statup("Emma", "Obed", 90, 1)
-                    call Statup("Emma", "Obed", 50, 1)
-                    call Statup("Emma", "Obed", 30, 2)
-                    $ P_RecentActions.append("nope")      
-                    call AnyWord("Emma",1,"refused","refused")  
+                    $ EmmaX.FaceChange("surprised")       
+                    $ EmmaX.Statup("Inbt", 70, 1) 
+                    ch_p "Let's not do that right now, [EmmaX.Pet]."
+                    $ EmmaX.NameCheck() #checks reaction to petname
+                    "[EmmaX.Name] pulls back."
+                    $ EmmaX.Statup("Obed", 90, 1)
+                    $ EmmaX.Statup("Obed", 50, 1)
+                    $ EmmaX.Statup("Obed", 30, 2)
+                    $ Player.RecentActions.append("nope")      
+                    $ EmmaX.AddWord(1,"refused","refused")  
                     return          
             #end auto
            
-    if not E_Forced and Situation != "auto":
+    if not EmmaX.Forced and Situation != "auto":
         $ Tempmod = 0
-        call Emma_Bottoms_Off
-        if "angry" in E_RecentActions:
+        call Bottoms_Off(EmmaX)
+        if "angry" in EmmaX.RecentActions:
             return    
             
     $ Tempmod = 0   
-    if not E_InsertA:        
-        if E_Forced:
-            call Statup("Emma", "Love", 90, -50)
-            call Statup("Emma", "Obed", 70, 60)
-            call Statup("Emma", "Inbt", 80, 35) 
+    if not EmmaX.InsertA:        
+        if EmmaX.Forced:
+            $ EmmaX.Statup("Love", 90, -50)
+            $ EmmaX.Statup("Obed", 70, 60)
+            $ EmmaX.Statup("Inbt", 80, 35) 
         else:
-            call Statup("Emma", "Love", 90, 10)
-            call Statup("Emma", "Obed", 70, 20)
-            call Statup("Emma", "Inbt", 80, 25)
+            $ EmmaX.Statup("Love", 90, 10)
+            $ EmmaX.Statup("Obed", 70, 20)
+            $ EmmaX.Statup("Inbt", 80, 25)
             
     if Taboo:
-        $ E_Inbt += int(Taboo/10)  
-        $ E_Lust += int(Taboo/5)
+        $ EmmaX.Inbt += int(Taboo/10)  
+        $ EmmaX.Lust += int(Taboo/5)
         
     if Situation:     
         $ renpy.pop_call() 
@@ -3531,76 +3440,76 @@ label E_IA_Prep: #Animation set-up
     $ Line = 0    
     $ Cnt = 0
     if Taboo:
-        call DrainWord("Emma","tabno")
-    call DrainWord("Emma","no insert ass")
-    $ E_RecentActions.append("insert ass")                      
-    $ E_DailyActions.append("insert ass") 
+        $ EmmaX.DrainWord("tabno")
+    $ EmmaX.DrainWord("no insert ass")
+    $ EmmaX.RecentActions.append("insert ass")                      
+    $ EmmaX.DailyActions.append("insert ass") 
     
-label E_IA_Cycle: #Repeating strokes
+label Emma_IA_Cycle: #Repeating strokes
     while Round >=0:  
-        call Shift_Focus("Emma") 
-        call E_Pussy_Launch("insert ass")
-        call EmmaLust   
+        call Shift_Focus(EmmaX) 
+        call Emma_Pussy_Launch("insert ass")
+        $ EmmaX.LustFace()   
         
-        if  P_Focus < 100:                                                   
+        if  Player.Focus < 100:                                                   
                     #Player Command menu
                     menu:
                         "Keep going. . .":
                                     pass
                                                               
                         "Slap her ass":                     
-                                    call E_Slap_Ass  
+                                    call Slap_Ass(EmmaX)  
                                     $ Cnt += 1
                                     $ Round -= 1                                      
-                                    jump E_IA_Cycle  
+                                    jump Emma_IA_Cycle  
                                     
-                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in P_Traits:
+                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in Player.Traits:
                                     pass
-                        "Focus to last longer." if not P_FocusX and "focus" in P_Traits:
+                        "Focus to last longer." if not Player.FocusX and "focus" in Player.Traits:
                                     "You concentrate on not burning out too quickly."                
-                                    $ P_FocusX = 1
-                        "Release your focus." if P_FocusX:
+                                    $ Player.FocusX = 1
+                        "Release your focus." if Player.FocusX:
                                     "You release your concentration. . ."                
-                                    $ P_FocusX = 0
+                                    $ Player.FocusX = 0
                                     
                         "Other options":
                                 menu:   
                                     "Offhand action":
-                                            if E_Action and MultiAction:
-                                                call Emma_Offhand_Set
+                                            if EmmaX.Action and MultiAction:
+                                                call Offhand_Set
                                                 if Trigger2:
-                                                     $ E_Action -= 1
+                                                     $ EmmaX.Action -= 1
                                             else:
                                                 ch_e "I could use a break, are you about finished here?"  
                                                 
                                     "Shift primary action":
-                                            if E_Action and MultiAction:
+                                            if EmmaX.Action and MultiAction:
                                                     menu:                                                             
                                                         "Pull out and start rubbing again.":
                                                                 $ Situation = "pullback"
-                                                                call E_IA_After
-                                                                call E_Fondle_Ass
+                                                                call Emma_IA_After
+                                                                call Emma_Fondle_Ass
                                                         "I want to lick your asshole.":
                                                                 $ Situation = "shift"
-                                                                call E_IA_After
-                                                                call E_Lick_Ass                 
+                                                                call Emma_IA_After
+                                                                call Emma_Lick_Ass                 
                                                         "Just start licking.":
                                                                 $ Situation = "auto"
-                                                                call E_IA_After
-                                                                call E_Lick_Ass    
+                                                                call Emma_IA_After
+                                                                call Emma_Lick_Ass    
                                                         "I want to stick a dildo in.":
                                                                 $ Situation = "shift"
-                                                                call E_IA_After
-                                                                call E_Dildo_Ass  
+                                                                call Emma_IA_After
+                                                                call Emma_Dildo_Ass  
                                                         "Never Mind":
-                                                                jump E_IA_Cycle
+                                                                jump Emma_IA_Cycle
                                             else: 
                                                 ch_e "I could use a break, are you about finished here?"           
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
-                                                call E_IA_After
-                                                call Emma_Offhand_Set   
+                                                call Emma_IA_After
+                                                call Offhand_Set   
                                     "Shift your focus (locked)" if not Trigger2:
                                                 pass
                                     
@@ -3608,147 +3517,149 @@ label E_IA_Cycle: #Repeating strokes
                                         pass
                                     "Threesome actions" if Partner:   
                                         menu:
-                                            "Ask Emma to do something else with [Partner]" if Trigger == "lesbian":
-                                                        call Emma_Les_Change
-                                            "Ask Emma to do something else with [Partner] (locked)" if Trigger != "lesbian":
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name]" if Trigger == "lesbian":
+                                                        call Les_Change(EmmaX)
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name] (locked)" if Trigger != "lesbian":
                                                         pass
-                                            "Ask [Partner] to do something else":
-                                                        call Partner_Threechange("Emma") 
+                                            "Ask [Partner.Name] to do something else":
+                                                        call Three_Change(EmmaX) 
                                                         
                                             "Don't stop what you're doing. . .(locked)" if not ThreeCount or not Trigger4:
                                                         $ ThreeCount = 0                                                            
                                             "Don't stop what you're doing. . ." if ThreeCount and Trigger4:
                                                         $ ThreeCount = 0   
                                                         
-                                            "Swap to [Partner]":
-                                                        call Trigger_Swap("Emma")
-                                            "Undress [Partner]":
-                                                        call Partner_Undress
-                                                        jump E_IA_Cycle 
-                                            "Clean up Partner":
-                                                        call Partner_Cleanup
-                                                        jump E_IA_Cycle 
+                                            "Swap to [Partner.Name]":
+                                                        call Trigger_Swap(EmmaX)
+                                            "Undress [Partner.Name]":
+                                                        call Girl_Undress(Partner)
+                                                        jump Emma_IA_Cycle
+                                            "Clean up [Partner.Name] (locked)" if not Partner.Spunk:
+                                                        pass 
+                                            "Clean up [Partner.Name]" if Partner.Spunk:
+                                                        call Girl_Cleanup(Partner,"ask")
+                                                        jump Emma_IA_Cycle 
                                             "Never mind":
-                                                        jump E_IA_Cycle 
-                                    "Undress Emma":
-                                            call E_Undress   
-                                    "Clean up Emma (locked)" if not E_Spunk:
+                                                        jump Emma_IA_Cycle 
+                                    "Undress [EmmaX.Name]":
+                                            call Girl_Undress(EmmaX)   
+                                    "Clean up [EmmaX.Name] (locked)" if not EmmaX.Spunk:
                                             pass  
-                                    "Clean up Emma" if E_Spunk:
-                                            call Emma_Cleanup("ask")                                         
+                                    "Clean up [EmmaX.Name]" if EmmaX.Spunk:
+                                            call Girl_Cleanup(EmmaX,"ask")                                         
                                     "Never mind":
-                                            jump E_IA_Cycle 
+                                            jump Emma_IA_Cycle 
                                                    
                         "Back to Sex Menu" if MultiAction: 
                                     ch_p "Let's try something else."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Situation = "shift"
                                     $ Line = 0
-                                    jump E_IA_After
+                                    jump Emma_IA_After
                         "End Scene" if not MultiAction: 
                                     ch_p "Let's stop for now."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Line = 0
-                                    jump E_IA_After
+                                    jump Emma_IA_After
         #End menu (if Line)
         
-        if E_Panties or E_Legs == "pants" or HoseNum("Emma") >= 5: #This checks if Emma wants to strip down.
-                call E_Undress("auto")
+        if EmmaX.Panties or EmmaX.PantsNum() > 6 or EmmaX.HoseNum() >= 5: #This checks if [EmmaX.Name] wants to strip down.
+                call Girl_Undress(EmmaX,"auto")
                 
-        call Shift_Focus("Emma")    
-        call Sex_Dialog("Emma",Partner)
+        call Shift_Focus(EmmaX)    
+        call Sex_Dialog(EmmaX,Partner)
                 
         #If either of you could cum 
         
         $ Cnt += 1
         $ Round -= 1   
     
-        $ P_Focus = 50 if not P_Semen and P_Focus >= 50 else P_Focus #Resets P_Focus if can't get it up
-        if P_Focus >= 100 or E_Lust >= 100: 
+        $ Player.Focus = 50 if not Player.Semen and Player.Focus >= 50 else Player.Focus #Resets Player.Focus if can't get it up
+        if Player.Focus >= 100 or EmmaX.Lust >= 100: 
                     #If either of you could cum   
-                    if P_Focus >= 100:    
+                    if Player.Focus >= 100:    
                             #If you can cum:                                                 
-                            call PE_Cumming
-                            if "angry" in E_RecentActions:  
-                                call E_Pos_Reset
+                            call Player_Cumming(EmmaX)
+                            if "angry" in EmmaX.RecentActions:  
+                                call Emma_Pos_Reset
                                 return    
-                            call Statup("Emma", "Lust", 200, 5) 
-                            if 100 > E_Lust >= 70 and E_OCount < 2:             
-                                $ E_RecentActions.append("unsatisfied")                      
-                                $ E_DailyActions.append("unsatisfied") 
+                            $ EmmaX.Statup("Lust", 200, 5) 
+                            if 100 > EmmaX.Lust >= 70 and EmmaX.OCount < 2:             
+                                $ EmmaX.RecentActions.append("unsatisfied")                      
+                                $ EmmaX.DailyActions.append("unsatisfied") 
                             
-                            if P_Focus > 80:
-                                jump E_IA_After 
+                            if Player.Focus > 80:
+                                jump Emma_IA_After 
                             $ Line = "came"
      
-                    if E_Lust >= 100:  
-                            #If Emma can cum                                             
-                            call E_Cumming
-                            if Situation == "shift" or "angry" in E_RecentActions:
-                                jump E_IA_After
+                    if EmmaX.Lust >= 100:  
+                            #If [EmmaX.Name] can cum                                             
+                            call Girl_Cumming(EmmaX)
+                            if Situation == "shift" or "angry" in EmmaX.RecentActions:
+                                jump Emma_IA_After
                        
-                    if Line == "came": #ex P_Focus <= 20: 
+                    if Line == "came": #ex Player.Focus <= 20: 
                             #If you've just cum,  
                             $ Line = 0
-                            if not P_Semen:
+                            if not Player.Semen:
                                 "You're emptied out, you should probably take a break."
                             
                             
-                            if "unsatisfied" in E_RecentActions:#And Emma is unsatisfied,  
-                                    "Emma still seems a bit unsatisfied with the experience."
+                            if "unsatisfied" in EmmaX.RecentActions:#And [EmmaX.Name] is unsatisfied,  
+                                    "[EmmaX.Name] still seems a bit unsatisfied with the experience."
                                     menu:
                                         "Finish her?"
                                         "Yes, keep going for a bit.":
                                             $ Line = "You get back into it" 
                                         "No, I'm done.":
                                             "You pull back."
-                                            jump E_IA_After    
-        if Partner:
+                                            jump Emma_IA_After    
+        if Partner and Partner.Lust >= 100:
                 #Checks if partner could orgasm
-                call Partner_Cumming("Emma")            
+                call Girl_Cumming(Partner)            
         #End orgasm
         
-        $ P_Focus -= 10 if P_FocusX and P_Focus > 50 else 0
+        $ Player.Focus -= 10 if Player.FocusX and Player.Focus > 50 else 0
         
-        if E_SEXP >= 100 or ApprovalCheck("Emma", 1200, "LO"):
+        if EmmaX.SEXP >= 100 or ApprovalCheck(EmmaX, 1200, "LO"):
             pass
-        elif Cnt == (5 + E_InsertA):
-                    $ E_Brows = "confused"
+        elif Cnt == (5 + EmmaX.InsertA):
+                    $ EmmaX.Brows = "confused"
                     ch_e "Ungh, You're getting going there. . ."  
-        elif E_Lust >= 80:
+        elif EmmaX.Lust >= 80:
                     pass
-        elif Cnt == (15 + E_InsertA) and E_SEXP >= 15 and not ApprovalCheck("Emma", 1500):
-                    $ E_Brows = "confused"        
+        elif Cnt == (15 + EmmaX.InsertA) and EmmaX.SEXP >= 15 and not ApprovalCheck(EmmaX, 1500):
+                    $ EmmaX.Brows = "confused"        
                     menu:
-                        ch_e "[E_Petname], this is getting kind sore, maybe we could try something else."                         
+                        ch_e "[EmmaX.Petname], this is getting kind sore, maybe we could try something else."                         
                         "Finish up.":
                                 "You let go. . ."   
-                                jump E_IA_After
+                                jump Emma_IA_After
                         "Let's try something else." if MultiAction: 
                                 $ Line = 0
                                 $ Situation = "shift"
-                                jump E_IA_After
+                                jump Emma_IA_After
                         "No, this is fun.":   
-                                if ApprovalCheck("Emma", 1200) or ApprovalCheck("Emma", 500, "O"):                        
-                                    call Statup("Emma", "Love", 200, -5)
-                                    call Statup("Emma", "Obed", 50, 3)                    
-                                    call Statup("Emma", "Obed", 80, 2)
+                                if ApprovalCheck(EmmaX, 1200) or ApprovalCheck(EmmaX, 500, "O"):                        
+                                    $ EmmaX.Statup("Love", 200, -5)
+                                    $ EmmaX.Statup("Obed", 50, 3)                    
+                                    $ EmmaX.Statup("Obed", 80, 2)
                                     "She grumbles but lets you keep going."
                                 else:
-                                    call EmmaFace("angry", 1)   
-                                    call E_Pos_Reset
+                                    $ EmmaX.FaceChange("angry", 1)   
+                                    call Emma_Pos_Reset
                                     "She scowls at you and pulls back."
                                     ch_e "Well perhaps you are enjoying yourself, but I'm tired of this."                         
-                                    call Statup("Emma", "Love", 50, -3, 1)
-                                    call Statup("Emma", "Love", 80, -4, 1)
-                                    call Statup("Emma", "Obed", 30, -1, 1)                    
-                                    call Statup("Emma", "Obed", 50, -1, 1)  
-                                    $ E_RecentActions.append("angry")
-                                    $ E_DailyActions.append("angry")   
-                                    jump E_IA_After
+                                    $ EmmaX.Statup("Love", 50, -3, 1)
+                                    $ EmmaX.Statup("Love", 80, -4, 1)
+                                    $ EmmaX.Statup("Obed", 30, -1, 1)                    
+                                    $ EmmaX.Statup("Obed", 50, -1, 1)  
+                                    $ EmmaX.RecentActions.append("angry")
+                                    $ EmmaX.DailyActions.append("angry")   
+                                    jump Emma_IA_After
         #End Count check
            
-        call Escalation("Emma","E") #sees if she wants to escalate things
+        call Escalation(EmmaX) #sees if she wants to escalate things
         
         if Round == 10:
             ch_e "It's getting late. . ."  
@@ -3756,31 +3667,31 @@ label E_IA_Cycle: #Repeating strokes
             ch_e "We should take a break soon."        
     
     #Round = 0 loop breaks
-    call EmmaFace("bemused", 0)
+    $ EmmaX.FaceChange("bemused", 0)
     $ Line = 0
     ch_e "We need to stop for a moment, let me catch my breath."
     
-label E_IA_After:
+label Emma_IA_After:
     if not Situation: #fix  Situation != "shift" and Situation != "auto" and Situation != "pullback": 
-        call E_Pos_Reset
+        call Emma_Pos_Reset
         
-    call EmmaFace("sexy") 
+    $ EmmaX.FaceChange("sexy") 
     
-    $ E_InsertA += 1  
-    $ E_Action -=1            
-    $ E_Addictionrate += 1
-    if "addictive" in P_Traits:
-        $ E_Addictionrate += 1
+    $ EmmaX.InsertA += 1  
+    $ EmmaX.Action -=1            
+    $ EmmaX.Addictionrate += 1
+    if "addictive" in Player.Traits:
+        $ EmmaX.Addictionrate += 1
     
-    call Partner_Like("Emma",2)
+    call Partner_Like(EmmaX,2)
      
-    if E_InsertA == 1:            
-            $ E_SEXP += 12         
+    if EmmaX.InsertA == 1:            
+            $ EmmaX.SEXP += 12         
             if not Situation: 
-                if E_Love >= 500 and "unsatisfied" not in E_RecentActions:
+                if EmmaX.Love >= 500 and "unsatisfied" not in EmmaX.RecentActions:
                     ch_e "You certainly surprise me. . ."
-                elif E_Obed <= 500 and P_Focus <= 20:
-                    call EmmaFace("perplexed", 1)
+                elif EmmaX.Obed <= 500 and Player.Focus <= 20:
+                    $ EmmaX.FaceChange("perplexed", 1)
                     ch_e "Was it everything you dreamed?"
      
     $ Tempmod = 0  
@@ -3790,310 +3701,310 @@ label E_IA_After:
     return   
 
 
-# end E_Insert Ass /////////////////////////////////////////////////////////////////////////////
+# end EmmaX.Insert Ass /////////////////////////////////////////////////////////////////////////////
 
 
 
 
 # ////////////////////////////////////////////////////////////////////////Start Insert Ass    
-label E_Lick_Ass: 
+label Emma_Lick_Ass: 
     $ Round -= 5 if Round > 5 else (Round-1)
-    call Shift_Focus("Emma")
+    call Shift_Focus(EmmaX)
                                                                              # Will she let you lick? Modifiers         
-    if E_LickA: #You've done it before
+    if EmmaX.LickA: #You've done it before
         $ Tempmod += 20
-    if E_Legs == "pants" or HoseNum("Emma") >= 5: # she's got pants on.
+    if EmmaX.PantsNum() > 6 or EmmaX.HoseNum() >= 5: # she's got pants on.
         $ Tempmod -= 25 
-    if E_Lust > 95:
+    if EmmaX.Lust > 95:
         $ Tempmod += 20  
-    elif E_Lust > 85: #She's really horny
+    elif EmmaX.Lust > 85: #She's really horny
         $ Tempmod += 15    
-    if E_Lust > 85 and Situation == "auto": #auto
+    if EmmaX.Lust > 85 and Situation == "auto": #auto
         $ Tempmod += 10 
     if Situation == "shift":
         $ Tempmod += 10
-    if "exhibitionist" in E_Traits:
+    if "exhibitionist" in EmmaX.Traits:
         $ Tempmod += (4*Taboo) 
-    if "dating" in E_Traits or "sex friend" in E_Petnames:
+    if "dating" in EmmaX.Traits or "sex friend" in EmmaX.Petnames:
         $ Tempmod += 10
-    elif "ex" in E_Traits:
+    elif "ex" in EmmaX.Traits:
         $ Tempmod -= 25  
-    if E_ForcedCount and not E_Forced:
-        $ Tempmod -= 5 * E_ForcedCount 
+    if EmmaX.ForcedCount and not EmmaX.Forced:
+        $ Tempmod -= 5 * EmmaX.ForcedCount 
     
-    if Taboo and "tabno" in E_DailyActions:        
+    if Taboo and "tabno" in EmmaX.DailyActions:        
         $ Tempmod -= 10 
-    if Taboo and "public" not in E_History:                   
+    if Taboo and "public" not in EmmaX.History:                   
         $ Tempmod -= 20 
         
-    if "no lick ass" in E_DailyActions:               
+    if "no lick ass" in EmmaX.DailyActions:               
         $ Tempmod -= 5 
-        $ Tempmod -= 10 if "no lick ass" in E_RecentActions else 0   
+        $ Tempmod -= 10 if "no lick ass" in EmmaX.RecentActions else 0   
             
-    $ Approval = ApprovalCheck("Emma", 1550, TabM = 4) # 155, 170, 185, Taboo -160(315)
+    $ Approval = ApprovalCheck(EmmaX, 1550, TabM = 4) # 155, 170, 185, Taboo -160(315)
     
     if Situation == "auto":                                                                  #You auto-start                    
         if Approval:            
-            call EmmaFace("surprised")   
-            call Statup("Emma", "Obed", 90, 1)
-            call Statup("Emma", "Inbt", 80, 3) 
-            call Statup("Emma", "Inbt", 40, 2) 
-            "As you crouch down and start to lick her asshole, Emma startles briefly, but then begins to melt."  
-            call EmmaFace("sexy")  
-            jump E_LA_Prep
+            $ EmmaX.FaceChange("surprised")   
+            $ EmmaX.Statup("Obed", 90, 1)
+            $ EmmaX.Statup("Inbt", 80, 3) 
+            $ EmmaX.Statup("Inbt", 40, 2) 
+            "As you crouch down and start to lick her asshole, [EmmaX.Name] startles briefly, but then begins to melt."  
+            $ EmmaX.FaceChange("sexy")  
+            jump Emma_LA_Prep
         else:   
-            call EmmaFace("surprised")
-            call Statup("Emma", "Love", 80, -2)
-            call Statup("Emma", "Obed", 50, -3)
-            ch_e "[E_Petname]! Not now. . ."               
+            $ EmmaX.FaceChange("surprised")
+            $ EmmaX.Statup("Love", 80, -2)
+            $ EmmaX.Statup("Obed", 50, -3)
+            ch_e "[EmmaX.Petname]! Not now. . ."               
             $ Tempmod = 0
             $ Trigger2 = 0
             return  
     
-    if "lick ass" in E_RecentActions:
-        call EmmaFace("sexy", 1)
+    if "lick ass" in EmmaX.RecentActions:
+        $ EmmaX.FaceChange("sexy", 1)
         ch_e "Mmmm, again? I suppose. . ."
-        jump E_LA_Prep
-    elif "lick ass" in E_DailyActions:
-        call EmmaFace("sexy", 1)
+        jump Emma_LA_Prep
+    elif "lick ass" in EmmaX.DailyActions:
+        $ EmmaX.FaceChange("sexy", 1)
         ch_e "You didn't get enough earlier?"
     
             
     if Approval >= 2:                                                                   #She's into it. . .               
-        if E_Forced:
-            call EmmaFace("sad")
-            call Statup("Emma", "Love", 70, -3, 1)
-            call Statup("Emma", "Love", 20, -2, 1)
-            call Statup("Emma", "Obed", 90, 2)
-            call Statup("Emma", "Inbt", 60, 2)
+        if EmmaX.Forced:
+            $ EmmaX.FaceChange("sad")
+            $ EmmaX.Statup("Love", 70, -3, 1)
+            $ EmmaX.Statup("Love", 20, -2, 1)
+            $ EmmaX.Statup("Obed", 90, 2)
+            $ EmmaX.Statup("Inbt", 60, 2)
             ch_e "If you must. . ."    
         else:
-            call EmmaFace("sexy", 1)
-            $ E_Eyes = "closed"            
-            call Statup("Emma", "Love", 90, 1)
-            call Statup("Emma", "Inbt", 60, 2)            
-            call Statup("Emma", "Lust", 200, 3)
+            $ EmmaX.FaceChange("sexy", 1)
+            $ EmmaX.Eyes = "closed"            
+            $ EmmaX.Statup("Love", 90, 1)
+            $ EmmaX.Statup("Inbt", 60, 2)            
+            $ EmmaX.Statup("Lust", 200, 3)
             ch_e "Mmm. . . naughty."                
-        call Statup("Emma", "Obed", 20, 1)
-        call Statup("Emma", "Obed", 60, 1)
-        call Statup("Emma", "Inbt", 80, 2) 
-        jump E_LA_Prep   
+        $ EmmaX.Statup("Obed", 20, 1)
+        $ EmmaX.Statup("Obed", 60, 1)
+        $ EmmaX.Statup("Inbt", 80, 2) 
+        jump Emma_LA_Prep   
     
     else:                                                                               #She's not into it, but maybe. . .           
-        call EmmaFace("angry", 1)
-        if "no lick ass" in E_RecentActions:  
-            ch_e "Your persistance is doing you no favors, [E_Petname]."
-        elif Taboo and "tabno" in E_DailyActions and "no lick ass" in E_DailyActions:  
+        $ EmmaX.FaceChange("angry", 1)
+        if "no lick ass" in EmmaX.RecentActions:  
+            ch_e "Your persistance is doing you no favors, [EmmaX.Petname]."
+        elif Taboo and "tabno" in EmmaX.DailyActions and "no lick ass" in EmmaX.DailyActions:  
             ch_e "I told you not to touch me like that in public!" 
-        elif "no lick ass" in E_DailyActions:       
+        elif "no lick ass" in EmmaX.DailyActions:       
             ch_e "I believe you know my answer on this matter."
-        elif Taboo and "tabno" in E_DailyActions:  
-            ch_e "As I said, not here, [E_Petname]."  
-        elif not E_LickA:                    #First time dialog
-            call EmmaFace("bemused", 1)
-            if E_Love >= E_Obed and E_Love >= E_Inbt:            
+        elif Taboo and "tabno" in EmmaX.DailyActions:  
+            ch_e "As I said, not here, [EmmaX.Petname]."  
+        elif not EmmaX.LickA:                    #First time dialog
+            $ EmmaX.FaceChange("bemused", 1)
+            if EmmaX.Love >= EmmaX.Obed and EmmaX.Love >= EmmaX.Inbt:            
                 ch_e "Oh, are we there now?"
-            elif E_Obed >= E_Inbt:            
+            elif EmmaX.Obed >= EmmaX.Inbt:            
                 ch_e "Is that what gets you off?"
             else:
-                $ E_Eyes = "sexy"
+                $ EmmaX.Eyes = "sexy"
                 ch_e "Hm, I didn't know that's what you were into."
         else:
-            call EmmaFace("bemused")
-            ch_e "Not now, [E_Petname]."  
+            $ EmmaX.FaceChange("bemused")
+            ch_e "Not now, [EmmaX.Petname]."  
         menu:
             extend ""
-            "Sorry, never mind." if "no lick ass" in E_DailyActions:
-                call EmmaFace("bemused")
-                ch_e "I appreciate your restraint, [E_Petname]."              
+            "Sorry, never mind." if "no lick ass" in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("bemused")
+                ch_e "I appreciate your restraint, [EmmaX.Petname]."              
                 return
-            "I'm sure I can convince you later. . ." if "no lick ass" not in E_DailyActions:
-                call EmmaFace("sexy")  
-                ch_e "Anything's possible, [E_Petname]."
-                call Statup("Emma", "Love", 80, 2)
-                call Statup("Emma", "Inbt", 70, 2)   
+            "I'm sure I can convince you later. . ." if "no lick ass" not in EmmaX.DailyActions:
+                $ EmmaX.FaceChange("sexy")  
+                ch_e "Anything's possible, [EmmaX.Petname]."
+                $ EmmaX.Statup("Love", 80, 2)
+                $ EmmaX.Statup("Inbt", 70, 2)   
                 if Taboo:                    
-                    $ E_RecentActions.append("tabno")                      
-                    $ E_DailyActions.append("tabno") 
-                $ E_RecentActions.append("no lick ass")                      
-                $ E_DailyActions.append("no lick ass")            
+                    $ EmmaX.RecentActions.append("tabno")                      
+                    $ EmmaX.DailyActions.append("tabno") 
+                $ EmmaX.RecentActions.append("no lick ass")                      
+                $ EmmaX.DailyActions.append("no lick ass")            
                 return
             "I think you'd really enjoy it. . .":            
                 if Approval:
-                    call EmmaFace("sexy")           
-                    call Statup("Emma", "Obed", 90, 2)
-                    call Statup("Emma", "Obed", 50, 2)
+                    $ EmmaX.FaceChange("sexy")           
+                    $ EmmaX.Statup("Obed", 90, 2)
+                    $ EmmaX.Statup("Obed", 50, 2)
                     ch_e "Ok, you're probably right. . ."      
-                    call Statup("Emma", "Inbt", 70, 3) 
-                    call Statup("Emma", "Inbt", 40, 2)
-                    jump E_LA_Prep
+                    $ EmmaX.Statup("Inbt", 70, 3) 
+                    $ EmmaX.Statup("Inbt", 40, 2)
+                    jump Emma_LA_Prep
                 else:   
-                    call EmmaFace("sexy") 
+                    $ EmmaX.FaceChange("sexy") 
                     ch_e "I really don't think so."        
             
             "[[Start licking anyway]":                                               # Pressured into being licked. 
-                $ Approval = ApprovalCheck("Emma", 1100, "OI", TabM = 4) # 110, 125, 140, -160(270)
-                if Approval > 1 or (Approval and E_Forced):
-                    call EmmaFace("sad")
-                    call Statup("Emma", "Love", 70, -5, 1)
-                    call Statup("Emma", "Love", 200, -2)                 
+                $ Approval = ApprovalCheck(EmmaX, 1100, "OI", TabM = 4) # 110, 125, 140, -160(270)
+                if Approval > 1 or (Approval and EmmaX.Forced):
+                    $ EmmaX.FaceChange("sad")
+                    $ EmmaX.Statup("Love", 70, -5, 1)
+                    $ EmmaX.Statup("Love", 200, -2)                 
                     ch_e "Suit yourself."  
-                    call Statup("Emma", "Obed", 50, 4)
-                    call Statup("Emma", "Inbt", 80, 1) 
-                    call Statup("Emma", "Inbt", 60, 3)  
+                    $ EmmaX.Statup("Obed", 50, 4)
+                    $ EmmaX.Statup("Inbt", 80, 1) 
+                    $ EmmaX.Statup("Inbt", 60, 3)  
                     if Approval < 2:                          
-                        $ E_Forced = 1
-                    jump E_LA_Prep
+                        $ EmmaX.Forced = 1
+                    jump Emma_LA_Prep
                 else:                              
-                    call Statup("Emma", "Love", 200, -15)  
-                    call EmmaFace("angry", 1)
+                    $ EmmaX.Statup("Love", 200, -15)  
+                    $ EmmaX.FaceChange("angry", 1)
                     "She shoves your head back."   
-                    $ E_RecentActions.append("angry")
-                    $ E_DailyActions.append("angry")   
+                    $ EmmaX.RecentActions.append("angry")
+                    $ EmmaX.DailyActions.append("angry")   
                     
-    if "no lick ass" in E_DailyActions:
-        ch_e "I don't appreciate having to repeat myself, [E_Petname]."   
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
-    elif E_Forced:
-        call EmmaFace("angry", 1)
+    if "no lick ass" in EmmaX.DailyActions:
+        ch_e "I don't appreciate having to repeat myself, [EmmaX.Petname]."   
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
+    elif EmmaX.Forced:
+        $ EmmaX.FaceChange("angry", 1)
         ch_e "I don't think so."
-        if E_Inbt > 50:
-                call Statup("Emma", "Lust", 80, 10)  
+        if EmmaX.Inbt > 50:
+                $ EmmaX.Statup("Lust", 80, 10)  
         else:
-                call Statup("Emma", "Lust", 50, 3)
-        call Statup("Emma", "Obed", 50, -2)   
-        $ E_RecentActions.append("angry")
-        $ E_DailyActions.append("angry")   
+                $ EmmaX.Statup("Lust", 50, 3)
+        $ EmmaX.Statup("Obed", 50, -2)   
+        $ EmmaX.RecentActions.append("angry")
+        $ EmmaX.DailyActions.append("angry")   
     elif Taboo:
-        call EmmaFace("angry", 1)    
-        $ E_RecentActions.append("tabno")                   
-        $ E_DailyActions.append("tabno") 
+        $ EmmaX.FaceChange("angry", 1)    
+        $ EmmaX.RecentActions.append("tabno")                   
+        $ EmmaX.DailyActions.append("tabno") 
         ch_e "I have a reputation to maintain."                   
-    elif E_LickA:
-        call EmmaFace("sad") 
+    elif EmmaX.LickA:
+        $ EmmaX.FaceChange("sad") 
         ch_e "Sorry, no more of that."    
     else:
-        call EmmaFace("surprised")
+        $ EmmaX.FaceChange("surprised")
         ch_e "I'm sorry, not now."
-        call EmmaFace
-    $ E_RecentActions.append("no lick ass")                      
-    $ E_DailyActions.append("no lick ass") 
+        $ EmmaX.FaceChange()
+    $ EmmaX.RecentActions.append("no lick ass")                      
+    $ EmmaX.DailyActions.append("no lick ass") 
     $ Tempmod = 0    
     return
         
-label E_LA_Prep: #Animation set-up  
+label Emma_LA_Prep: #Animation set-up  
     if Trigger2 == "lick ass":
         return
-    if not E_Forced and Situation != "auto":
+    if not EmmaX.Forced and Situation != "auto":
         $ Tempmod = 0
-        if E_Legs == "pants":
+        if EmmaX.PantsNum() > 6:
             $ Tempmod = 15
-        call Emma_Bottoms_Off
-        if "angry" in E_RecentActions:
+        call Bottoms_Off(EmmaX)
+        if "angry" in EmmaX.RecentActions:
             return    
     $ Tempmod = 0  
-    call E_Pussy_Launch("lick ass")
-    if not E_LickA:        
-        if E_Forced:
-            call Statup("Emma", "Love", 90, -30)
-            call Statup("Emma", "Obed", 70, 40)
-            call Statup("Emma", "Inbt", 80, 80) 
+    call Emma_Pussy_Launch("lick ass")
+    if not EmmaX.LickA:        
+        if EmmaX.Forced:
+            $ EmmaX.Statup("Love", 90, -30)
+            $ EmmaX.Statup("Obed", 70, 40)
+            $ EmmaX.Statup("Inbt", 80, 80) 
         else:
-            call Statup("Emma", "Love", 90, 35)
-            call Statup("Emma", "Obed", 70, 25)
-            call Statup("Emma", "Inbt", 80, 55)
+            $ EmmaX.Statup("Love", 90, 35)
+            $ EmmaX.Statup("Obed", 70, 25)
+            $ EmmaX.Statup("Inbt", 80, 55)
     if Taboo:
-        $ E_Inbt += int(Taboo/10)  
-        $ E_Lust += int(Taboo/5)
+        $ EmmaX.Inbt += int(Taboo/10)  
+        $ EmmaX.Lust += int(Taboo/5)
     if Situation:     
         $ renpy.pop_call() 
         $ Situation = 0  
     
-    $ E_Upskirt = 1
-    if E_Legs == "skirt":
-        $ E_SeenPanties = 1
+    $ EmmaX.Upskirt = 1
+    if EmmaX.PantsNum() == 5:
+        $ EmmaX.SeenPanties = 1
     call Emma_First_Bottomless(1)
     $ Line = 0
     $ Cnt = 0
     if Taboo:
-        call DrainWord("Emma","tabno")
-    call DrainWord("Emma","no lick ass")
+        $ EmmaX.DrainWord("tabno")
+    $ EmmaX.DrainWord("no lick ass")
     
-    $ E_RecentActions.append("lick") if "lick" not in E_RecentActions else E_RecentActions
-    $ E_RecentActions.append("ass") if "ass" not in E_RecentActions else E_RecentActions
-    $ E_RecentActions.append("lick ass")  
+    $ EmmaX.RecentActions.append("lick") if "lick" not in EmmaX.RecentActions else EmmaX.RecentActions
+    $ EmmaX.RecentActions.append("ass") if "ass" not in EmmaX.RecentActions else EmmaX.RecentActions
+    $ EmmaX.RecentActions.append("lick ass")  
     
-    $ E_DailyActions.append("lick") if "lick" not in E_DailyActions else E_RecentActions
-    $ E_DailyActions.append("ass") if "ass" not in E_DailyActions else E_RecentActions                    
-    $ E_DailyActions.append("lick ass")  
-label E_LA_Cycle: #Repeating strokes
+    $ EmmaX.DailyActions.append("lick") if "lick" not in EmmaX.DailyActions else EmmaX.RecentActions
+    $ EmmaX.DailyActions.append("ass") if "ass" not in EmmaX.DailyActions else EmmaX.RecentActions                    
+    $ EmmaX.DailyActions.append("lick ass")  
+label Emma_LA_Cycle: #Repeating strokes
     if Trigger2 == "kiss you":
             $ Trigger2 = 0
     while Round >=0:  
-        call Shift_Focus("Emma") 
-        call E_Pussy_Launch("lick ass")
-        call EmmaLust   
+        call Shift_Focus(EmmaX) 
+        call Emma_Pussy_Launch("lick ass")
+        $ EmmaX.LustFace()   
         
-        if  P_Focus < 100:                                                   
+        if  Player.Focus < 100:                                                   
                     #Player Command menu
                     menu:
                         "Keep going. . .":
                                     pass
                                                               
                         "Slap her ass":                     
-                                    call E_Slap_Ass  
+                                    call Slap_Ass(EmmaX)  
                                     $ Cnt += 1
                                     $ Round -= 1                                      
-                                    jump E_LA_Cycle  
+                                    jump Emma_LA_Cycle  
                                     
-                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in P_Traits:
+                        "Focus to last longer [[not unlocked]. (locked)" if "focus" not in Player.Traits:
                                     pass
-                        "Focus to last longer." if not P_FocusX and "focus" in P_Traits:
+                        "Focus to last longer." if not Player.FocusX and "focus" in Player.Traits:
                                     "You concentrate on not burning out too quickly."                
-                                    $ P_FocusX = 1
-                        "Release your focus." if P_FocusX:
+                                    $ Player.FocusX = 1
+                        "Release your focus." if Player.FocusX:
                                     "You release your concentration. . ."                
-                                    $ P_FocusX = 0
+                                    $ Player.FocusX = 0
                                     
                         "Other options":
                                 menu:   
                                     "Offhand action":
-                                            if E_Action and MultiAction:
-                                                call Emma_Offhand_Set
+                                            if EmmaX.Action and MultiAction:
+                                                call Offhand_Set
                                                 if Trigger2:
-                                                     $ E_Action -= 1
+                                                     $ EmmaX.Action -= 1
                                             else:
                                                 ch_e "I could use a break, are you about finished here?"  
                                                 
                                     "Shift primary action":
-                                            if E_Action and MultiAction:
+                                            if EmmaX.Action and MultiAction:
                                                     menu:                                                             
                                                         "Switch to fondling.":
                                                                 $ Situation = "pullback"
-                                                                call E_LA_After
-                                                                call E_Fondle_Ass
+                                                                call Emma_LA_After
+                                                                call Emma_Fondle_Ass
                                                         "I want to stick a finger in.":
                                                                 $ Situation = "shift"
-                                                                call E_LA_After
-                                                                call E_Insert_Ass                 
+                                                                call Emma_LA_After
+                                                                call Emma_Insert_Ass                 
                                                         "Just stick a finger in [[without asking].":
                                                                 $ Situation = "auto"
-                                                                call E_LA_After
-                                                                call E_Insert_Ass                        
+                                                                call Emma_LA_After
+                                                                call Emma_Insert_Ass                        
                                                         "I want to stick a dildo in.":
                                                                 $ Situation = "shift"
-                                                                call E_LA_After
-                                                                call E_Dildo_Ass  
+                                                                call Emma_LA_After
+                                                                call Emma_Dildo_Ass  
                                                         "Never Mind":
-                                                                jump E_LA_Cycle
+                                                                jump Emma_LA_Cycle
                                             else: 
                                                 ch_e "I could use a break, are you about finished here?"           
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
-                                                call E_LA_After
-                                                call Emma_Offhand_Set   
+                                                call Emma_LA_After
+                                                call Offhand_Set   
                                     "Shift your focus (locked)" if not Trigger2:
                                                 pass
                                     
@@ -4101,147 +4012,149 @@ label E_LA_Cycle: #Repeating strokes
                                         pass
                                     "Threesome actions" if Partner:   
                                         menu:
-                                            "Ask Emma to do something else with [Partner]" if Trigger == "lesbian":
-                                                        call Emma_Les_Change
-                                            "Ask Emma to do something else with [Partner] (locked)" if Trigger != "lesbian":
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name]" if Trigger == "lesbian":
+                                                        call Les_Change(EmmaX)
+                                            "Asks [EmmaX.Name] to do something else with [Partner.Name] (locked)" if Trigger != "lesbian":
                                                         pass
-                                            "Ask [Partner] to do something else":
-                                                        call Partner_Threechange("Emma") 
+                                            "Ask [Partner.Name] to do something else":
+                                                        call Three_Change(EmmaX) 
                                                         
                                             "Don't stop what you're doing. . .(locked)" if not ThreeCount or not Trigger4:
                                                         $ ThreeCount = 0                                                            
                                             "Don't stop what you're doing. . ." if ThreeCount and Trigger4:
                                                         $ ThreeCount = 0   
                                                         
-                                            "Swap to [Partner]":
-                                                        call Trigger_Swap("Emma")
-                                            "Undress [Partner]":
-                                                        call Partner_Undress
-                                                        jump E_LA_Cycle 
-                                            "Clean up Partner":
-                                                        call Partner_Cleanup
-                                                        jump E_LA_Cycle 
+                                            "Swap to [Partner.Name]":
+                                                        call Trigger_Swap(EmmaX)
+                                            "Undress [Partner.Name]":
+                                                        call Girl_Undress(Partner)
+                                                        jump Emma_LA_Cycle 
+                                            "Clean up [Partner.Name] (locked)" if not Partner.Spunk:
+                                                        pass
+                                            "Clean up [Partner.Name]" if Partner.Spunk:
+                                                        call Girl_Cleanup(Partner,"ask")
+                                                        jump Emma_LA_Cycle 
                                             "Never mind":
-                                                        jump E_LA_Cycle 
-                                    "Undress Emma":
-                                            call E_Undress   
-                                    "Clean up Emma (locked)" if not E_Spunk:
+                                                        jump Emma_LA_Cycle 
+                                    "Undress [EmmaX.Name]":
+                                            call Girl_Undress(EmmaX)   
+                                    "Clean up [EmmaX.Name] (locked)" if not EmmaX.Spunk:
                                             pass  
-                                    "Clean up Emma" if E_Spunk:
-                                            call Emma_Cleanup("ask")                                         
+                                    "Clean up [EmmaX.Name]" if EmmaX.Spunk:
+                                            call Girl_Cleanup(EmmaX,"ask")                                         
                                     "Never mind":
-                                            jump E_LA_Cycle 
+                                            jump Emma_LA_Cycle 
                                                    
                         "Back to Sex Menu" if MultiAction: 
                                     ch_p "Let's try something else."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Situation = "shift"
                                     $ Line = 0
-                                    jump E_LA_After
+                                    jump Emma_LA_After
                         "End Scene" if not MultiAction: 
                                     ch_p "Let's stop for now."
-                                    call E_Pos_Reset
+                                    call Emma_Pos_Reset
                                     $ Line = 0
-                                    jump E_LA_After
+                                    jump Emma_LA_After
         #End menu (if Line)
         
-        if E_Panties or E_Legs == "pants" or HoseNum("Emma") >= 5: #This checks if Emma wants to strip down.
-                call E_Undress("auto")
+        if EmmaX.Panties or EmmaX.PantsNum() > 6 or EmmaX.HoseNum() >= 5: #This checks if [EmmaX.Name] wants to strip down.
+                call Girl_Undress(EmmaX,"auto")
                 
-        call Shift_Focus("Emma")    
-        call Sex_Dialog("Emma",Partner)
+        call Shift_Focus(EmmaX)    
+        call Sex_Dialog(EmmaX,Partner)
                 
         #If either of you could cum 
         
         $ Cnt += 1
         $ Round -= 1   
     
-        $ P_Focus = 50 if not P_Semen and P_Focus >= 50 else P_Focus #Resets P_Focus if can't get it up
-        if P_Focus >= 100 or E_Lust >= 100: 
+        $ Player.Focus = 50 if not Player.Semen and Player.Focus >= 50 else Player.Focus #Resets Player.Focus if can't get it up
+        if Player.Focus >= 100 or EmmaX.Lust >= 100: 
                     #If either of you could cum   
-                    if P_Focus >= 100:    
+                    if Player.Focus >= 100:    
                             #If you can cum:                                                 
-                            call PE_Cumming
-                            if "angry" in E_RecentActions:  
-                                call E_Pos_Reset
+                            call Player_Cumming(EmmaX)
+                            if "angry" in EmmaX.RecentActions:  
+                                call Emma_Pos_Reset
                                 return    
-                            call Statup("Emma", "Lust", 200, 5) 
-                            if 100 > E_Lust >= 70 and E_OCount < 2:             
-                                $ E_RecentActions.append("unsatisfied")                      
-                                $ E_DailyActions.append("unsatisfied") 
+                            $ EmmaX.Statup("Lust", 200, 5) 
+                            if 100 > EmmaX.Lust >= 70 and EmmaX.OCount < 2:             
+                                $ EmmaX.RecentActions.append("unsatisfied")                      
+                                $ EmmaX.DailyActions.append("unsatisfied") 
                             
-                            if P_Focus > 80:
-                                jump E_LA_After 
+                            if Player.Focus > 80:
+                                jump Emma_LA_After 
                             $ Line = "came"
      
-                    if E_Lust >= 100:  
-                            #If Emma can cum                                             
-                            call E_Cumming
-                            if Situation == "shift" or "angry" in E_RecentActions:
-                                jump E_LA_After
+                    if EmmaX.Lust >= 100:  
+                            #If [EmmaX.Name] can cum                                             
+                            call Girl_Cumming(EmmaX)
+                            if Situation == "shift" or "angry" in EmmaX.RecentActions:
+                                jump Emma_LA_After
                        
-                    if Line == "came": #ex P_Focus <= 20: 
+                    if Line == "came": #ex Player.Focus <= 20: 
                             #If you've just cum,  
                             $ Line = 0
-                            if not P_Semen:
+                            if not Player.Semen:
                                 "You're emptied out, you should probably take a break."
                             
                             
-                            if "unsatisfied" in E_RecentActions:#And Emma is unsatisfied,  
-                                    "Emma still seems a bit unsatisfied with the experience."
+                            if "unsatisfied" in EmmaX.RecentActions:#And [EmmaX.Name] is unsatisfied,  
+                                    "[EmmaX.Name] still seems a bit unsatisfied with the experience."
                                     menu:
                                         "Finish her?"
                                         "Yes, keep going for a bit.":
                                             $ Line = "You get back into it" 
                                         "No, I'm done.":
                                             "You pull back."
-                                            jump E_LA_After    
-        if Partner:
+                                            jump Emma_LA_After   
+        if Partner and Partner.Lust >= 100:
                 #Checks if partner could orgasm
-                call Partner_Cumming("Emma")            
+                call Girl_Cumming(Partner)            
         #End orgasm
         
-        $ P_Focus -= 10 if P_FocusX and P_Focus > 50 else 0
+        $ Player.Focus -= 10 if Player.FocusX and Player.Focus > 50 else 0
                     
-        if E_SEXP >= 100 or ApprovalCheck("Emma", 1200, "LO"):
+        if EmmaX.SEXP >= 100 or ApprovalCheck(EmmaX, 1200, "LO"):
             pass
-        elif Cnt == (5 + E_LickA):
-                    $ E_Brows = "confused"
+        elif Cnt == (5 + EmmaX.LickA):
+                    $ EmmaX.Brows = "confused"
                     ch_e "You certainly are enthusiastic. . ."  
-        elif E_Lust >= 80:
+        elif EmmaX.Lust >= 80:
                     pass
-        elif Cnt == (15 + E_LickA) and E_SEXP >= 15 and not ApprovalCheck("Emma", 1500):
-                    $ E_Brows = "confused"        
+        elif Cnt == (15 + EmmaX.LickA) and EmmaX.SEXP >= 15 and not ApprovalCheck(EmmaX, 1500):
+                    $ EmmaX.Brows = "confused"        
                     menu:
-                        ch_e "[E_Petname], this is getting weird, maybe we could try something else."                         
+                        ch_e "[EmmaX.Petname], this is getting weird, maybe we could try something else."                         
                         "Finish up.":
                                 "You let go. . ."   
-                                jump E_LA_After
+                                jump Emma_LA_After
                         "Let's try something else." if MultiAction: 
                                 $ Line = 0
                                 $ Situation = "shift"
-                                jump E_LA_After
+                                jump Emma_LA_After
                         "No, this is fun.":   
-                                if ApprovalCheck("Emma", 1200) or ApprovalCheck("Emma", 500, "O"):                        
-                                    call Statup("Emma", "Love", 200, -5)
-                                    call Statup("Emma", "Obed", 50, 3)                    
-                                    call Statup("Emma", "Obed", 80, 2)
+                                if ApprovalCheck(EmmaX, 1200) or ApprovalCheck(EmmaX, 500, "O"):                        
+                                    $ EmmaX.Statup("Love", 200, -5)
+                                    $ EmmaX.Statup("Obed", 50, 3)                    
+                                    $ EmmaX.Statup("Obed", 80, 2)
                                     "She grumbles but lets you keep going."
                                 else:
-                                    call EmmaFace("angry", 1)   
-                                    call E_Pos_Reset
+                                    $ EmmaX.FaceChange("angry", 1)   
+                                    call Emma_Pos_Reset
                                     "She scowls at you and pulls back."
                                     ch_e "Well perhaps you are enjoying yourself, but I'm tired of this."                         
-                                    call Statup("Emma", "Love", 50, -3, 1)
-                                    call Statup("Emma", "Love", 80, -4, 1)
-                                    call Statup("Emma", "Obed", 30, -1, 1)                    
-                                    call Statup("Emma", "Obed", 50, -1, 1)  
-                                    $ E_RecentActions.append("angry")
-                                    $ E_DailyActions.append("angry")   
-                                    jump E_LA_After
+                                    $ EmmaX.Statup("Love", 50, -3, 1)
+                                    $ EmmaX.Statup("Love", 80, -4, 1)
+                                    $ EmmaX.Statup("Obed", 30, -1, 1)                    
+                                    $ EmmaX.Statup("Obed", 50, -1, 1)  
+                                    $ EmmaX.RecentActions.append("angry")
+                                    $ EmmaX.DailyActions.append("angry")   
+                                    jump Emma_LA_After
         #End Count check
            
-        call Escalation("Emma","E") #sees if she wants to escalate things
+        call Escalation(EmmaX) #sees if she wants to escalate things
         
         if Round == 10:
             ch_e "It's getting late. . ."  
@@ -4249,32 +4162,32 @@ label E_LA_Cycle: #Repeating strokes
             ch_e "We should take a break soon."        
     
     #Round = 0 loop breaks
-    call EmmaFace("bemused", 0)
+    $ EmmaX.FaceChange("bemused", 0)
     $ Line = 0
     ch_e "We need to stop for a moment, let me catch my breath."
     
-label E_LA_After:
+label Emma_LA_After:
     if not Situation: #fix  Situation != "shift" and Situation != "auto" and Situation != "pullback": 
-        call E_Pos_Reset
+        call Emma_Pos_Reset
         
-    call EmmaFace("sexy") 
+    $ EmmaX.FaceChange("sexy") 
     
-    $ E_LickA += 1  
-    $ E_Action -=1      
-    if E_Legs != "pants" or E_Upskirt:        
-        $ E_Addictionrate += 1
-        if "addictive" in P_Traits:
-            $ E_Addictionrate += 1
+    $ EmmaX.LickA += 1  
+    $ EmmaX.Action -=1      
+    if EmmaX.PantsNum() <= 6 or EmmaX.Upskirt:        
+        $ EmmaX.Addictionrate += 1
+        if "addictive" in Player.Traits:
+            $ EmmaX.Addictionrate += 1
     
-    call Partner_Like("Emma",2)
+    call Partner_Like(EmmaX,2)
      
-    if E_LickA == 1:            
-            $ E_SEXP += 15         
+    if EmmaX.LickA == 1:            
+            $ EmmaX.SEXP += 15         
             if not Situation: 
-                if E_Love >= 500 and "unsatisfied" not in E_RecentActions:
+                if EmmaX.Love >= 500 and "unsatisfied" not in EmmaX.RecentActions:
                     ch_e "That was. . . invigorating."
-                elif E_Obed <= 500 and P_Focus <= 20:
-                    call EmmaFace("perplexed", 1)
+                elif EmmaX.Obed <= 500 and Player.Focus <= 20:
+                    $ EmmaX.FaceChange("perplexed", 1)
                     ch_e "Was it all you dreamed of?"
      
     $ Tempmod = 0  
@@ -4283,5 +4196,5 @@ label E_LA_After:
     call Checkout
     return   
 
-# end E_Lick Ass /////////////////////////////////////////////////////////////////////////////
+# end EmmaX.Lick Ass /////////////////////////////////////////////////////////////////////////////
 
