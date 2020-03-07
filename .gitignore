@@ -109,11 +109,17 @@ venv.bak/
 traceback.txt
 log.txt
 errors.txt
+*.exe
+/*.py
+/renpy
+/lib
 
 # Specific for Rogue-Like
 game/cache/
 game/saves/
 game/*.bat
+
+# Do not remove! Oni Images may not be uploaded to the repo
 game/images
 
 # UnRen specific ignores
