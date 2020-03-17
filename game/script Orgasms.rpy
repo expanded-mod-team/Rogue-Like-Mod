@@ -258,7 +258,7 @@ label Girl_Warn_Her:                                                            
                 $ Speed = 0
                 "She smiles and speeds up her actions, causing you to erupt inside her."   
                 if Girl.Lust >= 85: 
-                    call Girl_Cumming  
+                        call Girl_Cumming(Girl)  
                 jump Girl_Creampied
         
         elif Trigger == "sex" and Girl.CreamP and D20 >= 10:  
@@ -270,7 +270,7 @@ label Girl_Warn_Her:                                                            
                 $ Speed = 0
                 "She gets a michevious look and speeds up, you burst inside her."          
                 if Girl.Lust >= 85: 
-                    call Girl_Cumming  
+                        call Girl_Cumming(Girl) 
                 jump Girl_Creampied
             
         elif Trigger == "anal" and Girl.CreamA >= 5: 
@@ -282,7 +282,7 @@ label Girl_Warn_Her:                                                            
                 $ Speed = 0
                 "She smiles and speeds up her actions, causing you to erupt inside her."         
                 if Girl.Lust >= 85: 
-                    call Girl_Cumming  
+                        call Girl_Cumming(Girl) 
                 jump Girl_Creampied
         
         elif Trigger == "anal" and Girl.CreamA and D20 >= 10: 
@@ -294,7 +294,7 @@ label Girl_Warn_Her:                                                            
                 $ Speed = 0
                 "She gets a michevious look and speeds up, you burst inside her."    
                 if Girl.Lust >= 85: 
-                    call Girl_Cumming          
+                        call Girl_Cumming(Girl)       
                 jump Girl_Creampied
             
         elif Trigger != "anal" and Girl.Swallow >= 5: 
@@ -909,11 +909,11 @@ label Girl_Creampie_P:
                         "You come in her pussy. Her eyes widen in surprise, but she takes it in stride."  
                         $ Girl.FaceChange("sexy")
                         if Girl.Lust >= 85: 
-                                call Girl_Cumming
+                                call Girl_Cumming(Girl) 
                 else:
                         if Girl.Lust >= 85: 
                                 "You come in her pussy. Her eyes widen in surprise and she shakes a bit."
-                                call Girl_Cumming                
+                                call Girl_Cumming(Girl) 
                         else:
                                 "You come in her pussy. Her eyes widen in surprise and she pulls out."
                         $ Player.Cock = "out"
@@ -950,7 +950,7 @@ label Girl_Creampie_P:
                 $ Player.Spunk = "in"
                 $ Speed = 0
                 if Girl.Lust >= 85: 
-                        call Girl_Cumming  
+                        call Girl_Cumming(Girl) 
                 $ Girl.Statup("Love", 90, 1) 
                 if Girl == RogueX:
                         ch_r "Hmm, you know how to fill me up {i}right.{/i}"
@@ -988,11 +988,11 @@ label Girl_Creampie_A:
                         "You come in her ass. Her eyes widen in surprise, but she takes it in stride."  
                         $ Girl.FaceChange("sexy")
                         if Girl.Lust >= 85: 
-                                call Girl_Cumming
+                                call Girl_Cumming(Girl) 
                 else:
                         if Girl.Lust >= 85: 
                                 "You come in her ass. Her eyes widen in surprise and she shakes a bit."
-                                call Girl_Cumming                
+                                call Girl_Cumming(Girl) 
                         else:
                                 "You come in her ass. Her eyes widen in surprise and she pulls out."
                         $ Player.Cock = "out"
@@ -1029,7 +1029,7 @@ label Girl_Creampie_A:
                 $ Player.Spunk = "anal"
                 $ Speed = 0
                 if Girl.Lust >= 85: 
-                        call Girl_Cumming  
+                        call Girl_Cumming(Girl) 
                 $ Girl.Statup("Love", 90, 1) 
                 if Girl == RogueX:
                         ch_r "Hmm, I feel so full. . ."
@@ -1512,23 +1512,7 @@ label Girl_Cumming(Girl=0,Quick=0,BO=[]): #rename from Girl_Cumming
     $ Speed = 0
     
     call Punch
-    
-#    if renpy.showing("Rogue_Sprite"): #fix display                #fix display                #fix display                #fix display
-#            show Rogue_Sprite
-#            with vpunch
-#    elif renpy.showing(Girl.Tag+"_Doggy"): #if renpy.showing("Rogue_Doggy"):
-#            show Rogue_Doggy #fix, test this
-#            with vpunch
-#    elif renpy.showing(Girl.Tag+"_BJ_Animation"): #if renpy.showing("Rogue_BJ_Animation"):    
-#            show Rogue_BJ_Animation
-#            with vpunch
-#    elif renpy.showing(Girl.Tag+"_TJ_Animation"): #if renpy.showing("Rogue_TJ_Animation"):
-#            show Rogue_TJ_Animation  
-#            with vpunch
-#    elif renpy.showing(Girl.Tag+"_HJ_Animation"): #if renpy.showing("Rogue_HJ_Animation"): #fix display                #fix display                #fix display                #fix display
-#            show Rogue_HJ_Animation  
-#            with vpunch
-            
+                
     $ Speed = 1
     $ Line = renpy.random.choice([Girl.Name + " is suddenly rocked with spasms, holding back a muffled scream.", 
                 Girl.Name + " grabs on tightly as her body shakes with pleasure.", 
@@ -1599,24 +1583,16 @@ label Girl_Cumming(Girl=0,Quick=0,BO=[]): #rename from Girl_Cumming
             $ Girl.Statup("Obed", 50, 2)
             $ Girl.Statup("Obed", 70, 2) 
             
-            #checks to check reaction of other girls
-            
-            $ BO = TotalGirls[:]  
+            #checks to check reaction of other girls            
+            $ BO = TotalGirls[:]    
             while BO: 
                     if BO[0].Loc == bg_current and "noticed "+Girl.Tag in BO[0].RecentActions: 
                             $ BO[0].Lust += 15 if BO[0].GirlLikeCheck(Girl) >= 500 else 10
                             $ BO[0].Lust += 5 if BO[0].Les >= 5 else 0
+                    if BO[0].Lust >= 100:
+                            call Girl_Cumming(BO[0],1) #calls quick version
                     $ BO.remove(BO[0])
-                
-            if Girl == Girl:
-                    #If the active girl is someone else                    
-                    $ BO = TotalGirls[:] 
-                    $ BO.remove(Girl)
-                    while BO:                   
-                            if BO[0].Loc == bg_current and BO[0].Lust >= 100:
-                                    call Girl_Cumming(BO[0],1) #calls quick version
-                            $ BO.remove(BO[0])
-                    
+                                    
             #Orgasm count                                          
             if Trigger != "blow" and Trigger != "hand" and Partner != Girl:
                 if Girl.OCount == 2:

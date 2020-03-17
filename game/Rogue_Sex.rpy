@@ -1,5 +1,8 @@
 ﻿# Rogue_SexMenu //////////////////////////////////////////////////////////////////////
-label Rogue_SexAct(Act = 0):
+label Rogue_SexAct(Act = 0):    
+        if AloneCheck(RogueX) and RogueX.Taboo == 20:
+                $ RogueX.Taboo = 0
+                $ Taboo = 0
         call Shift_Focus(RogueX)
         if Act == "SkipTo":
                 $ renpy.pop_call() #causes it to skip past the Trigger Swap
@@ -867,6 +870,7 @@ label Rogue_M_Interupted:
                                             $ Tempmod -= 10
                                             $ RogueX.Statup("Lust", 200, -5)
                         call Seen_First_Peen(RogueX,Partner) 
+                        ch_r "Hmm. . ."
                                     
                 #you haven't been jacking it                    
                 else:         

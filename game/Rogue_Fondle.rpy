@@ -249,7 +249,7 @@ label Rogue_FB_Prep: #Animation set-up
                     $ RogueX.Statup("Obed", 50, 1)
                     $ RogueX.Statup("Obed", 30, 2)
                     $ Player.RecentActions.append("nope")      
-                    $ RogueX.AnyWord(1,"refused","refused")  
+                    $ RogueX.AddWord(1,"refused","refused")  
                     return          
             #end auto
         
@@ -747,7 +747,7 @@ label Rogue_SB_Prep:                                                            
                         $ RogueX.Statup("Obed", 50, 1)
                         $ RogueX.Statup("Obed", 30, 2)
                         $ Player.RecentActions.append("nope")      
-                        $ RogueX.AnyWord(1,"refused","refused")  
+                        $ RogueX.AddWord(1,"refused","refused")  
                         return          
             #end auto
             
@@ -1715,7 +1715,7 @@ label Rogue_FP_Prep: #Animation set-up
                     $ RogueX.Statup("Obed", 50, 1)
                     $ RogueX.Statup("Obed", 30, 2)
                     $ Player.RecentActions.append("nope")      
-                    $ RogueX.AnyWord(1,"refused","refused")  
+                    $ RogueX.AddWord(1,"refused","refused")  
                     return          
             #end auto
             
@@ -2334,7 +2334,7 @@ label Rogue_LP_Prep: #Animation set-up
                     $ RogueX.Statup("Obed", 50, 1)
                     $ RogueX.Statup("Obed", 30, 2)
                     $ Player.RecentActions.append("nope")      
-                    $ RogueX.AnyWord(1,"refused","refused")  
+                    $ RogueX.AddWord(1,"refused","refused")  
                     return          
             #end auto
             
@@ -3343,7 +3343,7 @@ label Rogue_IA_Prep: #Animation set-up
                     $ RogueX.Statup("Obed", 50, 1)
                     $ RogueX.Statup("Obed", 30, 2)
                     $ Player.RecentActions.append("nope")      
-                    $ RogueX.AnyWord(1,"refused","refused")  
+                    $ RogueX.AddWord(1,"refused","refused")  
                     return          
             #end auto
           

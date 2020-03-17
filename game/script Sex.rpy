@@ -233,7 +233,7 @@ label Jackin(Girl=0,Cnt=0,BO=[]):
 label Girl_Tag(Girl=0,Forced = 0,Gloves=0):
         #Called mostly by Addiction
         if Girl not in TotalGirls:
-            $ Girl = Ch_Focus
+                $ Girl = Ch_Focus
         call Shift_Focus(Girl)
         $ Gloves = Girl.Arms
         $ Girl.ArmPose = 2
@@ -310,7 +310,7 @@ label Girl_Tag(Girl=0,Forced = 0,Gloves=0):
                 elif Forced:
                         $ Girl.Statup("Obed", 50, 1)
                 "She continues to touch you, and a slight shiver passes through her."
-        if Gloves:
+        if Gloves and not Girl.Arms:
                 "Appearing sated, she puts her gloves back on."  
         $ Girl.Blush = 1
         $ Girl.Arms = Gloves
@@ -720,9 +720,11 @@ label KissCycle(Girl=0):
                                                             call Trigger_Swap(Girl)
                                                 "Undress [Partner.Name]":
                                                             call Girl_Undress(Partner) 
+                                                            call Shift_Focus(Partner)
                                                             jump KissCycle 
                                                 "Clean up Partner":
                                                             call Girl_Cleanup(Partner,"ask")   
+                                                            call Shift_Focus(Partner)
                                                             jump KissCycle 
                                                 "Never mind":
                                                             jump KissCycle 
@@ -1046,7 +1048,7 @@ label Massage_Cycle:
                 
         $ Trigger = "massage"
         
-        while Round >=0 and MCount < 10:  
+        while Round >= 10 and MCount < 10:  
                 call Shift_Focus(Girl) 
                 $ Girl.LustFace() 
                 menu Massage_Choices:
@@ -1499,7 +1501,7 @@ label Massage_Cycle:
                         $ Girl.AddWord(1,"massagefail")
                         jump Massage_BadEnd
                         
-                $ Round -= 8                
+                $ Round -= 6                
                 if Girl.MassageChart[MCount] == Current:
                         # advances progress along the track so long as you've hit the target
                         if MCount == 2:
@@ -1829,7 +1831,7 @@ label Group_Stripping:
             $ Round -= 2 if Round > 2 else Round
             
             if Present[Count] != Ch_Focus:
-                    call Shift_Focus(Partner)
+                    call Shift_Focus(Present[Count])
                     
             call Girl_Stripping(Present[Count])
             
@@ -2290,7 +2292,7 @@ label Girl_Stripping(Girl=0):
                     call AnyLine(Girl,"All right, "+Girl.Petname+".") 
                     $ Girl.FaceChange("sexy")
                     $ Girl.Arms = 0          
-            "Lose the gloves. . .(locked)" if not Girl.Arms:
+            "Lose the gloves. . . (locked)" if not Girl.Arms:
                     pass
                     
             "Ok, that's enough.":
@@ -2979,7 +2981,7 @@ label LesScene(Girl=0,Bonus = 0,BO=[]): #Repeating strokes
                             $ Line = renpy.random.choice(["You do like to watch.",                 
                                     "So you'd like us to go again?",                 
                                     "You want to watch some more?",
-                                    "You want me to get it on with "+Partner+"?"]) 
+                                    "You want me to get it on with "+Partner.Tag+"?"]) 
                             call AnyLine(Girl,Line)  
                     $ Line = 0                        
                     #End second time+ initial dialog
@@ -3260,7 +3262,7 @@ label Les_Partner:
                 $ BO.remove(BO[0])
         #if nobody refuses, it passes through to the next label
                                 
-label Les_Prep(Girl=0,BO=[]):    
+label Les_Prep(Girl=Ch_Focus,BO=[]):    
         #sets the scene up
         $ Line = 0
         if Girl not in TotalGirls or Girl == Partner:
@@ -3318,7 +3320,7 @@ label Les_Prep(Girl=0,BO=[]):
         $ Girl.AddWord(0,"lesbian","lesbian") #adds "lesbian" to daily and recent
         $ Partner.AddWord(0,"lesbian","lesbian") #adds "lesbian" to daily and recent
     
-label Les_Cycle(Girl): #Repeating strokes
+label Les_Cycle(Girl=Ch_Focus): #Repeating strokes
         if Girl not in TotalGirls:
             $ Girl = Ch_Focus
             
@@ -3392,6 +3394,7 @@ label Les_Cycle(Girl): #Repeating strokes
                                                                 jump Les_Interupted
                                                         else:                        
                                                                 call Girl_Undress(Partner)
+                                                                call Shift_Focus(Partner)
                                                                 jump Les_Cycle 
                                                 "Clean up Partner":
                                                         if "unseen" in Girl.RecentActions:
@@ -3399,6 +3402,7 @@ label Les_Cycle(Girl): #Repeating strokes
                                                                 jump Les_Interupted
                                                         else:                        
                                                                 call Girl_Cleanup(Partner,"ask")
+                                                                call Shift_Focus(Partner)
                                                                 jump Les_Cycle 
                                                 "Never mind":
                                                                 jump Les_Cycle 
@@ -3999,7 +4003,7 @@ label Les_Change(Primary = 0, Secondary=Partner, D20S=0, PrimaryLust=0, Secondar
             "why don't you kiss her?" if Trigger5 != "kiss girl" and Trigger5 != "kiss both":
                         call Threeway_Set(Primary,"kiss girl", "lesbian", Trigger3,Secondary)
             "why don't you grab her tits?" if Trigger3 != "fondle breasts":
-                        call Threeway_Set(Primary,Secondary,"fondle breasts", "lesbian", Trigger3,Secondary)
+                        call Threeway_Set(Primary,"fondle breasts", "lesbian", Trigger3,Secondary)
             "why don't you suck her breasts?" if Trigger3 != "suck breasts":
                         call Threeway_Set(Primary,"suck breasts", "lesbian", Trigger3,Secondary)
             "why don't you finger her?" if Trigger3 != "fondle pussy":

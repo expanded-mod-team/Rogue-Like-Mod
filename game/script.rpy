@@ -62,7 +62,6 @@ label splashscreen:
     
 
 init -1:  
-
 #World Stats
     default SaveVersion = 990
     default Day = 1
@@ -79,7 +78,7 @@ init -1:
     default Party = []
     default TotalGirls = []
     default ActiveGirls = []
-    default TotalSEXP = 0 #tallies the total combined SEXP daily
+    default TotalSEXP = 0               #tallies the total combined SEXP daily
     default PersonalRooms = ["bg player"] #,"bg rogue","bg kitty","bg emma","bg laura"]
     default Taboo = 0
     default Rules = []
@@ -718,33 +717,9 @@ label after_load:
 label VersionNumber: 
     $ SaveVersion = 0 if "SaveVersion" not in globals().keys() else SaveVersion    
     if SaveVersion == 975: #error correction, remove this eventually
-        $ SaveVersion = 957  
+            $ SaveVersion = 957  
         
-    if SaveVersion < 990: 
-        $ Player = PlayerClass()
-        $ RogueX = GirlClass("Rogue",500,0,0,10)
-        $ KittyX = GirlClass("Kitty",400,100,0,10)
-        $ EmmaX = GirlClass("Emma",300,0,200,15)
-        $ LauraX = GirlClass("Laura",400,0,200,10)
-        
-        $ RogueX.Introduction()
-        $ KittyX.Introduction()
-        $ EmmaX.Introduction()
-        $ LauraX.Introduction()
-        
-        $ Ch_Focus = RogueX
-        show screen Status_Screen    
-        show screen Inventorybutton     
-        show blackscreen onlayer black 
-        "You are loading a save from a version earlier than 0.990."
-        "This will not work with this build, but will hopefully work with a future build of the game." 
-        $ StackDepth = renpy.call_stack_depth() #Count = number of items in the call stack
-        while StackDepth > 0:
-            $ StackDepth -= 1
-            $ renpy.pop_call()  
-        return
-        #$ SaveVersion = 990
-    else:               #remove this later               #remove this later               #remove this later               #remove this later
+    if SaveVersion >= 990:
         if "RogueX" in globals().keys():
                     if RogueX.Hair == "wet":
                             $ RogueX.Hair = "evo"
@@ -764,8 +739,10 @@ label VersionNumber:
                             while RogueX in ActiveGirls:
                                 $ ActiveGirls.remove(RogueX)
                             $ ActiveGirls.append(RogueX)
-                            
-            
+                    if not hasattr(RogueX,'Cheated'):
+                            $ setattr(RogueX,"Cheated",0)
+                    if RogueX in Player.Harem:
+                            $ RogueX.AddWord(1,0,0,"dating",0)
         if "KittyX" in globals().keys():
                     if KittyX in ActiveGirls and "met" not in KittyX.History:
                             $ ActiveGirls.remove(KittyX)
@@ -781,6 +758,10 @@ label VersionNumber:
                             while KittyX.Home in PersonalRooms:
                                 $ PersonalRooms.remove(KittyX.Home)
                             $ PersonalRooms.append(KittyX.Home)
+                    if not hasattr(KittyX,'Cheated'):
+                            $ setattr(KittyX,"Cheated",0)
+                    if KittyX in Player.Harem:
+                            $ KittyX.AddWord(1,0,0,"dating",0)
         if "EmmaX" in globals().keys():
                     if EmmaX in ActiveGirls and "met" not in EmmaX.History:
                             $ ActiveGirls.remove(EmmaX)
@@ -796,6 +777,10 @@ label VersionNumber:
                             while EmmaX.Home in PersonalRooms:
                                 $ PersonalRooms.remove(EmmaX.Home)
                             $ PersonalRooms.append(EmmaX.Home)
+                    if not hasattr(EmmaX,'Cheated'):
+                            $ setattr(EmmaX,"Cheated",0)
+                    if EmmaX in Player.Harem:
+                            $ EmmaX.AddWord(1,0,0,"dating",0)
         if "LauraX" in globals().keys(): 
                     if LauraX in ActiveGirls and "met" not in LauraX.History:
                             $ ActiveGirls.remove(LauraX)
@@ -811,12 +796,79 @@ label VersionNumber:
                             while LauraX.Home in PersonalRooms:
                                 $ PersonalRooms.remove(LauraX.Home)
                             $ PersonalRooms.append(LauraX.Home)
+                    if not hasattr(LauraX,'Cheated'):
+                            $ setattr(LauraX,"Cheated",0)
+                    if LauraX in Player.Harem:
+                            $ LauraX.AddWord(1,0,0,"dating",0)
         $ Player.StatPoints = 0 if Player.StatPoints < 0 else Player.StatPoints
+        if "Emma stockings and garterbelt" in Player.Inventory:
+                $ Player.Inventory.remove("Emma stockings and garterbelt")
+                $ Player.Inventory.append("stockings and garterbelt")
+        while 0 in Party:
+                $ Party.remove(0)
+        hide Laura
         return
         #remove this later               #remove this later               #remove this later               #remove this later
+    else:        
             
+            $ renpy.scene("screens")    #removes old screens          
+            $ Player = PlayerClass()
+            $ RogueX = GirlClass("Rogue",500,0,0,10)
+            $ KittyX = GirlClass("Kitty",400,100,0,10)
+            $ EmmaX = GirlClass("Emma",300,0,200,15)
+            $ LauraX = GirlClass("Laura",400,0,200,10)
+            
+            $ RogueX.Introduction()
+            $ KittyX.Introduction()
+            $ EmmaX.Introduction()
+            $ LauraX.Introduction()
+            
+            $ Ch_Focus = RogueX
+            show screen Status_Screen    
+            show screen Inventorybutton    
+                
+            show blackscreen onlayer black
+            if SaveVersion < 984:
+                    "You are loading a save from a version earlier than 0.984."
+                    "This will not work with this build, but please pick up a copy of version 0.984h."   
+                    "Then move to the player's room, alone, and make a save file there."
+                    "This save file -should- be able to be openned in version 0.990 and beyond."       
+                    $ StackDepth = renpy.call_stack_depth() #Count = number of items in the call stack
+                    while StackDepth > 0:
+                        $ StackDepth -= 1
+                        $ renpy.pop_call()  
+                    return
+            "You are loading a save from a version earlier than 0.990."
+            if bg_current != "bg player":
+                    "Your save is not in the player's room, which might cause errors due to missing local variables."
+                    "You might want to load this save in version 0.984h, and move to the player's room before saving."
+            "If you continue, know that this save migration is still being tested and may cause new errors."
+            "Let me know if there are any clothing options behaving differently than expected, and stats that seem out of place,"
+            "Anything unusual. I would recommend playing from this save file only a short distance, and not just continung forward indefinitely,"
+            "until we're fairly certain that the migration process is fully functional. Be careful of where you save." 
+            "that said, it shouldn't cause any harm to try it. :D"
+            hide blackscreen onlayer black
+#    if not config.developer:
+#            show blackscreen onlayer black 
+            
+#            "You are loading a save from a version earlier than 0.990."
+#            "This will not work with this build, but will hopefully work with a future build of the game."         
+#            $ StackDepth = renpy.call_stack_depth() #Count = number of items in the call stack
+#            while StackDepth > 0:
+#                $ StackDepth -= 1
+#                $ renpy.pop_call()  
+#            return
+#            #$ SaveVersion = 990
+     
+    call Failsafe                #fix                #fix                #fix                #fix
+    return                #fix                #fix                #fix                #fix
+    
     if SaveVersion < 990:
-        if SaveVersion < 976:
+        if SaveVersion < 984:
+                "You are loading a save from a version earlier than 0.984."
+                "This will not work with this build, but please pick up a copy of version 0.984h."   
+                "Then move to the player's room, alone, and make a save file there."
+                "This save file -should- be able to be openned in version 0.990 and beyond."
                 if SaveVersion < 94:
                     $ R_Love = R_Love * 10
                     $ R_Inbt = R_Inbt * 10
@@ -1482,16 +1534,9 @@ label VersionNumber:
             
             
             #when new girl added. . .
-            $ Shop_Inventory.extend(["A","DL","G"]) #adds a new one for each
-                
-        
-#        if SaveVersion < 990: 
-#            "You are loading a save from a version earlier than 0.990."
-#            "This will not work with this build, but will hopefully work with a future build of the game." 
-#            #$ SaveVersion = 990
+            #$ Shop_Inventory.extend(["A","DL","G"]) #adds a new one for each
             
-            
-#        call Failsafe
+    call Failsafe                     
     return
 
 

@@ -61,7 +61,8 @@ label Misplaced:
         if Trigger and Trigger in TotalGirls:
                 #sent here by a broken sex action, Trigger should be girl's name
                 call expression  Trigger.Tag + "_SexMenu"
-            
+        #if "Historia" in Player.Traits:
+                #call Historia_Clear
         $ Player.DrainWord("locked",0,0,1)
         $ StackDepth = renpy.call_stack_depth() #Count = number of items in the call stack
         while StackDepth > 0:
@@ -294,19 +295,16 @@ label Class_Room_Entry:
     $ Player.RecentActions.append("traveling")
     call EventCalls
     call Set_The_Scene(0) #won't display characters yet)
-    if Current_Time != "Night" and Current_Time != "Evening" and Weekday < 5:   
-            call Class_Room_Seating    
     $ Line = "entry"
-    $ Player.DrainWord("goto",1,0)
                 
 label Class_Room:    
     $ bg_current = "bg classroom"    
-    $ Player.DrainWord("traveling",1,0)
-    if "goto" in Player.RecentActions:
-        $ Present = []        
-        if Current_Time != "Night" and Current_Time != "Evening" and Weekday < 5:   
-                call Class_Room_Seating    
-        $ Player.RecentActions.remove("goto")
+    if "goto" in Player.RecentActions or "traveling" in Player.RecentActions:
+            $ Present = []        
+            if Current_Time != "Night" and Current_Time != "Evening" and Weekday < 5:   
+                    call Class_Room_Seating    
+            $ Player.DrainWord("goto",1,0)
+            $ Player.DrainWord("traveling",1,0)
     call Taboo_Level
     call Set_The_Scene(Quiet=1)
     call QuickEvents    
@@ -321,15 +319,15 @@ label Class_Room:
     call GirlsAngry  
     
     if Line == "entry":
-        if EmmaX.Loc == "bg teacher":
-            $ Line = "As you sit down, you see "+ EmmaX.Name +" at the podium. What would you like to do?" 
-        elif Current_Time == "Evening" or Weekday > 5:   
-            $ Line = "You enter the classroom. What would you like to do?" 
-        else:
-            $ Line = "You sit down at a desk. What would you like to do?" 
+            if EmmaX.Loc == "bg teacher":
+                    $ Line = "As you sit down, you see "+ EmmaX.Name +" at the podium. What would you like to do?" 
+            elif Current_Time == "Evening" or Weekday > 5:   
+                    $ Line = "You enter the classroom. What would you like to do?" 
+            else:
+                    $ Line = "You sit down at a desk. What would you like to do?" 
     else:
-        if Line != "What would you like to do next?":
-                $ Line = "You are in class right now. What would you like to do?" 
+            if Line != "What would you like to do next?":
+                    $ Line = "You are in class right now. What would you like to do?" 
     #End Room Set-up
     
 # Class Room Menu Start <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<        
@@ -802,16 +800,16 @@ label Pool_Room:
                 call Chat    
         
         "Want to sunbathe?" if Time_Count < 2:
-            call Pool_Sunbathe
-            $ Round -= 20 if Round >= 20 else Round  
-            "You just hang out for a little while."
+                call Pool_Sunbathe
+                $ Round -= 20 if Round >= 20 else Round  
+                "You just hang out for a little while."
         "Want to swim?":
             if Current_Time == "Night" and AloneCheck():
                 "It's a bit late for a swim." 
             else:                
                 call Pool_Swim
         "Want to skinnydip?":
-            call Pool_Skinnydip
+                call Pool_Skinnydip
                         
         "Wait. (locked)" if Current_Time == "Night":
                 pass
@@ -837,6 +835,7 @@ label Pool_Swim(Swimmers=[],BO=[]):
     call Set_The_Scene
         
     $ Line = ""
+    $ PassLine = 0
     $ BO = TotalGirls[:]      
     while BO:                              
             if bg_current == BO[0].Loc and ApprovalCheck(BO[0], 700): 
@@ -846,23 +845,35 @@ label Pool_Swim(Swimmers=[],BO=[]):
                     elif not BO[0].ChestNum() and not BO[0].OverNum() and not BO[0].PantiesNum() and not BO[0].PantsNum() and not BO[0].HoseNum():
                                 # or is nude. . .
                                 $ Swimmers.append(BO[0])
-                    else:
-                        if BO[0].OutfitChange("swimwear"): 
+                    else:                        
+                        if Line or PassLine:
+                                #if it's second time through
+                                call Display_Girl(BO[0],0,0,950,150)
+                        else:
+                                call Display_Girl(BO[0],0,0,800,150)
+                        if BO[0].OutfitChange("swimwear"):
                                 #if changed into swimsuit. . . 
+                                $ Line = "" if Swimmers and not PassLine else "s" #whole point of this is to change the plaurals
                                 $ Swimmers.append(BO[0])
-                                $ Line = "gets changed and " if Line != "get changed and " else "get changed and "
+                        else:
+                                #If she doesn't swim. . .
+                                $ Line = "" if PassLine and not Swimmers else "s"
+                                $ PassLine = PassLine + " and " + BO[0].Name if PassLine else BO[0].Name 
             $ BO.remove(BO[0])
                     
     if len(Swimmers) >= 2:
-        "The girls [Line]join you."
+            "The girls get[Line] changed and join you."
     elif Swimmers:
-        "[Swimmers[0].Name] [Line]joins you." 
-        
-    call ShowPool(Swimmers) #displays pool graphics
+            "[Swimmers[0].Name] get[Line] changed and joins you." 
+    if PassLine:
+            "[PassLine] chill[Line] out poolside."
+    $ PassLine = 0
+    $ Line = 0
     
-    if D20 >= 15:
-            call Pool_Topless
-            
+    call ShowPool(Swimmers[:]) #displays pool graphics
+    
+    if D20 >= 15 and Swimmers:
+            call Pool_Topless(Swimmers[0])            
     if D20 >= 11:
             "You take a nice, refreshing swim." 
     elif D20 == 2:
@@ -890,7 +901,6 @@ label Pool_Swim(Swimmers=[],BO=[]):
     elif D20 == 10:
             "You decide to make use of the diving board. You do a couple of dives before taking it easy and just swimming around." 
             
-    $ Line = 0
     call GirlWaitUp(1,80,3) #makes any girls in the room like each other a bit more.
     call RoomStatboost("Love",80,3)
     call RoomStatboost("Lust",30,5)
@@ -909,50 +919,41 @@ image FullPool:
         
 label ShowPool(BO=[],Loc=0):
         #displays the pool with girls in it
-        if not BO:
-                $ BO = TotalGirls[:] 
+        #if not BO:
+                #$ BO = TotalGirls[:] 
         while BO:  
                 if BO[0].Loc == bg_current:
                             $ BO[0].AddWord(0,"swim","swim",0,0) #adds "swim" tag to recent and daily actions  
-                            $ BO[0].Water = 1
-                            $ DLoc = 500 if Ch_Focus == BO[0] else 650  
+                            $ BO[0].Water = 1                            
+                            $ DLoc = 500 if len(BO) > 1 else 650  
                             if BO[0] == RogueX:
-                                    show Rogue_Sprite zorder BO[0].Layer:
-                                            alpha 1
-                                            zoom .45
-                                            offset (0,0)
-                                            anchor (0.5, 0.0)  
-                                            pos (DLoc,450)   
-                                    show Rogue_Sprite at Pool_Bob
+                                    show Rogue_Sprite at Pool_Bob(DLoc) zorder 50 
                             elif BO[0] == KittyX:
-                                    show Kitty_Sprite zorder BO[0].Layer:
-                                            alpha 1
-                                            zoom .45
-                                            offset (0,0)
-                                            anchor (0.5, 0.0)  
-                                            pos (DLoc,450)  
-                                    show Kitty_Sprite at Pool_Bob                                
+                                    show Kitty_Sprite at Pool_Bob(DLoc) zorder 50                            
                             elif BO[0] == EmmaX:
-                                    show Emma_Sprite zorder BO[0].Layer:
-                                            alpha 1
-                                            zoom .45
-                                            offset (0,0)
-                                            anchor (0.5, 0.0)  
-                                            pos (DLoc,450)  
-                                    show Emma_Sprite at Pool_Bob
-                            elif BO[0] == LauraX:
-                                    show Laura_Sprite zorder BO[0].Layer:
-                                            alpha 1
-                                            zoom .45
-                                            offset (0,0)
-                                            anchor (0.5, 0.0)  
-                                            pos (DLoc,450)   
-                                    show Laura_Sprite at Pool_Bob   
+                                    show Emma_Sprite at Pool_Bob(DLoc) zorder 50 
+                            elif BO[0] == LauraX: 
+                                    show Laura_Sprite at Pool_Bob(DLoc) zorder 50 #BO[0].Layer  
                 $ BO.remove(BO[0])
+        show FullPool zorder 60        #should put masked pool above girls #175?
         return
         
-transform Pool_Bob():     
+        
+#                                    show Rogue_Sprite zorder BO[0].Layer:
+#                                            alpha 1
+#                                            zoom .45
+#                                            offset (0,0)
+#                                            anchor (0.5, 0.0)  
+#                                            pos (DLoc,450)   
+#                                    show Rogue_Sprite at Pool_Bob
+
+transform Pool_Bob(DLoc=500):     
         subpixel True 
+        pos (DLoc,450)
+        alpha 1
+        zoom .45
+        offset (0,0)
+        anchor (0.5, 0.0)  
         xoffset 0
         yoffset 0
         choice:
@@ -970,13 +971,14 @@ transform Pool_Bob():
 label Shower_Room_Entry:
     $ bg_current = "bg showerroom"      
     $ Player.DrainWord("locked",0,0,1)
-    $ Nearby = []             
+    $ Nearby = []     
+    $ Present = []
     call Gym_Clothes  
     call Taboo_Level
     call Set_The_Scene(0,1,0)
     if Round <= 10 or len(Party) >= 2:         
             jump Shower_Room
-                        
+        
     $ Options = []
     $ Line = ActiveGirls[:]   #make sure this is initialized
     while Line:
@@ -988,45 +990,36 @@ label Shower_Room_Entry:
     $ Line = 0
     
     if Options:        
-            $ renpy.random.shuffle(Options)
-    
-    while Options and (len(Options) + len(Party) > 2):        
-                # culls out list to 2 if there is a party
-                $ Options.remove(Options[0])
+                $ renpy.random.shuffle(Options)
     
     $ D20 = renpy.random.randint(1, 20) 
     # <5 is they show up late, 5-10 is they haven't showered yet, 10-15 is they finished, 
     # >15 is you walk in on them, >17 they might be masturbating
         
-    if not Options or D20 < 5:  
-                # if nobody is around, skip it.
-                # if < 5, they show up late
-                $ Nearby = Options[:]
-                $ Line = Options[:]   #make sure this is initialized
-                while Line:
-                        #loops through and adds populates nearby with locals   
-                        if Line[0] in Options:
-                                $ Line[0].Loc = "nearby"  
-                        $ Line.remove(Line[0])   
-                $ Line = 0
+    if D20 < 5 or (len(Options) + len(Party) > 2):  #not Options or 
+                # if < 5, they show up late, or if there are more potential girls than room for them
+                while Options and (D20 < 5 or len(Options) + len(Party) > 2):
+                        #Loops through while Options and Party are more than 2
+                        $ Nearby.append(Options[0])     #adds this girl to the nearby roster
+                        $ Options[0].Loc = "nearby"     #adds this girl to the nearby roster
+                        $ Options.remove(Options[0])    #subs this girl from Options
                 
-    if D20 > 15 and Options and Options[0]:                    
-            call Girl_Caught_Shower(Options[0])
-            if _return:
-                jump Campus_Map #if there is a return value, jump to the campus, but not otherwise
-            jump Shower_Room
+    if not Party and D20 > 15 and Options and Options[0] in TotalGirls:               
+                call Girl_Caught_Shower(Options[0])
+                jump Shower_Room
     #End Caught Check
     
     # If none of the caught dialogs plays, checks to see if anyone is in the room, and allows them to be there if they are. 
-    $ Line = Options[:]   #make sure this is initialized
+    $ Line = Options[:]
     while Line:
             #loops through and adds populates nearby with locals   
             if Line[0] in Options:
                     $ Line[0].Loc = bg_current  
             $ Line.remove(Line[0])   
     $ Line = 0
-                
-    call Present_Check
+    
+    call Present_Check(0)
+            
     $ Line = Options[:] 
     while Line:
             #loops through and puts towels on them, maybe the "showered" trait
@@ -1040,11 +1033,16 @@ label Shower_Room_Entry:
     #End Count set-up
     
     call Set_The_Scene(Dress=0)
+    if Party:
+        $ Line = " and " + Party[0].Name
+    else:
+        $ Line = ""
     if len(Options) >= 2:    
-        "As you enter, you see [Options[0].Name] and [Options[1].Name] standing there."           
+        "As you enter, you[Line] see [Options[0].Name] and [Options[1].Name] standing there."           
     elif Options:
-        "As you enter, you see [Options[0].Name] standing there."
-        
+        "As you enter, you[Line] see [Options[0].Name] standing there."
+    $ Line = 0
+    
     if Options:          
             $ Line = 0
             if Options[0] == RogueX:
@@ -1104,7 +1102,7 @@ label Shower_Room:
                 call Girls_Location 
     call GirlsAngry      
     #End Room Set-up
-
+    
 # Shower Room Menu Start <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     menu:
         "You're in the showers. What would you like to do?"
@@ -1353,7 +1351,6 @@ label Showering(Occupants = [], StayCount=[] , Showered = 0, Line = 0, BO=[]):
                 #end none have showered yet                            
             if len(Occupants) > len(StayCount):                    
                     #if either said no. If they're at StayCount = 2 here, they have already agreed.
-                    
                     menu:
                         extend ""
                         "Ok, see you later then.":
@@ -1553,140 +1550,146 @@ label Showering(Occupants = [], StayCount=[] , Showered = 0, Line = 0, BO=[]):
             while BO:
                     #loops through and adds populates Occupants with locals 
                     if BO[0].Loc == bg_current:
-                        if BO[0] in StayCount:  
-                                #If the girl Stays
-                                $ BO[0].OutfitChange("nude")
-                                $ BO[0].Water = 1
-                                $ BO[0].Spunk = []                    
-                                $ BO[0].RecentActions.append("showered")                      
-                                $ BO[0].DailyActions.append("showered")   
-                        else:   
-                                #If the girl leaves
-                                call Remove_Girl(BO[0])  
-                                if BO[0] in Nearby:
-                                        $ Nearby.remove(BO[0])
-                                        $ BO[0].Loc = BO[0].Home
+                            if BO[0] in StayCount:  
+                                    #If the girl Stays
+                                    $ BO[0].OutfitChange("nude")
+                                    $ BO[0].Water = 1
+                                    $ BO[0].Spunk = []                    
+                                    $ BO[0].RecentActions.append("showered")                      
+                                    $ BO[0].DailyActions.append("showered")   
+                            else:   
+                                    #If the girl leaves
+                                    call Remove_Girl(BO[0])  
+                            while BO[0] in Nearby:
+                                    $ Nearby.remove(BO[0])
                     $ BO.remove(BO[0])   
             
+#/ / Pre-shower ends / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+            
+#/ / Showering begins / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
     call Seen_First_Peen(0,0,0,1) #You get naked
     
+    while len(StayCount) >= 2 and StayCount[1] in Nearby:
+            # removes any staying characters from Nearby
+            $ Nearby.remove(StayCount[1])
+    while StayCount and StayCount[0] in Nearby:
+            # removes any staying characters from Nearby
+            $ Nearby.remove(StayCount[0])
+                
     if Nearby and len(StayCount) < 2:
             # This value carries over from the Entry scene if there are girls who show up late
             $ renpy.random.shuffle(Nearby)
-            if len(StayCount) == 1:
-                #if there is at least one person sticking around and 2+ on the waitlist. . .
-                while len(Nearby) >= 2:
-                        $ Nearby.remove(Nearby[0]) #culls it to 1
-            else:
-                while len(Nearby) >= 3:
-                        $ Nearby.remove(Nearby[0]) #culls it to 2
             
+            while Nearby and (len(Nearby) + len(StayCount)) > 2:
+                        # while Nearby is more than 2-Staying characters
+                        $ Nearby.remove(Nearby[0]) #culls it to 1
+                        
             if len(Nearby) >= 2:
                 "As you finish getting undressed, [Nearby[0].Name] and [Nearby[1].Name] enter the room." 
-                $ Nearby[1].Loc = bg_current  
+                $ Nearby[1].Loc = bg_current 
             else:
-                "As you finish getting undressed, [Nearby[0].Name] enters the room."                
-            $ Nearby[0].Loc = bg_current  
-            
+                "As you finish getting undressed, [Nearby[0].Name] enters the room."   
+            $ Nearby[0].Loc = bg_current 
+                
+            $ BO = Nearby[:]
+                    
             #call Present_Check ?
             call Set_The_Scene(Dress=0)
                 
             call Seen_First_Peen(0,0,1,1) #You get naked, silent reactions
             
-            if RogueX in Nearby:  
+            if RogueX in BO:# in Nearby:  
                     if RogueX.SeenPeen == 1:
-                        $ RogueX.FaceChange("surprised",2,Eyes="down")    
-                        ch_r "Oh!"
-                        $ RogueX.FaceChange("bemused",1,Eyes="side")  
-                        ch_r "I am so sorry, I should {i}not{/i} have just barged in like that."
+                            $ RogueX.FaceChange("surprised",2,Eyes="down")    
+                            ch_r "Oh!"
+                            $ RogueX.FaceChange("bemused",1,Eyes="side")  
+                            ch_r "I am so sorry, I should {i}not{/i} have just barged in like that."
                     else:                    
-                        $ RogueX.FaceChange("bemused",1,Eyes="side")  
-                        ch_r "I simply {i}must{/i} be more careful. . ."
-            if KittyX in Nearby:  
+                            $ RogueX.FaceChange("bemused",1,Eyes="side")  
+                            ch_r "I simply {i}must{/i} be more careful. . ."
+            if KittyX in BO:  
                     $ KittyX.FaceChange("bemused",2,Eyes="side")
                     if KittyX.SeenPeen == 1:
-                        ch_k "Sorry! Sorry! I need to stop just casually phasing into places!"
+                            ch_k "Sorry! Sorry! I need to stop just casually phasing into places!"
                     else:                    
-                        ch_k "I have {i}got{/i} to knock more. . ."
-            if EmmaX in Nearby:                      
+                            ch_k "I have {i}got{/i} to knock more. . ."
+            if EmmaX in BO:                      
                     if EmmaX.SeenPeen == 1:
-                        $ EmmaX.FaceChange("surprised")
-                        ch_e "Oh! Dreadfully sorry." 
-                        $ EmmaX.FaceChange("sexy",Eyes="down")
-                        ch_e "I hope we can meet again under. . . different circumstances."
+                            $ EmmaX.FaceChange("surprised")
+                            ch_e "Oh! Dreadfully sorry." 
+                            $ EmmaX.FaceChange("sexy",Eyes="down")
+                            ch_e "I hope we can meet again under. . . different circumstances."
                     else:              
-                        $ EmmaX.FaceChange("sexy",Eyes="down")      
-                        ch_e "I really should pay closer attention. . ."
+                            $ EmmaX.FaceChange("sexy",Eyes="down")      
+                            ch_e "I really should pay closer attention. . ."
                     if "classcaught" not in EmmaX.History or ((StayCount or len(Nearby) >= 2) and "three" not in EmmaX.History):
                             #if Emma just showed up, but there are other girls around and she's not ok with that
                             "[EmmaX.Name] decides to leave immediately."  
                             call Remove_Girl(EmmaX)
                             $ EmmaX.OutfitChange()
-            if LauraX in Nearby:  
+            if LauraX in BO:  
                     if LauraX.SeenPeen == 1:
-                        $ LauraX.FaceChange("surprised",Eyes="down")    
-                        ch_l "Hey. That's interesting. . ."
+                            $ LauraX.FaceChange("surprised",Eyes="down")    
+                            ch_l "Hey. That's interesting. . ."
                     else:         
-                        $ LauraX.FaceChange("normal",Eyes="down")             
-                        ch_l ". . ."
-                        $ LauraX.FaceChange("normal")    
-                        ch_l "I'm supposed to knock, aren't I."
-            
-            
+                            $ LauraX.FaceChange("normal",Eyes="down")             
+                            ch_l ". . ."
+                            $ LauraX.FaceChange("normal")    
+                            ch_l "I'm supposed to knock, aren't I."
+                
             if EmmaX in StayCount and "three" not in EmmaX.History:
                     #if Emma was already here, but there are other girls around and she's not ok with that
-                    if len(Nearby) >= 2:
+                    if len(BO) >= 2:
                             "Seeing the other girls arrive, [EmmaX.Name] quickly excuses herself."      
                     else:
-                            "Seeing [Nearby[0].Name] arrive, [EmmaX.Name] quickly excuses herself."              
+                            "Seeing [BO[0].Name] arrive, [EmmaX.Name] quickly excuses herself."              
                     $ StayCount.remove(EmmaX)  
                     call Remove_Girl(EmmaX)
                     $ EmmaX.OutfitChange() 
-            
-            if Nearby:
-                #if there are still girls around to join in. . .
-                if ApprovalCheck(Nearby[0], 1200):
-                        $ StayCount.append(Nearby[0])                     
-                if len(Nearby) >=2 and ApprovalCheck(Nearby[1], 1200) and len(StayCount) < 2:
-                        $ StayCount.append(Nearby[1]) 
                     
-                if len(Nearby) >=2:
-                        if Nearby[0] not in StayCount and Nearby[1] not in StayCount:
-                                "They both turn right back around."                                   
-                                $ Nearby.remove(Nearby[1])                                   
-                                $ Nearby.remove(Nearby[0])    
-                        elif Nearby[0] not in StayCount:
-                                "[Nearby[0].Name] turns right back around, but [Nearby[1].Name] stays."                                   
-                                $ Nearby.remove(Nearby[0])  
-                        elif Nearby[1] not in StayCount:
-                                "[Nearby[1].Name] turns right back around, but [Nearby[0].Name] stays."                                   
-                                $ Nearby.remove(Nearby[1])                      
-                elif Nearby[0] not in StayCount:
-                                "She turns right back around."                                    
-                                $ Nearby.remove(Nearby[0])  
-                
-                $ BO = TotalGirls[:]   
+            if BO:
+                #if there are still girls around to join in. . .
+                if ApprovalCheck(BO[0], 1200):
+                        $ StayCount.append(BO[0])                     
+                if len(BO) >=2 and ApprovalCheck(BO[1], 1200) and len(StayCount) < 2:
+                        $ StayCount.append(BO[1]) 
+                    
+                if len(BO) >=2:
+                        if BO[0] not in StayCount and BO[1] not in StayCount:
+                                "They both turn right back around."    
+                                call Remove_Girl(BO[0])      
+                                call Remove_Girl(BO[1])                                      
+                                $ BO = []              
+                        elif BO[0] not in StayCount:
+                                "[BO[0].Name] turns right back around, but [BO[1].Name] stays."  
+                                call Remove_Girl(BO[0])                                   
+                                $ BO.remove(BO[0])  
+                        elif BO[1] not in StayCount:
+                                "[BO[1].Name] turns right back around, but [BO[0].Name] stays."    
+                                call Remove_Girl(BO[1])                                 
+                                $ BO.remove(BO[1])                      
+                elif BO[0] not in StayCount:
+                                "She turns right back around."  
+                                call Remove_Girl(BO[0])                                    
+                                $ BO.remove(BO[0])  
+                 
                 while BO:
                         #loops deals with "Nearby"s joining the party, removes others
-                        if BO[0] in Nearby:  
-                                #If Rogue Stays
-                                $ BO[0].OutfitChange("nude")
-                                $ BO[0].Water = 1
-                                $ BO[0].Spunk = []                    
-                                $ Nearby.remove(BO[0])           
-                                $ BO[0].RecentActions.append("showered")                      
-                                $ BO[0].DailyActions.append("showered") 
-                                if BO[0] == RogueX:
-                                            ch_r "I wouldn't mind stickin around though." 
-                                elif BO[0] == KittyX: 
-                                            ch_k "I {i}could{/i} get in on this."
-                                elif BO[0] == EmmaX: 
-                                            ch_e "But, I could use some face time." 
-                                elif BO[0] == LauraX:
-                                            ch_l "Scoot over."
-                        else:   
-                                #If Girl leaves
-                                call Remove_Girl(BO[0])                      
+                        #If Rogue Stays
+                        $ BO[0].OutfitChange("nude")
+                        $ BO[0].Water = 1
+                        $ BO[0].Spunk = []              
+                        $ BO[0].RecentActions.append("showered")                      
+                        $ BO[0].DailyActions.append("showered") 
+                        if BO[0] == RogueX:
+                                    ch_r "I wouldn't mind stickin around though." 
+                        elif BO[0] == KittyX: 
+                                    ch_k "I {i}could{/i} get in on this."
+                        elif BO[0] == EmmaX: 
+                                    ch_e "But, I could use some face time." 
+                        elif BO[0] == LauraX:
+                                    ch_l "Scoot over."                 
                         $ BO.remove(BO[0])   
                     
     #End "girl crashes in"
@@ -1709,32 +1712,32 @@ label Showering(Occupants = [], StayCount=[] , Showered = 0, Line = 0, BO=[]):
                 call Shower_Sex
                 
                 if StayCount[0] == RogueX:                                
-                    #Rogue agreed
-                    ch_r "That was real nice, [RogueX.Petname]."                                            
+                        #Rogue agreed
+                        ch_r "That was real nice, [RogueX.Petname]."                                            
                 elif StayCount[0] == KittyX:                               
-                    #Kitty agreed
-                    ch_k "That was. . . nice."                                                       
+                        #Kitty agreed
+                        ch_k "That was. . . nice."                                                       
                 elif StayCount[0] == EmmaX:                               
-                    #Emma agreed
-                    ch_e "That was. . . distracting."                                
+                        #Emma agreed
+                        ch_e "That was. . . distracting."                                
                 elif StayCount[0] == LauraX:                               
-                    #Laura agreed
-                    ch_l "Well that was fun."
+                        #Laura agreed
+                        ch_l "Well that was fun."
 
                 if len(StayCount) > 1:
                         #if there are multiple girls      
                         if StayCount[1] == RogueX:                               
-                            #Rogue too
-                            ch_r "Yeah."                                      
+                                #Rogue too
+                                ch_r "Yeah."                                      
                         elif StayCount[1] == KittyX:                               
-                            #Kitty too
-                            ch_k "Yeah, I had fun."                            
+                                #Kitty too
+                                ch_k "Yeah, I had fun."                            
                         elif StayCount[1] == EmmaX:                               
-                            #Emma too
-                            ch_e "Indeed."
+                                #Emma too
+                                ch_e "Indeed."
                         elif StayCount[1] == LauraX:                               
-                            #Laura too
-                            ch_l "Yup."   
+                                #Laura too
+                                ch_l "Yup."   
                                                                                        
     else:        
                 #solo shower
@@ -2457,22 +2460,22 @@ label Study_Room_Explore:
 label Rogue_Room_Entry: 
         $ bg_current = RogueX.Home  
         call Girls_Room_Entry(RogueX) 
-        return 
+        $ bg_current = "bg campus"   
         jump Misplaced
 label Kitty_Room_Entry:   
         $ bg_current = KittyX.Home  
         call Girls_Room_Entry(KittyX)
-        return  
+        $ bg_current = "bg campus"   
         jump Misplaced
 label Emma_Room_Entry:  
         $ bg_current = EmmaX.Home  
         call Girls_Room_Entry(EmmaX) 
-        return 
+        $ bg_current = "bg campus"   
         jump Misplaced
 label Laura_Room_Entry:
         $ bg_current = LauraX.Home  
-        call Girls_Room_Entry(LauraX)  
-        return
+        call Girls_Room_Entry(LauraX) 
+        $ bg_current = "bg campus"   
         jump Misplaced
                             
 label Girls_Room_Entry(Chr=0):
@@ -2549,8 +2552,8 @@ label Girls_Room_Entry(Chr=0):
         if bg_current == KittyX.Home and "dress2" in LauraX.History and not Party:
                         #if you helped buy clothes for Laura earlier. . .
                         call Laura_Dressup3
-                        $ renpy.pop_call()
-                        jump Campus
+                        $ bg_current = "bg campus"   
+                        jump Misplaced
                 
         if Round >= 10 and Chr.Loc == bg_current and "gonnafap" in Chr.DailyActions and D20 >= 5: 
                         #girl caught fapping  
@@ -2600,12 +2603,14 @@ label Girls_Room_Entry(Chr=0):
                             "You knock on [Chr.Name]'s door."        
                             if Chr.Loc != bg_current:
                                         "Looks like she's not home right now."
-                                        return
+                                        $ bg_current = "bg campus"   
+                                        jump Misplaced
                                 
                             if Round <= 10:
                                     if Current_Time == "Night" :
-                                        "There's no answer, she's probably asleep."  
-                                        return   
+                                        "There's no answer, she's probably asleep." 
+                                        $ bg_current = "bg campus"   
+                                        jump Misplaced
                         
                             if (D20 >=19 and Chr.Lust >= 50) or (D20 >=15 and Chr.Lust >= 70) or (D20 >=10 and Chr.Lust >= 80):    
                                     #Girl caught fapping
@@ -2647,7 +2652,8 @@ label Girls_Room_Entry(Chr=0):
                                             ch_l "Nope."  
                                     $ Trigger = 0
                                     "[Chr.Name] knocks you back into the hall and slams the door."
-                                    return    
+                                    $ bg_current = "bg campus"   
+                                    jump Misplaced
                             else:
                                     call Set_The_Scene
                                     "[Chr.Name] opens the door and leans out."
@@ -2666,7 +2672,8 @@ label Girls_Room_Entry(Chr=0):
                                     "No":
                                             pass
                         "You head back."
-                        return                    
+                        $ bg_current = "bg campus"   
+                        jump Misplaced 
                 elif Current_Time == "Night" and "noentry" in Chr.RecentActions:                
                         if Chr == RogueX:
                                 ch_r "Hey, I told you you're not welcome. I'll see you tomorrow."
@@ -2676,7 +2683,8 @@ label Girls_Room_Entry(Chr=0):
                                 ch_e "Later, [Chr.Petname]."  
                         elif Chr == LauraX:
                                 ch_l "Not tonight, [Chr.Petname]."
-                        return                    
+                        $ bg_current = "bg campus"   
+                        jump Misplaced 
                 elif "noentry" in Chr.RecentActions or "angry" in Chr.RecentActions:
                         $ Chr.FaceChange("angry")
                         if Chr == RogueX:
@@ -2687,7 +2695,8 @@ label Girls_Room_Entry(Chr=0):
                                 ch_e "Out."
                         elif Chr == LauraX:
                                 ch_l "Fuck off."  
-                        return     
+                        $ bg_current = "bg campus"   
+                        jump Misplaced 
                 elif Current_Time == "Night" and (Chr.Sleep or Chr.SEXP >= 30):                                                   
                         #It's late but she really likes you                    
                         if Chr == RogueX:
@@ -2730,7 +2739,8 @@ label Girls_Room_Entry(Chr=0):
                                 ch_l "It's late [Chr.Petname]. Come back tomorrow."                    
                         $ Chr.RecentActions.append("noentry")                      
                         $ Chr.DailyActions.append("noentry")   
-                        return     
+                        $ bg_current = "bg campus"   
+                        jump Misplaced 
                 elif ApprovalCheck(Chr, 600, "LI") or ApprovalCheck(Chr, 300, "OI"):                                    
                         #She quite likes you and lets you in   
                         if Chr == RogueX:
@@ -2752,18 +2762,19 @@ label Girls_Room_Entry(Chr=0):
                         elif Chr == LauraX:
                                 ch_l "Nah."
                         $ Chr.RecentActions.append("noentry")                      
-                        $ Chr.DailyActions.append("noentry")   
-                        return     
+                        $ Chr.DailyActions.append("noentry") 
+                        $ bg_current = "bg campus"   
+                        jump Misplaced 
         
         # If you get this far, she's allowed you in
         call EventCalls
         if Chr.Loc == Chr.Home and "angry" in Chr.RecentActions:
-            # if she's home and pissed, she kicks you out
-            $ Line = 0
-            $ Trigger = 0
-            "[Chr.Name] shoves you back into the hall and slams the door. You head back to your room."
-            $ Chr = 0
-            jump Player_Room
+                # if she's home and pissed, she kicks you out
+                $ Line = 0
+                $ Trigger = 0
+                "[Chr.Name] shoves you back into the hall and slams the door. You head back to your room."
+                $ bg_current = "bg player"   
+                jump Misplaced
         jump Misplaced
 
 # End Girls room entry / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
@@ -3006,12 +3017,12 @@ label Emma_Room:
                 "Back":
                             pass
         "Go to the Showers" if TravelMode:            
-                    jump Shower_Room_Entry
+                            jump Shower_Room_Entry
                     
         "Leave" if not TravelMode:
-                    call Worldmap
+                            call Worldmap
         "Leave [[Go to Campus Square]" if TravelMode:
-                    jump Campus_Entry
+                            jump Campus_Entry
     
     if "angry" in EmmaX.RecentActions:
             $ EmmaX.FaceChange("angry")

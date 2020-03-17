@@ -1,5 +1,8 @@
 ﻿# Laura_SexMenu //////////////////////////////////////////////////////////////////////
-label Laura_SexAct(Act = 0):    
+label Laura_SexAct(Act = 0):        
+        if AloneCheck(LauraX) and LauraX.Taboo == 20:
+                $ LauraX.Taboo = 0
+                $ Taboo = 0
         call Shift_Focus(LauraX)    
         if Act == "SkipTo":
             $ renpy.pop_call() #causes it to skip past the Trigger Swap
@@ -870,6 +873,7 @@ label Laura_M_Interupted:
                                             $ Tempmod -= 10
                                             $ LauraX.Statup("Lust", 200, -5)
                         call Seen_First_Peen(LauraX,Partner) 
+                        ch_l "Hmm. . ."
                                     
                 #you haven't been jacking it                    
                 else:         

@@ -137,13 +137,13 @@ label Laura_Relationship:
                  
             "I wanted to ask about [[another girl]" if LauraX in Player.Harem:
                     menu:
-                        "Have you reconsidered letting me date. . ."
+                        "Have you considered letting me date. . ."
                         "[RogueX.Name]" if RogueX not in Player.Harem:
-                                call Poly_Start(RogueX,1)
+                                call Poly_Start(RogueX,1,LauraX)
                         "[KittyX.Name]" if KittyX not in Player.Harem and "met" in KittyX.History:
-                                call Poly_Start(KittyX,1)
+                                call Poly_Start(KittyX,1,LauraX)
                         "[EmmaX.Name]" if EmmaX not in Player.Harem and "met" in EmmaX.History:
-                                call Poly_Start(EmmaX,1)
+                                call Poly_Start(EmmaX,1,LauraX)
                         "Never mind":
                                 pass  
                                    
@@ -354,7 +354,7 @@ label Laura_Monogamy:
                             return                       
                     if "mono" not in LauraX.DailyActions:                                                         
                             $ LauraX.Statup("Obed", 90, 3) 
-                    $ LauraX.AnyWord(1,0,"mono") #Daily
+                    $ LauraX.AddWord(1,0,"mono") #Daily
                     $ LauraX.Traits.append("mono")   
             "Don't hook up with other girls." if "mono" not in LauraX.Traits:
                     if ApprovalCheck(LauraX, 900, "O", TabM=0):
@@ -383,7 +383,7 @@ label Laura_Monogamy:
                             return                 
                     if "mono" not in LauraX.DailyActions:                                                         
                             $ LauraX.Statup("Obed", 90, 3) 
-                    $ LauraX.AnyWord(1,0,"mono") #Daily
+                    $ LauraX.AddWord(1,0,"mono") #Daily
                     $ LauraX.Traits.append("mono")   
             "It's ok if you hook up with other girls." if "mono" in LauraX.Traits:
                     if ApprovalCheck(LauraX, 700, "O", TabM=0):
@@ -401,7 +401,7 @@ label Laura_Monogamy:
                             $ LauraX.Statup("Obed", 90, 3) 
                     if "mono" in LauraX.Traits:
                             $ LauraX.Traits.remove("mono")   
-                    $ LauraX.AnyWord(1,0,"mono") #Daily
+                    $ LauraX.AddWord(1,0,"mono") #Daily
             "Never mind.":
                 pass
         return
@@ -441,7 +441,7 @@ label Laura_Jumped:
                             return                    
                     if "chill" not in LauraX.DailyActions:                                                         
                             $ LauraX.Statup("Obed", 90, 3) 
-                    $ LauraX.AnyWord(1,0,"chill") #Daily
+                    $ LauraX.AddWord(1,0,"chill") #Daily
                     $ LauraX.Traits.append("chill")   
             "Don't bother me like that." if "chill" not in LauraX.Traits:
                     if ApprovalCheck(LauraX, 800, "O", TabM=0):
@@ -471,7 +471,7 @@ label Laura_Jumped:
                             return                     
                     if "chill" not in LauraX.DailyActions:                                                         
                             $ LauraX.Statup("Obed", 90, 3) 
-                    $ LauraX.AnyWord(1,0,"chill") #Daily
+                    $ LauraX.AddWord(1,0,"chill") #Daily
                     $ LauraX.Traits.append("chill")   
             "Knock yourself out.":
                     if ApprovalCheck(LauraX, 800, "L", TabM=0):
@@ -489,7 +489,7 @@ label Laura_Jumped:
                             $ LauraX.Statup("Obed", 90, 3) 
                     if "chill" in LauraX.Traits:
                             $ LauraX.Traits.remove("chill")  
-                    $ LauraX.AnyWord(1,0,"chill") #Daily 
+                    $ LauraX.AddWord(1,0,"chill") #Daily 
             "Um, never mind.":
                 pass
         return
@@ -600,23 +600,23 @@ label Laura_SexChat:
                                         $ LauraX.PlayerFav = "titjob"   
                                         
                             "Footjobs.":
-                                        $ LauraXX.FaceChange("sly")
-                                        if LauraXX.PlayerFav == "foot":
-                                            $ LauraXX.Statup("Lust", 80, 5)
+                                        $ LauraX.FaceChange("sly")
+                                        if LauraX.PlayerFav == "foot":
+                                            $ LauraX.Statup("Lust", 80, 5)
                                             ch_l "Yeah, you've said that. . ."                                 
-                                        elif LauraXX.Favorite == "foot":
-                                            $ LauraXX.Statup("Love", 90, 5)
-                                            $ LauraXX.Statup("Lust", 80, 7)
+                                        elif LauraX.Favorite == "foot":
+                                            $ LauraX.Statup("Love", 90, 5)
+                                            $ LauraX.Statup("Lust", 80, 7)
                                             ch_l "I do like using my feet. . ."
-                                        elif LauraXX.Foot >= 10:
+                                        elif LauraX.Foot >= 10:
                                             ch_l "I like it too . . ."
-                                        elif not LauraXX.Foot:
-                                            $ LauraXX.FaceChange("perplexed")
+                                        elif not LauraX.Foot:
+                                            $ LauraX.FaceChange("perplexed")
                                             ch_l "Who's playing footsie with you?"
                                         else:
-                                            $ LauraXX.FaceChange("bemused")
+                                            $ LauraX.FaceChange("bemused")
                                             ch_l "Yeah, it's nice. . ."
-                                        $ LauraXX.PlayerFav = "foot"  
+                                        $ LauraX.PlayerFav = "foot"  
                                         
                             "Handjobs.":
                                         $ LauraX.FaceChange("sly")
@@ -882,7 +882,7 @@ label Laura_Chitchat(O=0, Options = ["default","default","default"]):
                             $ LauraX.FaceChange("sly",1)    
                             ch_l "Hey, wanna bone?"
                             call Quick_Sex(LauraX)
-                    return
+                            return
 #        $ Options = ["default","default","default"]
         #adds options based on accomplishments
 #        if PunishmentX and "caught chat" not in LauraX.DailyActions:
@@ -1852,6 +1852,7 @@ label Laura_Summon(Tempmod=Tempmod):
             $ renpy.pop_call()
             $ LauraX.RecentActions.append("goto")  
             $ Player.RecentActions.append("goto")  
+            $ Line = 0
             if LauraX.Loc == "bg classroom":
                     ch_l "K, there's room next to me."
                     jump Class_Room 
@@ -2094,6 +2095,7 @@ label Laura_Leave(Tempmod=Tempmod, GirlsNum = 0):
     elif Line == "go to":                                                                 
             #You agreed to go to her instead  
             $ Tempmod = 0
+            $ Line = 0
             call DrainAll("leaving")
             call DrainAll("arriving")       
             hide Laura_Sprite

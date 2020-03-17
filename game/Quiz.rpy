@@ -148,7 +148,7 @@ label Group_Strip_Study(BO=[],QuizOrder=[]):
                                 "Bummer":
                                         pass
                 
-            if len(Party) >= 2 and Cnt != 3 and not Party[1].ClothingCheck:
+            if len(Party) >= 2 and Cnt != 3 and Party[1].ClothingCheck:
                     #if there are multiple girls, and the other girl is not nude, alternate        
                     $ Party.reverse()
                     call Shift_Focus(Party[0])            

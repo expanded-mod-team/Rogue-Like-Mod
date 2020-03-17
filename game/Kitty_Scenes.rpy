@@ -1241,7 +1241,8 @@ label Kitty_Sexfriend:
                             $ KittyX.FaceChange("angry",1)
                             ch_k "Fine. [KittyX.like]whatever."
                             $ Line = "rude"
-                                
+    if KittyX in Player.Harem:
+            $ Line = "harem"
     if not Line: #again, if the Line has been changed to "rude" or "embarrassed" then it skips past here.                          
             ch_k "Anyway. . . I was[KittyX.like]kinda thinking. . . we get along pretty well, right?"
             menu:
@@ -1300,7 +1301,9 @@ label Kitty_Sexfriend:
                         ch_k "Oh.  Okay."  #Sad expression
                         ch_k "I[KittyX.like]think I should go now.  I've got[KittyX.like]stuff to do."
                         $ Line = "sad"
-
+    if Line == "harem":
+            ch_k "I am -totally- addicted to this dick. . ."
+            $ Line = 0
     if Line == "rude":    
             $ KittyX.FaceChange("angry",1)
             $ KittyX.RecentActions.append("angry")
@@ -1365,7 +1368,7 @@ label Kitty_Daddy:
     call Shift_Focus(KittyX)
     call Set_The_Scene
     ch_k ". . ."
-    if "dating" in KittyX.Traits or KittyX in P_Harem:
+    if "dating" in KittyX.Traits or KittyX in Player.Harem:
         ch_k "Hey, so[KittyX.like]we've been dating,"  
     else:    
         ch_k "Hey, so[KittyX.like]we've been hanging out," 
@@ -2214,6 +2217,7 @@ label Kitty_Kate:
                                         menu:
                                             extend ""
                                             "Ok, \"Kate\" it is then.":
+                                                    $ KittyX.Name = "Kate"
                                                     $ KittyX.FaceChange("smile", 1)
                                                     $ KittyX.Statup("Love", 60, 5) 
                                                     $ KittyX.Statup("Love", 90, 5) 

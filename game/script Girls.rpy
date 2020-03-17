@@ -7,6 +7,7 @@ init python:
                 self.Focus = 0                  #progress towards orgasm
                 self.FocusX = 0                 #is the player trying not to orgasm
                 self.XP = 0
+                self.SEXP = 0                   #how much sex you've had overall
                 self.StatPoints = 0    
                 self.XPgoal = 100
                 self.Lvl = 1
@@ -120,6 +121,7 @@ init python:
                 self.Petnames = ["Zero"]
                 self.Pet = "Girl"
                 self.Pets = ["Girl"]
+                self.Cheated = 0
                 self.Break = [0,0]      #minimum time between break-ups/number of total break-ups
                 self.Forced = 0         #are they being coerced
                 self.ForcedCount = 0    #countdown for how long they stay mad
@@ -881,7 +883,7 @@ init python:
                 if self in Party and OutfitTemp == self.OutfitDay:
                         #this ignores her daily outfit if she's in a party
                         OutfitTemp = self.Outfit
-                if self.Loc not in ("bg showerroom","bg pool") or (OutfitTemp != "nude" and OutfitTemp != "towel"):
+                if self.Loc not in ("bg showerroom","bg pool") or (OutfitTemp not in ("nude","swimwear","towel")):
                         #Dries her off
                         self.Water = 0
                 if self.Spunk:
@@ -2645,7 +2647,6 @@ label OutfitShame(Girl=0, Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agre
         # Tempshame is a throwaway value, 0-50, Agree is whether she will wear it out, 2 if yes, 1 if only around you. 
         # call OutfitShame(RogueX,20)
         $ Girl = Ch_Focus if not Girl else Girl
-        #call Shift_Focus(Girl)  #removed because this gets called passively
         
         if not Check and not Girl.Taboo and Custom != 20:
                 #if this is not a custom check and you're in a safe space,
@@ -2653,7 +2654,7 @@ label OutfitShame(Girl=0, Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agre
                         #if there is a "private outfit" set, ask to change.
                         call Private_Outfit
                 return
-                        
+                
         #If she's wearing a bra of some kind
         if Custom == 20 and Girl.Uptop: 
             $ Count = 0
@@ -3187,6 +3188,7 @@ label OutfitShame(Girl=0, Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agre
                         $ Girl.Custom2[4] = Girl.Neck
                         $ Girl.Custom2[5] = Girl.Chest 
                         $ Girl.Custom2[6] = Girl.Panties
+                        $ Girl.Custom2[7] = Girl.Acc
                         $ Girl.Custom2[8] = Girl.Hair
                         $ Girl.Custom2[9] = Girl.Hose
                         $ Girl.Custom2[10] = Tempshame
@@ -3199,6 +3201,7 @@ label OutfitShame(Girl=0, Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agre
                         $ Girl.Custom3[4] = Girl.Neck
                         $ Girl.Custom3[5] = Girl.Chest 
                         $ Girl.Custom3[6] = Girl.Panties
+                        $ Girl.Custom3[7] = Girl.Acc
                         $ Girl.Custom3[8] = Girl.Hair
                         $ Girl.Custom3[9] = Girl.Hose
                         $ Girl.Custom3[10] = Tempshame
@@ -3211,6 +3214,7 @@ label OutfitShame(Girl=0, Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agre
                         $ Girl.Gym[4] = Girl.Neck
                         $ Girl.Gym[5] = Girl.Chest 
                         $ Girl.Gym[6] = Girl.Panties
+                        $ Girl.Gym[7] = Girl.Acc
                         $ Girl.Gym[8] = Girl.Hair
                         $ Girl.Gym[9] = Girl.Hose
                         $ Girl.Gym[10] = Tempshame
@@ -3223,6 +3227,7 @@ label OutfitShame(Girl=0, Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agre
                         $ Girl.Sleepwear[4] = Girl.Neck 
                         $ Girl.Sleepwear[5] = Girl.Chest 
                         $ Girl.Sleepwear[6] = Girl.Panties
+                        $ Girl.Sleepwear[7] = Girl.Acc
                         $ Girl.Sleepwear[8] = Girl.Hair
                         $ Girl.Sleepwear[9] = Girl.Hose                        
                         $ Girl.Sleepwear[10] = Tempshame
@@ -3234,6 +3239,7 @@ label OutfitShame(Girl=0, Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agre
                         $ Girl.Swim[4] = Girl.Neck 
                         $ Girl.Swim[5] = Girl.Chest 
                         $ Girl.Swim[6] = Girl.Panties
+                        $ Girl.Swim[7] = Girl.Acc
                         $ Girl.Swim[8] = Girl.Hair
                         $ Girl.Swim[9] = Girl.Hose
                         $ Girl.Swim[10] = Tempshame
@@ -3245,6 +3251,7 @@ label OutfitShame(Girl=0, Custom = 3, Check = 0, Count = 0, Tempshame = 50, Agre
                         $ Girl.Custom1[4] = Girl.Neck
                         $ Girl.Custom1[5] = Girl.Chest 
                         $ Girl.Custom1[6] = Girl.Panties
+                        $ Girl.Custom1[7] = Girl.Acc
                         $ Girl.Custom1[8] = Girl.Hair
                         $ Girl.Custom1[9] = Girl.Hose
                         $ Girl.Custom1[10] = Tempshame
@@ -3354,7 +3361,7 @@ label Girl_Undress(Girl=0,Region = "ask",CountStore=0):
                 "A little of both. . ." if Girl.Over or Girl.Chest or Girl.Legs or Girl.Panties or Girl.Hose: 
                         $ Region = "both"    
                 "Never mind":
-                    pass
+                        pass
         
         if Region == "top":
             if Girl.Over or Girl.Chest:    

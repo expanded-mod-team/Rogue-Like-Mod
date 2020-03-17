@@ -138,13 +138,13 @@ label Kitty_Relationship:
                
             "I wanted to ask about [[another girl]" if KittyX in Player.Harem:
                     menu:
-                        "Have you reconsidered letting me date. . ."
+                        "Have you considered letting me date. . ."
                         "[RogueX.Name]" if RogueX not in Player.Harem:
-                                call Poly_Start(RogueX,1)
+                                call Poly_Start(RogueX,1,KittyX)
                         "[EmmaX.Name]" if EmmaX not in Player.Harem and "met" in EmmaX.History:
-                                call Poly_Start(EmmaX,1)
+                                call Poly_Start(EmmaX,1,KittyX)
                         "[LauraX.Name]" if LauraX not in Player.Harem and "met" in LauraX.History:
-                                call Poly_Start(LauraX,1)
+                                call Poly_Start(LauraX,1,KittyX)
                         "Never mind":
                                 pass      
                                    
@@ -403,7 +403,7 @@ label Kitty_Monogamy:
                             return                  
                     if "mono" not in KittyX.DailyActions:                                                         
                             $ KittyX.Statup("Obed", 90, 3) 
-                    $ KittyX.AnyWord(1,0,"mono") #Daily
+                    $ KittyX.AddWord(1,0,"mono") #Daily
                     $ KittyX.Traits.append("mono")   
             "Don't hook up with other girls." if "mono" not in KittyX.Traits:
                     if ApprovalCheck(KittyX, 800, "O", TabM=0):
@@ -433,7 +433,7 @@ label Kitty_Monogamy:
                             return               
                     if "mono" not in KittyX.DailyActions:                                                         
                             $ KittyX.Statup("Obed", 90, 3) 
-                    $ KittyX.AnyWord(1,0,"mono") #Daily
+                    $ KittyX.AddWord(1,0,"mono") #Daily
                     $ KittyX.Traits.append("mono")   
             "It's ok if you hook up with other girls." if "mono" in KittyX.Traits:
                     if ApprovalCheck(KittyX, 650, "O", TabM=0):
@@ -452,7 +452,7 @@ label Kitty_Monogamy:
                             $ KittyX.Statup("Obed", 90, 3) 
                     if "mono" in KittyX.Traits:
                             $ KittyX.Traits.remove("mono")   
-                    $ KittyX.AnyWord(1,0,"mono") #Daily
+                    $ KittyX.AddWord(1,0,"mono") #Daily
             "Never mind.":
                 pass
         return
@@ -493,7 +493,7 @@ label Kitty_Jumped:
                             return                    
                     if "chill" not in KittyX.DailyActions:                                                         
                             $ KittyX.Statup("Obed", 90, 3) 
-                    $ KittyX.AnyWord(1,0,"chill") #Daily
+                    $ KittyX.AddWord(1,0,"chill") #Daily
                     $ KittyX.Traits.append("chill")   
             "Don't bother me like that." if "chill" not in KittyX.Traits:
                     if ApprovalCheck(KittyX, 900, "O", TabM=0):
@@ -523,7 +523,7 @@ label Kitty_Jumped:
                             return                     
                     if "chill" not in KittyX.DailyActions:                                                         
                             $ KittyX.Statup("Obed", 90, 3) 
-                    $ KittyX.AnyWord(1,0,"chill") #Daily
+                    $ KittyX.AddWord(1,0,"chill") #Daily
                     $ KittyX.Traits.append("chill")   
             "Knock yourself out.":
                     if ApprovalCheck(KittyX, 800, "L", TabM=0):
@@ -543,7 +543,7 @@ label Kitty_Jumped:
                             $ KittyX.Statup("Obed", 90, 3) 
                     if "chill" in KittyX.Traits:
                             $ KittyX.Traits.remove("chill")  
-                    $ KittyX.AnyWord(1,0,"chill") #Daily 
+                    $ KittyX.AddWord(1,0,"chill") #Daily 
             "Um, never mind.":
                 pass
         return
@@ -654,23 +654,23 @@ label Kitty_SexChat:
                                         $ KittyX.PlayerFav = "titjob"   
                                         
                             "Footjobs.":
-                                        $ KittyXX.FaceChange("sly")
-                                        if KittyXX.PlayerFav == "foot":
-                                            $ KittyXX.Statup("Lust", 80, 5)
+                                        $ KittyX.FaceChange("sly")
+                                        if KittyX.PlayerFav == "foot":
+                                            $ KittyX.Statup("Lust", 80, 5)
                                             ch_k "Yeah, you've said that. . ."                                       
-                                        elif KittyXX.Favorite == "foot":
-                                            $ KittyXX.Statup("Love", 90, 5)
-                                            $ KittyXX.Statup("Lust", 80, 7)
+                                        elif KittyX.Favorite == "foot":
+                                            $ KittyX.Statup("Love", 90, 5)
+                                            $ KittyX.Statup("Lust", 80, 7)
                                             ch_k "You do feel pretty nice. . ."
-                                        elif KittyXX.Foot >= 10:
+                                        elif KittyX.Foot >= 10:
                                             ch_k "I like it too . . ."
-                                        elif not KittyXX.Foot:
-                                            $ KittyXX.FaceChange("perplexed")
+                                        elif not KittyX.Foot:
+                                            $ KittyX.FaceChange("perplexed")
                                             ch_k "Who's playing footsie with you? Is it Ms. Frost?!"
                                         else:
-                                            $ KittyXX.FaceChange("bemused")
+                                            $ KittyX.FaceChange("bemused")
                                             ch_k "Yeah, it's nice. . ."
-                                        $ KittyXX.PlayerFav = "foot"  
+                                        $ KittyX.PlayerFav = "foot"  
                                         
                             "Handjobs.":
                                         $ KittyX.FaceChange("sly")
@@ -939,8 +939,8 @@ label Kitty_Chitchat(O=0, Options = ["default","default","default"]):
                             ch_k "Hey, um . . . did you want to. . ."
                             ch_k ". . . sex?"
                             call Quick_Sex(KittyX)
-                    return
-        
+                            return
+                
 #        $ Options = ["default","default","default"]
         #adds options based on accomplishments
 #        if PunishmentX and "caught chat" not in KittyX.DailyActions:
@@ -1315,7 +1315,6 @@ label Kitty_Chitchat(O=0, Options = ["default","default","default"]):
                         $ KittyX.Statup("Love", 90, 5) 
                         $ KittyX.Statup("Inbt", 50, 5)  
                         if ApprovalCheck(KittyX, 800, "LO"):
-                                $ KittyX.Name = "Kitty"
                                 $ KittyX.Statup("Obed", 70, 5)
                         ch_k "Yeah, me too. . ."
                 "Why not go by \"Katherine\" then?":
@@ -1927,6 +1926,7 @@ label Kitty_Summon(Tempmod=Tempmod):
             $ renpy.pop_call()
             $ KittyX.RecentActions.append("goto")  
             $ Player.RecentActions.append("goto")  
+            $ Line = 0
             if KittyX.Loc == "bg classroom":
                     ch_k "I'll hold a seat for you!"
                     jump Class_Room 
@@ -2069,8 +2069,7 @@ label Kitty_Leave(Tempmod=Tempmod, GirlsNum = 0):
         ch_k "I'm[KittyX.like]hitting up the pool. You coming?"     
     else:        
         ch_k "Wanna[KittyX.like]come with me, [KittyX.Petname]?"    
-    
-    
+        
     menu:
         extend ""
         "Sure, I'll catch up.":
@@ -2159,6 +2158,7 @@ label Kitty_Leave(Tempmod=Tempmod, GirlsNum = 0):
     elif Line == "go to":                                                                 
             #You agreed to go to her instead  
             $ Tempmod = 0
+            $ Line = 0
             call DrainAll("leaving")
             call DrainAll("arriving")         
             hide Kitty_Sprite
@@ -2687,7 +2687,7 @@ label Kitty_Wardrobe_Menu:
                 ch_k "K, no problem."
                 $ KittyX.Legs = "shorts"    
             
-        "How about the blue skirt?" if KittyX.Legs != "blue skirt":
+        "How about the blue skirt?" if KittyX.Legs != "blue skirt" and "blue skirt" in KittyX.Inventory:
                 if KittyX.Panties or ApprovalCheck(KittyX,500,"I",TabM=2):
                         ch_k "Yeah, ok."
                         $ KittyX.Legs = "blue skirt"    

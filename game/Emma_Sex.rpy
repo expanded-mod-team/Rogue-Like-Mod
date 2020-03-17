@@ -1,5 +1,8 @@
 ﻿# Emma_SexMenu //////////////////////////////////////////////////////////////////////
 label Emma_SexAct(Act = 0):    
+        if AloneCheck(EmmaX) and EmmaX.Taboo == 20:
+                $ EmmaX.Taboo = 0
+                $ Taboo = 0
         call Shift_Focus(EmmaX)      
         if Taboo > 20 and "taboo" not in EmmaX.History:
                 # If she's yet to agree to taboo stuff
@@ -895,6 +898,7 @@ label Emma_M_Interupted:
                         
                         if "Historia" not in Player.Traits:
                                     call Seen_First_Peen(EmmaX,Partner)
+                                    ch_e "Hmm. . ."
                                     
                 #you haven't been jacking it                    
                 else:         

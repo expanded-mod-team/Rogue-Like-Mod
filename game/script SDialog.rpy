@@ -1524,7 +1524,7 @@ label Primary_SexDialog(GirlA=Primary,TempLine = 0, TempLust = 0, TempLust2 = 0)
                 
     # end Masturbation                               /////////////////////////////////////////////////////////////////////////////
     elif Trigger == "lesbian":
-                call SexDialog_Threeway(GirlA,"lesbian") #Rog*ue_SexDialog_Threeway("lesbian")      
+                call SexDialog_Threeway(GirlA,"lesbian",GirlB=Partner) #Rog*ue_SexDialog_Threeway("lesbian")      
     
     elif Trigger == "foot":
                         $ Line = GirlA.Name + " continues stroke your cock with her feet. "
@@ -2215,7 +2215,7 @@ label SexDialog_Threeway(GirlA = Secondary, Mode = 0, Action = 0, GirlB = Primar
     # In "lesbian" mode, GirlB will be the secondary girl, and this sequence will build text for what the primary will do to her.
     # Lesbian Trigger1 dialog calls "call SexDialog_Threeway(RogueX,"lesbian")" #nee "call Rog*ue_SexDialog_Threeway("lesbian")"
     
-    call Threeway_Set(GirlA,Mode=Mode) #nee Rog*ue_Threeway_Set(Mode=Mode)   #Picks a new activty on a 7-9 roll or when not set, otherwise returns
+    call Threeway_Set(GirlA,Mode=Mode,GirlB=GirlB) #nee Rog*ue_Threeway_Set(Mode=Mode)   #Picks a new activty on a 7-9 roll or when not set, otherwise returns
     
     if Mode == "lesbian":
             $ Action = Trigger3
@@ -2772,8 +2772,13 @@ label Threeway_Set(GirlA=Secondary,Preset = 0, Mode = 0, Action = Trigger4, Girl
             if Trigger == "lesbian":
                     # if this was sent from a Lesbian action. . .
                     $ State = "lesbian"
-#                    if Secondary != GirlA:
-#                            $ GirlB = Secondary
+                    if GirlA == GirlB and GirlA != Partner:
+                            $ GirlB = Partner
+                    elif GirlA == GirlB and GirlA != Primary:
+                            $ GirlB = Primary
+                    if GirlA == GirlB:
+                            "Tell Oni that in Threeway_Set, A:[GirlA.Tag] and B:[GirlB.Tag]"
+                            "[Girl.Gibberish]"
                     $ Options = ["kiss girl","kiss girl"]        
                     if Preset in ("hand","blow","kiss you","kiss both"):
                             #if you send it presets that you want the other girl to touch you. . .
