@@ -365,13 +365,13 @@ label Rogue_Relationship:
                         
             "I wanted to ask about [[another girl]" if RogueX in Player.Harem:
                     menu:
-                        "Have you reconsidered letting me date. . ."
+                        "Have you considered letting me date. . ."
                         "[KittyX.Name]" if KittyX not in Player.Harem and "met" in KittyX.History:
-                                call Poly_Start(KittyX,1)
+                                call Poly_Start(KittyX,1,RogueX)
                         "[EmmaX.Name]" if EmmaX not in Player.Harem and "met" in EmmaX.History:
-                                call Poly_Start(EmmaX,1)
+                                call Poly_Start(EmmaX,1,RogueX)
                         "[LauraX.Name]" if LauraX not in Player.Harem and "met" in LauraX.History:
-                                call Poly_Start(LauraX,1)
+                                call Poly_Start(LauraX,1,RogueX)
                         "Never mind":
                                 pass
                                 
@@ -1137,8 +1137,8 @@ label Rogue_Chitchat(O=0, Options = ["default","default","default"]):
                             $ RogueX.FaceChange("sly",1)    
                             ch_r "Hey, do you want to get a little frisky?"
                             call Quick_Sex(RogueX)
-                    return
-        
+                            return
+                
         #adds options based on accomplishments
         if ApprovalCheck(RogueX, 1200):
             $ Options.append("dance") 
@@ -1165,6 +1165,10 @@ label Rogue_Chitchat(O=0, Options = ["default","default","default"]):
         if not RogueX.Chat[0] and RogueX.Sex:
             $ Options.append("virgin")    
             
+        if "lover" in RogueX.Petnames and "Anna" not in RogueX.Names:
+            #if you've done the love scene, but never got Rogue's other name, second chance
+            $ Options.append("annamarie")
+        
         if (bg_current == "bg rogue" or bg_current == "bg player") and "nametag chat" not in RogueX.DailyActions:
             if "lover" not in RogueX.Petnames and ApprovalCheck(RogueX, 900, "L"): # RogueX.Event[6]        
                 $ Options.append("lover?")
@@ -1316,7 +1320,8 @@ label Rogue_Chitchat(O=0, Options = ["default","default","default"]):
     elif Options[0] == "daddy?":
         call Rogue_Daddy  
         $ RogueX.DailyActions.append("nametag chat") 
-        
+    elif Options[0] == "annamarie":
+        call Rogue_AnnaMarie #adds new names to list
     elif Options[0] == "hate": # trinty lower then 50:
         $ Line = renpy.random.choice(["Get away from me.", 
                 "I don't want to see your face.", 
@@ -1895,6 +1900,7 @@ label Rogue_Summon(Tempmod = Tempmod):
             #You agreed to go to her instead        
             $ renpy.pop_call()
             $ Tempmod = 0
+            $ Line = 0
             $ RogueX.RecentActions.append("goto") 
             $ Player.RecentActions.append("goto")  
             if RogueX.Loc == "bg classroom":
@@ -2122,6 +2128,7 @@ label Rogue_Leave(Tempmod=Tempmod):
         elif Line == "go to":                                                                 
                 #You agreed to go to her instead  
                 $ Tempmod = 0
+                $ Line = 0
                 call DrainAll("leaving")
                 call DrainAll("arriving")            
                 hide Rogue_Sprite

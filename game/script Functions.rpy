@@ -337,7 +337,7 @@ label Round10(Options = ["none"]):
 
 #Start Checkout  Overrun checking / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 label Checkout(Total = 0,BO=[]):    
-        call VersionNumber
+#        call VersionNumber
         
         $ BO = TotalGirls[:]  
         while BO:   
@@ -390,7 +390,7 @@ label Checkout(Total = 0,BO=[]):
     
 
 # Wait/Sleep Cycle //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// #Wait
-label Wait (Outfit = 1, Lights = 1, TempSEXP=TotalSEXP, BO=[]):
+label Wait (Outfit = 1, Lights = 1, BO=[]):
     # If Outfit is 1, it changes her clothes to the scheduled default, otherwise it does not. 
     # If Lights is 1, it removes the blackout screen, otherwise it does not. 
     show blackscreen onlayer black 
@@ -429,7 +429,9 @@ label Wait (Outfit = 1, Lights = 1, TempSEXP=TotalSEXP, BO=[]):
                 $ Player.Spunk = 0      
                 $ Player.Rep = 0 if Player.Rep < 0 else Player.Rep 
                 $ Player.Rep += 10 if Player.Rep < 800 else 0
-                $ Player.Rep = 1000 if Player.Rep > 1000 else Player.Rep     
+                $ Player.Rep = 1000 if Player.Rep > 1000 else Player.Rep 
+                
+                $ TotalSEXP = 0 #zeros out so that next bit and add to it
                 
                 #Clearing colognes
                 if "mandrill" in Player.Traits:  
@@ -444,7 +446,7 @@ label Wait (Outfit = 1, Lights = 1, TempSEXP=TotalSEXP, BO=[]):
                 $ BO = TotalGirls[:]                
                 while BO:
                         #loops through and makes choices. 
-                        if BO[0].Loc == "hold" and BO[0] in ActiveGirls:
+                        if BO[0] in ActiveGirls and BO[0].Loc != bg_current:
                                 $ BO[0].Loc = BO[0].Home      
                         if BO[0].Todo:
                                 call Todo(BO[0])
@@ -472,6 +474,7 @@ label Wait (Outfit = 1, Lights = 1, TempSEXP=TotalSEXP, BO=[]):
                         $ BO[0].Rep += 10 if BO[0].Rep < 800 else 0
                         $ BO[0].Rep = 1000 if BO[0].Rep > 1000 else BO[0].Rep 
                         $ BO[0].Lust -= 5 if BO[0].Lust >= 50 else 0
+                        $ TotalSEXP += BO[0].SEXP #tabulates total based on combined score
                         
                         if BO[0].SEXP >= 15:
                                 #raises thirst if you've had sex before
@@ -484,7 +487,6 @@ label Wait (Outfit = 1, Lights = 1, TempSEXP=TotalSEXP, BO=[]):
                                     
                                 $ BO[0].Thirst -= 5 if BO[0].Break[0] else 0
                                 $ BO[0].Thirst += 1 if BO[0].Lust >= 50 else 0 
-                                $ TempSEXP += BO[0].SEXP
                         
                         if "gonnafap" in BO[0].DailyActions and BO[0].Loc != bg_current:
                                 #if it's morning and she wanted to fap yesterday. . .
@@ -653,7 +655,6 @@ label Wait (Outfit = 1, Lights = 1, TempSEXP=TotalSEXP, BO=[]):
                     $ BO.remove(BO[0])
                 
     call LesCheck #checks to see if the girls hook up with each other. . . 
-    $ TotalSEXP = TempSEXP
     #end wait items: 
     
     call Checkout
@@ -723,11 +724,14 @@ label Girls_Schedule(Girls = [], Clothes = 1, Location = 1, LocTemp = 0):
                         elif Girls[0] in Party or Girls[0].Loc == "hold":
                                 pass
                         else:
-                                $ Girls[0].Loc = Girls[0].Schedule[Weekday][Time_Count]
+                                $ Girls[0].Loc = Girls[0].Schedule[Weekday][Time_Count]                        
                                                                 
                         if Girls[0].Loc != LocTemp and Girls[0] not in Party:  
                                 #if she moved
-                                if LocTemp == bg_current:                         
+                                if ApprovalCheck(Girls[0], 1200) and Girls[0].Loc not in ("bg classroom","bg dangerroom"):
+                                        # if she's contented, then she just sticks around
+                                        $ Girls[0].Loc = LocTemp                                        
+                                elif LocTemp == bg_current:                         
                                         #If she was where you were, but left
                                         $ Girls[0].RecentActions.append("leaving") 
                                 elif Girls[0].Loc == bg_current: #If she's showed up
@@ -815,7 +819,7 @@ label EventCalls(EGirls=[]):
                     #Disables events when it's too early in the game or the turn is about to end 
                     return
                                         
-        #Activates Kitty meet                
+    #Activates Kitty meet                
         if KittyX in ActiveGirls:
                 if "Kate" not in KittyX.Names and KittyX.Inbt >= 500 and KittyX.Loc == bg_current:
                         #She calls herself Kate now.
@@ -826,7 +830,7 @@ label EventCalls(EGirls=[]):
                         jump KittyMeet
                         return
         
-        #Activates Laura meet                      
+    #Activates Laura meet                      
         if LauraX in ActiveGirls:
                     pass
         elif "met" not in LauraX.History and "traveling" in Player.RecentActions:
@@ -841,7 +845,7 @@ label EventCalls(EGirls=[]):
                                     call Laura_Dressup
                                     return
             
-        #Activates Emma meet and class stuff                       
+    #Activates Emma meet and class stuff                       
         if EmmaX in ActiveGirls:
                 if bg_current == "bg classroom" and Current_Time == "Evening" and Weekday < 5:
                         #If you've met Emma, it's evening on a school night                    
@@ -868,21 +872,21 @@ label EventCalls(EGirls=[]):
                         jump EmmaMeet
                         return   
            
-        #activates if you haven't done an addiction event today 
+    #activates if you haven't done an addiction event today 
         call AddictCheck            
-                                    
-        #Activates if any girl caught you cheating
+                                 
+    #This scene has Girl A asks Girl B off camera if she wants to have a poly Relationship with you    
+        call ShareCheck
+        
+    #Activates if any girl caught you cheating
         #checks to see if any of the girls noticed you cheating on them
         #returns if not
         call CheatCheck
-                                        
-        #This scene has Girl A asks Girl B off camera if she wants to have a poly Relationship with you    
-        call ShareCheck
-        
-        #checks to see if a girl wants to jump you. . .
+                                 
+    #checks to see if a girl wants to jump you. . .
         call JumperCheck
               
-        #Checks to see if any girls want to fap. 
+    #Checks to see if any girls want to fap. 
         #If they have "wannafap" in their daily, and "nofap" in their traits, and are not in the room, they will ask you
         #otherwise, they will automatically fap. If you meet them after this, they will be fapping, 
         #if you keep them busy, they will do it overnight
@@ -894,23 +898,26 @@ label EventCalls(EGirls=[]):
                     if "wannafap" in EGirls[0].DailyActions:
                             #if she's wants to fap and is not in the room with you                         
                             call CalltoFap(EGirls[0]) #checks to see if she's allowed
+                            if not EGirls:
+                                    return
                     $ EGirls.remove(EGirls[0])
         #end fap call check
         
+    #locked door check
         if "locked" in Player.Traits:
                 #exits if the door is locked, but maybe open this up a bit later. 
                 return
                 
-        #Start relationship checks
+    #Start relationship checks
         $ EGirls = ActiveGirls[:]    
         $ renpy.random.shuffle(EGirls)
         #fills list and then randomly shuffles it. 
         while EGirls:
-                if "relationship" not in EGirls[0].DailyActions and "angry" not in EGirls[0].DailyActions:
+                if "relationship" not in EGirls[0].DailyActions:
                         if "stoodup" in EGirls[0].Traits: #you stood her up
                                         call Date_Stood_Up(EGirls[0])
                                         return  
-                        if EGirls[0].Break[0]:
+                        if EGirls[0].Break[0] or "angry" in EGirls[0].DailyActions:
                                         #skip all this if you're broken up
                                         pass
                         elif not EGirls[0].Event[0] and EGirls[0].Sleep >= 5:               
@@ -1020,9 +1027,7 @@ label QuickEvents(EGirls=[]):
                         #if Girl is not around
                         if EGirls[0].Loc == "bg showerroom" and "showered" in EGirls[0].DailyActions:
                                 #if she's recently showered and still in the shower, send her elsewhere
-                                call Girls_Schedule([EGirls[0]])
-                                $ EGirls[0].OutfitChange()
-                                call Girls_Location
+                                $ EGirls[0].Loc = EGirls[0].Schedule[Weekday][Time_Count]  
                                 $ EGirls[0].OutfitChange()
                 #End girl's Quick Events  
                 $ EGirls.remove(EGirls[0])      
@@ -1263,7 +1268,65 @@ label Hanks_Lab(Line=0):
                                     call LastNamer                         
                                     $ EmmaX.Petnames.append(_return)
                             "That should do it, your name has been updated and an email has been sent out to everyne on campus about the change."
-                        
+                "Red Button":
+                            if not Player.Harem:
+                                "No harem"
+                            elif len(Player.Harem) == 4:
+                                "[Player.Harem[0].Tag],[Player.Harem[1].Tag],[Player.Harem[2].Tag],[Player.Harem[3].Tag]"
+                            elif len(Player.Harem) == 3:
+                                "[Player.Harem[0].Tag],[Player.Harem[1].Tag],[Player.Harem[2].Tag]"
+                            elif len(Player.Harem) == 2:
+                                "[Player.Harem[0].Tag],[Player.Harem[1].Tag]"
+                            else:
+                                "[Player.Harem[0].Tag]"            
+                "Blue Button":
+                            $ Count = len(ActiveGirls)
+                            "[Count]"
+                            if len(ActiveGirls) == 8:
+                                "A-[ActiveGirls[0].Tag],[ActiveGirls[1].Tag],[ActiveGirls[2].Tag],[ActiveGirls[3].Tag]"
+                                "B-[ActiveGirls[4].Tag],[ActiveGirls[5].Tag],[ActiveGirls[6].Tag],[ActiveGirls[7].Tag]"
+                            elif len(ActiveGirls) == 7:
+                                "A-[ActiveGirls[0].Tag],[ActiveGirls[1].Tag],[ActiveGirls[2].Tag],[ActiveGirls[3].Tag]"
+                                "B-[ActiveGirls[4].Tag],[ActiveGirls[5].Tag],[ActiveGirls[6].Tag]"
+                            elif len(ActiveGirls) == 6:
+                                "A-[ActiveGirls[0].Tag],[ActiveGirls[1].Tag],[ActiveGirls[2].Tag],[ActiveGirls[3].Tag]"
+                                "B-[ActiveGirls[4].Tag],[ActiveGirls[5].Tag]"
+                            elif len(ActiveGirls) == 5:
+                                "A-[ActiveGirls[0].Tag],[ActiveGirls[1].Tag],[ActiveGirls[2].Tag],[ActiveGirls[3].Tag]"
+                                "B-[ActiveGirls[4].Tag]"
+                            elif len(ActiveGirls) == 4:
+                                "[ActiveGirls[0].Tag],[ActiveGirls[1].Tag],[ActiveGirls[2].Tag],[ActiveGirls[3].Tag]"
+                            elif len(ActiveGirls) == 3:
+                                "[ActiveGirls[0].Tag],[ActiveGirls[1].Tag],[ActiveGirls[2].Tag]"
+                            elif len(ActiveGirls) == 2:
+                                "[ActiveGirls[0].Tag],[ActiveGirls[1].Tag]"
+                            else:
+                                "[ActiveGirls[0].Tag]"    
+                            $ Count = 0                
+                "Yellow Button":
+                            $ Count = len(TotalGirls)
+                            "[Count]"
+                            if len(TotalGirls) == 8:
+                                "A-[TotalGirls[0].Tag],[TotalGirls[1].Tag],[TotalGirls[2].Tag],[TotalGirls[3].Tag]"
+                                "B-[TotalGirls[4].Tag],[TotalGirls[5].Tag],[TotalGirls[6].Tag],[TotalGirls[7].Tag]"
+                            elif len(TotalGirls) == 7:
+                                "A-[TotalGirls[0].Tag],[TotalGirls[1].Tag],[TotalGirls[2].Tag],[TotalGirls[3].Tag]"
+                                "B-[TotalGirls[4].Tag],[TotalGirls[5].Tag],[TotalGirls[6].Tag]"
+                            elif len(TotalGirls) == 6:
+                                "A-[TotalGirls[0].Tag],[TotalGirls[1].Tag],[TotalGirls[2].Tag],[TotalGirls[3].Tag]"
+                                "B-[TotalGirls[4].Tag],[TotalGirls[5].Tag]"
+                            elif len(TotalGirls) == 5:
+                                "A-[TotalGirls[0].Tag],[TotalGirls[1].Tag],[TotalGirls[2].Tag],[TotalGirls[3].Tag]"
+                                "B-[TotalGirls[4].Tag]"
+                            elif len(TotalGirls) == 4:
+                                "[TotalGirls[0].Tag],[TotalGirls[1].Tag],[TotalGirls[2].Tag],[TotalGirls[3].Tag]"
+                            elif len(TotalGirls) == 3:
+                                "[TotalGirls[0].Tag],[TotalGirls[1].Tag],[TotalGirls[2].Tag]"
+                            elif len(TotalGirls) == 2:
+                                "[TotalGirls[0].Tag],[TotalGirls[1].Tag]"
+                            else:
+                                "[TotalGirls[0].Tag]"    
+                            $ Count = 0       
                 "Leave.":
                             return
         
@@ -1640,21 +1703,20 @@ label Girls_Location(GirlsNum = 0, Change=0, BOptions=[]):
         # the girl in questions was someplace else, and just showed up here on their own.
         
         $ BOptions = TotalGirls[:]  
+        $ renpy.random.shuffle(BOptions)
         while BOptions:        
                 #cycles through each girl possible, adds them to the local area if possible
                 if "leaving" in BOptions[0].RecentActions:
                         if "sleepover" in BOptions[0].Traits:
                                 $ BOptions[0].DrainWord("sleepover",0,0,1)  #remove from Traits
                         call expression BOptions[0].Tag + "_Leave" #call Rogue_Leave
-                        #if BOptions[0] in Adjacent and BOptions[0].Loc != "bg classroom":
-                                #$ Adjacent.remove(BOptions[0])
                         if BOptions[0].Loc != bg_current:                            
                                 if BOptions[0] in Present:
                                         $ Present.remove(BOptions[0])
                                 $ Change = 1
-                                $ GirlsNum += 1     
+                        $ GirlsNum += 1     
                 #if Girl was in Nearby, but was moved to a new location
-                if BOptions[0] in Nearby and BOptions[0].Loc != bg_current and BOptions[0].Loc != "nearby":
+                if BOptions[0] in Nearby and BOptions[0].Loc != "nearby": #and BOptions[0].Loc != bg_current 
                                 $ Nearby.remove(BOptions[0])
                 $ BOptions.remove(BOptions[0]) 
                 
@@ -2255,7 +2317,7 @@ label Gym_Clothes(Mode = 0, Girl = [], GirlsNum = 0, BO=[]): #checked each time 
                 $ BO = TotalGirls[:]          
         while BO: #or Mode == "exit"?
                 #while there are still girls to do or the Mode is exit. . .
-                if BO[0].Loc != "bg dangerroom" or Mode == "change":  
+                if BO[0].Loc != "bg dangerroom" or Mode == "change" or "leaving" in BO[0].RecentActions:  
                         #If the girl has left the gym or was told to change back
                         if Mode == "exit" and "leaving" not in BO[0].RecentActions:
                                 #this means she will only change into street clothes if leaving
@@ -2389,7 +2451,7 @@ label Gym_Clothes(Mode = 0, Girl = [], GirlsNum = 0, BO=[]): #checked each time 
 # End Gym clothes / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /        
 
 # Start Present Check / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / 
-label Present_Check(BO=[]):
+label Present_Check(Hold=1,BO=[]):
         # Culls parties down to 2 max
         # call Present_Check(1) will _return positive if the room is filled with the current inhabitants
         # call Present Check will cull inhabitants of the room down to zero
@@ -2415,22 +2477,38 @@ label Present_Check(BO=[]):
             
         $ renpy.random.shuffle(Present) #Randomizes pool
              
-        if len(Party) >= 1:
-            #adds the first party member to Present if it exists
-            $ Present.append(Party[0]) 
         if len(Party) == 2:
-            #adds the second party member if to Present it exists
-            $ Present.append(Party[1]) 
+                #adds the second party member if to Present it exists
+                if Party[1] in TotalGirls:
+                        $ Present.append(Party[1]) 
+                else:
+                        $ Party.remove(Party[1])
+        if len(Party) >= 1:
+                #adds the first party member to Present if it exists
+                if Party[0] in TotalGirls:
+                        $ Present.append(Party[0]) 
+                else:
+                        $ Party.remove(Party[0])
         
         while len(Present) > 2:
                 #culls the Present list down to two items (or less if the party is full)
                 #Removes the rest
-                call Remove_Girl(Present[0],Hold=1) #Moves girls to Nearby if that's an option. 
+                call Remove_Girl(Present[0],Hold=Hold) #Moves girls to Nearby if that's an option. 
                 $ Present.remove(Present[0]) 
                            
         if Present and Ch_Focus not in Present:
                 $ renpy.random.shuffle(Present) 
-                call Shift_Focus(Present[0])          
+                call Shift_Focus(Present[0]) 
+                               
+        $ BO = Present[:]  
+        while BO:        
+                #cycles through each girl possible, removes them from NEarby if they were there.
+                if BO[0] in Nearby:
+                                $ Nearby.remove(BO[0])  
+                if BO[0].Loc == "nearby":
+                                $ BO[0].Loc = bg_current 
+                $ BO.remove(BO[0])
+                
         return
     
 # End Present Check / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / 
@@ -2672,8 +2750,8 @@ label CheckTaboo(Girl=0,Taboo_Check=0,Girl2=[]):
                 #compares the first girl to each of the others. 
                 if Girl2[0] != Girl:
                         #loops through the girls in an inner loop if they are not the same 
-                        if Girl.Loc == Girl2[0].Loc and Girl.GirlLikeCheck(Girl2[0]) <= 800 and not (Girl in Player.Harem and Girl2[0] in Player.Harem):
-                                #if either she likes the second girl, or both are in the harem, skip
+                        if Girl.Loc == Girl2[0].Loc and Girl.GirlLikeCheck(Girl2[0]) <= 700 and not (Girl in Player.Harem and Girl2[0] in Player.Harem):
+                                #if either she likes the second girl, or both are in the harem, skip                                
                                 $ Girl.Taboo = 20
                 $ Girl2.remove(Girl2[0])
                 
@@ -2827,10 +2905,10 @@ label Shop:
                         $ Player.Cash -= 50
                     else:
                         "You don't have enough for that."   
-                "Buy stockings and garterbelt for $100." if "stockings and garterbelt" not in EmmaX.Inventory and "Emma stockings and garterbelt" not in Player.Inventory and ApprovalCheck(EmmaX, 1500):          
+                "Buy stockings and garterbelt for $100." if "stockings and garterbelt" not in EmmaX.Inventory and "stockings and garterbelt" not in Player.Inventory and ApprovalCheck(EmmaX, 1500):          
                     if Player.Cash >= 100:
                         "You purchase the stockings, these will look nice on [EmmaX.Name]."             
-                        $ Player.Inventory.append("Emma stockings and garterbelt")
+                        $ Player.Inventory.append("stockings and garterbelt")
                         $ Player.Cash -= 100
                     else:
                         "You don't have enough for that."   
@@ -3027,7 +3105,7 @@ label Set_The_Scene(Chr = 1, Entry = 0, Dress = 1, TrigReset = 1, Quiet=0,BO=[])
         # If Entry, then show the "entry" version of a room, such as a closed door, does not display characters
         # If Dress, then check whether the character is underdressed when displaying her
         # Trigreset resets triggers
-        # if Quiet, no fade to black
+        # if Quiet, no fade to black                
         
         if not Quiet:
             show blackscreen onlayer black 
@@ -3042,9 +3120,18 @@ label Set_The_Scene(Chr = 1, Entry = 0, Dress = 1, TrigReset = 1, Quiet=0,BO=[])
                 show NightMask onlayer nightmask
         else:          
                 hide NightMask onlayer nightmask  
-        
+                         
+        if TrigReset:
+                # resets triggers
+                $ Trigger = 0    
+                $ Trigger2 = 0 if Trigger2 != "jackin" else "jackin"
+                $ Trigger3 = 0
+                $ Trigger4 = 0
+                $ Trigger5 = 0
+                $ TrigReset = 0
+                        
         if Chr:
-                call Present_Check  #culls out Party to 2, 
+                call Present_Check  #culls out Party to 2,
                 #sets location to bg_current, removes extra girls, sets Focus to a girl in the room   
                 
                 $ BO = TotalGirls[:]   
@@ -3058,14 +3145,13 @@ label Set_The_Scene(Chr = 1, Entry = 0, Dress = 1, TrigReset = 1, Quiet=0,BO=[])
                                 #moves all other girls to Stage Right, 75 layer
                                 $ BO[0].SpriteLoc = StageRight 
                                 $ BO[0].Layer = 75                                
-                        call Display_Girl(BO[0],Dress,TrigReset)
+                        call Display_Girl(BO[0],Dress,TrigReset) 
                         $ BO.remove(BO[0])      
                 # set and display primary girl
                 if Ch_Focus.Loc == bg_current: 
                         $ Ch_Focus.SpriteLoc = StageCenter
                         $ Ch_Focus.Layer = 100
-                        call Display_Girl(Ch_Focus,Dress,TrigReset)
-                        #call Display_Emma(Dress,TrigReset)
+                        call Display_Girl(Ch_Focus,Dress,TrigReset) 
                     
                 if bg_current == "bg study" and Current_Time != "Night":   
                         show Professor at SpriteLoc(StageLeft) zorder 25 
@@ -3101,21 +3187,24 @@ label Shift_Focus(Chr = RogueX, Second = 0,BO=[]):
         #When used like Shift_Focus(KittyX), changes the focus character and relative default positions
         if Chr not in TotalGirls:
                 "Tell Oni [Chr]"
-        if Ch_Focus == Partner:
-                #if somehow the partner and chosen girl are the same. . .     
-                $ BO = TotalGirls[:]                
+                $ RogueX.Gibberish = 0
+        if Chr == Ch_Focus == Partner:
+                #if somehow the partner and chosen girl are the same. . .    
+                $ BO = TotalGirls[:]  
+                $ BO.remove(Partner)
                 while BO:
                         #loops through and makes choices.                
-                        if Partner != BO[0] and BO[0].Loc == bg_current:
+                        if BO[0].Loc == bg_current:
                                 $ Partner = BO[0]
                         $ BO.remove(BO[0])
                 #if anyone else is in the room, make her the partner. Do I want this? 
         if Chr.Loc == bg_current:
                 #If she is where you're at. . .                  
-                $ BO = TotalGirls[:]                
+                $ BO = TotalGirls[:]   
+                $ BO.remove(Chr)             
                 while BO:
                         #loops through and makes choices.    
-                        if Chr != BO[0] and BO[0].Loc == bg_current:
+                        if BO[0].Loc == bg_current:
                                 #if other girl is in the room, shift her to second position
                                 $ BO[0].SpriteLoc = StageRight
                                 $ BO[0].Layer = 75
@@ -3127,10 +3216,11 @@ label Shift_Focus(Chr = RogueX, Second = 0,BO=[]):
         if Ch_Focus == Chr: 
                 #If Girl was already the focal character, return
                 pass
-        elif Second:
+        elif Second and Second != Chr:
+                #if a deliberate partner was offered to the call, use it
                 $ Partner = Second
         elif Partner == Chr: 
-                #If Girl was the Partner in a scene, make the existing focal character the Partner
+                #If Chr was the Partner in a scene, make the existing focal character the Partner
                 $ Partner = Ch_Focus
         $ Ch_Focus = Chr
         $ renpy.restart_interaction() 
@@ -3144,19 +3234,12 @@ transform SpriteLoc(Loc = StageRight, LocY = 50):
         
 label Display_Girl(Chr=0,Dress = 1, TrigReset = 1, DLoc = 0, YLoc=50):
                 # If Dress, then check whether the character is underdressed when displaying her
-                # call Display_Girl(RogueX)
+                # call Display_Girl(RogueX,0,0)
                 if Chr not in TotalGirls:
                         "Tell Oni that in Display_Girl, Chr is [Chr]"
-                if Taboo and Dress: #If not in the showers, get dressed and dry off        
-                        $ Chr.OutfitChange(Changed=1)
-                        $ Chr.Wet = 0
-                          
-                if Chr.Loc != "bg showerroom" and Chr.Loc != "bg pool":
-                        $ Chr.Water = 0
-                        
-                if Chr.Name not in Party and Chr.Loc != bg_current: 
-                        # If girl isn't there, put her away    
-                        $ Chr.OutfitChange(Changed=1)
+                
+                if Chr not in Party and Chr.Loc != bg_current: 
+                        # If girl isn't there, put her away 
                         if Chr == RogueX:
                                 hide Rogue_Sprite
                         elif Chr == KittyX:
@@ -3165,9 +3248,21 @@ label Display_Girl(Chr=0,Dress = 1, TrigReset = 1, DLoc = 0, YLoc=50):
                                 hide Emma_Sprite
                         elif Chr == LauraX:
                                 hide Laura_Sprite
-                        call expression Chr.Tag + "_Hide"
+                        call expression Chr.Tag + "_Hide"   
+                        $ Chr.OutfitChange(Changed=1)
                         return
-                            
+                        
+                if Taboo and Dress: #If not in the showers, get dressed and dry off        
+                        $ Chr.OutfitChange(Changed=1)
+                        $ Chr.Wet = 0
+                elif Dress and Chr.Loc != "bg dangerroom" and Chr.OutfitDay != "gym":
+                        #if she's not in the gym and arw wearing gym clothes. . .
+                        $ Chr.Outfit = Chr.OutfitDay      
+                        $ Chr.OutfitChange(Changed=1)
+                          
+                if Chr.Loc != "bg showerroom" and Chr.Loc != "bg pool":
+                        $ Chr.Water = 0
+                                                    
                 if TrigReset:
                         # resets triggers
                         $ Trigger = 0    
@@ -3177,7 +3272,7 @@ label Display_Girl(Chr=0,Dress = 1, TrigReset = 1, DLoc = 0, YLoc=50):
                         $ Trigger5 = 0
                 
                 if Partner == Chr:
-                        $ DLoc = StageFarRight #Moves Laura over if she's secondary
+                        $ DLoc = StageRight #Moves Girl over if she's secondary
                 
                 if DLoc: #if sent a pre-location, use that, otherwise, accept the existing one. 
                         $ Chr.SpriteLoc = DLoc
@@ -3191,76 +3286,25 @@ label Display_Girl(Chr=0,Dress = 1, TrigReset = 1, DLoc = 0, YLoc=50):
                 
                 if Dress:   
                         #If in public, check to see if clothes are too sexy, and change them if necessary
-                        #call expression Chr.Tag + "_OutfitShame"
                         call OutfitShame(Chr)
-                
-                if Chr == LauraX:
-                        $ Chr.Claws = 0 # Resets her claws
-                                
+                                                
                 if bg_current == "bg movies" or bg_current == "bg restaurant":
                         #shifts them downward if on a date
                         $ YLoc = 250
-                        
 
-                #Display Girl                  
-#                $ Char_Temp = Chr.Name + "_Sprite" 
-#                if not renpy.showing("Char_Temp"):                    
-#                        "CX" #diagnostic
+                #Display Girl              
                 if Chr == RogueX:
-                    if not renpy.showing("Rogue_Sprite"): 
-                        show Rogue_Sprite at SpriteLoc(1000,YLoc) zorder Chr.Layer: # Chr.Layer:
-                                offset (0,0)
-                                anchor (0.5, 0.0)  
-                                pos (1000,YLoc)  
-                elif Chr == KittyX:
-                    if not renpy.showing("Kitty_Sprite"): 
-                        show Kitty_Sprite at SpriteLoc(1000,YLoc) zorder Chr.Layer: # Chr.Layer:   
-                                offset (0,0)
-                                anchor (0.5, 0.0)  
-                                pos (1000,YLoc)  
-                elif Chr == EmmaX:
-                    if not renpy.showing("Emma_Sprite"): 
-                        show Emma_Sprite at SpriteLoc(1000,YLoc) zorder Chr.Layer: # Chr.Layer:    
-                                offset (0,0)
-                                anchor (0.5, 0.0)  
-                                pos (1000,YLoc)  
-                elif Chr == LauraX:
-                    if not renpy.showing("Laura_Sprite"): 
-                        show Laura_Sprite at SpriteLoc(1000,YLoc) zorder Chr.Layer: # Chr.Layer:
-                                offset (0,0)
-                                anchor (0.5, 0.0)  
-                                pos (1000,YLoc)  
-                #Then                
-                if Chr == RogueX:
+                        if not renpy.showing("Rogue_Sprite"): 
+                            show Rogue_Sprite at SpriteLoc(1000,YLoc) zorder Chr.Layer:
+                                    offset (0,0)
+                                    anchor (0.5, 0.0)  
+                                    pos (1000,YLoc)  
                         show Rogue_Sprite zorder Chr.Layer: # Chr.Layer:
                                 easeout .5 alpha 1
                                 easeout .5 zoom 1
                                 offset (0,0)
                                 anchor (0.5, 0.0)  
-                                easeout .5 pos (DLoc,YLoc)  
-                elif Chr == KittyX:
-                        show Kitty_Sprite zorder Chr.Layer: # Chr.Layer:
-                                easeout .5 alpha 1
-                                easeout .5 zoom 1
-                                offset (0,0)
-                                anchor (0.5, 0.0)  
-                                easeout .5 pos (DLoc,YLoc)  
-                elif Chr == EmmaX:
-                        show Emma_Sprite zorder Chr.Layer: # Chr.Layer:
-                                easeout .5 alpha 1
-                                easeout .5 zoom 1
-                                offset (0,0)
-                                anchor (0.5, 0.0)  
-                                easeout .5 pos (DLoc,YLoc)  
-                elif Chr == LauraX:
-                        show Laura_Sprite zorder Chr.Layer: # Chr.Layer:
-                                easeout .5 alpha 1
-                                easeout .5 zoom 1
-                                offset (0,0)
-                                anchor (0.5, 0.0)  
-                                easeout .5 pos (DLoc,YLoc) 
-                #Then                
-                if Chr == RogueX:
+                                easeout .5 pos (DLoc,YLoc)
                         show Rogue_Sprite: # Chr.Layer:
                                 alpha 1
                                 zoom 1
@@ -3268,6 +3312,17 @@ label Display_Girl(Chr=0,Dress = 1, TrigReset = 1, DLoc = 0, YLoc=50):
                                 anchor (0.5, 0.0)  
                                 pos (DLoc,YLoc)  
                 elif Chr == KittyX:
+                        if not renpy.showing("Kitty_Sprite"): 
+                            show Kitty_Sprite at SpriteLoc(1000,YLoc) zorder Chr.Layer:   
+                                    offset (0,0)
+                                    anchor (0.5, 0.0)  
+                                    pos (1000,YLoc)  
+                        show Kitty_Sprite zorder Chr.Layer: # Chr.Layer:
+                                easeout .5 alpha 1
+                                easeout .5 zoom 1
+                                offset (0,0)
+                                anchor (0.5, 0.0)  
+                                easeout .5 pos (DLoc,YLoc) 
                         show Kitty_Sprite: # Chr.Layer:
                                 alpha 1
                                 zoom 1
@@ -3275,6 +3330,17 @@ label Display_Girl(Chr=0,Dress = 1, TrigReset = 1, DLoc = 0, YLoc=50):
                                 anchor (0.5, 0.0)  
                                 pos (DLoc,YLoc)  
                 elif Chr == EmmaX:
+                        if not renpy.showing("Emma_Sprite"): 
+                            show Emma_Sprite at SpriteLoc(1000,YLoc) zorder Chr.Layer:   
+                                    offset (0,0)
+                                    anchor (0.5, 0.0)  
+                                    pos (1000,YLoc)  
+                        show Emma_Sprite zorder Chr.Layer: # Chr.Layer:
+                                easeout .5 alpha 1
+                                easeout .5 zoom 1
+                                offset (0,0)
+                                anchor (0.5, 0.0)  
+                                easeout .5 pos (DLoc,YLoc) 
                         show Emma_Sprite: # Chr.Layer:
                                 alpha 1
                                 zoom 1
@@ -3282,13 +3348,31 @@ label Display_Girl(Chr=0,Dress = 1, TrigReset = 1, DLoc = 0, YLoc=50):
                                 anchor (0.5, 0.0)  
                                 pos (DLoc,YLoc)  
                 elif Chr == LauraX:
+                        $ Chr.Claws = 0 # Resets her claws
+                        if not renpy.showing("Laura_Sprite"): 
+                            show Laura_Sprite at SpriteLoc(1000,YLoc) zorder Chr.Layer:
+                                    offset (0,0)
+                                    anchor (0.5, 0.0)  
+                                    pos (1000,YLoc)  
+                        show Laura_Sprite zorder Chr.Layer: # Chr.Layer:
+                                easeout .5 alpha 1
+                                easeout .5 zoom 1
+                                offset (0,0)
+                                anchor (0.5, 0.0)  
+                                easeout .5 pos (DLoc,YLoc) 
                         show Laura_Sprite: # Chr.Layer:
                                 alpha 1
                                 zoom 1
                                 offset (0,0)
                                 anchor (0.5, 0.0)  
                                 pos (DLoc,YLoc) 
-                                
+                #End show Chr     
+                
+                return
+                            
+#                $ Char_Temp = Chr.Name + "_Sprite" 
+#                if not renpy.showing("Char_Temp"):                    
+#                        "CX" #diagnostic    
 #                show "Chr.Name + '_Sprite'": 
 ##                show expression Chr.Tag + "_Sprite": 
 #                            alpha 1
@@ -3302,10 +3386,8 @@ label Display_Girl(Chr=0,Dress = 1, TrigReset = 1, DLoc = 0, YLoc=50):
 #                            zoom 1
 #                            offset (0,0)
 #                            anchor (0.5, 0.0)  
-#                            pos (DLoc,YLoc)    
-                            
-                return
-           
+#                            pos (DLoc,YLoc)
+
 # End Display Girls / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /     
 
 image Punchout:
@@ -3402,7 +3484,7 @@ label Sex_Menu_Threesome(Girl=0):
                         call Girls_Noticed(Girl,RogueX,1)
                         if Girl.Loc != bg_current:
                             # if the lead ran away
-                            ch_r "Oh, well. . . I'm still game. . ."
+                            ch_r "Oh, well. . . I'm still game. . ."                            
                             call Rogue_SexAct("switch")   
                         elif RogueX.Loc == bg_current:
                             ch_r "I s'pose I could lend a hand . ."
@@ -3453,11 +3535,12 @@ label Sex_Menu_Threesome(Girl=0):
                             ch_l "Hm, ok. . ."
                         else:
                             "She seems uncomfortable with this situation and leaves the room." 
-                            
-            "Switch lead girl" if Partner:
-                    call expression Partner.Tag + "_SexAct" pass ("switch") #call Rogue_SexAct("switch")                        
+                                            
             "Never mind [[something else]":
-                    pass
+                    pass        
+        if AloneCheck(Girl) and Girl.Taboo == 20:
+                $ Girl.Taboo = 0
+                $ Taboo = 0
         return
           
 label Partner_Like(Girl=0,Value=1,AltValue=1,Measure=800,Partner=Partner):
@@ -3566,7 +3649,7 @@ label GirlWaitUp(Local=0,Check=70,D20=0,Teach=0,BOA=[],BOB=[]):
 # Start Lesbian Jumping check / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
 label LesCheck(Girls=[],BO=[]):
-        #Checks if any girls will jump each other behind the scenes. . . 
+        #Called by Wait, Checks if any girls will jump each other behind the scenes. . . 
         # They will if they have over 500 Inbt and are thirsty
         
         if "three" not in EmmaX.History:  
@@ -3649,8 +3732,8 @@ label LesCheck(Girls=[],BO=[]):
         $ Girls[0].Statup("Lust", 60, 20) 
         $ Girls[1].Statup("Lust", 60, 20) 
         
-        $ Girl[0].Thirst -= 5
-        $ Girl[1].Thirst -= 5
+        $ Girls[0].Thirst -= 5
+        $ Girls[1].Thirst -= 5
         return
 # end Les_Check, checking to see if the girls jump each other / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / 
        
@@ -3688,14 +3771,18 @@ label HaremStatup(Girl=0,Check=1000,Value=0,Greater=0,BOA=[],BOB=[]):
        
 # Start Jumping check / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
-label JumperCheck(Girls=[]):
+label JumperCheck(Girls=[],BO=[]):
         #decides whether a girl wants to jump you unexpectedly
         if "nope" in Player.RecentActions or Party:
                 #if you refused sex. . .
                 return
         
         $ BO = ActiveGirls[:]                
-        while BO:            
+        while BO: 
+                if "les" in BO[0].RecentActions and ApprovalCheck(BO[0], 1600 - BO[0].SEXP, TabM=0):
+                        #if they might be into you joining their lesbian adventure. . .
+                        call Call_For_Les(BO[0])
+                    
                 if "locked" in Player.Traits and BO[0].Loc != bg_current:
                         #if the door's locked and she's not in the room, skip it
                         pass
@@ -3707,7 +3794,7 @@ label JumperCheck(Girls=[]):
                             if BO[0].Thirst >= 60:
                                     $ Girls.append(BO[0])      
                         if BO[0].Thirst >= 90:
-                                $ Girls.append(BO[0])   
+                                    $ Girls.append(BO[0])   
                 $ BO.remove(BO[0]) 
                  
         if not Girls:
@@ -3717,7 +3804,6 @@ label JumperCheck(Girls=[]):
             $ renpy.random.shuffle(Girls)                
             while len(Girls) >= 2 and Girls[0] == Girls[1]:
                     $ Girls.remove(Girls[1])    #removes duplicates
-                    #$ del Girls[1]     
             while len(Girls) > 2:
                     $ Girls.remove(Girls[2])    #removes any over 2
                     
@@ -3790,13 +3876,10 @@ label Jumped(Act=0):
         if bg_current in PersonalRooms:             
                 #Causes the girl to pull you out if she doesn't live in the room you're in  
                 if bg_current == "bg player":
-                        pass
-                elif Girls[0].Home != bg_current:
+                                pass
+                elif Girls[0].Home != bg_current and not (Partner and Partner.Home == bg_current):
+                                #if it's not the first girl's room, and also not the second's
                                 $ Act = "leave" 
-                elif len(Girls) > 1 and Girls[1].Home != bg_current:
-                                $ Act = "leave"   
-#                if bg_current == "bg rogue" and "Rogue" not in Girls:
-#                        $ Act = "leave"    
         
         call Shift_Focus(Girls[0])
         call Set_The_Scene
@@ -3826,21 +3909,22 @@ label Jumped(Act=0):
                         "[Partner.Name] also follows along behind you."
                 
                 $ bg_current = "bg player"                   
-                call CleartheRoom(Girls[0],1,1)                  
-                $ BO = Girls[:]                
-                while BO:
-                        $ BO[0].Loc = bg_current
-                        $ BO.remove(BO[0])            
-                call Set_The_Scene(Dress=0) 
+                call CleartheRoom(Girls[0],1,1)    
                         
                 call Taboo_Level #makes sure Taboo level is accurate                
         else:                     
-            if Partner:  
+            if Partner in TotalGirls:  
                     $ Girls[1].FaceChange("sly",1)                       
-                    "Suddenly, [Girls[0].Name] pulls you aside and [Partner] follows along."
+                    "Suddenly, [Girls[0].Name] pulls you aside and [Partner.Name] follows along."
             else:
                     "Suddenly, [Girls[0].Name] pulls you aside."
-        
+                      
+        $ BO = Girls[:]                
+        while BO:
+                $ BO[0].Loc = bg_current
+                $ BO.remove(BO[0])            
+        call Set_The_Scene(Dress=0) 
+                
         $ Girls[0].AddWord(1,"jumped","jumped",0,"jumped") #adds jumped to recent, daily, and history
         
         if Girls[0] == RogueX:
@@ -4291,7 +4375,7 @@ label Sex_Dialog(Primary=Ch_Focus,Secondary=0,TempFocus=0,PrimaryLust=0,Secondar
                         #if you're coercing her, it just reverts to the previous tier
                         $ renpy.pop_call() #negates call to Sex Dialog 
                         return
-                if Secondary:
+                if Secondary and Secondary.Loc == bg_current:
                         #if the first girl leaves, but there is another,  
                         $ Trigger = Secondary
                         $ Partner = 0
@@ -4791,62 +4875,62 @@ label Girl_First_Peen(Girl = 0, Silent = 0, Undress = 0, Second = 0, React = 0):
             else:
                     "You whip your cock out."
             $ Player.AddWord(1,"cockout") 
-            if bg_current != "bg showerroom" and not ApprovalCheck(Girl, 800) and not ApprovalCheck(Girl, 500, "I"):
-                if Girl == EmmaX and "detention" in Girl.RecentActions or "classcaught" in Girl.RecentActions:  
-                    #special exceptions for detention and classcaught events
-                    $ Girl.FaceChange("confused", Eyes="down")  
-                    ch_e "Mmm?"                    
-                    $ Girl.FaceChange("surprised", Eyes="squint") 
-                    if Girl.SeenPeen == 1: 
-                            $ Girl.Statup("Love", 30, 10) 
-                            $ Girl.Statup("Love", 90, 5)                
-                            $ Girl.Statup("Obed", 50, 20)
-                            $ Girl.Statup("Inbt", 60, 30)
-                    else:                         
-                            $ Girl.Statup("Love", 90, 2)                
-                            $ Girl.Statup("Obed", 50, 3)
-                            $ Girl.Statup("Inbt", 60, 5) 
-                    ch_e "Well I suppose I can make an exception in this case."
-                    $ React = 1 
-                else:
-                    $ Girl.FaceChange("surprised", 2) 
-                    if Girl == RogueX: 
-                            ch_r "What the hell?"
-                    elif Girl == KittyX:  
-                            ch_k "Huh?!"                  
-                    elif Girl == EmmaX:   
-                            $ Girl.Eyes = "down"
-                            ch_e "Mmm?"               
-                    elif Girl == LauraX:
-                            $ Girl.Eyes = "down"
-                            ch_l "Mmm?"
-                    $ Girl.FaceChange("angry", 1)  
-                    $ Girl.RecentActions.append("angry")
-                    $ Girl.DailyActions.append("angry")  
-                    $ React = 2
-                    if Girl.SeenPeen == 1: 
-                                $ Girl.Statup("Love", 90, -20)                
-                                $ Girl.Statup("Obed", 50, 30)
-                                $ Girl.Statup("Inbt", 60, 20)
-                    else:       
-                        #if this is the second time you've done this today. . .
+            if not React and bg_current != "bg showerroom" and not ApprovalCheck(Girl, 800) and not ApprovalCheck(Girl, 500, "I"):
+                    if Girl == EmmaX and "detention" in Girl.RecentActions or "classcaught" in Girl.RecentActions:  
+                        #special exceptions for detention and classcaught events
+                        $ Girl.FaceChange("confused", Eyes="down")  
+                        ch_e "Mmm?"                    
+                        $ Girl.FaceChange("surprised", Eyes="squint") 
+                        if Girl.SeenPeen == 1: 
+                                $ Girl.Statup("Love", 30, 10) 
+                                $ Girl.Statup("Love", 90, 5)                
+                                $ Girl.Statup("Obed", 50, 20)
+                                $ Girl.Statup("Inbt", 60, 30)
+                        else:                         
+                                $ Girl.Statup("Love", 90, 2)                
+                                $ Girl.Statup("Obed", 50, 3)
+                                $ Girl.Statup("Inbt", 60, 5) 
+                        ch_e "Well I suppose I can make an exception in this case."
+                        $ React = 1 
+                    else:
+                        $ Girl.FaceChange("surprised", 2) 
                         if Girl == RogueX: 
-                                ch_r "What is {i}wrong{/i} with you?"
-                        elif Girl == KittyX:               
-                                ch_k "Dude, seriously, you've got a problem!"    
-                        elif Girl == EmmaX:           
-                                ch_e "[Girl.Petname]! We are going to have to work through this. . . problem of yours."       
+                                ch_r "What the hell?"
+                        elif Girl == KittyX:  
+                                ch_k "Huh?!"                  
+                        elif Girl == EmmaX:   
+                                $ Girl.Eyes = "down"
+                                ch_e "Mmm?"               
                         elif Girl == LauraX:
-                                ch_l "Dude, not cool."
-                        if Girl.DailyActions.count("peen") >= 2:
-                                #if she's seen more than one peen today         
-                                $ Girl.Statup("Love", 90, -1)     
-                                $ Girl.Statup("Obed", 50, 1)
-                                $ Girl.Statup("Inbt", 60, 2)
-                        else:
-                                $ Girl.Statup("Love", 90, -5)                
-                                $ Girl.Statup("Obed", 50, 10)
-                                $ Girl.Statup("Inbt", 60, 10)  
+                                $ Girl.Eyes = "down"
+                                ch_l "Mmm?"
+                        $ Girl.FaceChange("angry", 1)  
+                        $ Girl.RecentActions.append("angry")
+                        $ Girl.DailyActions.append("angry")  
+                        $ React = 2
+                        if Girl.SeenPeen == 1: 
+                                    $ Girl.Statup("Love", 90, -20)                
+                                    $ Girl.Statup("Obed", 50, 30)
+                                    $ Girl.Statup("Inbt", 60, 20)
+                        else:       
+                            #if this is the second time you've done this today. . .
+                            if Girl == RogueX: 
+                                    ch_r "What is {i}wrong{/i} with you?"
+                            elif Girl == KittyX:               
+                                    ch_k "Dude, seriously, you've got a problem!"    
+                            elif Girl == EmmaX:           
+                                    ch_e "[Girl.Petname]! We are going to have to work through this. . . problem of yours."       
+                            elif Girl == LauraX:
+                                    ch_l "Dude, not cool."
+                            if Girl.DailyActions.count("peen") >= 2:
+                                    #if she's seen more than one peen today         
+                                    $ Girl.Statup("Love", 90, -1)     
+                                    $ Girl.Statup("Obed", 50, 1)
+                                    $ Girl.Statup("Inbt", 60, 2)
+                            else:
+                                    $ Girl.Statup("Love", 90, -5)                
+                                    $ Girl.Statup("Obed", 50, 10)
+                                    $ Girl.Statup("Inbt", 60, 10)  
             elif Taboo > 20 and (not ApprovalCheck(Girl, 1500) or Girl.SEXP < 10) and bg_current != "bg showerroom":
                         #if it's a semi-public space that isn't the showers, and she is not down with this. . .
                         $ Girl.FaceChange("surprised", 2)                     
@@ -5311,7 +5395,7 @@ label Girls_Noticed(Girl=Primary,Other=0,Silent=0,B=0,BO=[]):
                         $ Other = BO[0]
                         $ BO = [1]
                 $ BO.remove(BO[0])        
-        if not Other or Other == Girl:
+        if Other not in TotalGirls or Other == Girl:
                 return
         if "threesome" in Other.RecentActions:
                 return
@@ -5383,8 +5467,6 @@ label Girls_Noticed(Girl=Primary,Other=0,Silent=0,B=0,BO=[]):
                     $ Other.Statup("Lust", 90, 3)  
                     $ Other.AddWord(1,0,0,"poly " + Girl.Tag)
                     call Threeway_Set(Other,Mode="start",GirlB=Girl) 
-#                    call expression Other.Tag + "_Threeway_Set" pass (Mode="start",ActiveGirl=Girl) 
-    #                call Rogue_Threeway_Set(Mode="start",ActiveGirl=Girl) 
         elif ApprovalCheck(Other, 650, "O", TabM=2) and ApprovalCheck(Other, 450, "L", TabM=1) or ApprovalCheck(Other, 800, "O", TabM=2, Bonus = (B/3)): 
                     #if she likes you, but is very obedient
                     $ Other.FaceChange("sexy")
@@ -5394,8 +5476,7 @@ label Girls_Noticed(Girl=Primary,Other=0,Silent=0,B=0,BO=[]):
                     $ Other.Statup("Inbt", 90, 5)  
                     $ Other.Statup("Lust", 90, 2) 
                     $ Other.AddWord(1,0,0,"poly " + Girl.Tag)
-                    call Threeway_Set(Other,"watch",Mode="start",GirlB=Girl) 
-#                    call expression Other.Tag + "_Threeway_Set" pass ("watch",Mode="start",ActiveGirl=Girl)    
+                    call Threeway_Set(Other,"watch",Mode="start",GirlB=Girl)   
         elif ApprovalCheck(Other, 650, "I", TabM=2) and ApprovalCheck(Other, 450, "L", TabM=1) or ApprovalCheck(Other, 800, "I", TabM=2, Bonus = (B/3)):
                     #if she likes you, but is very uninhibited
                     $ Other.FaceChange("sexy")
@@ -5406,8 +5487,7 @@ label Girls_Noticed(Girl=Primary,Other=0,Silent=0,B=0,BO=[]):
                     $ Other.Statup("Inbt", 90, 2)     
                     $ Other.Statup("Lust", 90, 5)
                     $ Other.AddWord(1,0,0,"poly " + Girl.Tag)
-                    call Threeway_Set(Other,"watch",Mode="start",GirlB=Girl) 
-#                    call expression Other.Tag + "_Threeway_Set" pass ("watch",Mode="start",ActiveGirl=Girl)   
+                    call Threeway_Set(Other,"watch",Mode="start",GirlB=Girl)  
         elif ApprovalCheck(Other, 1500, TabM=2, Bonus = B):
                     $ Other.FaceChange("perplexed", 1)
                     if not Silent:
@@ -5424,7 +5504,6 @@ label Girls_Noticed(Girl=Primary,Other=0,Silent=0,B=0,BO=[]):
                         $ Other.Statup("Inbt", 90, 1) 
                     $ Other.Statup("Lust", 90, 5) 
                     call Threeway_Set(Other,"watch",Mode="start",GirlB=Girl) 
-#                    call expression Other.Tag + "_Threeway_Set" pass ("watch",Mode="start",ActiveGirl=Girl)   
         elif ApprovalCheck(Other, 650, "L", TabM=1) or ApprovalCheck(Other, 400, "O", TabM=2):
                     #if she likes you or is obedient, but not enough
                     $ Other.FaceChange("angry", 2)
@@ -5476,7 +5555,11 @@ label Girls_Noticed(Girl=Primary,Other=0,Silent=0,B=0,BO=[]):
                     if bg_current == Other.Home: #Kicks you out if in Rogue's room
                             $ Other.RecentActions.append("angry")
                             call GirlsAngry
-                    call Remove_Girl(Other)
+                    call Remove_Girl(Other)        
+        if AloneCheck(Girl) and Girl.Taboo == 20:
+                #if the second girl ran away, it removes the taboo factor she added.
+                $ Girl.Taboo = 0
+                $ Taboo = 0
         if Line:
             # This plays a line from a threesome action, if there is one. 
             "[Line]."
@@ -5605,7 +5688,7 @@ label SkipTo(Chr = Ch_Focus):
         elif Trigger == "titjob":
             call expression Chr.Tag + "_TJ_Cycle"
         elif Trigger == "kiss you":
-            call KissCycle(Primary)
+            call KissCycle(Chr)
         elif Trigger == "fondle breasts":
             call expression Chr.Tag + "_FB_Cycle"
         elif Trigger == "suck breasts":

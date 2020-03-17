@@ -1,6 +1,9 @@
 ﻿# Kitty_SexMenu //////////////////////////////////////////////////////////////////////
 label Kitty_SexAct(Act = 0):    
-        call Shift_Focus(KittyX)    
+        call Shift_Focus(KittyX)  
+        if AloneCheck(KittyX) and KittyX.Taboo == 20:
+                $ KittyX.Taboo = 0
+                $ Taboo = 0
         if Act == "SkipTo":
             $ renpy.pop_call() #causes it to skip past the Trigger Swap
             $ renpy.pop_call() #causes it to skip past the cycle you were in before
@@ -870,6 +873,7 @@ label Kitty_M_Interupted:
                                             $ Tempmod -= 10
                                             $ KittyX.Statup("Lust", 200, -5)
                         call Seen_First_Peen(KittyX,Partner) 
+                        ch_k "Hmm. . ."
                                     
                 #you haven't been jacking it                    
                 else:         

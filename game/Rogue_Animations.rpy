@@ -3814,6 +3814,7 @@ image PhoneScreen:
             "Ch_Focus.Loc == 'bg laura'", "bg_laura",
             "Ch_Focus.Loc == 'bg emma'", "bg_emma",
             "Ch_Focus.Loc == 'bg classroom'", "bg_class",
+            "Ch_Focus.Loc == 'bg teacher'", "bg_class",
             "True", "bg_shower", 
             ) 
         offset (-800,-300)
@@ -3827,7 +3828,9 @@ image PhoneScreen:
             "Ch_Focus.Tag == 'Laura'", "Laura_Sprite",
             "True", Null(),        
             ) 
+        pos (0,0)
         offset (290,50)
+        anchor (0.6,0)
         zoom 1.1
 
 

@@ -86,32 +86,32 @@ screen say(who, what, side_image=None, two_window=False, CountWords = 0): #Count
                           
                     text what id "what" color "#000000" font "CRIMFBRG.ttf" text_align 0.5
             
-            if who == RogueX.Name: #"Rogue":
-                    if RogueX.SpriteLoc == StageRight or RogueX.SpriteLoc == StageFarRight:
-                        add "arrow" rotate -90 xzoom -1 xpos 1.03 ypos -0.85                        
-                    elif RogueX.SpriteLoc == StageFarLeft:
+            if who == RogueX.Name: #"Rogue":                      
+                    if RogueX.Loc != bg_current or RogueX.SpriteLoc == StageFarLeft:
                         add "arrow" xalign 0.1 #xzoom -1
+                    elif RogueX.SpriteLoc == StageRight or RogueX.SpriteLoc == StageFarRight:
+                        add "arrow" rotate -90 xzoom -1 xpos 1.03 ypos -0.85  
                     else: #RogueX.SpriteLoc == StageCenter, Left, etc.:
                         add "arrow" xalign 0.8                        
-            elif who == KittyX.Name: 
-                    if KittyX.SpriteLoc == StageRight or KittyX.SpriteLoc == StageFarRight:
-                        add "arrow" rotate -90 xzoom -1 xpos 1.03 ypos -0.85                        
-                    elif KittyX.SpriteLoc == StageFarLeft:
+            elif who == KittyX.Name:                       
+                    if KittyX.Loc != bg_current or KittyX.SpriteLoc == StageFarLeft:
                         add "arrow" xalign 0.1 #xzoom -1
+                    elif KittyX.SpriteLoc == StageRight or KittyX.SpriteLoc == StageFarRight:
+                        add "arrow" rotate -90 xzoom -1 xpos 1.03 ypos -0.85 
                     else: #KittyX.SpriteLoc == StageCenter, Left, etc.:
                         add "arrow" xalign 0.8   
-            elif who == EmmaX.Name: 
-                    if EmmaX.SpriteLoc == StageRight or EmmaX.SpriteLoc == StageFarRight:
-                        add "arrow" rotate -90 xzoom -1 xpos 1.03 ypos -0.85                        
-                    elif EmmaX.SpriteLoc == StageFarLeft:
+            elif who == EmmaX.Name:                       
+                    if EmmaX.Loc != bg_current or EmmaX.SpriteLoc == StageFarLeft:
                         add "arrow" xalign 0.1 #xzoom -1
+                    elif EmmaX.SpriteLoc == StageRight or EmmaX.SpriteLoc == StageFarRight:
+                        add "arrow" rotate -90 xzoom -1 xpos 1.03 ypos -0.85    
                     else: #EmmaX.SpriteLoc == StageCenter, Left, etc.:
                         add "arrow" xalign 0.8     
-            elif who == LauraX.Name: 
-                    if LauraX.SpriteLoc == StageRight or LauraX.SpriteLoc == StageFarRight:
-                        add "arrow" rotate -90 xzoom -1 xpos 1.03 ypos -0.85                        
-                    elif LauraX.SpriteLoc == StageFarLeft:
+            elif who == LauraX.Name:                       
+                    if LauraX.Loc != bg_current or LauraX.SpriteLoc == StageFarLeft:
                         add "arrow" xalign 0.1 #xzoom -1
+                    elif LauraX.SpriteLoc == StageRight or LauraX.SpriteLoc == StageFarRight:
+                        add "arrow" rotate -90 xzoom -1 xpos 1.03 ypos -0.85  
                     else: #LauraX.SpriteLoc == StageCenter, Left, etc.:
                         add "arrow" xalign 0.8    
             elif who == GwenName: 
@@ -1148,7 +1148,7 @@ transform TinyButtons:
     
 screen Focus_Map:
     #changes focal character with dropdown box
-    imagebutton auto "images/Button_X_%s.png" action Hide("Test_Focus_Map") xpos 690 ypos 5 focus_mask True
+    imagebutton auto "images/Button_X_%s.png" action Hide("Focus_Map") xpos 690 ypos 5 focus_mask True
     frame:            
         xpos 684 
         ypos 44

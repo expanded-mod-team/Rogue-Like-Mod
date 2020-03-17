@@ -209,13 +209,13 @@ label Emma_Relationship:
              
             "I wanted to ask about [[another girl]" if EmmaX in Player.Harem:
                     menu:
-                        "Have you reconsidered letting me date. . ."
+                        "Have you considered letting me date. . ."
                         "[RogueX.Name]" if RogueX not in Player.Harem:
-                                call Poly_Start(RogueX,1)
+                                call Poly_Start(RogueX,1,EmmaX)
                         "[KittyX.Name]" if KittyX not in Player.Harem and "met" in KittyX.History:
-                                call Poly_Start(KittyX,1)
+                                call Poly_Start(KittyX,1,EmmaX)
                         "[LauraX.Name]" if LauraX not in Player.Harem and "met" in LauraX.History:
-                                call Poly_Start(LauraX,1)
+                                call Poly_Start(LauraX,1,EmmaX)
                         "Never mind":
                                 pass          
                                    
@@ -414,7 +414,7 @@ label Emma_Monogamy:
                             return                    
                     if "mono" not in EmmaX.DailyActions:                                                         
                             $ EmmaX.Statup("Obed", 90, 3) 
-                    $ EmmaX.AnyWord(1,0,"mono") #Daily
+                    $ EmmaX.AddWord(1,0,"mono") #Daily
                     $ EmmaX.Traits.append("mono")   
             "Don't hook up with other girls." if "mono" not in EmmaX.Traits:
                     if ApprovalCheck(EmmaX, 900, "O", TabM=0):
@@ -444,7 +444,7 @@ label Emma_Monogamy:
                             return                   
                     if "mono" not in EmmaX.DailyActions:                                                         
                             $ EmmaX.Statup("Obed", 90, 3) 
-                    $ EmmaX.AnyWord(1,0,"mono") #Daily
+                    $ EmmaX.AddWord(1,0,"mono") #Daily
                     $ EmmaX.Traits.append("mono")   
             "It's ok if you hook up with other girls." if "mono" in EmmaX.Traits:
                     if ApprovalCheck(EmmaX, 700, "O", TabM=0):
@@ -462,7 +462,7 @@ label Emma_Monogamy:
                             $ EmmaX.Statup("Obed", 90, 3)
                     if "mono" in EmmaX.Traits:
                             $ EmmaX.Traits.remove("mono")   
-                    $ EmmaX.AnyWord(1,0,"mono") #Daily
+                    $ EmmaX.AddWord(1,0,"mono") #Daily
             "Never mind.":
                 pass
         return
@@ -504,7 +504,7 @@ label Emma_Jumped:
                             return                    
                     if "chill" not in EmmaX.DailyActions:                                                         
                             $ EmmaX.Statup("Obed", 90, 3) 
-                    $ EmmaX.AnyWord(1,0,"chill") #Daily
+                    $ EmmaX.AddWord(1,0,"chill") #Daily
                     $ EmmaX.Traits.append("chill")   
             "Don't bother me like that." if "chill" not in EmmaX.Traits:
                     if ApprovalCheck(EmmaX, 900, "O", TabM=0):
@@ -536,7 +536,7 @@ label Emma_Jumped:
                             return                     
                     if "chill" not in EmmaX.DailyActions:                                                         
                             $ EmmaX.Statup("Obed", 90, 3) 
-                    $ EmmaX.AnyWord(1,0,"chill") #Daily
+                    $ EmmaX.AddWord(1,0,"chill") #Daily
                     $ EmmaX.Traits.append("chill")   
             "Knock yourself out.":
                     if ApprovalCheck(EmmaX, 800, "L", TabM=0):
@@ -554,7 +554,7 @@ label Emma_Jumped:
                             $ EmmaX.Statup("Obed", 90, 3) 
                     if "chill" in EmmaX.Traits:
                             $ EmmaX.Traits.remove("chill")  
-                    $ EmmaX.AnyWord(1,0,"chill") #Daily 
+                    $ EmmaX.AddWord(1,0,"chill") #Daily 
             "Um, never mind.":
                 pass
         return
@@ -660,23 +660,23 @@ label Emma_SexChat:
                                         $ EmmaX.PlayerFav = "titjob"   
                                         
                             "Footjobs.":
-                                        $ EmmaXX.FaceChange("sly")
-                                        if EmmaXX.PlayerFav == "foot":
-                                            $ EmmaXX.Statup("Lust", 80, 5)
+                                        $ EmmaX.FaceChange("sly")
+                                        if EmmaX.PlayerFav == "foot":
+                                            $ EmmaX.Statup("Lust", 80, 5)
                                             ch_e "Yes, so you've said. . ."                                
-                                        elif EmmaXX.Favorite == "foot":
-                                            $ EmmaXX.Statup("Love", 90, 5)
-                                            $ EmmaXX.Statup("Lust", 80, 7)
+                                        elif EmmaX.Favorite == "foot":
+                                            $ EmmaX.Statup("Love", 90, 5)
+                                            $ EmmaX.Statup("Lust", 80, 7)
                                             ch_e "It certainly is a diversion. . ."
-                                        elif EmmaXX.Foot >= 10:
+                                        elif EmmaX.Foot >= 10:
                                             ch_e "Yes, it certainly is a workout . . ."
-                                        elif not EmmaXX.Foot:
-                                            $ EmmaXX.FaceChange("perplexed")
+                                        elif not EmmaX.Foot:
+                                            $ EmmaX.FaceChange("perplexed")
                                             ch_e "Oh, is some little skank offering footsies now?"
                                         else:
-                                            $ EmmaXX.FaceChange("bemused")
+                                            $ EmmaX.FaceChange("bemused")
                                             ch_e "It certainly is a diversion. . ."
-                                        $ EmmaXX.PlayerFav = "foot"  
+                                        $ EmmaX.PlayerFav = "foot"  
                                         
                             "Handjobs.":
                                         $ EmmaX.FaceChange("sly")
@@ -931,11 +931,11 @@ label Emma_Chitchat(O=0, Options = ["default","default","default"]):
         $ Options = [O]
     else:
         if EmmaX not in Digits:
-                if ApprovalCheck(EmmaX, 500, "L") or ApprovalCheck(EmmaX, 250, "I"):
+                if ApprovalCheck(EmmaX, 850, "LI"):
                     ch_e "If you'd like to reach me. . . after hours, here's my number."
                     $ Digits.append(EmmaX)  
                     return
-                elif ApprovalCheck(EmmaX, 250, "O"):
+                elif ApprovalCheck(EmmaX, 500, "OI"):
                     ch_e "I should let you know how to contact me."             
                     $ Digits.append(EmmaX)
                     return
@@ -951,7 +951,7 @@ label Emma_Chitchat(O=0, Options = ["default","default","default"]):
                             $ Girl.FaceChange("sly",1)    
                             ch_e ". . think you can scratch it?"
                             call Quick_Sex(EmmaX)
-                    return
+                            return
         
 #        $ Options = ["default","default","default"]
         #adds options based on accomplishments
@@ -1442,8 +1442,8 @@ label Emma_Pet:
                     "I think I'll just call you Emma.":
                         if ApprovalCheck(EmmaX, 700) or "classcaught" in EmmaX.History:
                             ch_e "I don't see why not, [EmmaX.Petname]."   
-                            $ EmmaX.Pet = EmmaX            
-                            $ EmmaX.Name = EmmaX
+                            $ EmmaX.Pet = "Emma"           
+                            $ EmmaX.Name = "Emma"
                         else:
                             ch_e "I'd rather you didn't, [EmmaX.Petname]."
                         
@@ -1920,6 +1920,7 @@ label Emma_Summon(Tempmod=Tempmod):
             #You agreed to go to her instead        
             $ renpy.pop_call()
             $ Tempmod = 0
+            $ Line = 0
             $ EmmaX.RecentActions.append("goto")  
             $ Player.RecentActions.append("goto")  
             if EmmaX.Loc == "bg classroom" or EmmaX.Loc == "bg teacher":
@@ -2159,6 +2160,7 @@ label Emma_Leave(Tempmod=Tempmod, GirlsNum = 0):
     elif Line == "go to":                                                                 
             #You agreed to go to her instead  
             $ Tempmod = 0
+            $ Line = 0
             call DrainAll("leaving")
             call DrainAll("arriving")       
             hide Emma_Sprite

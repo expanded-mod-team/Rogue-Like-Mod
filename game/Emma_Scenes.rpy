@@ -86,7 +86,7 @@ label EmmaMeet:
         $ EmmaX.FaceChange("smile") 
         ch_e "You have managed a reasonble reputation. . ."
         
-    if len(Player.Harem) >= 2:
+    if TotalSEXP >= 110 or (len(Player.Harem) >= 2 and "Historia" not in Player.Traits):
         $ EmmaX.Statup("Love", 70, 5) 
         $ EmmaX.Statup("Obed", 80, 10)
         $ EmmaX.Statup("Inbt", 200, 10) 
@@ -251,7 +251,7 @@ label EmmaMeet:
     hide Emma_Sprite with easeoutright 
     "She strides out of the room and down the hall."
     $ EmmaX.Loc = "bg emma"         
-    $ EmmaX.History.append("met")    
+    $ EmmaX.History.append("met")   
     $ ActiveGirls.append(EmmaX) if EmmaX not in ActiveGirls else ActiveGirls  
     $ Round -= 10      
     return
@@ -271,14 +271,14 @@ label Emma_Teacher_Caught(Girl = "That girl"):
     if ApprovalCheck(Girl, 700, "I"): 
             $ Girl.FaceChange("bemused", 1)
             "[Girl.Name] shrugs and returns to her seat."
-            call Partner_Like(EmmaX,2,-1,500,1,Girl) #if likes emma 500+, +2, else -1 
+            call Partner_Like(EmmaX,2,-1,500,Girl) #if likes emma 500+, +2, else -1 
     else: 
             "[Girl.Name] jumps and dashes out of the room."
-            call Partner_Like(EmmaX,-2,-3,500,1,Girl) #if likes emma 500+, -2, else -3  
+            call Partner_Like(EmmaX,-2,-3,500,Girl) #if likes emma 500+, -2, else -3  
             call Remove_Girl(Girl)       
             
     $ Girl.Rep -= 1
-    call Partner_Like(Girl,3,2,800,1,EmmaX)  #if likes the girl 800+, +3, else +2
+    call Partner_Like(Girl,3,2,800,EmmaX)  #if likes the girl 800+, +3, else +2
     $ EmmaX.GLG(Girl,800,3,1)
     
     $ Player.Rep -= 1             
@@ -866,6 +866,7 @@ label Emma_Taboo_Talk:
                 #if she agrees to do it
                 $ EmmaX.History.append("taboo") 
                 $ EmmaX.History.remove("taboocheck") 
+        $ Line = 0
         return
 
 # Emma Taboo Talk End < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
@@ -892,7 +893,7 @@ label Emma_ThreeCheck(Pass=3,Quest=[],Girl=0,BO=[]):
                         $ BO = [1]
                 $ BO.remove(BO[0])
                     
-        if not Girl:
+        if not Girl or Girl not in TotalGirls:
             $ Quest.append(2)
             if Line:
                 $ EmmaX.FaceChange("angry", Eyes = "side") 
@@ -1059,16 +1060,17 @@ label Emma_ThreeCheck(Pass=3,Quest=[],Girl=0,BO=[]):
         if "threecheck" not in EmmaX.History:    
                 $ EmmaX.History.append("threecheck") 
         if Pass == -1:
-            # if the conditions added up to failure state, it exits the sex menu
-            $ renpy.pop_call() #drops it past the sex menu  
+                # if the conditions added up to failure state, it exits the sex menu
+                $ renpy.pop_call() #drops it past the sex menu  
         else:
-            #if the conditions don't add up to failure, then it results in a success state
-            $ EmmaX.History.append("three") 
-            $ EmmaX.History.remove("threecheck")
-            if "poly " + Girl.Tag not in EmmaX.Traits: 
-                    $ EmmaX.Traits.append("poly " + Girl.Tag) 
-            $ EmmaX.RecentActions.append("noticed " + Girl.Tag)
-            $ Girl.RecentActions.append("noticed Emma")            
+                #if the conditions don't add up to failure, then it results in a success state
+                $ EmmaX.History.append("three") 
+                $ EmmaX.History.remove("threecheck")
+                if Girl in TotalGirls:
+                        if "poly " + Girl.Tag not in EmmaX.Traits: 
+                                $ EmmaX.Traits.append("poly " + Girl.Tag) 
+                        $ EmmaX.RecentActions.append("noticed " + Girl.Tag)
+                        $ Girl.RecentActions.append("noticed Emma")            
         return
 # Emma Threesome Talk End < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
@@ -1676,7 +1678,7 @@ label Emma_Sub:     #Emma_Update
                                             
         if not Line:
             $ EmmaX.FaceChange("bemused", 1, Eyes="side")
-            ch_e "I'm more used to being in charge of the sitation."
+            ch_e "I'm more used to being in charge of the situation."
             ch_e "When you take control of things. . ."
             ch_e "I find it quite. . . exciting."
             menu:

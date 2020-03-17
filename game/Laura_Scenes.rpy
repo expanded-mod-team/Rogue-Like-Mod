@@ -256,8 +256,8 @@ label LauraMeet(Topics=[],Loop=1):
 label Laura_Key:
         call Set_The_Scene
         $ LauraX.FaceChange("bemused")
-        ch_l "Hey, so... this isn't something I usually do but..."
-        ch_l "Look, you've been sleeping over a lot and I was thinking..."
+        ch_l "Hey, so. . . this isn't something I usually do but. . ."
+        ch_l "Look, you've been sleeping over a lot and I was thinking. . ."
         ch_l "Just take it already."
         "She takes your hand and practically forces a key onto your palm before making your fingers close on it."
         $ Keys.append(LauraX)
@@ -2398,7 +2398,7 @@ label Laura_Dressup3:
         ch_k "Aww, c'mon. You look great."
 
         "You remember [KittyX.Name] talking about getting [LauraX.Name] some new clothes. She must've gotten [LauraX.Name] to try them on."
-        "You can't help but feel curious..."
+        "You can't help but feel curious. . ."
         
         $ KittyX.Outfit = KittyX.OutfitDay
         $ KittyX.OutfitChange()
@@ -2424,13 +2424,28 @@ label Laura_Dressup3:
                     "[LauraX.Name] stares at you, her eyes narrowed. She's clearly on edge."
                     $ LauraX.FaceChange("sad",2,Brows="confused",Eyes="leftside")  
                     ch_l "Didn't you lock the door?"
-                    $ KittyX.FaceChange("smile",Eyes="side")  
-                    ch_k "Yeah, but I gave him a key."
-                    $ LauraX.FaceChange("sad",1,Brows="confused",Eyes="leftside")  
-                    ch_l "You... gave him a key?"
+                    if KittyX.Sleep < 5:                        
+                            $ KittyX.FaceChange("smile",Eyes="side")  
+                            ch_k "Yeah, but I gave him a key."
+                            $ LauraX.FaceChange("sad",1,Brows="confused",Eyes="leftside")  
+                            ch_l "You. . . gave him a key?"
+                    else:
+                            # you probably stole it from Xavier
+                            $ KittyX.FaceChange("confused",Eyes="side")  
+                            ch_k "Yeah, I'm not realy sure how he got a key. . ."
+                            if not ApprovalCheck(KittyX,1200):
+                                    #if she doesn't like you a lot yet. . .   
+                                    $ KittyX.FaceChange("angry",1)  
+                                    ch_k "Ok, that's enough, out, out!"
+                                    "You head back out."
+                                    return
+                            $ KittyX.FaceChange("smile")  
+                            ch_k "I guess it's fine though. . ."
+                            $ LauraX.FaceChange("sad",1,Brows="confused",Eyes="leftside")  
+                            ch_l "It's fine that he got a mystery key?"
                     $ KittyX.FaceChange("smile",1)  
                     ch_k "Uh-huh. I mean, he's my [KittyX.Petname]."
-                    ch_l "Your... [KittyX.Petname]."    
+                    ch_l "Your. . . [KittyX.Petname]."    
             "Knock":
                     "You knock on the door."
                     ch_k "Who is it?"
@@ -2454,6 +2469,9 @@ label Laura_Dressup3:
                     "[LauraX.Name] stares at you, as if she's not sure what she's seeing."
                     $ LauraX.FaceChange("sad",2,Brows="confused",Eyes="leftside")  
                     ch_l "So you just let him come into your room whenever?"
+                    $ KittyX.FaceChange("smile",1)  
+                    ch_k "Uh-huh. I mean, he's my [KittyX.Petname]."
+                    ch_l "Your. . . [KittyX.Petname]."    
         
             "Walk away":
                 "Nah, I should let them have their girl time."
@@ -2462,7 +2480,7 @@ label Laura_Dressup3:
         $ LauraX.FaceChange("angry",1,Eyes="closed")  
         "She shakes her head, trying to absorb all this new information."
         "She mutters to herself."
-        ch_l "I've been gone longer than I thought..."
+        ch_l "I've been gone longer than I thought. . ."
         $ LauraX.FaceChange("sad",1,Brows="confused",Eyes="leftside")  
         ch_l "So why's he here?"
         $ KittyX.FaceChange("smile",Eyes="side")  
@@ -2474,7 +2492,7 @@ label Laura_Dressup3:
 
         menu:
             extend ""
-            "Her outfit looks familiar...":
+            "Her outfit looks familiar. . .":
                     ch_k "I call it the Logan Look."
                     $ LauraX.FaceChange("sad",2,Eyes="stunned")    
                     $ LauraX.Statup("Inbt", 40, -2)

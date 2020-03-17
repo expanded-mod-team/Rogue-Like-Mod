@@ -30,6 +30,7 @@ label Chat(Girl=0):
         if Girl:
                 if Girl.Loc == bg_current:  
                         if Girl == EmmaX and "classcaught" not in EmmaX.History:
+                                        "hey"
                                         jump Emma_Chat_Minimal
                         if "caught" in Girl.DailyActions:
                                 if Girl == RogueX:
@@ -94,10 +95,10 @@ label Chat(Girl=0):
                         if Girl == EmmaX:
                                     if EmmaX.Loc == "bg teacher" and bg_current == "bg classroom":
                                             "She texts back, \"We can speak after class, [EmmaX.Petname].\"" 
+                                            return
                                     elif "classcaught" not in EmmaX.History:
                                             call Emma_Chat_Minimal
-                                    return
-                                           
+                                            return                                           
                         if Girl.Loc != bg_current:
                                     show Cellphone at SpriteLoc(StageLeft)
                         else:
@@ -1942,7 +1943,8 @@ label Compliment(Girl=0,Line0=0,Line1=0,Line2=0,Options=[],CountList=[],Line=0,D
                 $ Line = CountList[1]
             "[Line2]":
                 $ Line = CountList[2]
-            "Never mind":                
+            "Never mind":                 
+                $ Girl.Chat[5] = 0 #can only flirt once per cycle. 
                 return
                     
     $ D20 = renpy.random.randint(5, 20)
@@ -4450,13 +4452,13 @@ label Gifts:
                                             call AnyLine(Girl,"I already have one of those.")         
                         #End Lace Panties
                              
-                        "Give her the stockings and garterbelt." if " stockings and garterbelt" in Player.Inventory: 
+                        "Give her the stockings and garterbelt." if "stockings and garterbelt" in Player.Inventory: 
                                 #If you have a stockings, you'll give it. (Rogue and Emma)
                                 if "stockings and garterbelt" not in Girl.Inventory:                            
                                         "You give [Girl.Name] the stockings."
                                         $ Girl.Blush = 1                 
                                         $ Girl.FaceChange("bemused")
-                                        $ Player.Inventory.remove(" stockings and garterbelt")
+                                        $ Player.Inventory.remove("stockings and garterbelt")
                                         $ Girl.Inventory.append("stockings and garterbelt")
                                         $ Girl.Statup("Love", 200, 5)
                                         $ Girl.Statup("Obed", 200, 5)

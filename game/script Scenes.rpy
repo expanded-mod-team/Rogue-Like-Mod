@@ -1556,21 +1556,46 @@ label Morning_Partner:
     
     
 ## start Poly _Start//////////////////////////////////////////////////////////
-label Poly_Start(Newbie=0,Round2=0):
+label Poly_Start(Newbie=0,Round2=0,Asked=0):
         # This is called prior to any new girls being added to your dating structure
         # If there are already two girls in there, it kicks up to the Harem version. 
         # Newbie will be the new girl
+        # Asked is passed if you request it from a chat menu
         $ Line = 0
-                
+                                        
         if not Player.Harem:            
-            return
-        if len(Player.Harem) >= 2:
-            call Harem_Start(Newbie,Round2)
-            return
-            
+                return
+                  
+        if Asked in TotalGirls:
+                if Asked in Player.Harem and Player.Harem[0] != Asked:
+                        #moves character "Asked" to the head of the line.
+                        $ Player.Harem.remove(Asked)           
+                        if Player.Harem: 
+                                $ Player.Harem.insert(0,Asked)
+                        else:
+                                $ Player.Harem.append(Asked)
+                        
         if "polystart" in Player.DailyActions:
-                return                
+                if Round2 and Asked:
+                        "You pull [Player.Harem[0].Name] aside for a moment."
+                        ch_p "Hey, have you changed your mind about [Newbie.Name] lately?"
+                        if Player.Harem[0] == RogueX:                 
+                                ch_r "Getting a little greedy, aren't you."
+                        elif Player.Harem[0] == KittyX:      
+                                ch_k "Wow, um, chill for a bit."
+                        elif Player.Harem[0] == EmmaX:      
+                                ch_e "Take a breather, [Player.Harem[0].Petname]."
+                        elif Player.Harem[0] == LauraX:     
+                                ch_l "Cool your jets." 
+                        call AnyLine(Asked,"Ask me some time later.")
+                return         
+                
         $ Player.DailyActions.append("polystart")
+        
+        if len(Player.Harem) >= 2:
+                call Harem_Start(Newbie,Round2)
+                return        
+                               
         
         $ Party = [Player.Harem[0]]
         call Shift_Focus(Player.Harem[0])
@@ -1952,9 +1977,6 @@ label Harem_Start(Newbie=0,Round2=0):
         # If there are aren't two girls in there, it kicks back. 
         # Newbie will be the new girl
         
-        if "harem" in Player.DailyActions:
-                return                
-        $ Player.DailyActions.append("harem")
         $ Line = 0
         
         if len(Player.Harem) < 2:
@@ -2425,6 +2447,10 @@ label Harem_Start(Newbie=0,Round2=0):
                         $ Player.Traits.remove(Newbie.Tag + "No")
                 $ Player.DrainWord(Newbie.Tag + "No",0,0,1)
                 $ Player.Traits.append(Newbie.Tag + "Yes")
+                $ Count = len(Player.Harem)
+                while Count:
+                        $ Count -= 1
+                        $ Player.Harem[Count].DrainWord("saw with "+Newbie.Tag,0,0,1)      #removes "saw with Kitty" from traits   
                 "You should give [Newbie.Name] a call."   
         else:     
                 $ Player.Traits.append(Newbie.Tag + "No")
@@ -3130,7 +3156,7 @@ label Girls_Caught(Girl=0,TotalCaught=0,Shame=0,Count=0,T_Pet=0,BO=[]):
     call Remove_Girl("All")  
     "You return to your room"
     hide Professor
-    $ bg_current == "bg player"
+    $ bg_current = "bg player"
     jump Misplaced
 #End Caught / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
@@ -3686,6 +3712,7 @@ label Girl_Caught_Mastubating(Girl=0):
         #called by room entry dialog if the girl was masturbating
         if not Girl:
             return
+        $ Girl.DrainWord("gonnafap")
         "As you approach her room, you hear soft moans from inside, and notice that the door is slightly ajar."
         menu:
             extend ""
@@ -3812,14 +3839,225 @@ label Girl_Caught_Mastubating(Girl=0):
                 #end "if you entered"
         return
     
-#start girls caught lesing / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+#end girls caught masturbating / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
+
+#start Call_For_Les / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /              
+label Call_For_Les(Girl=0,Girl2=0,BO=[]):      
+        #called by JumperCheck if girls are lesing and Girl approves
         
+        if Girl not in ActiveGirls:            
+                $ BO = ActiveGirls[:]   
+                while BO and Girl not in ActiveGirls:      
+                        if BO[0] not in Party and BO[0].Loc != bg_current and "les" in BO[0].RecentActions:
+                                # if this girl is not already the focal girl, is at the current location but not in a party, 
+                                # and was queued for a les action, set her up as girl 1.
+                                $ Girl = BO[0]
+                                $ BO = [1]
+                        $ BO.remove(BO[0])
+        if Girl in ActiveGirls and not Girl2:     
+                #if a Girl was either offered or produced by first loop. . .
+                $ BO = ActiveGirls[:]  
+                $ BO.remove(Girl)
+                while BO:      
+                        if BO[0] not in Party and BO[0].Loc != bg_current and "les" in BO[0].RecentActions:
+                                # if this girl is not already the focal girl, is at the current location but not in a party, 
+                                # and was queued for a les action, set her up as girl 2.
+                                if ApprovalCheck(BO[0], 1600 - BO[0].SEXP, TabM=0):
+                                        $ Girl2 = BO[0]
+                                        $ BO = [1]
+                                else:
+                                        return 0                                
+                        $ BO.remove(BO[0])
+        if Girl not in ActiveGirls or Girl2 not in ActiveGirls:
+                #if either girl refuses, continue with Jumper check
+                return 0
+                                                
+        show Cellphone at SpriteLoc(StageLeft)
+                                    
+        "You get a call from [Girl.Name]."        
+        if Girl == RogueX:
+                ch_r "Hey, [Player.Name]. . . I was just over here with [Girl2.Name] and. . ."
+                ch_r "One thing lead to another, you know how that goes. . . and we were just wondering,"
+                ch_r "Would you like to come over and join us?"
+        elif Girl == KittyX:
+                ch_k "Oh, hi, [Girl.Petname]. . . I was just hanging out with [Girl2.Name] and. . ."
+                ch_k "we got to thinking[Girl.like]"
+                ch_k "Did you wanna come over and join us?"
+        elif Girl == EmmaX:
+                ch_e "[Girl.Petname]. . . I was just here entertaining [Girl2.Name]. . ."
+                ch_e "One thing lead to another, I'm sure you get the picture. . . and we were just wondering,"
+                ch_e "Would you like to come lend us a hand?"
+                ch_e "Or other bits. . ."
+        elif Girl == LauraX:
+                ch_l "Hey, [Player.Name]. . . I was with [Girl2.Name] here, and. . ."
+                ch_l "You know, feeling each other up-"
+                call AnyLine(Girl2,"Hey!{w=0.3}{nw}")
+                ch_l ". . . so . . ."
+                ch_l "Want in on this action?"
+        $ Line = 0
+        while not Line and Line != "what":
+                menu:
+                    extend ""
+                    "Sure, I'll be right there!":   
+                            $ Girl.Statup("Love", 95, 5)
+                            $ Girl.Statup("Obed", 95, 3)
+                            $ Girl.Statup("Inbt", 95, 2)                          
+                            if Girl == EmmaX:
+                                ch_e "Lovely, see you in a bit."
+                            else:  
+                                call AnyLine(Girl,"Cool. See you here.")
+                            $ Girl2.Statup("Love", 95, 5)
+                            $ Girl2.Statup("Obed", 95, 3)
+                            $ Girl2.Statup("Inbt", 95, 2)  
+                            $ Line = "yes"                                
+                    "Nah, have fun though.":  
+                            $ Girl.Statup("Love", 90, -4)
+                            $ Girl.Statup("Obed", 95, 2)
+                            $ Girl.Statup("Inbt", 90, -2)                          
+                            if Girl == RogueX:
+                                    ch_r "Oh. Ok then. . ."
+                            elif Girl == KittyX:
+                                    ch_k "Wow, ok, I guess."
+                            elif Girl == EmmaX:
+                                    ch_e "I admire your restraint. . ."
+                                    $ Girl.Statup("Obed", 95, 2)
+                                    ch_e "If not your wisdom. . ."
+                            elif Girl == LauraX: 
+                                    ch_l "Huh. Ok."
+                            $ Girl2.Statup("Love", 90, -4)
+                            $ Girl2.Statup("Obed", 95, 2)
+                            $ Girl2.Statup("Inbt", 90, -2) 
+                            "She hangs up."
+                            hide Cellphone 
+                            jump Misplaced                
+                    "What, are you watching a movie?" if Line != "what": 
+                            $ Girl.Statup("Love", 80, 2)
+                            $ Girl.Statup("Inbt", 80, 2)                           
+                            if Girl == RogueX:
+                                    ch_r "Oh, we're putting on quite the show, but no."
+                            elif Girl == KittyX:
+                                    $ Girl.Statup("Inbt", 80, 2)      
+                                    ch_k "Um. . . no. . .we're, um. . ."
+                            elif Girl == EmmaX:
+                                    $ Girl.Statup("Love", 80, 1)
+                                    ch_e "Oh, that's adorable. No, of course not."
+                            elif Girl == LauraX: 
+                                    ch_l "You hit your head or something?"     
+                                    
+                            $ Girl2.Statup("Love", 80, 2)
+                            $ Girl2.Statup("Inbt", 80, 2)                  
+                            if Girl2 == RogueX:
+                                    ch_r "We're bumpin uglies, [Girl2.Petname]."
+                                    ch_r "Thought you might want in."
+                            elif Girl2 == KittyX:
+                                    $ Girl2.Statup("Inbt", 80, 2)
+                                    ch_k "It's, um. . . sex."
+                                    ch_k "We're having sex."
+                                    ch_k "-thought you might wanna join us?"
+                            elif Girl2 == EmmaX:
+                                    ch_e "We're having -intercourse-, [Girl2.Petname]."
+                                    ch_e "Did - you - want - to - join - us?"
+                            elif Girl2 == LauraX: 
+                                    ch_l "Sex, dumbass."
+                                    ch_l "We're shucking clams over here and wanted someone to bring the meat."
+                                    ch_l "You packing, or what?"
+                            $ Line = "what"
+                            #loops back through. . .
+              
+        hide Cellphone           
+        #if you decide to come over. . .  
+        if bg_current == Girl.Home:
+                #swaps girls if for some reason you're in the other one's room
+                $ Line = Girl
+                $ Girl = Girl2
+                $ Girl2 = Line
+        $ Girl.Loc = Girl.Home           
+        $ Girl2.Loc = Girl.Home
+        $ bg_current = Girl.Home
+        $ Taboo= 0
+        $ Girl.Taboo = 0           
+        $ Girl2.Taboo = 0
+        $ Line = 0            
+                                
+        $ Girl.DrainWord("les",1,0) #removes general "les" tag from recent actions
+        $ Girl2.DrainWord("les",1,0) #removes general "les" tag from recent actions
+        
+        $ Girl.AddWord(0,"lesbian","lesbian")  #adds "lesbian" tag to recent and daily actions 
+        $ Girl2.AddWord(0,"lesbian","lesbian")  #adds "lesbian" tag to recent and daily actions    
+        $ Girl.AddWord(1,0,0,0,"les "+Girl2.Tag)  #adds "les Rogue" tag to recent actions
+        $ Girl2.AddWord(1,0,0,0,"les "+Girl.Tag)  #adds "les Kitty" tag to recent actions 
+        
+        call Set_The_Scene(0,1,0,0)            
+        "As you approach her room, you hear soft moans from inside, and notice that the door is slightly ajar."
+        while Line < 2:
+            menu:
+                extend ""
+                "Knock politely":
+                        if Girl == RogueX:
+                                ch_r "Come on in, [RogueX.Petname]!"
+                        elif Girl == KittyX:
+                                ch_k "Oh! Come in!"
+                        elif Girl == EmmaX:
+                                ch_e "No need to wait on our account. . ."
+                        elif Girl == LauraX:                
+                                ch_l "Come in!" 
+                        $ Line = 2
+                "Peek inside" if Line != 1:
+                        call Set_The_Scene
+                        $ Girl.FaceChange("kiss",1,Eyes = "closed") 
+                        $ Girl2.FaceChange("kiss",1,Eyes = "closed") 
+                        $ Trigger = "lesbian"
+                        $ Trigger3 = "fondle pussy"
+                        $ Trigger4 = "fondle pussy"
+                        "You see [Girl.Name] and [Girl2.Name], eyes closed and stroking each other vigorously."
+                        $ Line = 1
+                "Enter quietly":
+                        $ Line = 2
+                "Leave quietly":
+                        "You leave the girls to their business and slip out."
+                        $ Girl.Thirst -= 30 
+                        $ Girl.Lust = 20 
+                        $ Girl2.Thirst -= 30 
+                        $ Girl2.Lust = 20                 
+                        $ Girl.Statup("Love", 90, -3)
+                        $ Girl2.Statup("Love", 90, -3)
+                        $ renpy.pop_call()  
+                        $ bg_current = "bg campus"
+                        $ Line = 0
+                        jump Misplaced
+                        
+        $ Line = 0
+        $ Girl.FaceChange("sly",1) 
+        $ Girl2.FaceChange("sly",1) 
+        call Set_The_Scene(1,0,0,0)  #no clothes or trigger resets          
+        if Girl == RogueX:
+                ch_r "Sorry we got started without you."
+        elif Girl == KittyX:
+                ch_k "Oh, hey, [KittyX.Petname], we. . . got a little bored."
+        elif Girl == EmmaX:
+                ch_e "We certainly didn't."
+        elif Girl == LauraX:                
+                ch_l "So you waiting for another invitation?"  
+                
+        $ Trigger = "lesbian"
+        $ Trigger3 = "fondle pussy"
+        $ Trigger4 = "fondle pussy"
+        $ Partner = Girl2
+        call expression Girl.Tag + "_SexAct" pass ("lesbian") #call Rogue_SexAct("lesbian")
+        jump Misplaced
+        return
+    
+#end Call_For_Les / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+
+
+  
+#start girls caught lesing / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 label Girls_Caught_Lesing(Girl=0,Girl2=0,BO=[]):
         #called by room entry dialog if the girls were lesing
-        
+                
         $ BO = ActiveGirls[:]   
-        if Girl:
+        if Girl in TotalGirls:
                 $ BO.remove(Girl)
         while BO and not Girl:      
                 if BO[0] not in Party and BO[0].Loc == bg_current and "les" in BO[0].RecentActions:
@@ -3841,7 +4079,7 @@ label Girls_Caught_Lesing(Girl=0,Girl2=0,BO=[]):
                         $ BO.remove(BO[0])
                                     
         if not Girl or not Girl2:
-            return 1
+                return 1
             
         $ Girl.DrainWord("les",1,0) #removes general "les" tag from recent actions
         $ Girl2.DrainWord("les",1,0) #removes general "les" tag from recent actions
@@ -3852,84 +4090,74 @@ label Girls_Caught_Lesing(Girl=0,Girl2=0,BO=[]):
         $ Girl2.AddWord(1,0,0,0,"les "+Girl.Tag)  #adds "les Kitty" tag to recent actions 
         
         "As you approach her room, you hear soft moans from inside, and notice that the door is slightly ajar."
-        menu:
-            extend ""
-            "Knock politely":
-                $ Line = "knock"
-            "Peek inside":
-                call Set_The_Scene
-                $ Girl.FaceChange("kiss",1,Eyes = "closed") 
-                $ Girl2.FaceChange("kiss",1,Eyes = "closed") 
-                $ Trigger = "lesbian"
-                $ Trigger3 = "fondle pussy"
-                $ Trigger4 = "fondle pussy"
-                "You see [Girl.Name] and [Girl2.Name], eyes closed and stroking each other vigorously."
-                menu:
-                    extend ""
-                    "Enter Quietly":
-                            $ Line = "enter"
-                    "Pull back and knock":                        
-                            $ Line = "knock"
-                    "Leave quietly":
-                            $ Line = "leave"
-            "Enter quietly":
-                    $ Line = "enter"
-            "Leave quietly":
-                    $ Line = "leave"
-        
-        if Line == "leave":      
-                "You leave the girls to their business and slip out."
-                $ Girl.Thirst -= 30 
-                $ Girl.Lust = 20 
-                $ Girl2.Thirst -= 30 
-                $ Girl2.Lust = 20 
-                $ renpy.pop_call()  
-                jump Campus_Map 
-        elif Line == "knock":
-                "You hear some soft moans, followed by some shuffling around as items tumble to the ground."
-                "After several seconds and some more shuffling of clothing, [Girl.Name] comes to the door."
-                $ Girl.FaceChange("confused",2,Eyes = "surprised",Mouth = "smile") 
-                $ Girl2.FaceChange("confused",2,Eyes = "surprised",Mouth = "smile") 
-                $ Trigger = 0
-                $ Trigger3 = 0
-                $ Trigger4 = 0
-                $ Trigger5 = 0
-                call Set_The_Scene            
-                if Girl == RogueX:
-                        ch_r "Sorry about that [RogueX.Petname], we were, um. . . working out."
-                elif Girl == KittyX:
-                        ch_k "Oh, hey, [KittyX.Petname], hi, we were. . . never mind."
-                elif Girl == EmmaX:
-                        ch_e "Well, I hope you have a good reason for interrupting us."
-                        ch_e "I was. . . teaching her a few things. . ."
-                elif Girl == LauraX:                
-                        ch_l "Um, hey [LauraX.Petname], we were a bit busy."            
-                $ Girl.FaceChange("smile",1) 
-                $ Girl2.FaceChange("smile",1) 
-                $ Tempmod += 10
-        elif Line == "enter":
-                call Set_The_Scene(Quiet=1)
-                $ Girl.FaceChange("kiss",1,Eyes = "closed") 
-                $ Girl2.FaceChange("kiss",1,Eyes = "closed") 
-                $ Trigger = "lesbian"
-                $ Trigger3 = "fondle pussy"
-                $ Trigger4 = "fondle pussy"
-                $ Girl.AddWord(1,"unseen","unseen") 
-                $ Girl2.AddWord(1,"unseen","unseen")
-                $ Partner = Girl2
-                call expression Girl.Tag + "_SexAct" pass ("lesbian") #call Rogue_SexAct("lesbian")
+        $ Line = 0
+        while not Line:
+            menu:
+                extend ""
+                "Knock politely":
+                        "You hear some soft moans, followed by some shuffling around as items tumble to the ground."
+                        "After several seconds and some more shuffling of clothing, [Girl.Name] comes to the door."
+                        $ Girl.FaceChange("confused",2,Eyes = "surprised",Mouth = "smile") 
+                        $ Girl2.FaceChange("confused",2,Eyes = "surprised",Mouth = "smile") 
+                        $ Trigger = 0
+                        $ Trigger3 = 0
+                        $ Trigger4 = 0
+                        $ Trigger5 = 0
+                        call Set_The_Scene            
+                        if Girl == RogueX:
+                                ch_r "Sorry about that [RogueX.Petname], we were, um. . . working out."
+                        elif Girl == KittyX:
+                                ch_k "Oh, hey, [KittyX.Petname], hi, we were. . . never mind."
+                        elif Girl == EmmaX:
+                                ch_e "Well, I hope you have a good reason for interrupting us."
+                                ch_e "I was. . . teaching her a few things. . ."
+                        elif Girl == LauraX:                
+                                ch_l "Um, hey [LauraX.Petname], we were a bit busy."            
+                        $ Girl.FaceChange("smile",1) 
+                        $ Girl2.FaceChange("smile",1) 
+                        $ Tempmod += 10
+                        $ Line = 1   
+                "Peek inside":
+                        call Set_The_Scene
+                        $ Girl.FaceChange("kiss",1,Eyes = "closed") 
+                        $ Girl2.FaceChange("kiss",1,Eyes = "closed") 
+                        $ Trigger = "lesbian"
+                        $ Trigger3 = "fondle pussy"
+                        $ Trigger4 = "fondle pussy"
+                        "You see [Girl.Name] and [Girl2.Name], eyes closed and stroking each other vigorously."
+                "Enter quietly":
+                        call Set_The_Scene(Quiet=1)
+                        $ Girl.FaceChange("kiss",1,Eyes = "closed") 
+                        $ Girl2.FaceChange("kiss",1,Eyes = "closed") 
+                        $ Trigger = "lesbian"
+                        $ Trigger3 = "fondle pussy"
+                        $ Trigger4 = "fondle pussy"
+                        $ Girl.AddWord(1,"unseen","unseen") 
+                        $ Girl2.AddWord(1,"unseen","unseen")
+                        $ Partner = Girl2
+                        $ Line = 0
+                        call expression Girl.Tag + "_SexAct" pass ("lesbian") #call Rogue_SexAct("lesbian")
+                "Leave quietly":
+                        "You leave the girls to their business and slip out."
+                        $ Girl.Thirst -= 30 
+                        $ Girl.Lust = 20 
+                        $ Girl2.Thirst -= 30 
+                        $ Girl2.Lust = 20 
+                        $ renpy.pop_call()  
+                        jump Campus_Map         
+        $ Line = 0   
         return
     
-#end girls caught lesing / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+#end Girls caught lessing / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / 
 
 
-   
-    
+#Start girls caught showering / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /     
 label Girl_Caught_Shower(Girl=0):  
-        if not Girl:
+        if Girl not in TotalGirls:
                 return
         call Shift_Focus(Girl)
         
+        $ Options = []
         $ Girl.AddWord(1,"showered","showered",0,0)
         call Remove_Girl("All")
         
@@ -3956,7 +4184,8 @@ label Girl_Caught_Shower(Girl=0):
                     $ Girl.DrainWord("gonnafap",0,1) #removes "gonnafap" tag from daily                    
                     $ Girl.Lust = 25
                     $ Girl.Thirst -= int(Girl.Thirst/2) if Girl.Thirst >= 50 else int(Girl.Thirst/4) 
-                    return 1
+                    $ bg_current = "bg campus"
+                    jump Misplaced
                 
         if Line == "knock":                                                                                         
                 #You knock
@@ -4003,8 +4232,9 @@ label Girl_Caught_Shower(Girl=0):
                     $ Trigger = "masturbation"
                     $ Trigger3 = "fondle pussy"   
                     "You see [Girl.Name] under the shower, feeling herself up."
-                    call expression Girl.Tag + "_SexAct" pass ("masturbate") #call Laura_SexAct("masturbate")   
-                    jump Shower_Room
+                    call expression Girl.Tag + "_SexAct" pass ("masturbate") #call Laura_SexAct("masturbate")
+                    $ bg_current = "bg showerroom"
+                    jump Misplaced
                 
             elif D20 >= 15:                                                                                         
                     #She's just showering and naked
@@ -4815,9 +5045,13 @@ label Pool_Skinnydip(Girl=0,Line=0,Type=0,Mod=0):
                         
                     $ Girl.AddWord(1,"no dip","no dip") #adds the "no tan" trait to recent and daily actions
                     return
+                    
+    call ShowPool([Girl]) #displays pool graphics
     $ Girl.Water = 1               
     $ Round -= 20 if Round >= 20 else Round         
     "You both swim around for a bit."   
+    hide FullPool
+    call Set_The_Scene(1,0,0)
     
     return
 
@@ -4826,7 +5060,7 @@ label Pool_Skinnydip(Girl=0,Line=0,Type=0,Mod=0):
 
 # Start Pool Topless / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 label Pool_Topless(Girl=Ch_Focus,BO=[]):    
-        #the girl is swimming, but ends up topless temporarily
+        #the girl is swimming, but ends up topless temporarily        
         if Girl.Loc != bg_current:
                     #if the lead girl isn't in the room for some reason. . .
                     $ BO = TotalGirls[:]  
@@ -4837,15 +5071,13 @@ label Pool_Topless(Girl=Ch_Focus,BO=[]):
                                     $ BO = [1]
                             $ BO.remove(BO[0])
                 
-        $ Girl = Ch_Focus
+        $ Ch_Focus = Girl
         if (Girl.ChestNum() <= 1 and Girl.OverNum() <= 1) or Girl.Loc != bg_current:
                 #if *no* girls are present, ditch or no point, already topless
                 $ D20 = renpy.random.randint(1, 14)
                 return
-        call AllReset(Girl)
-        "[Girl.Name] dives into the pool"         
-        call ShowPool #displays pool graphics
         $ Girl.Uptop = 1 #sets uptop
+        "[Girl.Name] dives into the pool"         
         menu:
             "It appears she's had a wardrobe malfunction."
             "Hey, [Girl.Name]. . .":
@@ -5515,7 +5747,9 @@ label CheatCheck(BO=[],BO2=[]):
                                                 #if "saw with Kitty" in RogueX.Traits:      
                                                 if BO[0] in Player.Harem and BO2[0] in Player.Harem:                
                                                         #if both girls were in the harem, this shouldn't happen 
-                                                        $ BO[0].DrainWord("saw with "+BO2[0].Tag,0,0,1)      #removes "saw with Kitty" from traits  
+                                                        $ BO[0].DrainWord("saw with "+BO2[0].Tag,0,0,1)      #removes "saw with Kitty" from traits 
+                                                elif BO[0] in Player.Harem and BO2[0].Tag + "Yes" in Player.Traits:
+                                                        $ BO[0].DrainWord("saw with "+BO2[0].Tag,0,0,1)      #removes "saw with Kitty" from traits                                                     
                                                 elif bg_current == "bg player" or bg_current == BO[0].Home:
                                                         call Cheated(BO[0],BO2[0])  
                                                         $ renpy.pop_call()
@@ -5524,34 +5758,6 @@ label CheatCheck(BO=[],BO2=[]):
                 $ BO.remove(BO[0])
         return
         
-        
-#        $ Counter = 4 #len(Roster)-1   
-#        while Counter:
-#                $ Counter2 = 4 #len(Roster)-1 #resets Counter 2
-#                while Counter2:
-#                    if "meet girl" in Player.DailyActions:
-#                                        #skips if you already have an appointment 
-#                                        $ Counter = 1
-#                                        $ Counter2 = 1                                    
-#                    elif CheckWord(Roster[Counter],"Traits","dating") or Roster[Counter] in Player.Harem:
-#                            #if "dating" in RogueX.Traits or RogueX in Player.Harem: 
-#                            if CheckWord(Roster[Counter],"Traits","saw with "+Roster[Counter2]):
-#                                        #if "saw with Kitty" in RogueX.Traits:      
-#                                        if Roster[Counter] in Player.Harem and Roster[Counter2] in Player.Harem:                
-#                                                #if both girls were in the harem, this shouldn't happen 
-#                                                $ Roster[Counter].DrainWord("saw with "+Roster[Counter2],0,0,1)      #removes "saw with Kitty" from traits  
-#                                        elif bg_current in  ("bg player","bg rogue","bg kitty","bg emma","bg laura"):
-#                                                call Cheated(Roster[Counter],Roster[Counter2])  
-#                                                $ renpy.pop_call()
-#                                                return
-#                                        else:
-#                                                call AskedMeet(Roster[Counter],"angry")    
-#                                                $ Counter = 1
-#                                                $ Counter2 = 1             
-#                    $ Counter2 -= 1
-#                $ Counter -= 1
-#        return
-
 label ShareCheck(BO=[],BO2=[]):
         # This checks whether one of the girls is supposed to ask the other about joining the harem
         # Called by EventCalls
@@ -5571,7 +5777,7 @@ label ShareCheck(BO=[],BO2=[]):
                                                 $ BO[0].DrainWord("ask "+BO2[0].Tag,0,0,1)      #removes "askKitty" from traits  
                                         else:
                                                 call Share(BO[0],BO2[0])  
-                                                $ renpy.pop_call()
+                                                $ renpy.pop_call() #skips past EventCalls
                                                 return  
                                 $ BO2.remove(BO2[0])
                 $ BO.remove(BO[0])
@@ -5659,15 +5865,19 @@ label Share(Girl=0,Other=0):
                                 
                         $ Other.Statup("Obed", 80, 10)
                         $ Other.Statup("Inbt", 80, 15)  
-                        
+                         
+                        $ BO = Player.Harem[:]
+                        while BO:
+                                $ BO[0].DrainWord("saw with "+Other.Tag,0,0,1) 
+                                $ BO.remove(BO[0])                                                
                         if Girl.Event[5]:
                                 # if you've already done her BF event before. . .
                                 $ Player.Harem.append(Other)             
-                                $ Girl.AddWord(1,0,0,"dating",0)     #adds "dating" to traits                   
-                        elif bg_current in ("bg rogue","bg kitty","bg emma","bg laura"):     
+                                $ Other.AddWord(1,0,0,"dating",0)     #adds "dating" to traits                   
+                        elif bg_current in PersonalRooms:     
                                 #if you're in a character room, launch their boyfriend speech
                                 if Other.Tag+"Yes" not in Player.Traits: 
-                                        $ Player.Traits.append(Other.Tag+"Yes")
+                                        $ Player.Traits.append(Other.Tag+"Yes")                                           
                                 call expression Other.Tag + "_BF" #call Rogue_BF 
                                 $ renpy.pop_call() #skips return to ShareCheck
                                 $ renpy.pop_call() #skips return to EventCalls
@@ -5677,7 +5887,7 @@ label Share(Girl=0,Other=0):
                                         $ Player.Traits.append(Other.Tag+"Yes")
                                 call AskedMeet(Other,"bemused")  
                 else:                    
-                        #If Kitty refuses to share you
+                        #If Girl refuses to share you
                         "[Girl.Name] sends you a text."        
                         call AnyLine(Girl,"I talked to "+Other.Name+" about sharing you, and she said she wasn't into that sort of thing,") 
                         if not ApprovalCheck(Other, 2000):
@@ -5691,7 +5901,6 @@ label Share(Girl=0,Other=0):
                                 
                         #means that she won't be available to ask again for another 7 days   
                         $ Other.Break[0] = 7
-                        
         return
         
 # Start Cheated on the girl / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /

@@ -2,6 +2,7 @@
 
 label Prologue: 
     $ bg_current = "bg study"  
+    $ Current_Time = "Evening"
     call Display_Background
     if "Historia" in Player.Traits: #Simulation haze
                 show BlueScreen onlayer black   
@@ -556,50 +557,7 @@ label Rogue_Love:
                     jump Rogue_Love_Jerk
     $ RogueX.FaceChange("bemused",1,Eyes="side")
     $ RogueX.Petnames.append("lover")
-    ch_r "I should probably tell you, I wasn't exactly born with the name \"Rogue.\""
-    ch_r ". . ."
-    $ RogueX.FaceChange("bemused",1)
-    ch_r "Grow'in up, I went by \"Anna-Marie.\""
-    $ RogueX.Names.append("Anna-Marie")
-    $ RogueX.Names.append("Anna")
-    $ RogueX.Names.append("Marie")
-    menu:
-        extend ""
-        "That's a lovely name.":
-                $ RogueX.Statup("Love", 200, 10)
-                $ RogueX.Statup("Obed", 50, 5)
-                $ RogueX.Statup("Inbt", 70, 5)
-                $ RogueX.FaceChange("smile",2)
-                ch_r "Oh, thank you so much for say'in. . ."
-        "Huh, ok.":
-                $ RogueX.Statup("Obed", 80, 5)
-                $ RogueX.FaceChange("confused",1)
-                ch_r "Um. . . yeah."
-        "Don't like it.":
-                $ RogueX.Statup("Love", 200, -5)
-                $ RogueX.Statup("Obed", 200, 10)
-                $ RogueX.Statup("Inbt", 200, -5)
-                $ RogueX.FaceChange("angry",1)
-                ch_r "Oh. . . Ok. . ."
-    menu:
-        extend ""
-        "I think \"Rogue\" suits you though.":
-                $ RogueX.Name = "Rogue"
-                $ RogueX.FaceChange("smile")
-                ch_r "Yeah, I'm used to it buy this point."    
-        "I liked the sound of \"Anna-Marie.\"":
-                $ RogueX.Name = "Anna-Marie"
-                $ RogueX.FaceChange("smile")
-                ch_r "It might be fun to go back like that again. . ."
-        "\"Marie\" would be a cute name for you.":
-                $ RogueX.Name = "Marie"
-                $ RogueX.FaceChange("smile")
-                ch_r "You think? I suppose. . ."
-        "\"Anna\" sounds nice.":
-                $ RogueX.Name = "Anna"
-                $ RogueX.FaceChange("smile")
-                ch_r "I suppose it does. . ."
-    
+    call Rogue_AnnaMarie        #plays new name dialog    
     ch_r "Anyway, I am glad I've been able to share this with you."
     $ RogueX.FaceChange("sly")
     ch_r "I'm hoping to share a lot more with you if I can. . ."
@@ -670,6 +628,51 @@ label Rogue_Love_Jerk:
     call Remove_Girl(RogueX)
     jump Player_Room  
 
+label Rogue_AnnaMarie:
+    ch_r "I should probably tell you, I wasn't exactly born with the name \"Rogue.\""
+    ch_r ". . ."
+    $ RogueX.FaceChange("bemused",1)
+    ch_r "Grow'in up, I went by \"Anna-Marie.\""
+    $ RogueX.Names.append("Anna-Marie")
+    $ RogueX.Names.append("Anna")
+    $ RogueX.Names.append("Marie")
+    menu:
+        extend ""
+        "That's a lovely name.":
+                $ RogueX.Statup("Love", 200, 10)
+                $ RogueX.Statup("Obed", 50, 5)
+                $ RogueX.Statup("Inbt", 70, 5)
+                $ RogueX.FaceChange("smile",2)
+                ch_r "Oh, thank you so much for say'in. . ."
+        "Huh, ok.":
+                $ RogueX.Statup("Obed", 80, 5)
+                $ RogueX.FaceChange("confused",1)
+                ch_r "Um. . . yeah."
+        "Don't like it.":
+                $ RogueX.Statup("Love", 200, -5)
+                $ RogueX.Statup("Obed", 200, 10)
+                $ RogueX.Statup("Inbt", 200, -5)
+                $ RogueX.FaceChange("angry",1)
+                ch_r "Oh. . . Ok. . ."
+    menu:
+        extend ""
+        "I think \"Rogue\" suits you though.":
+                $ RogueX.Name = "Rogue"
+                $ RogueX.FaceChange("smile")
+                ch_r "Yeah, I'm used to it buy this point."    
+        "I liked the sound of \"Anna-Marie.\"":
+                $ RogueX.Name = "Anna-Marie"
+                $ RogueX.FaceChange("smile")
+                ch_r "It might be fun to go back like that again. . ."
+        "\"Marie\" would be a cute name for you.":
+                $ RogueX.Name = "Marie"
+                $ RogueX.FaceChange("smile")
+                ch_r "You think? I suppose. . ."
+        "\"Anna\" sounds nice.":
+                $ RogueX.Name = "Anna"
+                $ RogueX.FaceChange("smile")
+                ch_r "I suppose it does. . ."
+    return
 # end Rogue_Love//////////////////////////////////////////////////////////
 
 
@@ -948,7 +951,9 @@ label Rogue_Sexfriend:
                 $ RogueX.Statup("Inbt", 200, 20)
         "Maybe. . .":
                 $ RogueX.Statup("Love", 200, -10)
-                $ RogueX.Statup("Obed", 200, 30)
+                $ RogueX.Statup("Obed", 200, 30)    
+    if RogueX in Player.Harem:
+        ch_r "I'd like to have a -lot- more sex. . ."
     if not RogueX.Event[9]:
         ch_r "Ok, so since we've been having so much fun. . ."
         if "ex" in RogueX.Traits:
@@ -959,28 +964,29 @@ label Rogue_Sexfriend:
         ch_r "I'd like you to reconsider my generous offer. . ."
         ch_r "come on, sex friend? Eh?"
     $ RogueX.Petnames.append("sex friend") 
-    $ RogueX.Event[9] += 1
-    menu:
-        extend ""
-        "Sounds fun!":
-                $ RogueX.Statup("Inbt", 200, 100) 
-                $ RogueX.Petnames.append("sex friend")
-                "[RogueX.Name] nods obediently."            
-        "What do you mean by that?":            
-                $RogueX.Brows = "confused"              
-                ch_r "You know, casual sex, no real strings, for now at least."
-                menu:
-                    ch_r "Well?"
-                    "Oh, ok, sure.":
-                            "[RogueX.Name] is a bit put off, but grabs you in a big hug anyway."  
-                    "Oh, no thanks. Not interested.":
-                            jump Rogue_Sexfriend_Jerk                
-        "Nah, you're on your own.":
-                jump Rogue_Sexfriend_Jerk
-    $ RogueX.FaceChange("sexy")  
-    ch_r "Now, sex friend. . . how would you like to celebrate?"
-    if "Historia" in Player.Traits:
-            return 1
+    $ RogueX.Event[9] += 1    
+    if RogueX not in Player.Harem:
+            menu:
+                extend ""
+                "Sounds fun!":
+                        $ RogueX.Statup("Inbt", 200, 100) 
+                        $ RogueX.Petnames.append("sex friend")
+                        "[RogueX.Name] nods obediently."            
+                "What do you mean by that?":            
+                        $RogueX.Brows = "confused"              
+                        ch_r "You know, casual sex, no real strings, for now at least."
+                        menu:
+                            ch_r "Well?"
+                            "Oh, ok, sure.":
+                                    "[RogueX.Name] is a bit put off, but grabs you in a big hug anyway."  
+                            "Oh, no thanks. Not interested.":
+                                    jump Rogue_Sexfriend_Jerk                
+                "Nah, you're on your own.":
+                        jump Rogue_Sexfriend_Jerk
+            $ RogueX.FaceChange("sexy")  
+            ch_r "Now, sex friend. . . how would you like to celebrate?"
+            if "Historia" in Player.Traits:
+                    return 1
     if "stockings and garterbelt" not in RogueX.Inventory:
             $ RogueX.Inventory.append("stockings and garterbelt")
     $ Tempmod = 25
@@ -1060,38 +1066,39 @@ label Rogue_Fuckbuddy:
                 $ RogueX.Statup("Love", 200, -10)
                 $ RogueX.Statup("Obed", 200, 30)    
     ch_r "So, since it's worked so far. . ."
-    ch_r "I'd like to be full on casual fuck buddies."
     $ RogueX.Event[10] += 1
     $ RogueX.Petnames.append("fuck buddy")  
-    menu:
-        extend ""
-        "Heh, ok, fuck buddy.":
-                $ RogueX.Statup("Inbt", 200, 100) 
-                $ RogueX.Petnames.append("fuck buddy")
-                $ RogueX.ArmPose = 2
-                ch_r "Whoo hoo!"
-                $ RogueX.Over = 0
-                $ RogueX.Chest = 0  
-                if "Historia" in Player.Traits:
-                            return 1
-                call Rogue_First_Topless(1)
-                call Rogue_Breasts_Launch
-                "Rogue, throws her top off, grabs you and shoves your head into her cleavage."
-                call Rogue_Pos_Reset
-        "What do you mean by that?":            
-            $RogueX.Brows = "confused"
+    if RogueX not in Player.Harem:
+            ch_r "I'd like to be full on casual fuck buddies."
             menu:
-                ch_r "I mean, you know, we'd fuck. And be buddies. Both of those."
-                "Oh, ok, sure.":
-                        call Rogue_Kissing_Launch
-                        "Rogue laughs and tackles you into a hug." 
+                extend ""
+                "Heh, ok, fuck buddy.":
+                        $ RogueX.Statup("Inbt", 200, 100) 
+                        $ RogueX.Petnames.append("fuck buddy")
+                        $ RogueX.ArmPose = 2
+                        ch_r "Whoo hoo!"
+                        $ RogueX.Over = 0
+                        $ RogueX.Chest = 0  
+                        if "Historia" in Player.Traits:
+                                    return 1
+                        call Rogue_First_Topless(1)
+                        call Rogue_Breasts_Launch
+                        "Rogue, throws her top off, grabs you and shoves your head into her cleavage."
                         call Rogue_Pos_Reset
-                "Oh, no, not my style.":
-                        jump Rogue_Fuckbuddy_Jerk                
-        "No thanks.":
-            jump Rogue_Fuckbuddy_Jerk
-    $ RogueX.FaceChange("sexy")      
-    ch_r "Now, -heh-, fuck buddy. . . let's make this official!"
+                "What do you mean by that?":            
+                    $RogueX.Brows = "confused"
+                    menu:
+                        ch_r "I mean, you know, we'd fuck. And be buddies. Both of those."
+                        "Oh, ok, sure.":
+                                call Rogue_Kissing_Launch
+                                "Rogue laughs and tackles you into a hug." 
+                                call Rogue_Pos_Reset
+                        "Oh, no, not my style.":
+                                jump Rogue_Fuckbuddy_Jerk                
+                "No thanks.":
+                    jump Rogue_Fuckbuddy_Jerk
+            $ RogueX.FaceChange("sexy")      
+            ch_r "Now, -heh-, fuck buddy. . . let's make this official!"
     if "Historia" in Player.Traits:
             return 1
     $ Tempmod = 30
