@@ -18,28 +18,28 @@ init python:
 
     class Outfit(object):
 
-        self._outfit = [0,0,0,0,0,0,0,0,0,0]
-
-        # Outfit stats
-        self._undressed = 0
-        self._upSkirt = 0
-        self._upTop = 0
-        self._pantiesDown = 0
-
-        # Outfit pieces named:
-        self.arms = 0
-        self.legs = 0
-        self.over = 0
-        self.neck = 0
-        self.chest = 0
-        self.panties = 0
-        self.acc = 0
-        self.hair = 0
-        self.hose = 0
-
         def __init__(self, name, outfit = [0,0,0,0,0,0,0,0,0,0]):
             self.name = name
             self.UpdateOutfit(outfit)
+
+            self._outfit = [0,0,0,0,0,0,0,0,0,0]
+
+            # Outfit stats
+            self._undressed = 0
+            self._upSkirt = 0
+            self._upTop = 0
+            self._pantiesDown = 0
+
+            # Outfit pieces named:
+            self.arms = 0
+            self.legs = 0
+            self.over = 0
+            self.neck = 0
+            self.chest = 0
+            self.panties = 0
+            self.acc = 0
+            self.hair = 0
+            self.hose = 0
 
         def __getitem__(self, item):
             return self._outfit[item]
@@ -53,9 +53,7 @@ init python:
 
         # Calculates undressed state.
         def _calcUndressed(self):
-            if not self._outfit[2] or not self._outfit[3] or not self._outfit[5]
-            or not self._outfit[6] or not self._outfit[9] or self._upSkirt
-            or self._uptop or self._pantiesDown:
+            if self._outfit[2] and self._outfit[3] and self._outfit[5] and self._outfit[6] == 0:
                 self._undressed = 1
 
         # Sanity check for outfit. Replaces any blanks with '0'.

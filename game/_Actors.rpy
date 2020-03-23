@@ -1,8 +1,8 @@
 init -1 python:
 
     class Player(object):
-    ''' Player object holds player data and does not
-        control player interactions.'''
+    #''' Player object holds player data and does not
+    #    control player interactions.'''
         def __init__(self, name = "Zero", color = "green"):
             # default player name is Zero
             self.name = name
@@ -12,16 +12,23 @@ init -1 python:
             self.level = 1
             # Set current xp to 0
             self.xp = 0
+            # Used when upgrading skills 
+            self.statpoints = 0
+            # Amount of reputation
+            self.rep = 0
 
             # Store sex stats together in a dict
             self.sex = {
-                stamina : 0,
-                staminaMax : 0,
-                semen = 3,
-                semenMax = 3,
+                focus : 0,                      #progress towards orgasm
+                focusX : 0,                     #when using focus to last longer
+                semen : 3,                      #available semen
+                semenMax : 3,                   #amount it maxes out at
+                SEXP : 0,                       #how much sex you've had overall
+                stamina : 0,                    #available stamina
+                staminaMax : 0,                 #amount it maxes out at
                 }
             # Inventory is a simple list.
-            self.inventory[]
+            self.inventory = []
             # Money is stored as a separate value. Default start of $0
             self.cash = 0
             # Set an initial income value.
@@ -51,7 +58,7 @@ init -1 python:
 
             # Sex Stats:
             self.sex = {
-                'actions': 3
+                'actions': 3,
                 'addiction': 0,
                 'addictionRate': 0,
                 'addictionResist': 0,
@@ -64,7 +71,7 @@ init -1 python:
                 'chest': 0,
                 'panties': 0,
                 'penis': 0,
-                'pussy': 0
+                'pussy': 0,
                 }
 
             # Sex history. Why is so much recorded? Trim if possible.
@@ -89,7 +96,7 @@ init -1 python:
                 'lesbian': 0,
                 'lesWatch': 0,
                 'lickedAss': 0,
-                'lickedPenis'; 0,
+                'lickedPenis': 0,
                 'massaged': 0,
                 'masturbated': 0,
                 'orgasmed': 0,
@@ -97,5 +104,5 @@ init -1 python:
                 'stripped': 0,
                 'swallowed': 0,
                 'usedVibe': 0,
-                'usedPlug': 0
+                'usedPlug': 0,
                 }
