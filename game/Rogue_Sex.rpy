@@ -698,7 +698,7 @@ label Rogue_M_Cycle:
                                                 if Trigger2:
                                                      $ RogueX.Action -= 1
                                             else:
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"  
+                                                call Sex_Basic_Dialog(RogueX,"tired")   
                                                            
                                     "Threesome actions (locked)" if not Partner or "unseen" in RogueX.RecentActions or RogueX.Loc == bg_current: 
                                         pass
@@ -1425,7 +1425,7 @@ label Rogue_Sex_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ RogueX.Action -= 1
                                             else:
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"  
+                                                call Sex_Basic_Dialog(RogueX,"tired")   
                                                 
                                     "Shift primary action":
                                             if RogueX.Action and MultiAction:
@@ -1445,7 +1445,7 @@ label Rogue_Sex_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Rogue_Sex_Cycle
                                             else:
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?" 
+                                                call Sex_Basic_Dialog(RogueX,"tired")  
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
                                     "Threesome actions" if Partner:  
@@ -2175,7 +2175,7 @@ label Rogue_Anal_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ RogueX.Action -= 1
                                             else:
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"  
+                                                call Sex_Basic_Dialog(RogueX,"tired")   
                                                 
                                     "Shift primary action":
                                             if RogueX.Action and MultiAction:
@@ -2195,7 +2195,7 @@ label Rogue_Anal_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Rogue_Anal_Cycle
                                             else:
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?" 
+                                                call Sex_Basic_Dialog(RogueX,"tired")  
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
                                     "Threesome actions" if Partner:  
@@ -2837,7 +2837,7 @@ label Rogue_Hotdog_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ RogueX.Action -= 1
                                             else:
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"  
+                                                call Sex_Basic_Dialog(RogueX,"tired")   
                                                 
                                     "Shift primary action":
                                             if RogueX.Action and MultiAction:
@@ -2861,7 +2861,7 @@ label Rogue_Hotdog_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Rogue_Hotdog_Cycle
                                             else:
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?" 
+                                                call Sex_Basic_Dialog(RogueX,"tired")  
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
                                     "Threesome actions" if Partner:   

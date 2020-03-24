@@ -727,15 +727,17 @@ label Girls_Schedule(Girls = [], Clothes = 1, Location = 1, LocTemp = 0):
                                 $ Girls[0].Loc = Girls[0].Schedule[Weekday][Time_Count]                        
                                                                 
                         if Girls[0].Loc != LocTemp and Girls[0] not in Party:  
-                                #if she moved
-                                if ApprovalCheck(Girls[0], 1200) and Girls[0].Loc not in ("bg classroom","bg dangerroom"):
-                                        # if she's contented, then she just sticks around
-                                        $ Girls[0].Loc = LocTemp                                        
-                                elif LocTemp == bg_current:                         
-                                        #If she was where you were, but left
-                                        $ Girls[0].RecentActions.append("leaving") 
-                                elif Girls[0].Loc == bg_current: #If she's showed up
-                                        $ Girls[0].RecentActions.append("arriving") 
+                                #if she moved                                                                    
+                                if LocTemp == bg_current:                     
+                                        if ApprovalCheck(Girls[0], 1200) and Girls[0].Loc not in ("bg classroom","bg teacher","bg dangerroom"):
+                                                # if she's contented, then she just sticks around
+                                                $ Girls[0].Loc = LocTemp  
+                                        else:    
+                                                #If she was where you were, but left
+                                                $ Girls[0].RecentActions.append("leaving") 
+                                elif Girls[0].Loc == bg_current: 
+                                                #If she's showed up
+                                                $ Girls[0].RecentActions.append("arriving") 
                         if Girls[0] in Nearby:
                                         $ Nearby.remove(Girls[0])    
                 $ Girls.remove(Girls[0])
@@ -2352,19 +2354,14 @@ label Gym_Clothes(Mode = 0, Girl = [], GirlsNum = 0, BO=[]): #checked each time 
                         
                         if Line == "no" or "asked gym" in BO[0].DailyActions or "no ask gym" in BO[0].Traits:   
                                 #If she decides not to ask you   
-                                show blackscreen onlayer black                     
-                                if GirlsNum:
-                                    if BO[0] == EmmaX:
-                                            ch_e "I should change too."  
-                                    elif BO[0] == LauraX:
-                                            ch_l "I'll be right back. . ."   
-                                    else:
-                                            call AnyLine(BO[0],"I'll be right back too.")
+                                show blackscreen onlayer black 
+                                if BO[0] == EmmaX:
+                                        ch_e "I should change too."  
+                                elif BO[0] == LauraX:
+                                        ch_l "I'll be right back. . ."   
                                 else:
-                                    if BO[0] == EmmaX:
-                                            ch_e "I should change too."  
-                                    elif BO[0] == LauraX:
-                                            ch_l "I'll be right back. . ."   
+                                    if GirlsNum:
+                                            call AnyLine(BO[0],"I'll be right back too.")
                                     else: 
                                             call AnyLine(BO[0],"I'll be back soon, gotta change.")  
                                 $ BO[0].Outfit = "gym"
@@ -2580,7 +2577,10 @@ label Locked_Door(Girl=0,Entry=0):
         # called when a girl tries to enter a locked room, mainly from the summon function
         # Girl is the indicated girl, Entry is True if you want to always have her enter with dialog
         if Girl not in TotalGirls:
-                return
+                return  
+        if not Trigger:
+                #resets the scene if not during a sex act
+                call Set_The_Scene
         if Girl == KittyX:
                 "You look to the door just as [KittyX.Name] phases into the room."
                 $ KittyX.Loc = bg_current 
@@ -3141,6 +3141,7 @@ label Set_The_Scene(Chr = 1, Entry = 0, Dress = 1, TrigReset = 1, Quiet=0,BO=[])
                         if Ch_Focus.Loc != bg_current and BO[0].Loc == bg_current: 
                                 #if the focused girl is not in the room, pick someone else
                                 call Shift_Focus(BO[0])
+                                
                         if Ch_Focus != BO[0]:
                                 #moves all other girls to Stage Right, 75 layer
                                 $ BO[0].SpriteLoc = StageRight 
@@ -3178,6 +3179,7 @@ label Set_The_Scene(Chr = 1, Entry = 0, Dress = 1, TrigReset = 1, Quiet=0,BO=[])
         else:
                 hide BlueScreen onlayer black
         hide blackscreen onlayer black
+        
         return
 # End primary Display function / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /      
         
@@ -3859,11 +3861,10 @@ label Jumped(Act=0):
                     $ Player.RecentActions.append("nope")      
                     return     
                                         
-        #sets their location
-        
+        #sets their location        
         $ BO = Girls[:]                
         while BO:
-                $ BO[0].Loc == bg_current
+                $ BO[0].Loc = bg_current
                 $ BO.remove(BO[0]) 
         $ Girls[0].AddWord(1,"jumped","jumped") 
                         
@@ -3880,8 +3881,11 @@ label Jumped(Act=0):
                 elif Girls[0].Home != bg_current and not (Partner and Partner.Home == bg_current):
                                 #if it's not the first girl's room, and also not the second's
                                 $ Act = "leave" 
+                                
+        if Room_Full(): #if the room is full. . .
+                $ Act = "leave" 
         
-        call Shift_Focus(Girls[0])
+        call Shift_Focus(Girls[0]) #this is not working, sometimes?
         call Set_The_Scene
          
         $ Player.RecentActions.append("jumped")  
@@ -4875,7 +4879,7 @@ label Girl_First_Peen(Girl = 0, Silent = 0, Undress = 0, Second = 0, React = 0):
             else:
                     "You whip your cock out."
             $ Player.AddWord(1,"cockout") 
-            if not React and bg_current != "bg showerroom" and not ApprovalCheck(Girl, 800) and not ApprovalCheck(Girl, 500, "I"):
+            if not Girl.Forced and not React and bg_current != "bg showerroom" and not ApprovalCheck(Girl, 800) and not ApprovalCheck(Girl, 500, "I"):
                     if Girl == EmmaX and "detention" in Girl.RecentActions or "classcaught" in Girl.RecentActions:  
                         #special exceptions for detention and classcaught events
                         $ Girl.FaceChange("confused", Eyes="down")  
@@ -4931,7 +4935,7 @@ label Girl_First_Peen(Girl = 0, Silent = 0, Undress = 0, Second = 0, React = 0):
                                     $ Girl.Statup("Love", 90, -5)                
                                     $ Girl.Statup("Obed", 50, 10)
                                     $ Girl.Statup("Inbt", 60, 10)  
-            elif Taboo > 20 and (not ApprovalCheck(Girl, 1500) or Girl.SEXP < 10) and bg_current != "bg showerroom":
+            elif not Girl.Forced and not React and Taboo > 20 and (not ApprovalCheck(Girl, 1500) or Girl.SEXP < 10) and bg_current != "bg showerroom":
                         #if it's a semi-public space that isn't the showers, and she is not down with this. . .
                         $ Girl.FaceChange("surprised", 2)                     
                         if Girl == RogueX: 
@@ -5098,7 +5102,8 @@ label Girl_First_Peen(Girl = 0, Silent = 0, Undress = 0, Second = 0, React = 0):
                     else:
                             if Girl.SeenPeen == 1: 
                                 $ Girl.Statup("Obed", 50, 5)
-                                $ Girl.Statup("Inbt", 60, 5)  
+                                $ Girl.Statup("Inbt", 60, 5) 
+                                $ Girl.AddWord(1,0,0,0,"seenpeen") #$ Girl.History.append("seenpeen")  
                             elif Girl.SeenPeen < 5: 
                                 $ Girl.Statup("Inbt", 60, 2)  
                             elif Girl.SeenPeen == 10:              
@@ -5425,16 +5430,14 @@ label Girls_Noticed(Girl=Primary,Other=0,Silent=0,B=0,BO=[]):
         $ Other.RecentActions.append("noticed " + Girl.Tag)
         if Other == EmmaX and "three" not in EmmaX.History or "classcaught" not in EmmaX.History: 
                     #Emma-specific code
+                    $ Other.AddWord(1,0,0,"saw with " + Girl.Tag) #adds to Traits.
                     if bg_current == EmmaX.Home:
                             #if you're in her room. . .
                             ch_e "If the two of you cannot keep your hands off each other, please do so elsewhere. . ."
                             "She shoves the two of you out of her room and slams the door."
-                            $ Other.Loc = "bg player"
-                            $ renpy.pop_call()        
-                            $ renpy.pop_call()
-                            jump Player_Room
+                            $ Girl.Loc = "bg player"
+                            jump Misplaced
                     call Remove_Girl(EmmaX)    
-                    $ Other.AddWord(1,0,0,"saw with " + Girl.Tag) #adds to Traits.
                     if not Silent:
                             "She seems uncomfortable with the situation and leaves the room."
                             "Perhaps you should ask her about it later."
@@ -5647,7 +5650,7 @@ label Sex_Over(Clothes=1,Girls=0,BO=[]):
                                 call Girl_CleanCock(BO[0])
                 $ BO.remove(BO[0])
                                         
-        if Girls in TotalGirls and Girls == Partner:#Ch_Focus != Girls:
+        if Girls == Partner and Girls in TotalGirls:
                 #swaps lead back to original
                 call Shift_Focus(Girls)
         $ Girls = 0            

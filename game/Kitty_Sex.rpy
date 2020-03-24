@@ -1455,7 +1455,7 @@ label Kitty_Sex_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ KittyX.Action -= 1
                                             else:
-                                                ch_k "I'm[KittyX.like]kinda tired here? Could we wrap it up?" 
+                                                call Sex_Basic_Dialog(KittyX,"tired")  
                                                 
                                     "Shift primary action":
                                             if KittyX.Action and MultiAction:
@@ -1475,7 +1475,7 @@ label Kitty_Sex_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Kitty_Sex_Cycle
                                             else:
-                                                ch_k "I'm[KittyX.like]kinda tired here? Could we wrap it up?" 
+                                                call Sex_Basic_Dialog(KittyX,"tired")  
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
                                     "Threesome actions" if Partner:   
@@ -1834,7 +1834,7 @@ label Kitty_Sex_A:
     if not KittyX.Loose and ("dildo anal" in KittyX.DailyActions or "anal" in KittyX.DailyActions):
             #if she's done anal stuff today
             $ KittyX.FaceChange("bemused", 1)
-            ch_k "I'm not really over the last time."            
+            ch_k "I'm not really over the last time, but. . ."            
     elif "anal" in KittyX.RecentActions:
             $ KittyX.FaceChange("sexy", 1)
             ch_k "Again? K."
@@ -2226,7 +2226,7 @@ label Kitty_Anal_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ KittyX.Action -= 1
                                             else:
-                                                ch_k "I'm[KittyX.like]kinda tired here? Could we wrap it up?" 
+                                                call Sex_Basic_Dialog(KittyX,"tired")  
                                                 
                                     "Shift primary action":
                                             if KittyX.Action and MultiAction:
@@ -2246,7 +2246,7 @@ label Kitty_Anal_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Kitty_Anal_Cycle
                                             else:
-                                                ch_k "I'm[KittyX.like]kinda tired here? Could we wrap it up?" 
+                                                call Sex_Basic_Dialog(KittyX,"tired")  
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
                                     "Threesome actions" if Partner:   
@@ -2896,7 +2896,7 @@ label Kitty_Hotdog_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ KittyX.Action -= 1
                                             else:
-                                                ch_k "I'm[KittyX.like]kinda tired here? Could we wrap it up?" 
+                                                call Sex_Basic_Dialog(KittyX,"tired")  
                                                 
                                     "Shift primary action":
                                             if KittyX.Action and MultiAction:
@@ -2920,7 +2920,7 @@ label Kitty_Hotdog_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Kitty_Hotdog_Cycle
                                             else:
-                                                ch_k "I'm[KittyX.like]kinda tired here? Could we wrap it up?" 
+                                                call Sex_Basic_Dialog(KittyX,"tired")  
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
                                     "Threesome actions" if Partner:   

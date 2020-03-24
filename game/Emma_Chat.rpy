@@ -996,6 +996,14 @@ label Emma_Chitchat(O=0, Options = ["default","default","default"]):
                 #If you've given Emma the lingerie
                 if "lingerie" not in EmmaX.Chat:
                     $ Options.append("lingerie")
+                    
+            if "seenpeen" in EmmaX.History:
+                $ Options.append("seenpeen")  
+            if "topless" in EmmaX.History:
+                $ Options.append("topless")  
+            if "bottomless" in EmmaX.History:
+                $ Options.append("bottomless")  
+            
             if EmmaX.Hand:   
                 #If Emma's given a handjob
                 $ Options.append("handy")
@@ -1286,6 +1294,28 @@ label Emma_Chitchat(O=0, Options = ["default","default","default"]):
             $ EmmaX.FaceChange("sexy")
             ch_e "I'm glad you \"went there.\""
         
+    elif Options[0] == "seenpeen": # first seen peen skipped
+            $ EmmaX.FaceChange("sly",1)  
+            ch_e "Perhaps I should have mentioned it earlier,"
+            $ EmmaX.FaceChange("sly",1, Eyes="down")  
+            ch_e "That cock you've got is certainly an interesting specimen."
+            $ EmmaX.FaceChange("bemused",1)  
+            $ EmmaX.Statup("Love", 50, 5) 
+            $ EmmaX.Statup("Love", 90, 10)  
+            $ EmmaX.History.remove("seenpeen")  
+    elif Options[0] == "topless": # first seen breasts skipped
+            $ EmmaX.FaceChange("sly",1)  
+            ch_e "Out of curiosity, when you saw my breasts earlier. . ."
+            ch_e "Was it everything you dreamed?"  
+            call Emma_First_TMenu
+            $ EmmaX.History.remove("topless")  
+    elif Options[0] == "bottomless": # first seen pussy skipped
+            $ EmmaX.FaceChange("sly",1)  
+            ch_e "I was wondering, when you saw me bottomless before. . ."
+            ch_e "What did you think?"
+            call Emma_First_BMenu
+            $ EmmaX.History.remove("bottomless")  
+            
     elif Options[0] == "boyfriend?":
         call Emma_BF
     elif Options[0] == "lover?":

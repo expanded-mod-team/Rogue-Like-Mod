@@ -246,7 +246,7 @@ label LauraMeet(Topics=[],Loop=1):
     $ bg_current = "bg dangerroom"            
     $ Round -= 10      
     call Shift_Focus(RogueX) 
-    $ ActiveGirls.remove(LauraX)
+    $ ActiveGirls.remove(LauraX) if LauraX in ActiveGirls else ActiveGirls
                 
     return
 

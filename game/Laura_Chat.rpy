@@ -950,6 +950,13 @@ label Laura_Chitchat(O=0, Options = ["default","default","default"]):
             #If Laura's been analed
             $ Options.append("anal")
             
+        if "seenpeen" in LauraX.History:
+            $ Options.append("seenpeen")  
+        if "topless" in LauraX.History:
+            $ Options.append("topless")  
+        if "bottomless" in LauraX.History:
+            $ Options.append("bottomless")  
+            
 #        if not LauraX.Chat[0] and LauraX.Sex:
 #            $ Options.append("virgin")    
             
@@ -1224,6 +1231,22 @@ label Laura_Chitchat(O=0, Options = ["default","default","default"]):
             $ LauraX.FaceChange("sexy",1)
             ch_l "Until you, at least."
         
+    elif Options[0] == "seenpeen": # first seen peen skipped
+            $ LauraX.FaceChange("sly",1, Eyes="down")  
+            ch_l "I forgot to tell you, you've got a pretty nice cock down there. . ."
+            $ LauraX.FaceChange("bemused",1)  
+            $ LauraX.Statup("Love", 50, 5) 
+            $ LauraX.History.remove("seenpeen")  
+    elif Options[0] == "topless": # first seen breasts skipped
+            ch_l "Hey,what'd you think of my tits?"
+            ch_l "Did you like what you saw?"  
+            call Laura_First_TMenu
+            $ LauraX.History.remove("topless")  
+    elif Options[0] == "bottomless": # first seen pussy skipped
+            ch_l "Hey, what'd you think when you saw my pussy earlier?"
+            call Laura_First_BMenu
+            $ LauraX.History.remove("bottomless")  
+            
 #    elif Options[0] == "boyfriend?":
 #        call Laura_BF
 #    elif Options[0] == "lover?":

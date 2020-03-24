@@ -744,8 +744,8 @@ label VersionNumber:
                     if RogueX in Player.Harem:
                             $ RogueX.AddWord(1,0,0,"dating",0)
         if "KittyX" in globals().keys():
-                    if KittyX in ActiveGirls and "met" not in KittyX.History:
-                            $ ActiveGirls.remove(KittyX)
+#                    if KittyX in ActiveGirls and "met" not in KittyX.History:
+#                            $ ActiveGirls.remove(KittyX)
                     if KittyX in TotalGirls:
                             while KittyX in TotalGirls:
                                 $ TotalGirls.remove(KittyX)
@@ -763,8 +763,8 @@ label VersionNumber:
                     if KittyX in Player.Harem:
                             $ KittyX.AddWord(1,0,0,"dating",0)
         if "EmmaX" in globals().keys():
-                    if EmmaX in ActiveGirls and "met" not in EmmaX.History:
-                            $ ActiveGirls.remove(EmmaX)
+#                    if EmmaX in ActiveGirls and "met" not in EmmaX.History:
+#                            $ ActiveGirls.remove(EmmaX)
                     if EmmaX in TotalGirls:
                             while EmmaX in TotalGirls:
                                 $ TotalGirls.remove(EmmaX)
@@ -782,8 +782,8 @@ label VersionNumber:
                     if EmmaX in Player.Harem:
                             $ EmmaX.AddWord(1,0,0,"dating",0)
         if "LauraX" in globals().keys(): 
-                    if LauraX in ActiveGirls and "met" not in LauraX.History:
-                            $ ActiveGirls.remove(LauraX)
+#                    if LauraX in ActiveGirls and "met" not in LauraX.History:
+#                            $ ActiveGirls.remove(LauraX)
                     if LauraX in TotalGirls:
                             while LauraX in TotalGirls:
                                 $ TotalGirls.remove(LauraX)

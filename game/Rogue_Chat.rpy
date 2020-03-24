@@ -1163,7 +1163,14 @@ label Rogue_Chitchat(O=0, Options = ["default","default","default"]):
             $ Options.append("corruption")
                     
         if not RogueX.Chat[0] and RogueX.Sex:
-            $ Options.append("virgin")    
+            $ Options.append("virgin")   
+                        
+        if "seenpeen" in RogueX.History:
+            $ Options.append("seenpeen")  
+        if "topless" in RogueX.History:
+            $ Options.append("topless")  
+        if "bottomless" in RogueX.History:
+            $ Options.append("bottomless")  
             
         if "lover" in RogueX.Petnames and "Anna" not in RogueX.Names:
             #if you've done the love scene, but never got Rogue's other name, second chance
@@ -1262,8 +1269,24 @@ label Rogue_Chitchat(O=0, Options = ["default","default","default"]):
         ch_r "Y'know what I'm sayin', [RogueX.Petname]?"        
         $ RogueX.Upskirt = 0      
         call Rogue_Doggy_Reset
-
-        
+     
+    elif Options[0] == "seenpeen": # first seen peen skipped
+            $ RogueX.FaceChange("sly",1)  
+            ch_r "You really did surprise me when you whipped that cock out."
+            ch_r "I didn't know they looked so big up close."
+            $ RogueX.FaceChange("bemused",1)  
+            $ RogueX.Statup("Love", 90, 5) 
+            $ RogueX.History.remove("seenpeen")  
+    elif Options[0] == "topless": # first seen breasts skipped
+            ch_r "Hey, when you got a look at my tits earlier, you didn't have much to say. . ."
+            ch_r "Did you like what you saw?"  
+            call Rogue_First_TMenu
+            $ RogueX.History.remove("topless")  
+    elif Options[0] == "bottomless": # first seen pussy skipped
+            ch_r "Hey, when you saw me bottomless earlier, you didn't have much to say. . ."
+            call Rogue_First_BMenu
+            $ RogueX.History.remove("bottomless")  
+            
     elif Options[0] == "luv": # love maxed out
         $ RogueX.FaceChange("bemused", 1)
         ch_r ". . ."

@@ -342,7 +342,7 @@ label Rogue_HJ_Cycle: #Repeating strokes
                                                 "You start to fondle her breasts."
                                                 $ RogueX.Action -= 1
                                             else:
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"  
+                                                call Sex_Basic_Dialog(RogueX,"tired")   
                                          
                                     "Shift primary action":
                                             if RogueX.Action and MultiAction:
@@ -353,7 +353,7 @@ label Rogue_HJ_Cycle: #Repeating strokes
                                                                         call Rogue_HJ_After                
                                                                         call Rogue_Blowjob
                                                                     else:
-                                                                        ch_r "Actually I'm getting a bit worn out, let's finish up here. . ."
+                                                                        call Sex_Basic_Dialog(RogueX,"tired") 
                                                                         
                                                         "How about a titjob?":
                                                                     if RogueX.Action and MultiAction:
@@ -361,11 +361,11 @@ label Rogue_HJ_Cycle: #Repeating strokes
                                                                         call Rogue_HJ_After
                                                                         call Rogue_Titjob
                                                                     else:
-                                                                        ch_r "Actually I'm getting a bit worn out, let's finish up here. . ."
+                                                                        call Sex_Basic_Dialog(RogueX,"tired") 
                                                         "Never Mind":
                                                                 jump Rogue_HJ_Cycle
                                             else: 
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"           
+                                                call Sex_Basic_Dialog(RogueX,"tired")            
                     
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
@@ -956,7 +956,7 @@ label Rogue_TJ_Cycle: #Repeating strokes
                                                 "You start to fondle her breasts."
                                                 $ RogueX.Action -= 1
                                             else:
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"  
+                                                call Sex_Basic_Dialog(RogueX,"tired")   
                                          
                                     "Shift primary action":
                                             if RogueX.Action and MultiAction:
@@ -967,7 +967,7 @@ label Rogue_TJ_Cycle: #Repeating strokes
                                                                     call Rogue_TJ_After                
                                                                     call Rogue_Blowjob
                                                                 else:
-                                                                    ch_r "Actually I'm getting a bit worn out, let's finish up here. . ."
+                                                                    call Sex_Basic_Dialog(RogueX,"tired") 
                                                                     
                                                         "How about a handy?":
                                                                 if RogueX.Action and MultiAction:
@@ -975,11 +975,11 @@ label Rogue_TJ_Cycle: #Repeating strokes
                                                                     call Rogue_TJ_After
                                                                     call Rogue_Handjob
                                                                 else:
-                                                                    ch_r "Actually I'm getting a bit worn out, let's finish up here. . ."                                                            
+                                                                    call Sex_Basic_Dialog(RogueX,"tired")                                                             
                                                         "Never Mind":
                                                                 jump Rogue_TJ_Cycle
                                             else: 
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"           
+                                                call Sex_Basic_Dialog(RogueX,"tired")            
                     
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
@@ -1576,7 +1576,7 @@ label Rogue_BJ_Cycle: #Repeating strokes
                                                 "You start to fondle her breasts."
                                                 $ RogueX.Action -= 1
                                             else:
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"  
+                                                call Sex_Basic_Dialog(RogueX,"tired")   
                                          
                                     "Shift primary action":
                                             if RogueX.Action and MultiAction:
@@ -1587,18 +1587,18 @@ label Rogue_BJ_Cycle: #Repeating strokes
                                                                     call Rogue_BJ_After
                                                                     call Rogue_Handjob
                                                                 else:
-                                                                    ch_r "Actually I'm getting a bit worn out, let's finish up here. . ."
+                                                                    call Sex_Basic_Dialog(RogueX,"tired") 
                                                         "How about a titjob?":
                                                                 if RogueX.Action and MultiAction:
                                                                     $ Situation = "shift"
                                                                     call Rogue_BJ_After
                                                                     call Rogue_Titjob
                                                                 else:
-                                                                    ch_r "Actually I'm getting a bit worn out, let's finish up here. . ."
+                                                                    call Sex_Basic_Dialog(RogueX,"tired") 
                                                         "Never Mind":
                                                                 jump Rogue_BJ_Cycle
                                             else: 
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"           
+                                                call Sex_Basic_Dialog(RogueX,"tired")            
                     
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
@@ -2218,7 +2218,7 @@ label Rogue_DP_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ RogueX.Action -= 1
                                             else:
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"  
+                                                call Sex_Basic_Dialog(RogueX,"tired")   
                                                 
                                     "Shift primary action":
                                             if RogueX.Action and MultiAction:
@@ -2238,7 +2238,7 @@ label Rogue_DP_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Rogue_DP_Cycle
                                             else: 
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"           
+                                                call Sex_Basic_Dialog(RogueX,"tired")            
                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
@@ -2844,7 +2844,7 @@ label Rogue_DA_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ RogueX.Action -= 1
                                             else:
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"  
+                                                call Sex_Basic_Dialog(RogueX,"tired")   
                                                 
                                     "Shift primary action":
                                             if RogueX.Action and MultiAction:
@@ -2864,7 +2864,7 @@ label Rogue_DA_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Rogue_DA_Cycle
                                             else: 
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"           
+                                                call Sex_Basic_Dialog(RogueX,"tired")            
                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
@@ -3417,7 +3417,7 @@ label Rogue_FJ_Cycle:
                                                 if Trigger2:
                                                      $ RogueX.Action -= 1
                                             else:
-                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?"  
+                                                call Sex_Basic_Dialog(RogueX,"tired")   
                                                    
                                     "Shift primary action":
                                             if RogueX.Action and MultiAction:
@@ -3428,14 +3428,14 @@ label Rogue_FJ_Cycle:
                                                                         call Rogue_FJ_After                
                                                                         call Rogue_Blowjob
                                                                     else:
-                                                                        ch_r "Actually I'm getting a bit worn out, let's finish up here. . ."
+                                                                        call Sex_Basic_Dialog(RogueX,"tired") 
                                                         "How about a handjob?":
                                                                     if RogueX.Action and MultiAction:
                                                                         $ Situation = "shift"
                                                                         call Rogue_FJ_After                
                                                                         call Rogue_Handjob
                                                                     else:
-                                                                        ch_r "Actually I'm getting a bit worn out, let's finish up here. . ."
+                                                                        call Sex_Basic_Dialog(RogueX,"tired") 
                                                                         
                                                         "How about a titjob?":
                                                                     if RogueX.Action and MultiAction:
@@ -3443,12 +3443,12 @@ label Rogue_FJ_Cycle:
                                                                         call Rogue_FJ_After
                                                                         call Rogue_Titjob
                                                                     else:
-                                                                        ch_r "Actually I'm getting a bit worn out, let's finish up here. . ."
+                                                                        call Sex_Basic_Dialog(RogueX,"tired") 
                                                                 
                                                         "Never Mind":
                                                                 jump Rogue_FJ_Cycle
                                             else: 
-                                                ch_r "I'm getting kinda tired, so maybe we could wrap this up?"           
+                                                call Sex_Basic_Dialog(RogueX,"tired")            
                     
                                     "Threesome actions (locked)" if not Partner: 
                                         pass

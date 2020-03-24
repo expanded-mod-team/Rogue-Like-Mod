@@ -637,6 +637,7 @@ label Primary_SexDialog(GirlA=Primary,TempLine = 0, TempLust = 0, TempLust2 = 0)
                 #If she's extra loose
                 $ TempLust += 1
                 
+            $ GirlA.Addict -= 3
             $ TempLust = 0 if (GirlA.Lust - TempLust) < 0 else TempLust
             
     # end GirlA.Anal                                 //////////////////////////////////////////////////////////////////////////////
@@ -3388,7 +3389,7 @@ label Dirty_Talk(Girl = Primary, D20=0, TempCheck=0, TempLine=0, TempTrigger=Tri
                                             "I like it."+KittyX.Like+"a {i}lot{/i}.",
                                             "Oooh, that's it. . .",
                                             "More, gimme more!",
-                                            "That look's so cute, " +KittyX.Petname + "!",
+                                            "You're looking so cute, " +KittyX.Petname + "!",
                                             "I've never wanted a guy like I want you, " + KittyX.Petname + "."
                                             ])
                         else:
@@ -3708,7 +3709,10 @@ label Sex_Basic_Dialog(Girl=0,Type=0):
                 elif Type == "done":
                         ch_r "Ok, [Girl.Petname], that's enough of that for now."
                 elif Type == "tired":
-                        ch_r "I'm actually getting a little tired, so maybe we could wrap this up?" 
+                        if not MultiAction:
+                                ch_r "Look, I think we can stay on this one thing. . ." 
+                        else:
+                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up?" 
                 elif Type == "sitch":
                         ch_r "Mmm, so what else did you have in mind?"
         elif Girl == KittyX:
@@ -3719,7 +3723,10 @@ label Sex_Basic_Dialog(Girl=0,Type=0):
                 elif Type == "done":
                         ch_k "Time to take a little break, for now."
                 elif Type == "tired":
-                        ch_k "I kinda need a break, so if we could wrap this up?"  
+                        if not MultiAction:
+                                ch_k "Let's just. . . stick with this. . ." 
+                        else:
+                                ch_k "I kinda need a break, so if we could wrap this up?"  
                 elif Type == "sitch":
                         ch_k "Mmm, so what else did you have in mind?"
         elif Girl == EmmaX:
@@ -3730,7 +3737,10 @@ label Sex_Basic_Dialog(Girl=0,Type=0):
                 elif Type == "done":
                         ch_e "We need to stop for a moment, let me catch my breath."
                 elif Type == "tired":
-                        ch_e "I could use a break, are you about finished here?" 
+                        if not MultiAction:
+                                ch_e "Focus on what we're doing, [Girl.Petname]." 
+                        else:
+                                ch_e "I could use a break, are you about finished here?" 
                 elif Type == "sitch": 
                         ch_e "Ok then, what were you thinking?"
         elif Girl == LauraX:
@@ -3741,7 +3751,10 @@ label Sex_Basic_Dialog(Girl=0,Type=0):
                 elif Type == "done":
                         ch_l "Ok, [Girl.Petname], breaktime."
                 elif Type == "tired":
-                        ch_l "Maybe we could finish this up for now?" 
+                        if not MultiAction:
+                                ch_l "Nah, let's just stick to this." 
+                        else:
+                                ch_l "Maybe we could finish this up for now?" 
                 elif Type == "sitch":    
                         ch_l "Ok then, what next?"                    
         return

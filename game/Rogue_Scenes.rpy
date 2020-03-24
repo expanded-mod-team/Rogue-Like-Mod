@@ -39,6 +39,7 @@ label Prologue:
     ch_p "Why did you even bring me here, I don't have any \"super powers.\""
     ch_x "Nonsense, my boy. You have an incredibly useful ability. . ."
     ch_x "the power to negate other powers, even including my own."
+    $ RogueX.Loc = bg_current
     $ RogueX.FaceChange("surprised")
     $ RogueX.SpriteLoc = StageFarRight
     show Rogue_Sprite at SpriteLoc(RogueX.SpriteLoc)
@@ -109,13 +110,15 @@ label Prologue:
 # Tour //////////////////////////////////////////////////////////////////////
 label tour_start:
     $ bg_current = "bg campus"    
+    $ RogueX.Loc = bg_current
     call Set_The_Scene(0)
     show Rogue_Sprite at SpriteLoc(RogueX.SpriteLoc)  
     ch_r "This is the campus square. It links up to all the major locations on campus and you'll probably pass through here a lot."
 
 
 # Player's room
-    $ bg_current = "bg player"    
+    $ bg_current = "bg player" 
+    $ RogueX.Loc = bg_current   
     call Set_The_Scene(0)
     show Rogue_Sprite at SpriteLoc(RogueX.SpriteLoc)  
     ch_r "This will be your room, we each get private rooms now that the campus has been expanded."
@@ -136,7 +139,8 @@ label tour_start:
             ch_r "You can stop by sometime, but not after curfew."
     
 # Classrooms
-    $ bg_current = "bg classroom"   
+    $ bg_current = "bg classroom"  
+    $ RogueX.Loc = bg_current 
     call CleartheRoom("All",0,1)
     call Set_The_Scene(0)
     show Rogue_Sprite at SpriteLoc(RogueX.SpriteLoc)  
@@ -147,6 +151,7 @@ label tour_start:
 
 # Danger Room
     $ bg_current = "bg dangerroom"   
+    $ RogueX.Loc = bg_current
     call Set_The_Scene(0)
     show Rogue_Sprite at SpriteLoc(RogueX.SpriteLoc)  
     ch_r "And this is the Danger Room. It's been upgraded to a fully holographic experience, allowing realistic battlefield simulations."
@@ -173,7 +178,8 @@ label tour_start:
     ch_r "Moving on then. . ."
 
 label tour_end: 
-    $ bg_current = "bg campus"   
+    $ bg_current = "bg campus"  
+    $ RogueX.Loc = bg_current 
     call Set_The_Scene(0)
     show Rogue_Sprite at SpriteLoc(RogueX.SpriteLoc)  
     ch_r "Well, that's the nickel tour, now you know where everything is. . ."

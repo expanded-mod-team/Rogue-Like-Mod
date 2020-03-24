@@ -322,7 +322,7 @@ label Kitty_FB_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ KittyX.Action -= 1
                                             else:
-                                                ch_k "I kinda need a break, so if we could wrap this up?"  
+                                                call Sex_Basic_Dialog(KittyX,"tired")   
                                                 
                                     "Shift primary action":
                                             if KittyX.Action and MultiAction:
@@ -333,7 +333,7 @@ label Kitty_FB_Cycle: #Repeating strokes
                                                                     call Kitty_FB_After
                                                                     call Kitty_Suck_Breasts
                                                                 else:
-                                                                    ch_k "I kinda need a break, so if we could wrap this up?"
+                                                                    call Sex_Basic_Dialog(KittyX,"tired") 
                                                         "Just suck on them without asking.":
                                                                 if KittyX.Action and MultiAction:                            
                                                                     $ Situation = "auto"
@@ -341,11 +341,11 @@ label Kitty_FB_Cycle: #Repeating strokes
                                                                     call Kitty_Suck_Breasts
                                                                 else:
                                                                     "As you lean in to suck on her breast, she grabs your head and pushes back."
-                                                                    ch_k "I kinda need a break, so if we could wrap this up?"
+                                                                    call Sex_Basic_Dialog(KittyX,"tired") 
                                                         "Never Mind":
                                                                 jump Kitty_FB_Cycle
                                             else: 
-                                                ch_k "I kinda need a break, so if we could wrap this up?"
+                                                call Sex_Basic_Dialog(KittyX,"tired") 
                     
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
@@ -828,7 +828,7 @@ label Kitty_SB_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ KittyX.Action -= 1
                                             else:
-                                                ch_k "I kinda need a break, so if we could wrap this up?"  
+                                                call Sex_Basic_Dialog(KittyX,"tired")   
                                                 
                                     "Shift primary action":
                                             if KittyX.Action and MultiAction:
@@ -840,11 +840,11 @@ label Kitty_SB_Cycle: #Repeating strokes
                                                                 call Kitty_Fondle_Breasts
                                                             else:
                                                                 "As you pull back, [KittyX.Name] pushes you back in close."
-                                                                ch_k "I kinda need a break, so if we could wrap this up?"
+                                                                call Sex_Basic_Dialog(KittyX,"tired") 
                                                         "Never Mind":
                                                                 jump Kitty_SB_Cycle
                                             else: 
-                                                ch_k "I kinda need a break, so if we could wrap this up?"           
+                                                call Sex_Basic_Dialog(KittyX,"tired")            
                     
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
@@ -1280,7 +1280,7 @@ label Kitty_FT_Cycle:                                                           
                                                 if Trigger2:
                                                      $ KittyX.Action -= 1
                                             else:
-                                                ch_k "I kinda need a break, so if we could wrap this up?"  
+                                                call Sex_Basic_Dialog(KittyX,"tired")   
                                                 
                                     "Shift primary action":
                                             if KittyX.Action and MultiAction:
@@ -1291,7 +1291,7 @@ label Kitty_FT_Cycle:                                                           
                                                                     call Kitty_FT_After
                                                                     call Kitty_Fondle_Pussy                
                                                                 else:
-                                                                    ch_k "I kinda need a break, so if we could wrap this up?"  
+                                                                    call Sex_Basic_Dialog(KittyX,"tired")   
                                                         "Shift your hands a bit higher without asking":
                                                                 if KittyX.Action and MultiAction:
                                                                     $ Situation = "auto"
@@ -1299,11 +1299,11 @@ label Kitty_FT_Cycle:                                                           
                                                                     call Kitty_Fondle_Pussy    
                                                                 else:
                                                                     "As your hands creep upwards, she grabs your wrists."
-                                                                    ch_k "I kinda need a break, so if we could wrap this up?" 
+                                                                    call Sex_Basic_Dialog(KittyX,"tired")  
                                                         "Never Mind":
                                                                 jump Kitty_FT_Cycle
                                             else: 
-                                                ch_k "I kinda need a break, so if we could wrap this up?"           
+                                                call Sex_Basic_Dialog(KittyX,"tired")            
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
@@ -1821,7 +1821,7 @@ label Kitty_FP_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ KittyX.Action -= 1
                                             else:
-                                                ch_k "I kinda need a break, so if we could wrap this up?"  
+                                                call Sex_Basic_Dialog(KittyX,"tired")   
                                                 
                                     "Shift primary action":
                                             if KittyX.Action and MultiAction:
@@ -1845,7 +1845,7 @@ label Kitty_FP_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Kitty_FP_Cycle
                                             else: 
-                                                ch_k "I kinda need a break, so if we could wrap this up?"           
+                                                call Sex_Basic_Dialog(KittyX,"tired")            
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
@@ -2448,7 +2448,7 @@ label Kitty_LP_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ KittyX.Action -= 1
                                             else:
-                                                ch_k "I kinda need a break, so if we could wrap this up?"  
+                                                call Sex_Basic_Dialog(KittyX,"tired")   
                                                 
                                     "Shift primary action":
                                             if KittyX.Action and MultiAction:
@@ -2459,7 +2459,7 @@ label Kitty_LP_Cycle: #Repeating strokes
                                                                     call Kitty_LP_After
                                                                     call Kitty_Fondle_Pussy
                                                                 else:
-                                                                    ch_k "I kinda need a break, so if we could wrap this up?"  
+                                                                    call Sex_Basic_Dialog(KittyX,"tired")   
                                                         "I want to stick a dildo in.":
                                                                 $ Situation = "shift"
                                                                 call Kitty_LP_After
@@ -2467,7 +2467,7 @@ label Kitty_LP_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Kitty_LP_Cycle
                                             else: 
-                                                ch_k "I kinda need a break, so if we could wrap this up?"           
+                                                call Sex_Basic_Dialog(KittyX,"tired")            
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
@@ -2914,7 +2914,7 @@ label Kitty_FA_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ KittyX.Action -= 1
                                             else:
-                                                ch_k "I kinda need a break, so if we could wrap this up?"  
+                                                call Sex_Basic_Dialog(KittyX,"tired")   
                                                 
                                     "Shift primary action":
                                             if KittyX.Action and MultiAction:
@@ -2942,7 +2942,7 @@ label Kitty_FA_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Kitty_FA_Cycle
                                             else: 
-                                                ch_k "I kinda need a break, so if we could wrap this up?"           
+                                                call Sex_Basic_Dialog(KittyX,"tired")            
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
@@ -3462,7 +3462,7 @@ label Kitty_IA_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ KittyX.Action -= 1
                                             else:
-                                                ch_k "I kinda need a break, so if we could wrap this up?"  
+                                                call Sex_Basic_Dialog(KittyX,"tired")   
                                                 
                                     "Shift primary action":
                                             if KittyX.Action and MultiAction:
@@ -3486,7 +3486,7 @@ label Kitty_IA_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Kitty_IA_Cycle
                                             else: 
-                                                ch_k "I kinda need a break, so if we could wrap this up?"           
+                                                call Sex_Basic_Dialog(KittyX,"tired")            
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
@@ -3956,7 +3956,7 @@ label Kitty_LA_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ KittyX.Action -= 1
                                             else:
-                                                ch_k "I kinda need a break, so if we could wrap this up?"  
+                                                call Sex_Basic_Dialog(KittyX,"tired")   
                                                 
                                     "Shift primary action":
                                             if KittyX.Action and MultiAction:
@@ -3980,7 +3980,7 @@ label Kitty_LA_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Kitty_LA_Cycle
                                             else: 
-                                                ch_k "I kinda need a break, so if we could wrap this up?"           
+                                                call Sex_Basic_Dialog(KittyX,"tired")            
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
