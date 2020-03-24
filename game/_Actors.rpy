@@ -38,7 +38,7 @@ init -1 python:
                 obed = 0,
                 addictionRate = 0,
 
-            ):
+                ):
             # Basic information:
             self.name = name
             self.inbt = inbt
