@@ -334,7 +334,7 @@ label Emma_HJ_Cycle:
                                                 "You start to fondle her breasts."
                                                 $ EmmaX.Action -= 1
                                             else:
-                                                ch_e "Hmm, I think we've probably done enough for now. . ."  
+                                                call Sex_Basic_Dialog(EmmaX,"tired")   
                                          
                                     "Shift primary action":
                                             if EmmaX.Action and MultiAction:
@@ -345,7 +345,7 @@ label Emma_HJ_Cycle:
                                                                         call Emma_HJ_After                
                                                                         call Emma_Blowjob
                                                                     else:
-                                                                        ch_e "Hmm, I think we've probably done enough for now. . ."
+                                                                        call Sex_Basic_Dialog(EmmaX,"tired") 
                                                                         
                                                         "How about a titjob?":
                                                                     if EmmaX.Action and MultiAction:
@@ -353,11 +353,11 @@ label Emma_HJ_Cycle:
                                                                         call Emma_HJ_After
                                                                         call Emma_Titjob
                                                                     else:
-                                                                        ch_e "Hmm, I think we've probably done enough for now. . ."
+                                                                        call Sex_Basic_Dialog(EmmaX,"tired") 
                                                         "Never Mind":
                                                                 jump Emma_HJ_Cycle
                                             else: 
-                                                ch_e "Hmm, I think we've probably done enough for now. . ."           
+                                                call Sex_Basic_Dialog(EmmaX,"tired")            
                     
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
@@ -1567,7 +1567,7 @@ label Emma_BJ_Cycle: #Repeating strokes
                                                 "You start to fondle her breasts."
                                                 $ EmmaX.Action -= 1
                                             else:
-                                                ch_e "Hmm, I think we've probably done enough for now. . ."  
+                                                call Sex_Basic_Dialog(EmmaX,"tired")   
                                          
                                     "Shift primary action":
                                             if EmmaX.Action and MultiAction:
@@ -1589,7 +1589,7 @@ label Emma_BJ_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Emma_BJ_Cycle
                                             else: 
-                                                ch_e "Hmm, I think we've probably done enough for now. . ."           
+                                                call Sex_Basic_Dialog(EmmaX,"tired")            
                     
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
@@ -2217,7 +2217,7 @@ label Emma_DP_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ EmmaX.Action -= 1
                                             else:
-                                                ch_e "Hmm, I think we've probably done enough for now. . ."  
+                                                call Sex_Basic_Dialog(EmmaX,"tired")   
                                                 
                                     "Shift primary action":
                                             if EmmaX.Action and MultiAction:
@@ -2237,7 +2237,7 @@ label Emma_DP_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Emma_DP_Cycle
                                             else: 
-                                                ch_e "Hmm, I think we've probably done enough for now. . ."           
+                                                call Sex_Basic_Dialog(EmmaX,"tired")            
                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
@@ -2824,7 +2824,7 @@ label Emma_DA_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ EmmaX.Action -= 1
                                             else:
-                                                ch_e "Hmm, I think we've probably done enough for now. . ."  
+                                                call Sex_Basic_Dialog(EmmaX,"tired")   
                                                 
                                     "Shift primary action":
                                             if EmmaX.Action and MultiAction:
@@ -2844,7 +2844,7 @@ label Emma_DA_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Emma_DA_Cycle
                                             else: 
-                                                ch_e "Hmm, I think we've probably done enough for now. . ."           
+                                                call Sex_Basic_Dialog(EmmaX,"tired")            
                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
@@ -3392,7 +3392,7 @@ label Emma_FJ_Cycle:
                                                 $ Trigger2 = "fondle thighs"
                                                 "You start to fondle her thighs."
                                             else:
-                                                ch_e "Hmm, I think we've probably done enough for now. . ."  
+                                                call Sex_Basic_Dialog(EmmaX,"tired")   
                                          
                                     "Shift primary action":
                                             if EmmaX.Action and MultiAction:
@@ -3403,14 +3403,14 @@ label Emma_FJ_Cycle:
                                                                         call Emma_FJ_After                
                                                                         call Emma_Blowjob
                                                                     else:
-                                                                        ch_e "Hmm, I think we've probably done enough for now. . ."
+                                                                        call Sex_Basic_Dialog(EmmaX,"tired") 
                                                         "How about a handjob?":
                                                                     if EmmaX.Action and MultiAction:
                                                                         $ Situation = "shift"
                                                                         call Emma_FJ_After                
                                                                         call Emma_Handjob
                                                                     else:
-                                                                        ch_e "Hmm, I think we've probably done enough for now. . ."
+                                                                        call Sex_Basic_Dialog(EmmaX,"tired") 
                                                                         
                                                         "How about a titjob?":
                                                                     if EmmaX.Action and MultiAction:
@@ -3418,12 +3418,12 @@ label Emma_FJ_Cycle:
                                                                         call Emma_FJ_After
                                                                         call Emma_Titjob
                                                                     else:
-                                                                        ch_e "Hmm, I think we've probably done enough for now. . ."
+                                                                        call Sex_Basic_Dialog(EmmaX,"tired") 
                                                                 
                                                         "Never Mind":
                                                                 jump Emma_FJ_Cycle
                                             else: 
-                                                ch_e "Hmm, I think we've probably done enough for now. . ."           
+                                                call Sex_Basic_Dialog(EmmaX,"tired")            
                     
                                     "Threesome actions (locked)" if not Partner: 
                                         pass

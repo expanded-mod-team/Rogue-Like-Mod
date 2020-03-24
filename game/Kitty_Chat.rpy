@@ -963,6 +963,13 @@ label Kitty_Chitchat(O=0, Options = ["default","default","default"]):
         if "corruption" in Player.Traits and "cologne chat" not in KittyX.DailyActions:
             $ Options.append("corruption")
         
+        if "seenpeen" in KittyX.History:
+            $ Options.append("seenpeen")  
+        if "topless" in KittyX.History:
+            $ Options.append("topless")  
+        if "bottomless" in KittyX.History:
+            $ Options.append("bottomless")  
+            
         if KittyX.Date >= 1:
             #if you've dated before
             $ Options.append("dated")
@@ -1334,6 +1341,28 @@ label Kitty_Chitchat(O=0, Options = ["default","default","default"]):
                                             $ KittyX.FaceChange("angry", 2)
                                             ch_k "!!!"
             #end "why not Katherine"
+            
+    elif Options[0] == "seenpeen": # first seen peen skipped
+            $ KittyX.FaceChange("sly",2)  
+            ch_k "Maybe I didn't mention it before, but. . ."
+            ch_k "That cock of yours is. . . impressive."
+            $ KittyX.FaceChange("bemused",1)  
+            $ KittyX.Statup("Love", 90, 3)      
+            $ KittyX.History.remove("seenpeen")  
+    elif Options[0] == "topless": # first seen breasts skipped
+            $ KittyX.FaceChange("bemused",2,Eyes="side")  
+            ch_k "Hey, when you saw me. . . topless earlier, you didn't have much to say. . ."
+            ch_k "What'd you think?"  
+            call Kitty_First_TMenu
+            $ KittyX.History.remove("topless")  
+    elif Options[0] == "bottomless": # first seen pussy skipped
+            $ KittyX.FaceChange("bemused",2,Eyes="side")  
+            ch_k "Hey, when you saw my. . . pussy earlier. . ."
+            ch_k "You didn't say much. . . "
+            ch_k "What'd you think?"
+            call Kitty_First_BMenu
+            $ KittyX.History.remove("bottomless")  
+            
     elif Options[0] == "boyfriend?":
         call Kitty_BF
     elif Options[0] == "lover?":

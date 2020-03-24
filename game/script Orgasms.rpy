@@ -1506,8 +1506,12 @@ label Girl_Cumming(Girl=0,Quick=0,BO=[]): #rename from Girl_Cumming
             return
     $ Girl.Eyes = "surprised"
     $ Girl.Brows = "sad"
-    $ Girl.Mouth = "sucking"
+    if Girl in (EmmaX,LauraX):
+            $ Girl.Mouth = "tongue"
+    else:
+            $ Girl.Mouth = "sucking"        
     $ Girl.Blush = 1
+    
     call AnyLine(Girl,". . . !")
     $ Speed = 0
     
@@ -1530,7 +1534,7 @@ label Girl_Cumming(Girl=0,Quick=0,BO=[]): #rename from Girl_Cumming
     $ Girl.Mouth = "tongue"
     if Girl == RogueX:
             $ Line = renpy.random.choice(["Wow. . .  just, wow.", 
-                "Ah don't know what came over me. . .", 
+                "I don't know what came over me. . .", 
                 "Hmmmm. . . .",
                 "That, felt good. Thatfeltrealgood."])
     elif Girl == KittyX:

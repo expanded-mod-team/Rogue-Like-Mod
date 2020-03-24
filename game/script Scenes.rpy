@@ -3675,8 +3675,9 @@ label Girl_Caught_Changing(Girl=0):
                 $ Girl.Upskirt = 1 #Upskirt up
                 pause 1      
                 call expression Girl.Tag + "_First_Topless" pass (1)
-                call expression Girl.Tag + "_First_Bottomless" pass (1)                   
-                $ Girl.OutfitChange() #restore current outfit
+                call expression Girl.Tag + "_First_Bottomless" pass (1) 
+                $ Girl.Uptop = 0 #Uptop up                   
+                $ Girl.Upskirt = 0 #Upskirt up
                 "She flashes you real quick."  
         else:
                 #if she doesn't flash you
@@ -5803,7 +5804,7 @@ label AddictCheck(BO=[]):
                         if BO[0].Addict >= 60 and BO[0].Resistance and BO[0].Event[1] >= 10:
                                 #if addict over 60, and she's completed the event chain
                                 if bg_current == BO[0].Home or bg_current == "bg player":
-                                            call Addiction_Fix(BO[0])
+                                            call Addiction_Fix(BO[0])                                            
                                 else:
                                     if "asked meet" in BO[0].RecentActions:
                                             pass

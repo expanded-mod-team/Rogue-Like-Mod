@@ -323,7 +323,7 @@ label Laura_FB_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ LauraX.Action -= 1
                                             else:
-                                                ch_l "Maybe we could finish this up for now?"  
+                                                call Sex_Basic_Dialog(LauraX,"tired")   
                                                 
                                     "Shift primary action":
                                             if LauraX.Action and MultiAction:
@@ -334,7 +334,7 @@ label Laura_FB_Cycle: #Repeating strokes
                                                                     call Laura_FB_After
                                                                     call Laura_Suck_Breasts
                                                                 else:
-                                                                    ch_l "Maybe we could finish this up for now?"
+                                                                    call Sex_Basic_Dialog(LauraX,"tired") 
                                                         "Just suck on them without asking.":
                                                                 if LauraX.Action and MultiAction:                            
                                                                     $ Situation = "auto"
@@ -342,11 +342,11 @@ label Laura_FB_Cycle: #Repeating strokes
                                                                     call Laura_Suck_Breasts
                                                                 else:
                                                                     "As you lean in to suck on her breast, she grabs your head and pushes back."
-                                                                    ch_l "Maybe we could finish this up for now?"
+                                                                    call Sex_Basic_Dialog(LauraX,"tired") 
                                                         "Never Mind":
                                                                 jump Laura_FB_Cycle
                                             else: 
-                                                ch_l "Maybe we could finish this up for now?"
+                                                call Sex_Basic_Dialog(LauraX,"tired") 
                     
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
@@ -831,7 +831,7 @@ label Laura_SB_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ LauraX.Action -= 1
                                             else:
-                                                ch_l "Maybe we could finish this up for now?"  
+                                                call Sex_Basic_Dialog(LauraX,"tired")   
                                                 
                                     "Shift primary action":
                                             if LauraX.Action and MultiAction:
@@ -843,11 +843,11 @@ label Laura_SB_Cycle: #Repeating strokes
                                                                 call Laura_Fondle_Breasts
                                                             else:
                                                                 "As you pull back, [LauraX.Name] pushes you back in close."
-                                                                ch_l "Maybe we could finish this up for now?"
+                                                                call Sex_Basic_Dialog(LauraX,"tired") 
                                                         "Never Mind":
                                                                 jump Laura_SB_Cycle
                                             else: 
-                                                ch_l "Maybe we could finish this up for now?"           
+                                                call Sex_Basic_Dialog(LauraX,"tired")            
                     
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
@@ -1286,7 +1286,7 @@ label Laura_FT_Cycle:                                                           
                                                 if Trigger2:
                                                      $ LauraX.Action -= 1
                                             else:
-                                                ch_l "Maybe we could finish this up for now?"  
+                                                call Sex_Basic_Dialog(LauraX,"tired")   
                                                 
                                     "Shift primary action":
                                             if LauraX.Action and MultiAction:
@@ -1297,7 +1297,7 @@ label Laura_FT_Cycle:                                                           
                                                                     call Laura_FT_After
                                                                     call Laura_Fondle_Pussy                
                                                                 else:
-                                                                    ch_l "Maybe we could finish this up for now?"  
+                                                                    call Sex_Basic_Dialog(LauraX,"tired")   
                                                         "Shift your hands a bit higher without asking":
                                                                 if LauraX.Action and MultiAction:
                                                                     $ Situation = "auto"
@@ -1305,11 +1305,11 @@ label Laura_FT_Cycle:                                                           
                                                                     call Laura_Fondle_Pussy    
                                                                 else:
                                                                     "As your hands creep upwards, she grabs your wrists."
-                                                                    ch_l "Maybe we could finish this up for now?" 
+                                                                    call Sex_Basic_Dialog(LauraX,"tired")  
                                                         "Never Mind":
                                                                 jump Laura_FT_Cycle
                                             else: 
-                                                ch_l "Maybe we could finish this up for now?"           
+                                                call Sex_Basic_Dialog(LauraX,"tired")            
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
@@ -1832,7 +1832,7 @@ label Laura_FP_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ LauraX.Action -= 1
                                             else:
-                                                ch_l "Maybe we could finish this up for now?"  
+                                                call Sex_Basic_Dialog(LauraX,"tired")   
                                                 
                                     "Shift primary action":
                                             if LauraX.Action and MultiAction:
@@ -1856,7 +1856,7 @@ label Laura_FP_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Laura_FP_Cycle
                                             else: 
-                                                ch_l "Maybe we could finish this up for now?"           
+                                                call Sex_Basic_Dialog(LauraX,"tired")            
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
@@ -2459,7 +2459,7 @@ label Laura_LP_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ LauraX.Action -= 1
                                             else:
-                                                ch_l "Maybe we could finish this up for now?"  
+                                                call Sex_Basic_Dialog(LauraX,"tired")   
                                                 
                                     "Shift primary action":
                                             if LauraX.Action and MultiAction:
@@ -2470,7 +2470,7 @@ label Laura_LP_Cycle: #Repeating strokes
                                                                     call Laura_LP_After
                                                                     call Laura_Fondle_Pussy
                                                                 else:
-                                                                    ch_l "Maybe we could finish this up for now?"  
+                                                                    call Sex_Basic_Dialog(LauraX,"tired")   
                                                         "I want to stick a dildo in.":
                                                                 $ Situation = "shift"
                                                                 call Laura_LP_After
@@ -2478,7 +2478,7 @@ label Laura_LP_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Laura_LP_Cycle
                                             else: 
-                                                ch_l "Maybe we could finish this up for now?"           
+                                                call Sex_Basic_Dialog(LauraX,"tired")            
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
@@ -2929,7 +2929,7 @@ label Laura_FA_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ LauraX.Action -= 1
                                             else:
-                                                ch_l "Maybe we could finish this up for now?"  
+                                                call Sex_Basic_Dialog(LauraX,"tired")   
                                                 
                                     "Shift primary action":
                                             if LauraX.Action and MultiAction:
@@ -2957,7 +2957,7 @@ label Laura_FA_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Laura_FA_Cycle
                                             else: 
-                                                ch_l "Maybe we could finish this up for now?"           
+                                                call Sex_Basic_Dialog(LauraX,"tired")            
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
@@ -3474,7 +3474,7 @@ label Laura_IA_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ LauraX.Action -= 1
                                             else:
-                                                ch_l "Maybe we could finish this up for now?"  
+                                                call Sex_Basic_Dialog(LauraX,"tired")   
                                                 
                                     "Shift primary action":
                                             if LauraX.Action and MultiAction:
@@ -3498,7 +3498,7 @@ label Laura_IA_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Laura_IA_Cycle
                                             else: 
-                                                ch_l "Maybe we could finish this up for now?"           
+                                                call Sex_Basic_Dialog(LauraX,"tired")            
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"
@@ -3968,7 +3968,7 @@ label Laura_LA_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ LauraX.Action -= 1
                                             else:
-                                                ch_l "Maybe we could finish this up for now?"  
+                                                call Sex_Basic_Dialog(LauraX,"tired")   
                                                 
                                     "Shift primary action":
                                             if LauraX.Action and MultiAction:
@@ -3992,7 +3992,7 @@ label Laura_LA_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Laura_LA_Cycle
                                             else: 
-                                                ch_l "Maybe we could finish this up for now?"           
+                                                call Sex_Basic_Dialog(LauraX,"tired")            
                                     
                                     "Shift your focus" if Trigger2:
                                                 $ Situation = "shift focus"

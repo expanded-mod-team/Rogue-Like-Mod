@@ -1478,7 +1478,7 @@ label Emma_Sex_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ EmmaX.Action -= 1
                                             else:
-                                                ch_e "I'm getting a bit tired here, could we take a break?" 
+                                                call Sex_Basic_Dialog(EmmaX,"tired")  
                                                 
                                     "Shift primary action":
                                             if EmmaX.Action and MultiAction:
@@ -1498,7 +1498,7 @@ label Emma_Sex_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Emma_Sex_Cycle
                                             else:
-                                                ch_e "I'm getting a bit tired here, could we take a break?" 
+                                                call Sex_Basic_Dialog(EmmaX,"tired")  
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
                                     "Threesome actions" if Partner:   
@@ -2228,7 +2228,7 @@ label Emma_Anal_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ EmmaX.Action -= 1
                                             else:
-                                                ch_e "I'm getting a bit tired here, could we take a break?" 
+                                                call Sex_Basic_Dialog(EmmaX,"tired")  
                                                 
                                     "Shift primary action":
                                             if EmmaX.Action and MultiAction:
@@ -2248,7 +2248,7 @@ label Emma_Anal_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Emma_Anal_Cycle
                                             else:
-                                                ch_e "I'm getting a bit tired here, could we take a break?" 
+                                                call Sex_Basic_Dialog(EmmaX,"tired")  
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
                                     "Threesome actions" if Partner:   
@@ -2888,7 +2888,7 @@ label Emma_Hotdog_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ EmmaX.Action -= 1
                                             else:
-                                                ch_e "I'm getting a bit tired here, could we take a break?" 
+                                                call Sex_Basic_Dialog(EmmaX,"tired")  
                                                 
                                     "Shift primary action":
                                             if EmmaX.Action and MultiAction:
@@ -2912,7 +2912,7 @@ label Emma_Hotdog_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Emma_Hotdog_Cycle
                                             else:
-                                                ch_e "I'm getting a bit tired here, could we take a break?" 
+                                                call Sex_Basic_Dialog(EmmaX,"tired")  
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
                                     "Threesome actions" if Partner:   

@@ -211,7 +211,7 @@ label Jackin(Girl=0,Cnt=0,BO=[]):
                             $ Girl.Action -= 1
                             $ Girl.Mast += 1    
                             call Checkout          
-                    else:
+                    elif Trigger:
                             call CloseOut(Girl)
                                     
                     show blackscreen onlayer black
@@ -1187,7 +1187,7 @@ label Massage_Cycle:
                 elif Current == "back":
                         call expression Girl.Tag + "_Breasts_Launch" pass (0)
                         if Past in ("neck","shoulders","breasts","hips"):
-                                $ Line = "You slide your hands toward lower" +Girl.Name+ "'s " +Current 
+                                $ Line = "You slide your hands toward " +Girl.Name+ "'s " +Current 
                                 $ Check = 400
                         else:
                                 $ Line = "You begin to massage " +Girl.Name+ "'s " +Current
@@ -1416,7 +1416,7 @@ label Massage_Cycle:
                                         $ Girl.Statup("Lust", 60, 1)
                                         "You stretch her ankles back and forth, as you work out her tensed calves."
                                 else:
-                                        "[Line]. She flexes her toes in satisfaction as her musccles stretch out."
+                                        "[Line]. She flexes her toes in satisfaction as her muscles stretch out."
                         elif Past == Current:
                                 $ Check = 600
                                 $ Line = "You continue to massage " +Girl.Name+ "'s " +Current

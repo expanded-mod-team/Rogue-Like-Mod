@@ -471,7 +471,7 @@ init python:
                     #If there is any change to the stat  
                     #Sets reporting text color based on Flavor     
                                         
-                    if self.Tag == "Jean":
+                    if self.Tag == "Jean" and Value > 0:
                             if Flavor == "Obed" and Type <= 800 and Check < 800:
                                     # if her Obedience is under 800 and the check is for less than 800, 
                                     # reduces half the gains. This slows low obed farming options
@@ -759,6 +759,8 @@ init python:
                 elif self.Thirst >= 50:
                         self.Lust += 1
                     
+                if self.Lust >= 80:        
+                        self.Blush = 2
                 if self.Lust >= 40:        
                         self.Blush = 1
                     
@@ -800,17 +802,28 @@ init python:
                                 self.Brows = "sad"
                                 self.Mouth = "lipbite"
                         elif self.Lust >= 50:
-                                self.Eyes = "sexy"
+                                if self.Tag == "Emma" or self.Tag == "Laura":
+                                        self.Eyes = "squint"
+                                else:
+                                        self.Eyes = "sexy"
                                 self.Brows = "sad"
                                 self.Mouth = "lipbite"
                         elif self.Lust >= 30:
                                 self.Eyes = "sexy"
                                 self.Brows = "normal"
-                                self.Mouth = "kiss"
+                                if self.Tag == "Emma" or self.Tag == "Laura":
+                                        self.Mouth = "smirk"
+                                else:
+                                        self.Mouth = "kiss"
                         else:
                                 self.Eyes = "sexy"
                                 self.Brows = "normal"
-                                self.Mouth = "normal"    
+                                if self.Tag == "Emma" or self.Tag == "Laura":
+                                        self.Mouth = "smirk"
+                                else:
+                                        self.Mouth = "normal"
+                        if self.Tag == "Laura" and self.Lust < 50 and not Extreme and not ApprovalCheck(self, 1000):
+                                self.Eyes = "side"
                 
                 if Partner == self and Trigger4 in ("lick pussy", "lick ass", "blow", "suck breasts"):         
                                 self.Mouth = "tongue"   
@@ -2396,7 +2409,6 @@ label AltClothes(Girl=0,Outfit=8):
         #This selects her outfit when teaching if 8
         #This selects her private outfit if 9  
         $ Girl = Ch_Focus if not Girl else Girl
-        call Shift_Focus(Girl)
         
         if Girl.Clothing[Outfit] == 1 or not Girl.Clothing[Outfit]:
                     $ Girl.Outfit = "casual1"
@@ -4822,7 +4834,7 @@ label Rogue_First_Topless(Silent = 0, TempLine=0):
         $ RogueX.FaceChange("bemused", 1)
         "[RogueX.Name] looks a bit shy, and slowly lowers her hands from her chest."
         ch_r "Well, [RogueX.Petname]? Like what you see?"    
-        menu:
+        menu Rogue_First_TMenu:
             extend ""
             "Nod":            
                     $ RogueX.Statup("Love", 90, 20)
@@ -4859,7 +4871,7 @@ label Rogue_First_Topless(Silent = 0, TempLine=0):
                             $ RogueX.Statup("Love", 90, -10)
                             $ RogueX.Statup("Obed", 80, 30)
                             $ RogueX.Statup("Inbt", 70, -25) 
-                            ". . ."
+                            ch_r ". . ."
                             $ RogueX.Mouth = "sad"
                             if TempLine == EmmaX:
                                     if RogueX.LikeEmma >= 800:
@@ -4897,14 +4909,15 @@ label Rogue_First_Topless(Silent = 0, TempLine=0):
                                             $ RogueX.RecentActions.append("angry")
                                             $ RogueX.DailyActions.append("angry")  
     else:
+        $ RogueX.AddWord(1,0,0,0,"topless") #$ RogueX.History.append("topless")  
         if ApprovalCheck(RogueX, 800) and not RogueX.Forced:
-                $ RogueX.Statup("Inbt", 70, 20) 
-                $ RogueX.Statup("Obed", 70, 10)    
+                $ RogueX.Statup("Inbt", 70, 5) 
+                $ RogueX.Statup("Obed", 70, 5)    
         else:        
-                $ RogueX.Statup("Love", 90, -30)
-                $ RogueX.Statup("Inbt", 70, -10)                          
+                $ RogueX.Statup("Love", 90, -5)
+                $ RogueX.Statup("Inbt", 70, -5)                          
                 $ RogueX.FaceChange("angry")
-                $ RogueX.Statup("Obed", 70, 30)
+                $ RogueX.Statup("Obed", 70, 15)
     return
     
     
@@ -4926,7 +4939,7 @@ label Rogue_First_Bottomless(Silent = 0):
     if not Silent:
         $ RogueX.FaceChange("bemused", 1)
         "[RogueX.Name] shyly moves her hands aside, revealing her pussy."        
-        menu:        
+        menu Rogue_First_BMenu:        
             ch_r "Well, [RogueX.Petname]? Was it worth the wait?"
             "Lovely. . .":            
                     $ RogueX.Statup("Love", 90, 20)
@@ -4942,15 +4955,14 @@ label Rogue_First_Bottomless(Silent = 0):
                     ch_r ". . ."
                     $ RogueX.Statup("Obed", 70, 30)
     else:
+            $ RogueX.AddWord(1,0,0,0,"bottomless") #$ RogueX.History.append("bottomless")  
             if ApprovalCheck(RogueX, 500):
-                    $ RogueX.Statup("Love", 90, 20)
-                    $ RogueX.Statup("Inbt", 60, 30)       
-                    $ RogueX.Statup("Love", 40, 20)
+                    $ RogueX.Statup("Inbt", 60, 30) 
             else:        
-                    $ RogueX.Statup("Love", 90, -30)
-                    $ RogueX.Statup("Inbt", 70, -10)
+                    $ RogueX.Statup("Love", 90, -5)
+                    $ RogueX.Statup("Inbt", 70, -5)
                     $ RogueX.FaceChange("angry")          
-                    $ RogueX.Statup("Obed", 70, 30)
+                    $ RogueX.Statup("Obed", 70, 15)
     return
     
 # Kitty Topless/Bottomless / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
@@ -4974,7 +4986,7 @@ label Kitty_First_Topless(Silent = 0, TempLine = 0):
         "Kitty looks a bit shy, and slowly lowers her hands from her chest."
         ch_k "[KittyX.Like]what do you think?"    
         $ KittyX.Blush = 1
-        menu:
+        menu Kitty_First_TMenu:
             extend ""
             "Lovely.":            
                 $ KittyX.Statup("Love", 90, 20)
@@ -5008,7 +5020,7 @@ label Kitty_First_Topless(Silent = 0, TempLine = 0):
                             $ KittyX.Statup("Love", 90, -10)
                             $ KittyX.Statup("Obed", 80, 30)
                             $ KittyX.Statup("Inbt", 70, -25)  
-                            ". . ."
+                            ch_k ". . ."
                             $ KittyX.Mouth = "sad"
                             if TempLine == EmmaX:
                                     if KittyX.LikeEmma >= 800:
@@ -5048,14 +5060,15 @@ label Kitty_First_Topless(Silent = 0, TempLine = 0):
                         
                     
     else:
+            $ KittyX.AddWord(1,0,0,0,"topless") #$ KittyX.History.append("topless")  
             if ApprovalCheck(KittyX, 800) and not KittyX.Forced:                #if she's not forced and happy about it
-                    $ KittyX.Statup("Inbt", 70, 15) 
-                    $ KittyX.Statup("Obed", 70, 15)     
+                    $ KittyX.Statup("Inbt", 70, 5) 
+                    $ KittyX.Statup("Obed", 70, 10)     
             else:                                                           #if she's not happy about it
-                    $ KittyX.Statup("Love", 90, -40)
-                    $ KittyX.Statup("Inbt", 70, -20)                          
+                    $ KittyX.Statup("Love", 90, -5)
+                    $ KittyX.Statup("Inbt", 70, -5)                          
                     $ KittyX.FaceChange("angry")
-                    $ KittyX.Statup("Obed", 70, 40)
+                    $ KittyX.Statup("Obed", 70, 20)
     return
     
 label Kitty_First_Bottomless(Silent = 0): 
@@ -5069,15 +5082,14 @@ label Kitty_First_Bottomless(Silent = 0):
     $ KittyX.DrainWord("no bottomless")
     $ KittyX.SeenPussy += 1 
     if KittyX.SeenPussy > 1:     
-            return                  #ends portion if you've already seen them        
-    
+            return                  #ends portion if you've already seen them    
     
     $ KittyX.Statup("Inbt", 80, 30)  
     $ KittyX.Statup("Obed", 70, 10)   
     if not Silent:
         $ KittyX.FaceChange("bemused", 1)
         "[KittyX.Name] shyly moves her hands aside, revealing her pussy."        
-        menu:        
+        menu Kitty_First_BMenu:        
             extend ""
             "Lovely. . .":            
                     $ KittyX.Statup("Love", 90, 20)
@@ -5115,24 +5127,23 @@ label Kitty_First_Bottomless(Silent = 0):
                     ch_k ". . ."
                     $ KittyX.Statup("Obed", 70, 35)
     else:
+            $ KittyX.AddWord(1,0,0,0,"bottomless") #$ KittyX.History.append("bottomless")  
             if ApprovalCheck(KittyX, 800) and not KittyX.Forced:
-                    $ KittyX.Statup("Love", 90, 20)
-                    $ KittyX.Statup("Inbt", 60, 25)       
-                    $ KittyX.Statup("Love", 40, 20)
+                    $ KittyX.Statup("Inbt", 60, 15)  
                     $ KittyX.Statup("Obed", 70, 10)
             else:        
-                    $ KittyX.Statup("Love", 90, -40)
-                    $ KittyX.Statup("Inbt", 70, -20)
+                    $ KittyX.Statup("Love", 90, -10)
+                    $ KittyX.Statup("Inbt", 70, -5)
                     $ KittyX.FaceChange("angry")          
-                    $ KittyX.Statup("Obed", 70, 30)
+                    $ KittyX.Statup("Obed", 70, 20)
     return
     
 
 # Emma Topless/Bottomless / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 label Emma_First_Topless(Silent = 0, TempLine = 0):    
     if EmmaX.ChestNum() > 1 or EmmaX.OverNum() > 2:
-        #if she's wearing substantial clothing. . .
-        return     
+            #if she's wearing substantial clothing. . .
+            return     
     if EmmaX.Loc != bg_current and "phonesex" not in Player.RecentActions:
             return   
     $ EmmaX.RecentActions.append("topless")                      
@@ -5149,7 +5160,7 @@ label Emma_First_Topless(Silent = 0, TempLine = 0):
         "You get your first look at [EmmaX.Name]'s bare chest."
         ch_e "Well, [EmmaX.Petname]? Is it everything you dreamed?"    
         $ EmmaX.Blush = 1
-        menu:
+        menu Emma_First_TMenu:
             extend ""
             "Definitely, and more.":            
                     $ EmmaX.Statup("Love", 90, 20)
@@ -5193,7 +5204,7 @@ label Emma_First_Topless(Silent = 0, TempLine = 0):
                             $ EmmaX.Statup("Love", 90, -10)
                             $ EmmaX.Statup("Obed", 80, 30)
                             $ EmmaX.Statup("Inbt", 70, -25)  
-                            ". . ."
+                            ch_e ". . ."
                             $ EmmaX.Mouth = "sad"
                             if TempLine == KittyX:
                                     if EmmaX.LikeKitty >= 800:
@@ -5235,14 +5246,15 @@ label Emma_First_Topless(Silent = 0, TempLine = 0):
                             
                     
     else:
+            $ EmmaX.AddWord(1,0,0,0,"topless") #$ EmmaX.History.append("topless")  
             if ApprovalCheck(EmmaX, 800) and not EmmaX.Forced:                #if she's not forced and happy about it
-                    $ EmmaX.Statup("Inbt", 70, 15) 
-                    $ EmmaX.Statup("Obed", 70, 15)       
+                    $ EmmaX.Statup("Inbt", 70, 5) 
+                    $ EmmaX.Statup("Obed", 70, 5)       
             else:                                                           #if she's not happy about it
-                    $ EmmaX.Statup("Love", 90, -40)
-                    $ EmmaX.Statup("Inbt", 70, -20)                          
+                    $ EmmaX.Statup("Love", 90, -10)
+                    $ EmmaX.Statup("Inbt", 70, -5)                          
                     $ EmmaX.FaceChange("angry")
-                    $ EmmaX.Statup("Obed", 70, 40)
+                    $ EmmaX.Statup("Obed", 70, 15)
     return
     
     
@@ -5265,7 +5277,7 @@ label Emma_First_Bottomless(Silent = 0):
     if not Silent:
         $ EmmaX.FaceChange("sly")
         "You find yourself staring at [EmmaX.Name]'s bare pussy."        
-        menu:        
+        menu Emma_First_BMenu:        
             extend ""
             "Niiice. . .":            
                     $ EmmaX.Statup("Love", 90, 20)
@@ -5319,23 +5331,22 @@ label Emma_First_Bottomless(Silent = 0):
                 ch_e "You will regret that remark. . ."
     else:
         
+        $ EmmaX.AddWord(1,0,0,0,"bottomless") #$ EmmaX.History.append("bottomless")  
         if ApprovalCheck(EmmaX, 800) and not EmmaX.Forced:
-                $ EmmaX.Statup("Love", 90, 20)
-                $ EmmaX.Statup("Inbt", 60, 25)       
-                $ EmmaX.Statup("Love", 40, 20)
+                $ EmmaX.Statup("Inbt", 60, 5)   
                 $ EmmaX.Statup("Obed", 70, 10)
         else:        
-                $ EmmaX.Statup("Love", 90, -40)
-                $ EmmaX.Statup("Inbt", 70, -20)
+                $ EmmaX.Statup("Love", 90, -10)
+                $ EmmaX.Statup("Inbt", 70, -5)
                 $ EmmaX.FaceChange("angry")          
-                $ EmmaX.Statup("Obed", 70, 30)
+                $ EmmaX.Statup("Obed", 70, 15)                
     return
     
 # Laura Topless/Bottomless / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / 
 label Laura_First_Topless(Silent = 0, TempLine = 0):     
     if LauraX.ChestNum() > 1 or LauraX.OverNum() > 2:
-        #if she's wearing substantial clothing. . .
-        return     
+            #if she's wearing substantial clothing. . .
+            return     
     if LauraX.Loc != bg_current and "phonesex" not in Player.RecentActions:
             return   
     $ LauraX.RecentActions.append("topless")                      
@@ -5351,9 +5362,9 @@ label Laura_First_Topless(Silent = 0, TempLine = 0):
         "You get your first look at Laura's bare chest."
         ch_l "So? What are you looking at?"    
         $ LauraX.Blush = 1
-        menu:
+        menu Laura_First_TMenu:
             extend ""
-            "Your tits, they look great.":            
+            "Your tits? They look great.":            
                     $ LauraX.Statup("Love", 90, 20)
                     $ LauraX.Statup("Inbt", 70, 20)           
                     $ LauraX.FaceChange("sexy",1,Eyes="down")    
@@ -5393,7 +5404,7 @@ label Laura_First_Topless(Silent = 0, TempLine = 0):
                             $ LauraX.Statup("Love", 90, -10)
                             $ LauraX.Statup("Obed", 80, 30)
                             $ LauraX.Statup("Inbt", 70, -25)  
-                            ". . ."
+                            ch_l ". . ."
                             $ LauraX.Mouth = "sad"
                             if TempLine == EmmaX:
                                     if LauraX.LikeEmma >= 800:
@@ -5435,14 +5446,15 @@ label Laura_First_Topless(Silent = 0, TempLine = 0):
                         
                     
     else:
+            $ LauraX.AddWord(1,0,0,0,"topless") #$ LauraX.History.append("topless")  
             if ApprovalCheck(LauraX, 800) and not LauraX.Forced:                #if she's not forced and happy about it
-                    $ LauraX.Statup("Inbt", 70, 15) 
-                    $ LauraX.Statup("Obed", 70, 15)  
+                    $ LauraX.Statup("Inbt", 70, 5) 
+                    $ LauraX.Statup("Obed", 70, 10)  
             else:                                                           #if she's not happy about it
-                    $ LauraX.Statup("Love", 90, -40)
-                    $ LauraX.Statup("Inbt", 70, -20)                          
+                    $ LauraX.Statup("Love", 90, -5)
+                    $ LauraX.Statup("Inbt", 70, -5)                          
                     $ LauraX.FaceChange("angry")
-                    $ LauraX.Statup("Obed", 70, 40)
+                    $ LauraX.Statup("Obed", 70, 10)
     return
     
     
@@ -5468,7 +5480,7 @@ label Laura_First_Bottomless(Silent = 0):
                 "You find yourself staring at [LauraX.Name]'s furry pussy."   
         else:
                 "You find yourself staring at [LauraX.Name]'s bare pussy."        
-        menu:        
+        menu Laura_First_BMenu:        
             extend ""
             "Niiice. . .":            
                     $ LauraX.Statup("Love", 90, 20)
@@ -5522,17 +5534,16 @@ label Laura_First_Bottomless(Silent = 0):
                             $ LauraX.DailyActions.append("angry")  
                             $ LauraX.Statup("Obed", 70, 25)
                     ch_l "I'll make you a mess. . ."
-    else:        
+    else:       
+        $ LauraX.AddWord(1,0,0,0,"bottomless") #$ LauraX.History.append("bottomless")   
         if ApprovalCheck(LauraX, 800) and not LauraX.Forced:
-                $ LauraX.Statup("Love", 90, 20)
-                $ LauraX.Statup("Inbt", 60, 25)        
-                $ LauraX.Statup("Love", 40, 20)
+                $ LauraX.Statup("Inbt", 60, 5)    
                 $ LauraX.Statup("Obed", 70, 10)
         else:        
-                $ LauraX.Statup("Love", 90, -40)
-                $ LauraX.Statup("Inbt", 70, -20)
+                $ LauraX.Statup("Love", 90, -5)
+                $ LauraX.Statup("Inbt", 70, -5)
                 $ LauraX.FaceChange("angry")          
-                $ LauraX.Statup("Obed", 70, 30)
+                $ LauraX.Statup("Obed", 70, 15)
     return
 # End First Topless/Bottomless / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 # End Undressing / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /

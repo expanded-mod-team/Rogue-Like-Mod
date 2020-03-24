@@ -30,7 +30,6 @@ label Chat(Girl=0):
         if Girl:
                 if Girl.Loc == bg_current:  
                         if Girl == EmmaX and "classcaught" not in EmmaX.History:
-                                        "hey"
                                         jump Emma_Chat_Minimal
                         if "caught" in Girl.DailyActions:
                                 if Girl == RogueX:

@@ -831,7 +831,7 @@ label Rogue_SB_Cycle: #Repeating strokes
                                                                 call Rogue_Fondle_Breasts
                                                             else:
                                                                 "As you pull back, [RogueX.Name] pushes you back in close."
-                                                                ch_r "I'm actually getting a little tired, so maybe we could wrap this up"
+                                                                call Sex_Basic_Dialog(RogueX,"tired") 
                                                         "Never Mind":
                                                                 jump Rogue_SB_Cycle
                                             else: 

@@ -1,6 +1,7 @@
 ﻿# Event First_Addicted /////////////////////////////////////////////////////
 label First_Addicted(Girl=0):
         # Girl.Event[1] starts at zero, +1 each time, jumps to 10 if you agree to help her
+        call Set_The_Scene
         call Shift_Focus(Girl)
         $ Girl.Event[1] += 1
         $ MultiAction = 0
@@ -283,7 +284,7 @@ label First_Addicted2:
                 ch_r "I've just been feeling a bit weird since we last touched, shaky, buzzed. I can't concentrate on anything."    
                 ch_r ". . .Anyway, I've reconsidered your. . . offer. I'm willing to be a bit . . . flexible here."
         elif Girl == KittyX:
-                ch_k "Anyway, it's a real hastle. . . I haven't been able to concentrate well. . ."
+                ch_k "Anyway, it's a real hassle. . . I haven't been able to concentrate well. . ."
                 ch_k "I'd really appreciate if you could help me out here. . ."
         elif Girl == EmmaX:
                 ch_e "Yes, well, I haven't been able to get my work done lately, I feel very foggy."
@@ -987,6 +988,7 @@ label Addicted_Fix_Beg:
 label Addiction_Fix(Girl=0):   
         if Girl not in TotalGirls:
                 $ Girl = Ch_Focus
+        call Set_The_Scene
         call Shift_Focus(Girl)
         $ Girl.Loc = bg_current
         $ Girl.OutfitChange(Changed=1)
@@ -1010,7 +1012,7 @@ label Addiction_Fix(Girl=0):
                         "[Girl.Name] turns to you with a hungry look."
                 else:            
                         "[Girl.Name] pops into your room in a bit of a tizzy."
-        if Girl.Event[1] <= 11:             
+        if Girl.Event[1] < 11:             
                 if Girl == RogueX:
                         ch_r "Hey, so we figured out what's causing this buzz."
                         ch_r "Since I saw you last, it's been easier to deal with, it builds slower, goes away faster."
@@ -1296,6 +1298,7 @@ label Addicted_Serum:
                                         ch_l "Do you want me to just get down there?"
                                 else:
                                         ch_l "So, we doing this?"
+                        $ Tempmod += 20
                         $ Girl.Chat[3] = 1
                     
                 "Never mind.":                
@@ -1304,7 +1307,8 @@ label Addicted_Serum:
         
         elif Girl.Chat[3]:
                 #if she knows it's jiz. . .
-                $ Girl.FaceChange("bemused", 1)             
+                $ Girl.FaceChange("bemused", 1)  
+                $ Tempmod += 20           
                 if Girl == RogueX:
                         ch_r "Hmm, it was good last time. . ."            
                         if ApprovalCheck(Girl, 750):
@@ -1352,7 +1356,8 @@ label Addicted_Serum:
                 elif Girl == EmmaX:
                         ch_e "Yes. . . it certain was. . . interesting. . ."  
                 elif Girl == LauraX:
-                        ch_l "Yeah, ok. Kinda tasted like jiz though. . ."                   
+                        ch_l "Yeah, ok. Kinda tasted like jiz though. . ." 
+                $ Tempmod += 10                  
                  
         #pricing                 
         $ Count = 3
@@ -1370,7 +1375,7 @@ label Addicted_Serum:
                     
                 "Well, a handy might do the trick. . .":
                         $ Girl.FaceChange("sexy")
-                        if ApprovalCheck(Girl, 1100):
+                        if ApprovalCheck(Girl, 1100) or (ApprovalCheck(Girl, 800) and Girl.Chat[2]):
                                 $ Girl.ArmPose = 2             
                                 if Girl == RogueX:
                                         if Girl.Chat[3]: 
@@ -1407,7 +1412,7 @@ label Addicted_Serum:
                                         
                 "How about a blowjob?":                    
                         $ Girl.FaceChange("sexy")
-                        if ApprovalCheck(Girl, 1300):             
+                        if ApprovalCheck(Girl, 1300) or (ApprovalCheck(Girl, 800) and Girl.Chat[3]):             
                                 if Girl == RogueX:
                                         if Girl.Chat[3]: 
                                                 ch_r "Heh, I guess I could get it straight from the source."

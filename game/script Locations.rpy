@@ -414,6 +414,11 @@ label Take_Class:                       #Class events
                 " The topic is \"Mutants VS Mutates.\" As it turns out, the terms aren’t interchangeable.",  
                 " Today's class is on how to present yourself to the public. She uses Spider-Man as an example of how bad PR makes your life harder than it needs to be.",                     
                 " Mutant History, Apocalypse to Dark Phoenix.",
+                " You spend some time learning about politics. Senator Trask seems like a real piece of work.",
+                " You spend class learning about Aristotelian philosophy. Or about "+EmmaX.Name+"'s breasts.",
+                " You learn how civil laws apply to mutant powers by studying some high profile case studies. It's surprisingly interesting.",
+                " You listen as a guest speaker describes working with a Genosha-based NGO trying to rehabilitate mutants in the States.",
+                " Today the teacher is describing the theory behind mutant powers. For some reason, you get the impression she is glancing at you during the lecture.",                                                                                                 
                 " Game writing for dummies, eh?"]) 
         "[Line]"    
     $ Player.RecentActions.append("class")                      
@@ -1012,9 +1017,8 @@ label Shower_Room_Entry:
     # If none of the caught dialogs plays, checks to see if anyone is in the room, and allows them to be there if they are. 
     $ Line = Options[:]
     while Line:
-            #loops through and adds populates nearby with locals   
-            if Line[0] in Options:
-                    $ Line[0].Loc = bg_current  
+            #loops through and adds populates nearby with locals  
+            $ Line[0].Loc = bg_current  
             $ Line.remove(Line[0])   
     $ Line = 0
     
@@ -1048,38 +1052,75 @@ label Shower_Room_Entry:
             if Options[0] == RogueX:
                     ch_r "Hey, [RogueX.Petname]."
                     if "showered" in RogueX.RecentActions:                    
-                            ch_r "I was just getting ready to head out." 
+                            ch_r "I was just getting ready to head out."
+                    if not ApprovalCheck(Options[0], 900):
+                            ch_r "See ya later."
             if Options[0]  == KittyX:
                     ch_k "Hey, [KittyX.Petname]."
                     if "showered" in KittyX.RecentActions:
                             ch_k "I just got finished."
+                    if not ApprovalCheck(Options[0], 900):
+                            ch_k "Oh, um, I should get out of your way. . ."
             if Options[0]  == EmmaX:
                     ch_e "Oh, hello, [EmmaX.Petname]." 
                     if "showered" in EmmaX.RecentActions:
                             ch_e "I was about finished here." 
+                    if not ApprovalCheck(Options[0], 900):
+                            ch_e "I should get going."
             if Options[0]  == LauraX:
                     ch_l "Oh, hey." 
                     if "showered" in LauraX.RecentActions:
-                            ch_l "I'm done here."                             
+                            ch_l "I'm done here."   
+                    if not ApprovalCheck(Options[0], 900):
+                            ch_l "See you later."                          
             if len(Options) >= 2:                               
                     if Options[1] == RogueX:
-                            ch_r "Yeah, hey."
+                            if not ApprovalCheck(Options[0], 900) and not ApprovalCheck(Options[1], 900):
+                                    #if both decide to leave
+                                    ch_r "Yeah, I'll see you too."            
+                            elif not ApprovalCheck(Options[1], 900):
+                                    #if only person 2 decides to leave
+                                    ch_r "Yeah, I should get going though." 
+                            else:
+                                    #if both stay
+                                    ch_r "Yeah, hey."
                     if Options[1] == KittyX:
-                            ch_k "Yeah, hi."
+                            if not ApprovalCheck(Options[0], 900) and not ApprovalCheck(Options[1], 900):
+                                    ch_k "Yeah, see ya."            
+                            elif not ApprovalCheck(Options[1], 900):
+                                    ch_k "Oh, well. . . I should get going." 
+                            else:
+                                    ch_k "Yeah, hi."
                     if Options[1] == EmmaX:
-                            ch_e "Yes, hello."
+                            if not ApprovalCheck(Options[0], 900) and not ApprovalCheck(Options[1], 900):
+                                    ch_e "Yes, I should alo get going."            
+                            elif not ApprovalCheck(Options[1], 900):
+                                    ch_e "You two look like you have some business. . ." 
+                            else:
+                                    ch_e "Yes, hello."
                     if Options[1] == LauraX:
-                            ch_l "Hey."                            
+                            if not ApprovalCheck(Options[0], 900) and not ApprovalCheck(Options[1], 900):
+                                    ch_l "Yeah, I'm heading out too."            
+                            elif not ApprovalCheck(Options[1], 900):
+                                    ch_l "I'll get out of your way." 
+                            else:
+                                    ch_l "Hey."  
+                                    
+                    if not ApprovalCheck(Options[1], 900):                        
+                            call Remove_Girl(Options[1])
+            if not ApprovalCheck(Options[0], 900):                        
+                            call Remove_Girl(Options[0])
             # End welcomes
-            if RogueX in Party:
-                    ch_r "Hey, [Options[0].Name]."
-            if KittyX in Party:
-                    ch_k "Hi, [Options[0].Name]."
-            if EmmaX in Party:
-                    ch_e "Oh, hello, [Options[0].Name]."
-            if LauraX in Party:
-                    ch_l "Hey."
-                    
+            if Options:
+                    if RogueX in Party:
+                            ch_r "Hey, [Options[0].Name]."
+                    if KittyX in Party:
+                            ch_k "Hi, [Options[0].Name]."
+                    if EmmaX in Party:
+                            ch_e "Oh, hello, [Options[0].Name]."
+                    if LauraX in Party:
+                            ch_l "Hey."                    
+    $ Line = 0             
     # End Reply portion    
     $ Options = []
             
@@ -1198,6 +1239,7 @@ label No_Towels:
             #loops through and adds populates Occupants with locals   
             if BO[0].Over == "towel":
                     $ BO[0].Outfit = BO[0].OutfitDay
+                    $ BO[0].Loc = BO[0].Schedule[Weekday][Time_Count] 
                     $ BO[0].OutfitChange()
                     $ BO[0].Water = 0
                     $ BO[0].AddWord(1,"showered","showered")                    

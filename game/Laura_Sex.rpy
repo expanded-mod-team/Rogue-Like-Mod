@@ -1453,7 +1453,7 @@ label Laura_Sex_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ LauraX.Action -= 1
                                             else:
-                                                ch_l "I think we could take a little break." 
+                                                call Sex_Basic_Dialog(LauraX,"tired")  
                                                 
                                     "Shift primary action":
                                             if LauraX.Action and MultiAction:
@@ -1473,7 +1473,7 @@ label Laura_Sex_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Laura_Sex_Cycle
                                             else:
-                                                ch_l "I think we could take a little break." 
+                                                call Sex_Basic_Dialog(LauraX,"tired")  
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
                                     "Threesome actions" if Partner:   
@@ -2198,7 +2198,7 @@ label Laura_Anal_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ LauraX.Action -= 1
                                             else:
-                                                ch_l "I think we could take a little break." 
+                                                call Sex_Basic_Dialog(LauraX,"tired")  
                                                 
                                     "Shift primary action":
                                             if LauraX.Action and MultiAction:
@@ -2218,7 +2218,7 @@ label Laura_Anal_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Laura_Anal_Cycle
                                             else:
-                                                ch_l "I think we could take a little break." 
+                                                call Sex_Basic_Dialog(LauraX,"tired")  
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
                                     "Threesome actions" if Partner:   
@@ -2857,7 +2857,7 @@ label Laura_Hotdog_Cycle: #Repeating strokes
                                                 if Trigger2:
                                                      $ LauraX.Action -= 1
                                             else:
-                                                ch_l "I think we could take a little break." 
+                                                call Sex_Basic_Dialog(LauraX,"tired")  
                                                 
                                     "Shift primary action":
                                             if LauraX.Action and MultiAction:
@@ -2881,7 +2881,7 @@ label Laura_Hotdog_Cycle: #Repeating strokes
                                                         "Never Mind":
                                                                 jump Laura_Hotdog_Cycle
                                             else:
-                                                ch_l "I think we could take a little break." 
+                                                call Sex_Basic_Dialog(LauraX,"tired")  
                                     "Threesome actions (locked)" if not Partner: 
                                         pass
                                     "Threesome actions" if Partner:   
